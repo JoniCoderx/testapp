@@ -6,18 +6,38 @@ import { motion } from 'framer-motion';
 const SECRET_KEY = 'mpx_admin_secret';
 
 type ActionState = { running: boolean; result: string | null; error: string | null };
-
 const idle: ActionState = { running: false, result: null, error: null };
+
+interface DebugInfo {
+  dbConnected: boolean;
+  tablesExist: boolean;
+  tables: Record<string, boolean>;
+  counts: { accounts: number; totalPosts: number; totalAnalyzed: number; pending: number };
+  lastFetchLog: {
+    success: boolean;
+    handle: string | null;
+    source: string | null;
+    postsFound: number;
+    postsNew: number;
+    errorMessage: string | null;
+    createdAt: string;
+  } | null;
+  nitterInstances: string[];
+  openaiConfigured: boolean;
+  openaiModel: string;
+  demoFallback: boolean;
+  nodeEnv: string;
+  lastError: string | null;
+}
 
 export default function AdminPanel() {
   const [secret, setSecret] = useState('');
   const [unlocked, setUnlocked] = useState(false);
   const [input, setInput] = useState('');
   const [action, setAction] = useState<ActionState>(idle);
-  const [health, setHealth] = useState<Record<string, unknown> | null>(null);
+  const [debug, setDebug] = useState<DebugInfo | null>(null);
+  const [debugError, setDebugError] = useState<string | null>(null);
 
-  // Restore secret from sessionStorage (client-side only, never persisted to
-  // the repo or localStorage — cleared when the tab closes or on Lock).
   useEffect(() => {
     const stored = sessionStorage.getItem(SECRET_KEY);
     if (stored) {
@@ -26,26 +46,45 @@ export default function AdminPanel() {
     }
   }, []);
 
-  const loadHealth = useCallback(async () => {
-    try {
-      const res = await fetch('/api/health', { cache: 'no-store' });
-      setHealth(await res.json());
-    } catch {
-      /* ignore */
-    }
-  }, []);
+  const loadDebug = useCallback(
+    async (sec: string) => {
+      try {
+        const res = await fetch('/api/admin/debug', {
+          headers: { Authorization: `Bearer ${sec}` },
+          cache: 'no-store',
+        });
+        if (res.status === 401) {
+          setDebugError('unauthorized');
+          return false;
+        }
+        const data = await res.json();
+        setDebug(data as DebugInfo);
+        setDebugError(null);
+        return true;
+      } catch {
+        setDebugError('Failed to load diagnostics');
+        return false;
+      }
+    },
+    [],
+  );
 
   useEffect(() => {
-    if (unlocked) loadHealth();
-  }, [unlocked, loadHealth]);
+    if (unlocked && secret) loadDebug(secret);
+  }, [unlocked, secret, loadDebug]);
 
-  const unlock = () => {
+  const unlock = async () => {
     const val = input.trim();
     if (!val) return;
-    sessionStorage.setItem(SECRET_KEY, val);
-    setSecret(val);
-    setUnlocked(true);
-    setInput('');
+    const ok = await loadDebug(val);
+    if (ok) {
+      sessionStorage.setItem(SECRET_KEY, val);
+      setSecret(val);
+      setUnlocked(true);
+      setInput('');
+    } else {
+      setDebugError('Unauthorized — wrong ADMIN_SECRET.');
+    }
   };
 
   const lock = () => {
@@ -53,7 +92,8 @@ export default function AdminPanel() {
     setSecret('');
     setUnlocked(false);
     setAction(idle);
-    setHealth(null);
+    setDebug(null);
+    setDebugError(null);
   };
 
   const run = useCallback(
@@ -71,30 +111,19 @@ export default function AdminPanel() {
           return;
         }
         if (!res.ok) {
-          setAction({
-            running: false,
-            result: null,
-            error: data?.error || `${label} failed (${res.status})`,
-          });
+          setAction({ running: false, result: null, error: data?.error || `${label} failed (${res.status})` });
           return;
         }
-        setAction({
-          running: false,
-          result: JSON.stringify(data, null, 2),
-          error: null,
-        });
-        loadHealth();
+        setAction({ running: false, result: JSON.stringify(data, null, 2), error: null });
+        loadDebug(secret);
       } catch (err) {
-        setAction({
-          running: false,
-          result: null,
-          error: err instanceof Error ? err.message : `${label} failed`,
-        });
+        setAction({ running: false, result: null, error: err instanceof Error ? err.message : `${label} failed` });
       }
     },
-    [secret, loadHealth],
+    [secret, loadDebug],
   );
 
+  // ---- Locked gate ---------------------------------------------------------
   if (!unlocked) {
     return (
       <div className="mx-auto max-w-md">
@@ -109,9 +138,9 @@ export default function AdminPanel() {
           </div>
           <h1 className="text-2xl font-bold text-white">Admin console</h1>
           <p className="mt-2 text-sm text-white/50">
-            Enter the <code className="text-white/70">ADMIN_SECRET</code> to
-            manually trigger fetch and analysis. The secret is held only in this
-            browser tab and is never stored server-side or in the repo.
+            Enter the <code className="text-white/70">ADMIN_SECRET</code> to view
+            diagnostics and manually trigger fetch/analyze/seed. The secret is
+            held only in this browser tab — never stored server-side or in the repo.
           </p>
           <div className="mt-6 space-y-3">
             <input
@@ -123,6 +152,9 @@ export default function AdminPanel() {
               className="w-full rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-white outline-none transition focus:border-accent-cyan/50"
               autoFocus
             />
+            {debugError && (
+              <p className="text-xs text-rose-300">{debugError}</p>
+            )}
             <button onClick={unlock} className="btn-primary w-full">
               Unlock console
             </button>
@@ -132,46 +164,103 @@ export default function AdminPanel() {
     );
   }
 
+  // ---- Unlocked console ----------------------------------------------------
+  const yesNo = (b: boolean | undefined) =>
+    b === undefined ? '—' : b ? 'yes' : 'no';
+  const dot = (b: boolean | undefined) =>
+    b ? 'bg-emerald-400' : 'bg-rose-400';
+
   const actions = [
+    { label: 'Run full refresh', path: '/api/admin/refresh', desc: 'Fetch posts → analyze pending → refresh status.', primary: true },
     { label: 'Fetch posts', path: '/api/fetch', desc: 'Poll all tracked accounts for new posts.' },
     { label: 'Analyze pending', path: '/api/analyze', desc: 'Run AI analysis on un-analyzed posts.' },
-    { label: 'Full refresh', path: '/api/admin/refresh', desc: 'Fetch, then analyze — the full pipeline.' },
+    { label: 'Seed demo data', path: '/api/admin/seed', desc: 'Insert labeled demo posts if the DB is empty.' },
   ];
-
-  const checks = (health?.checks ?? {}) as Record<string, unknown>;
-  const stats = (health?.stats ?? {}) as Record<string, unknown>;
 
   return (
     <div className="mx-auto max-w-3xl">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-white">Admin console</h1>
-          <p className="mt-1 text-sm text-white/50">
-            Manual controls · secret held in this tab only.
-          </p>
+          <p className="mt-1 text-sm text-white/50">Manual controls · secret held in this tab only.</p>
         </div>
-        <button onClick={lock} className="btn-ghost !py-2 text-xs">
-          Lock
-        </button>
+        <div className="flex gap-2">
+          <button onClick={() => loadDebug(secret)} className="btn-ghost !py-2 text-xs">
+            Refresh
+          </button>
+          <button onClick={lock} className="btn-ghost !py-2 text-xs">
+            Lock
+          </button>
+        </div>
       </div>
 
-      {/* Health snapshot */}
-      <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
-        {[
-          { k: 'Posts', v: String(stats.posts ?? '—') },
-          { k: 'Analyzed', v: String(stats.analyzed ?? '—') },
-          { k: 'Pending', v: String(stats.pending ?? '—') },
-          { k: 'OpenAI', v: checks.openai ? 'on' : 'heuristic' },
-        ].map((c) => (
-          <div key={c.k} className="glass rounded-2xl px-4 py-3">
-            <div className="text-[10px] uppercase tracking-wider text-white/40">{c.k}</div>
-            <div className="mt-1 font-mono text-lg font-bold text-white">{c.v}</div>
+      {/* Diagnostics */}
+      <div className="mt-6 glass rounded-2xl p-5">
+        <div className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-white/50">
+          Production diagnostics
+        </div>
+        {debug ? (
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="space-y-2 text-sm">
+              <Row label="DB connected" ok={debug.dbConnected} value={yesNo(debug.dbConnected)} dot={dot} />
+              <Row label="Tables exist" ok={debug.tablesExist} value={yesNo(debug.tablesExist)} dot={dot} />
+              <Row label="OpenAI configured" ok={debug.openaiConfigured} value={debug.openaiConfigured ? debug.openaiModel : 'heuristic'} dot={dot} />
+              <div className="flex items-center justify-between">
+                <span className="text-white/50">Demo fallback</span>
+                <span className="font-mono text-white/80">{yesNo(debug.demoFallback)}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-white/50">Environment</span>
+                <span className="font-mono text-white/80">{debug.nodeEnv}</span>
+              </div>
+            </div>
+            <div className="space-y-2 text-sm">
+              <div className="flex items-center justify-between">
+                <span className="text-white/50">Total posts</span>
+                <span className="font-mono text-white/90">{debug.counts.totalPosts}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-white/50">Total analyzed</span>
+                <span className="font-mono text-white/90">{debug.counts.totalAnalyzed}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-white/50">Pending analysis</span>
+                <span className="font-mono text-white/90">{debug.counts.pending}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-white/50">Sources configured</span>
+                <span className="font-mono text-white/90">{debug.nitterInstances.length}</span>
+              </div>
+            </div>
+
+            <div className="sm:col-span-2 border-t border-white/[0.06] pt-3 text-xs">
+              <div className="text-white/40">Last fetch log</div>
+              {debug.lastFetchLog ? (
+                <div className="mt-1 font-mono text-white/70">
+                  {new Date(debug.lastFetchLog.createdAt).toLocaleString()} ·{' '}
+                  {debug.lastFetchLog.success ? '✅' : '❌'}{' '}
+                  {debug.lastFetchLog.handle || debug.lastFetchLog.source || ''}{' '}
+                  {debug.lastFetchLog.success
+                    ? `(+${debug.lastFetchLog.postsNew} new)`
+                    : `— ${debug.lastFetchLog.errorMessage || 'error'}`}
+                </div>
+              ) : (
+                <div className="mt-1 text-white/50">No fetches recorded yet.</div>
+              )}
+              {debug.lastError && (
+                <div className="mt-2 rounded-lg border border-rose-400/20 bg-rose-500/[0.06] p-2 text-rose-200/80">
+                  Last error: {debug.lastError}
+                </div>
+              )}
+            </div>
           </div>
-        ))}
+        ) : (
+          <div className="text-sm text-white/40">{debugError || 'Loading diagnostics…'}</div>
+        )}
       </div>
 
       {/* Actions */}
-      <div className="mt-4 grid gap-3 sm:grid-cols-3">
+      <div className="mt-4 grid gap-3 sm:grid-cols-2">
         {actions.map((a) => (
           <div key={a.path} className="glass rounded-2xl p-4">
             <div className="text-sm font-semibold text-white">{a.label}</div>
@@ -179,7 +268,7 @@ export default function AdminPanel() {
             <button
               onClick={() => run(a.path, a.label)}
               disabled={action.running}
-              className="btn-primary mt-3 w-full !py-2 text-xs disabled:opacity-60"
+              className={`mt-3 w-full !py-2 text-xs disabled:opacity-60 ${a.primary ? 'btn-primary' : 'btn-ghost'}`}
             >
               {action.running ? 'Running…' : 'Run'}
             </button>
@@ -195,7 +284,7 @@ export default function AdminPanel() {
               {action.error}
             </div>
           ) : (
-            <pre className="max-h-80 overflow-auto rounded-2xl border border-white/10 bg-black/40 p-4 text-xs text-emerald-200/90">
+            <pre className="max-h-96 overflow-auto rounded-2xl border border-white/10 bg-black/40 p-4 text-xs text-emerald-200/90">
               {action.result}
             </pre>
           )}
@@ -203,9 +292,31 @@ export default function AdminPanel() {
       )}
 
       <p className="mt-6 text-center text-[11px] text-white/30">
-        Note: automatic polling runs on the Render cron job every ~15 min. These
-        controls are for on-demand refresh only.
+        Automatic polling runs on the Render cron job every ~15 min. These
+        controls are for on-demand refresh and diagnostics.
       </p>
+    </div>
+  );
+}
+
+function Row({
+  label,
+  ok,
+  value,
+  dot,
+}: {
+  label: string;
+  ok: boolean;
+  value: string;
+  dot: (b: boolean) => string;
+}) {
+  return (
+    <div className="flex items-center justify-between">
+      <span className="text-white/50">{label}</span>
+      <span className="flex items-center gap-2 font-mono text-white/80">
+        <span className={`h-1.5 w-1.5 rounded-full ${dot(ok)}`} />
+        {value}
+      </span>
     </div>
   );
 }

@@ -37,8 +37,8 @@ export function SkeletonGrid({ count = 6 }: { count?: number }) {
 }
 
 /**
- * Empty state. `filtered` distinguishes "no data has been ingested yet" from
- * "your current filters/search matched nothing".
+ * Empty state. `filtered` distinguishes "your current filters matched nothing"
+ * from "the database has no posts yet" (fresh deployment → admin refresh needed).
  */
 export function EmptyState({
   filtered,
@@ -55,17 +55,23 @@ export function EmptyState({
         </svg>
       </div>
       <h3 className="mt-5 text-lg font-semibold text-white">
-        {filtered ? 'No matching signals' : 'No signals yet'}
+        {filtered ? 'No matching signals' : 'No signals yet — admin refresh required'}
       </h3>
       <p className="mt-2 max-w-md text-sm text-white/50">
         {filtered
           ? 'Nothing matches your current filters or search. Try clearing them to see the full feed.'
-          : 'The feed is being populated. New posts are pulled automatically every few minutes — check back shortly.'}
+          : 'The database is empty. Signals appear automatically once the scheduled poller runs — or an admin can trigger a fetch now.'}
       </p>
-      {filtered && onClear && (
+      {filtered && onClear ? (
         <button onClick={onClear} className="btn-ghost mt-6">
           Clear filters
         </button>
+      ) : (
+        !filtered && (
+          <a href="/admin" className="btn-ghost mt-6">
+            Open admin console
+          </a>
+        )
       )}
     </div>
   );

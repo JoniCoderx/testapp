@@ -2,14 +2,14 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { env } from '@/lib/env';
 import { rateLimit, tooManyRequests } from '@/lib/rate-limit';
+import { cacheGet, cacheSet } from '@/lib/cache';
 
 export const dynamic = 'force-dynamic';
 
 const RECENT_WINDOW_MINUTES = 90;
-
-// Short-lived cache: this aggregates several counts, and the underlying data
-// only changes when the poller runs.
-let cached: { body: unknown; expires: number } | null = null;
+// Cached via the shared read cache so the pipeline (fetch/analyze/seed) can
+// invalidate it immediately after mutating data.
+const STATUS_CACHE_KEY = 'status:v1';
 const TTL_MS = 15_000;
 
 function startOfUtcDay(): Date {
@@ -17,18 +17,60 @@ function startOfUtcDay(): Date {
   return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
 }
 
+/** Build the always-present source list from configured instances. */
+function baseInstances() {
+  return env.nitterInstances.map((url) => ({
+    url,
+    host: url.replace(/^https?:\/\//, ''),
+    lastSuccessAt: null as string | null,
+    healthy: false,
+  }));
+}
+
+/**
+ * A safe, fully-populated payload used when the DB is unreachable or empty.
+ * Everything is zeros/nulls (never absent), so the dashboard renders a clean
+ * "0 / Not yet" state instead of "unavailable" or "—".
+ */
+function safePayload(dbConnected: boolean) {
+  return {
+    ok: true,
+    dbConnected,
+    stats: {
+      totalPosts: 0,
+      totalAnalyzed: 0,
+      pending: 0,
+      highImpactToday: 0,
+      cryptoToday: 0,
+      lastSuccessfulFetch: null as string | null,
+      lastFetchAt: null as string | null,
+    },
+    sources: {
+      configured: env.nitterInstances.length,
+      instances: baseInstances(),
+      recent: { windowMinutes: RECENT_WINDOW_MINUTES, successes: 0, failures: 0 },
+      allSourcesDown: false,
+    },
+  };
+}
+
 /**
  * GET /api/status  (public, read-only)
- * Market-intelligence stats + source health derived from FetchLog. Powers the
- * dashboard stat cards and the source-status widget. Never throws — returns a
- * safe degraded payload if the database is unavailable.
+ * ALWAYS returns HTTP 200 with a well-formed payload. Empty DB → zeros;
+ * unreachable DB → zeros + dbConnected:false. Never crashes, never returns null
+ * stats/sources.
  */
 export async function GET(req: NextRequest) {
-  const rl = rateLimit(req, 'status', { limit: 60, windowMs: 60_000 });
-  if (!rl.ok) return tooManyRequests(rl);
+  try {
+    const rl = rateLimit(req, 'status', { limit: 60, windowMs: 60_000 });
+    if (!rl.ok) return tooManyRequests(rl);
+  } catch {
+    /* ignore limiter errors */
+  }
 
-  if (cached && cached.expires > Date.now()) {
-    return NextResponse.json(cached.body, {
+  const hit = cacheGet(STATUS_CACHE_KEY);
+  if (hit) {
+    return NextResponse.json(hit, {
       headers: { 'Cache-Control': 'public, s-maxage=15', 'X-Cache': 'HIT' },
     });
   }
@@ -64,7 +106,7 @@ export async function GET(req: NextRequest) {
       prisma.fetchLog.findFirst({
         where: { success: true },
         orderBy: { createdAt: 'desc' },
-        select: { createdAt: true, postsNew: true },
+        select: { createdAt: true },
       }),
       prisma.fetchLog.findFirst({
         orderBy: { createdAt: 'desc' },
@@ -78,8 +120,6 @@ export async function GET(req: NextRequest) {
       }),
     ]);
 
-    // Per-instance health: for each configured instance, when did it last
-    // successfully serve a fetch (source == "nitter:<host>").
     const instances = await Promise.all(
       env.nitterInstances.map(async (url) => {
         const host = url.replace(/^https?:\/\//, '');
@@ -101,6 +141,7 @@ export async function GET(req: NextRequest) {
 
     const body = {
       ok: true,
+      dbConnected: true,
       stats: {
         totalPosts,
         totalAnalyzed,
@@ -122,21 +163,17 @@ export async function GET(req: NextRequest) {
       },
     };
 
-    cached = { body, expires: Date.now() + TTL_MS };
+    cacheSet(STATUS_CACHE_KEY, body, TTL_MS);
     return NextResponse.json(body, {
       headers: { 'Cache-Control': 'public, s-maxage=15', 'X-Cache': 'MISS' },
     });
   } catch (err) {
-    console.error('[api/status] failed:', err);
-    return NextResponse.json(
-      {
-        ok: false,
-        degraded: true,
-        error: 'Status temporarily unavailable',
-        stats: null,
-        sources: null,
-      },
-      { status: 200, headers: { 'Cache-Control': 'no-store' } },
-    );
+    // DB unreachable / tables missing → return a clean zeroed payload (200),
+    // never null. Do not cache the degraded response.
+    console.error('[api/status] failed (returning safe zeros):', err);
+    return NextResponse.json(safePayload(false), {
+      status: 200,
+      headers: { 'Cache-Control': 'no-store' },
+    });
   }
 }

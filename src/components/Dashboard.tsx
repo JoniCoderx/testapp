@@ -25,6 +25,7 @@ export default function Dashboard() {
   const [hasMore, setHasMore] = useState(false);
   const [status, setStatus] = useState<StatusPayload | null>(null);
   const [updatedAt, setUpdatedAt] = useState<string | null>(null);
+  const [demo, setDemo] = useState(false);
 
   const [filter, setFilter] = useState<FilterId>('all');
   const [sort, setSort] = useState<SortId>('newest');
@@ -68,6 +69,7 @@ export default function Dashboard() {
       setPosts(list);
       setNextCursor(data?.nextCursor ?? null);
       setHasMore(Boolean(data?.hasMore));
+      setDemo(Boolean(data?.demo));
       setUpdatedAt(new Date().toISOString());
 
       // A degraded response still renders (empty state); we don't blow up the UI
@@ -136,12 +138,12 @@ export default function Dashboard() {
 
   const s = status?.stats;
   const statCards = [
-    { label: 'Total analyzed', value: s ? s.totalAnalyzed.toLocaleString() : '—' },
-    { label: 'High-impact today', value: s ? s.highImpactToday.toLocaleString() : '—' },
-    { label: 'Crypto today', value: s ? s.cryptoToday.toLocaleString() : '—' },
+    { label: 'Total analyzed', value: (s?.totalAnalyzed ?? 0).toLocaleString() },
+    { label: 'High-impact today', value: (s?.highImpactToday ?? 0).toLocaleString() },
+    { label: 'Crypto today', value: (s?.cryptoToday ?? 0).toLocaleString() },
     {
       label: 'Last successful fetch',
-      value: s?.lastSuccessfulFetch ? timeAgo(s.lastSuccessfulFetch) : '—',
+      value: s?.lastSuccessfulFetch ? timeAgo(s.lastSuccessfulFetch) : 'Not yet',
     },
   ];
 
@@ -194,7 +196,23 @@ export default function Dashboard() {
       {/* Main grid: feed + sidebar */}
       <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_18rem]">
         <div className="order-2 lg:order-1">
-          {allSourcesDown && (
+          {demo && (
+            <div className="mb-4 flex items-start gap-3 rounded-2xl border border-violet-400/25 bg-violet-500/[0.06] px-4 py-3">
+              <svg viewBox="0 0 24 24" className="mt-0.5 h-5 w-5 shrink-0 text-violet-300" fill="none">
+                <path d="M12 2 2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              <div>
+                <div className="text-sm font-semibold text-violet-200">Showing demo data</div>
+                <p className="mt-0.5 text-xs text-violet-100/60">
+                  The database is empty, so sample signals are shown. Live posts
+                  replace these automatically once the poller succeeds, or an
+                  admin can trigger a refresh.
+                </p>
+              </div>
+            </div>
+          )}
+
+          {allSourcesDown && !demo && (
             <div className="mb-4">
               <SourcesDownBanner />
             </div>

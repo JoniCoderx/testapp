@@ -19,6 +19,7 @@ export async function GET() {
   let analyzedCount = 0;
   let lastFetch: string | null = null;
   let dbError: string | null = null;
+  let tablesExist = false;
 
   // 1) Lightweight connection check (works on sqlite + postgres).
   try {
@@ -29,7 +30,7 @@ export async function GET() {
     console.error('[health] db connection check failed:', err);
   }
 
-  // 2) Best-effort stats (won't flip status if a count fails).
+  // 2) Best-effort stats + table-existence probe.
   if (dbOk) {
     try {
       postCount = await prisma.post.count();
@@ -39,8 +40,11 @@ export async function GET() {
         select: { createdAt: true },
       });
       lastFetch = last?.createdAt.toISOString() ?? null;
+      tablesExist = true;
     } catch (err) {
-      console.error('[health] stats query failed:', err);
+      // A successful SELECT 1 but a failing count usually means the tables
+      // haven't been created yet (migration/db push not run).
+      console.error('[health] stats query failed (tables may be missing):', err);
     }
   }
 
@@ -52,6 +56,7 @@ export async function GET() {
       timestamp: new Date().toISOString(),
       checks: {
         database: dbOk,
+        tables: tablesExist,
         openai: hasOpenAi(),
         adminConfigured: isAdminConfigured(),
         nitterInstances: env.nitterInstances.length,

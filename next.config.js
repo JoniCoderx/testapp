@@ -24,6 +24,8 @@ const nextConfig = {
   experimental: {
     // Ensure Prisma client is treated as an external in server components.
     serverComponentsExternalPackages: ['@prisma/client', 'prisma'],
+    // Run src/instrumentation.ts register() at server boot (schema self-heal).
+    instrumentationHook: true,
   },
   async headers() {
     return [

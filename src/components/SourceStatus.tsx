@@ -5,6 +5,7 @@ import { cn, timeAgo } from '@/lib/ui';
 export interface StatusPayload {
   ok?: boolean;
   degraded?: boolean;
+  dbConnected?: boolean;
   stats: {
     totalPosts: number;
     totalAnalyzed: number;
@@ -27,15 +28,18 @@ export function SourceStatus({ status }: { status: StatusPayload | null }) {
   const healthyCount = sources?.instances.filter((i) => i.healthy).length ?? 0;
   const total = sources?.configured ?? 0;
 
-  const overall = !sources
-    ? { label: 'Unknown', dot: 'bg-slate-400', text: 'text-slate-300' }
-    : sources.allSourcesDown
-      ? { label: 'Sources down', dot: 'bg-rose-400', text: 'text-rose-300' }
-      : healthyCount === 0
-        ? { label: 'Awaiting first fetch', dot: 'bg-amber-400', text: 'text-amber-300' }
-        : healthyCount < total
-          ? { label: 'Partial', dot: 'bg-amber-400', text: 'text-amber-300' }
-          : { label: 'Operational', dot: 'bg-emerald-400', text: 'text-emerald-300' };
+  const dbDown = status?.dbConnected === false;
+  const overall = dbDown
+    ? { label: 'Connecting…', dot: 'bg-amber-400', text: 'text-amber-300' }
+    : !sources
+      ? { label: 'Loading…', dot: 'bg-slate-400', text: 'text-slate-300' }
+      : sources.allSourcesDown
+        ? { label: 'Sources down', dot: 'bg-rose-400', text: 'text-rose-300' }
+        : healthyCount === 0
+          ? { label: 'Awaiting first fetch', dot: 'bg-amber-400', text: 'text-amber-300' }
+          : healthyCount < total
+            ? { label: 'Partial', dot: 'bg-amber-400', text: 'text-amber-300' }
+            : { label: 'Operational', dot: 'bg-emerald-400', text: 'text-emerald-300' };
 
   return (
     <div className="glass rounded-2xl p-4">
@@ -69,7 +73,7 @@ export function SourceStatus({ status }: { status: StatusPayload | null }) {
           </div>
         ))}
         {!sources && (
-          <div className="text-xs text-white/40">Status unavailable.</div>
+          <div className="text-xs text-white/40">Loading source status…</div>
         )}
       </div>
 

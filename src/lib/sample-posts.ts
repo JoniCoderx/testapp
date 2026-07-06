@@ -1,14 +1,14 @@
 import type { SerializedPost } from '@/lib/serialize';
 import { heuristicAnalysis } from '@/lib/ai/analyze';
 
-interface Sample {
+export interface Sample {
   handle: string;
   name: string;
   text: string;
   minutesAgo: number;
 }
 
-const SAMPLES: Sample[] = [
+export const SAMPLES: Sample[] = [
   {
     handle: 'elonmusk',
     name: 'Elon Musk',

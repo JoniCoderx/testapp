@@ -130,6 +130,8 @@ The app depends only on the `PostSource` interface
 | `POST /api/fetch`            | **admin**     | Poll all accounts and cache new posts.         |
 | `POST /api/analyze`          | **admin**     | Analyze posts that have no analysis yet.        |
 | `POST /api/admin/refresh`    | **admin**     | Fetch **and** analyze in one call (for cron).  |
+| `POST /api/admin/seed`       | **admin**     | Seed labeled demo posts if DB is empty (`?force=true` to override). |
+| `GET  /api/admin/debug`      | **admin**     | Diagnostics: DB/tables/counts/last fetch/errors. |
 
 `(RL)` = rate-limited per IP. Admin endpoints require
 `Authorization: Bearer <ADMIN_SECRET>` (or `x-admin-secret: <ADMIN_SECRET>`).
@@ -258,6 +260,26 @@ Custom Domains**, and add the DNS records Render shows. `metadataBase` is alread
 set to the domain.
 
 ---
+
+## 🩺 Troubleshooting
+
+**Dashboard shows "No signals yet" / empty stats after deploy**
+1. Open **`/admin`**, enter `ADMIN_SECRET` → the **Production diagnostics** panel
+   shows `DB connected`, `Tables exist`, counts, the last fetch log, and the last
+   error. Use this first — it tells you exactly what's wrong.
+2. If **Tables exist = no**: the schema wasn't created. The app auto-runs
+   `prisma db push` at boot (see `src/lib/ensure-schema.ts`) on a Postgres
+   `DATABASE_URL`; ensure `DATABASE_URL` is set on the web service, then redeploy.
+   The build command also runs `npx prisma db push`.
+3. If **Tables exist = yes** but empty: click **Run full refresh** (fetches +
+   analyzes) or **Seed demo data**. Public Nitter instances are often blocked, so
+   if fetch fails, seeding (or `DEMO_FALLBACK=true`) gives immediate content.
+4. `/api/status` and `/api/posts` always return HTTP 200 — a blank dashboard is
+   a data problem, not a crash. Check `/api/admin/debug` for the root cause.
+
+**`DEMO_FALLBACK`** — when `true` (default in `render.yaml`), an empty DB serves
+clearly-labeled demo posts so the site is never blank. Set to `false` once live
+data is flowing.
 
 ## 🆓 Free-source limitations
 

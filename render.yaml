@@ -41,9 +41,10 @@ services:
         value: "15"
       - key: MAX_POSTS_PER_ACCOUNT
         value: "5"
-      # Set to "true" to serve demo posts on a brand-new empty DB. Default off.
+      # Serve clearly-labeled demo posts when the DB is empty so a fresh deploy
+      # is never blank. Set to "false" once live data is flowing.
       - key: DEMO_FALLBACK
-        value: "false"
+        value: "true"
       - key: NODE_VERSION
         value: "20.18.0"
 

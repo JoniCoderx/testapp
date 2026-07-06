@@ -78,17 +78,25 @@ export async function fetchAllAccounts(): Promise<FetchSummary> {
   let postsNew = 0;
   const failures: { handle: string; error: string }[] = [];
 
+  console.log(
+    `[fetch] starting poll of ${accounts.length} account(s) across ${env.nitterInstances.length} instance(s)`,
+  );
+
   for (const acc of accounts) {
     const accountId = accountMap.get(acc.handle.toLowerCase());
     if (!accountId) continue;
 
     const attemptStart = Date.now();
     try {
+      console.log(`[fetch] @${acc.handle}: trying ${source.name} sources…`);
       const result = await source.fetchPostsForHandle(
         acc.handle,
         env.maxPostsPerAccount,
       );
       postsFound += result.posts.length;
+      console.log(
+        `[fetch] @${acc.handle}: ${result.posts.length} post(s) via ${result.source}`,
+      );
 
       let newForHandle = 0;
       for (const post of result.posts) {
@@ -119,6 +127,9 @@ export async function fetchAllAccounts(): Promise<FetchSummary> {
         }
       }
       postsNew += newForHandle;
+      console.log(
+        `[fetch] @${acc.handle}: inserted ${newForHandle} new post(s) (deduped)`,
+      );
 
       await prisma.fetchLog.create({
         data: {
@@ -160,7 +171,13 @@ export async function fetchAllAccounts(): Promise<FetchSummary> {
     }
   }
 
-  if (postsNew > 0) clearPostsCache();
+  // Always invalidate the read cache: even with 0 new posts, FetchLog changed,
+  // so the status/source-health view must refresh.
+  clearPostsCache();
+
+  console.log(
+    `[fetch] done: ${postsFound} found, ${postsNew} new, ${failures.length} account(s) failed in ${Date.now() - start}ms`,
+  );
 
   return {
     accountsPolled: accounts.length,
@@ -217,6 +234,9 @@ export async function analyzePending(limit = 25): Promise<AnalyzeSummary> {
   if (analyzed > 0) clearPostsCache();
 
   const remaining = await prisma.post.count({ where: { analysis: null } });
+  console.log(
+    `[analyze] analyzed ${analyzed}, failed ${failed}, ${remaining} still pending`,
+  );
 
   return { analyzed, failed, remaining, durationMs: Date.now() - start };
 }
@@ -228,4 +248,52 @@ export async function runPipeline(): Promise<{
   const fetch = await fetchAllAccounts();
   const analyze = await analyzePending();
   return { fetch, analyze };
+}
+
+/**
+ * Insert clearly-labeled demo posts (deduped) and analyze them. Safe to call
+ * repeatedly. By default it only seeds when the DB is empty; pass `force: true`
+ * to seed regardless. Used by the admin seed endpoint and `npm run db:seed`.
+ */
+export async function seedDemoPosts(
+  opts: { force?: boolean } = {},
+): Promise<{ inserted: number; skipped: boolean; analyze: AnalyzeSummary | null }> {
+  const { SAMPLES } = await import('@/lib/sample-posts');
+
+  const existing = await prisma.post.count();
+  if (existing > 0 && !opts.force) {
+    return { inserted: 0, skipped: true, analyze: null };
+  }
+
+  const accountMap = await ensureAccounts();
+  let inserted = 0;
+
+  for (let i = 0; i < SAMPLES.length; i++) {
+    const s = SAMPLES[i];
+    const accountId = accountMap.get(s.handle.toLowerCase());
+    if (!accountId) continue;
+
+    const sourcePostId = `sample-${s.handle}-${i}`;
+    const already = await prisma.post.findUnique({ where: { sourcePostId } });
+    if (already) continue;
+
+    await prisma.post.create({
+      data: {
+        sourcePostId,
+        url: `https://x.com/${s.handle}`,
+        text: s.text,
+        authorHandle: s.handle,
+        authorName: s.name,
+        publishedAt: new Date(Date.now() - s.minutesAgo * 60_000),
+        source: 'demo:seed',
+        accountId,
+      },
+    });
+    inserted += 1;
+  }
+
+  if (inserted > 0) clearPostsCache();
+  const analyze = await analyzePending(SAMPLES.length);
+  console.log(`[seed] inserted ${inserted} demo post(s)`);
+  return { inserted, skipped: false, analyze };
 }
