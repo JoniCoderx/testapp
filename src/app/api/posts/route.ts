@@ -5,6 +5,8 @@ import { serializePost } from '@/lib/serialize';
 import { rateLimit, tooManyRequests } from '@/lib/rate-limit';
 import { VALID_TAGS } from '@/lib/ai/analyze';
 import { cacheGet, cacheSet } from '@/lib/cache';
+import { env } from '@/lib/env';
+import { getSamplePosts } from '@/lib/sample-posts';
 
 export const dynamic = 'force-dynamic';
 
@@ -21,101 +23,67 @@ const FILTERS = new Set([
 ]);
 const SENTIMENTS = new Set(['bullish', 'bearish', 'neutral', 'mixed']);
 const TAGS = new Set<string>(VALID_TAGS);
-// Tags that broadly indicate global-market relevance.
 const GLOBAL_TAGS = ['macro', 'stocks', 'commodities', 'energy', 'geopolitics'];
 
 const DEFAULT_LIMIT = 30;
 const MAX_LIMIT = 100;
 
-// A short-lived in-memory read cache (see src/lib/cache.ts) shields the DB from
-// bursty reads. Data only changes when the poller runs (~every 15 min), so a
-// short TTL is safe; the pipeline also clears it after a successful refresh.
+interface ParsedParams {
+  activeFilter: string;
+  search: string;
+  sort: 'newest' | 'impact';
+  limit: number;
+  cursor?: string;
+  tag?: string;
+  sentiment?: string;
+  minImpact?: number;
+}
 
-/**
- * GET /api/posts  (public, read-only, rate-limited, cached)
- *
- * Query params (all optional, all validated):
- *   filter    = all | crypto | global | stocks | geopolitics | high-impact | bearish | bullish
- *   tag       = one of the signal tags (crypto, stocks, macro, …)
- *   sentiment = bullish | bearish | neutral | mixed
- *   minImpact = 0–100 minimum impact score
- *   search    = free-text (post text / author / summary), max 120 chars
- *   sort      = newest | impact
- *   limit     = page size (default 30, capped at 100)
- *   cursor    = opaque cursor (a post id) from a previous response's nextCursor
- *
- * Returns: { count, filter, sort, hasMore, nextCursor, posts }
- */
-export async function GET(req: NextRequest) {
-  const rl = rateLimit(req, 'posts', { limit: 120, windowMs: 60_000 });
-  if (!rl.ok) return tooManyRequests(rl);
-
-  const { searchParams } = new URL(req.url);
+/** Parse + validate query params. Never throws — always yields safe defaults. */
+function parseParams(searchParams: URLSearchParams): ParsedParams {
+  const num = (v: string | null): number => {
+    const n = parseInt(v ?? '', 10);
+    return Number.isFinite(n) ? n : NaN;
+  };
 
   const filterRaw = (searchParams.get('filter') || 'all').toLowerCase();
-  const activeFilter = FILTERS.has(filterRaw) ? filterRaw : 'all';
+  const tagRaw = (searchParams.get('tag') || '').toLowerCase().trim();
+  const sentimentRaw = (searchParams.get('sentiment') || '').toLowerCase().trim();
+  const minImpactParsed = num(searchParams.get('minImpact'));
 
-  const search = (searchParams.get('search') || '').trim().slice(0, 120);
-
-  const sort =
-    (searchParams.get('sort') || 'newest').toLowerCase() === 'impact'
-      ? 'impact'
-      : 'newest';
-
+  const limitParsed = num(searchParams.get('limit'));
   const limit = Math.min(
-    Math.max(
-      parseInt(searchParams.get('limit') || String(DEFAULT_LIMIT), 10) ||
-        DEFAULT_LIMIT,
-      1,
-    ),
+    Math.max(Number.isFinite(limitParsed) ? limitParsed : DEFAULT_LIMIT, 1),
     MAX_LIMIT,
   );
 
-  const cursor = (searchParams.get('cursor') || '').trim() || undefined;
-
-  const tagRaw = (searchParams.get('tag') || '').toLowerCase().trim();
-  const tag = TAGS.has(tagRaw) ? tagRaw : undefined;
-
-  const sentimentRaw = (searchParams.get('sentiment') || '').toLowerCase().trim();
-  const sentiment = SENTIMENTS.has(sentimentRaw) ? sentimentRaw : undefined;
-
-  const minImpactParsed = parseInt(searchParams.get('minImpact') || '', 10);
-  const minImpact = Number.isFinite(minImpactParsed)
-    ? Math.min(100, Math.max(0, minImpactParsed))
-    : undefined;
-
-  const cacheKey = JSON.stringify({
-    activeFilter,
-    search,
-    sort,
+  return {
+    activeFilter: FILTERS.has(filterRaw) ? filterRaw : 'all',
+    search: (searchParams.get('search') || '').trim().slice(0, 120),
+    sort:
+      (searchParams.get('sort') || 'newest').toLowerCase() === 'impact'
+        ? 'impact'
+        : 'newest',
     limit,
-    cursor,
-    tag,
-    sentiment,
-    minImpact,
-  });
-  const cached = cacheGet(cacheKey);
-  if (cached) {
-    return NextResponse.json(cached, {
-      headers: {
-        'Cache-Control': 'public, s-maxage=30, stale-while-revalidate=60',
-        'X-Cache': 'HIT',
-      },
-    });
-  }
+    cursor: (searchParams.get('cursor') || '').trim() || undefined,
+    tag: TAGS.has(tagRaw) ? tagRaw : undefined,
+    sentiment: SENTIMENTS.has(sentimentRaw) ? sentimentRaw : undefined,
+    minImpact: Number.isFinite(minImpactParsed)
+      ? Math.min(100, Math.max(0, minImpactParsed))
+      : undefined,
+  };
+}
 
+function buildWhere(p: ParsedParams): Prisma.PostWhereInput {
   const and: Prisma.PostWhereInput[] = [];
 
-  // Chip filter.
-  switch (activeFilter) {
+  switch (p.activeFilter) {
     case 'crypto':
       and.push({ analysis: { tags: { contains: '"crypto"' } } });
       break;
     case 'global':
       and.push({
-        OR: GLOBAL_TAGS.map((t) => ({
-          analysis: { tags: { contains: `"${t}"` } },
-        })),
+        OR: GLOBAL_TAGS.map((t) => ({ analysis: { tags: { contains: `"${t}"` } } })),
       });
       break;
     case 'stocks':
@@ -135,55 +103,160 @@ export async function GET(req: NextRequest) {
       break;
   }
 
-  // Granular params (compose with the chip filter).
-  if (tag) and.push({ analysis: { tags: { contains: `"${tag}"` } } });
-  if (sentiment) and.push({ analysis: { sentiment } });
-  if (minImpact !== undefined)
-    and.push({ analysis: { impactScore: { gte: minImpact } } });
+  if (p.tag) and.push({ analysis: { tags: { contains: `"${p.tag}"` } } });
+  if (p.sentiment) and.push({ analysis: { sentiment: p.sentiment } });
+  if (p.minImpact !== undefined)
+    and.push({ analysis: { impactScore: { gte: p.minImpact } } });
 
-  if (search) {
+  if (p.search) {
     and.push({
       OR: [
-        { text: { contains: search } },
-        { authorHandle: { contains: search } },
-        { authorName: { contains: search } },
-        { analysis: { summary: { contains: search } } },
+        { text: { contains: p.search } },
+        { authorHandle: { contains: p.search } },
+        { authorName: { contains: p.search } },
+        { analysis: { summary: { contains: p.search } } },
       ],
     });
   }
 
-  const where: Prisma.PostWhereInput = and.length ? { AND: and } : {};
+  return and.length ? { AND: and } : {};
+}
 
-  // Deterministic ordering with `id` as the final tiebreaker so cursor
-  // pagination is stable and never skips/duplicates rows.
+function safeError(message: string, extra: Record<string, unknown> = {}) {
+  // A safe, dashboard-friendly payload. Returns HTTP 200 so the client renders
+  // an empty/degraded state instead of a hard "Server responded 500".
+  return NextResponse.json(
+    {
+      posts: [],
+      count: 0,
+      hasMore: false,
+      nextCursor: null,
+      error: message,
+      degraded: true,
+      ...extra,
+    },
+    { status: 200, headers: { 'Cache-Control': 'no-store' } },
+  );
+}
+
+/**
+ * GET /api/posts  (public, read-only, rate-limited, cached)
+ * Bulletproof: invalid params fall back to defaults; any DB/query error returns
+ * a safe empty JSON payload (HTTP 200) with an `error` field — it never throws a
+ * 500 at the dashboard.
+ */
+export async function GET(req: NextRequest) {
+  // Rate limiting must itself never crash the route.
+  try {
+    const rl = rateLimit(req, 'posts', { limit: 120, windowMs: 60_000 });
+    if (!rl.ok) return tooManyRequests(rl);
+  } catch {
+    /* ignore limiter errors */
+  }
+
+  let p: ParsedParams;
+  try {
+    p = parseParams(new URL(req.url).searchParams);
+  } catch {
+    p = { activeFilter: 'all', search: '', sort: 'newest', limit: DEFAULT_LIMIT };
+  }
+
+  const cacheKey = JSON.stringify(p);
+  try {
+    const cached = cacheGet(cacheKey);
+    if (cached) {
+      return NextResponse.json(cached, {
+        headers: {
+          'Cache-Control': 'public, s-maxage=30, stale-while-revalidate=60',
+          'X-Cache': 'HIT',
+        },
+      });
+    }
+  } catch {
+    /* cache miss on error */
+  }
+
+  const where = buildWhere(p);
   const orderBy: Prisma.PostOrderByWithRelationInput[] =
-    sort === 'impact'
+    p.sort === 'impact'
       ? [{ analysis: { impactScore: 'desc' } }, { publishedAt: 'desc' }, { id: 'desc' }]
       : [{ publishedAt: 'desc' }, { id: 'desc' }];
 
-  try {
-    const rows = await prisma.post.findMany({
+  const runQuery = (withCursor: boolean) =>
+    prisma.post.findMany({
       where,
       orderBy,
-      take: limit + 1, // fetch one extra to detect a next page
-      ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
+      take: p.limit + 1,
       include: { analysis: true },
+      ...(withCursor && p.cursor ? { cursor: { id: p.cursor }, skip: 1 } : {}),
     });
 
-    const hasMore = rows.length > limit;
-    const page = hasMore ? rows.slice(0, limit) : rows;
-    const nextCursor = hasMore ? page[page.length - 1]?.id ?? null : null;
+  let rows;
+  try {
+    rows = await runQuery(true);
+  } catch (err) {
+    // Most common causes here: an invalid/stale cursor, or the DB/table not
+    // being reachable. Retry once without the cursor before giving up.
+    console.error('[api/posts] query failed:', err);
+    if (p.cursor) {
+      try {
+        rows = await runQuery(false);
+      } catch (err2) {
+        console.error('[api/posts] retry without cursor failed:', err2);
+        return safeError('The signals database is temporarily unavailable.');
+      }
+    } else {
+      return safeError('The signals database is temporarily unavailable.');
+    }
+  }
+
+  try {
+    const hasMore = rows.length > p.limit;
+    const page = hasMore ? rows.slice(0, p.limit) : rows;
+    let posts = page.map(serializePost);
+
+    // Emergency demo fallback: empty DB + DEMO_FALLBACK + production + no
+    // filters/cursor → serve clearly-labeled sample posts so the dashboard is
+    // never blank in a fresh deployment.
+    let demo = false;
+    if (
+      posts.length === 0 &&
+      !p.cursor &&
+      p.activeFilter === 'all' &&
+      !p.search &&
+      !p.tag &&
+      !p.sentiment &&
+      p.minImpact === undefined &&
+      env.demoFallback &&
+      env.nodeEnv === 'production'
+    ) {
+      try {
+        const total = await prisma.post.count();
+        if (total === 0) {
+          posts = getSamplePosts().slice(0, p.limit);
+          demo = true;
+        }
+      } catch {
+        posts = getSamplePosts().slice(0, p.limit);
+        demo = true;
+      }
+    }
 
     const body = {
-      count: page.length,
-      filter: activeFilter,
-      sort,
-      hasMore,
-      nextCursor,
-      posts: page.map(serializePost),
+      count: posts.length,
+      filter: p.activeFilter,
+      sort: p.sort,
+      hasMore: demo ? false : hasMore,
+      nextCursor: demo || !hasMore ? null : page[page.length - 1]?.id ?? null,
+      demo,
+      posts,
     };
 
-    cacheSet(cacheKey, body);
+    try {
+      if (!demo) cacheSet(cacheKey, body);
+    } catch {
+      /* non-fatal */
+    }
 
     return NextResponse.json(body, {
       headers: {
@@ -192,16 +265,7 @@ export async function GET(req: NextRequest) {
       },
     });
   } catch (err) {
-    console.error('[api/posts] query failed:', err);
-    return NextResponse.json(
-      {
-        error: 'Failed to load posts',
-        posts: [],
-        count: 0,
-        hasMore: false,
-        nextCursor: null,
-      },
-      { status: 500, headers: { 'Cache-Control': 'no-store' } },
-    );
+    console.error('[api/posts] serialization failed:', err);
+    return safeError('Failed to render signals.');
   }
 }

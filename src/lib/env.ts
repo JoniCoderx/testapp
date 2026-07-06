@@ -25,6 +25,11 @@ export const env = {
 
   pollIntervalMinutes: num(process.env.POLL_INTERVAL_MINUTES, 15),
   maxPostsPerAccount: num(process.env.MAX_POSTS_PER_ACCOUNT, 5),
+
+  nodeEnv: process.env.NODE_ENV || 'development',
+  // When true (and in production with an empty DB), /api/posts serves a small
+  // set of clearly-labeled demo posts so the dashboard is never blank/broken.
+  demoFallback: /^(1|true|yes)$/i.test(process.env.DEMO_FALLBACK || ''),
 };
 
 export function hasOpenAi(): boolean {

@@ -17,10 +17,11 @@ services:
     runtime: node
     plan: free
     branch: main
-    # prisma generate + next build. The schema is synced to the DB at START
-    # (start:prod) rather than at build, so it runs when Postgres is reachable.
-    buildCommand: npm install && npm run build
-    startCommand: npm run start:prod
+    # Generate the Prisma client, create/sync the Postgres schema, then build.
+    # The committed schema uses provider "postgresql" so this is correct on
+    # Render even before prepare-db.mjs runs (it only flips to sqlite locally).
+    buildCommand: npm install && npx prisma generate && npx prisma db push && npm run build
+    startCommand: npm start
     healthCheckPath: /api/health
     autoDeploy: true
     envVars:
@@ -40,6 +41,9 @@ services:
         value: "15"
       - key: MAX_POSTS_PER_ACCOUNT
         value: "5"
+      # Set to "true" to serve demo posts on a brand-new empty DB. Default off.
+      - key: DEMO_FALLBACK
+        value: "false"
       - key: NODE_VERSION
         value: "20.18.0"
 
@@ -54,7 +58,7 @@ services:
     plan: free
     branch: main
     schedule: "*/15 * * * *"
-    buildCommand: npm install && npm run build
+    buildCommand: npm install && npx prisma generate && npm run build
     startCommand: npm run poll
     envVars:
       - key: DATABASE_URL

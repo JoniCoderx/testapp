@@ -60,14 +60,24 @@ export default function Dashboard() {
       const res = await fetch(`/api/posts?${buildParams().toString()}`, {
         cache: 'no-store',
       });
-      if (!res.ok) throw new Error(`Server responded ${res.status}`);
-      const data = await res.json();
-      setPosts(Array.isArray(data.posts) ? data.posts : []);
-      setNextCursor(data.nextCursor ?? null);
-      setHasMore(Boolean(data.hasMore));
+      // The API is designed to return 200 with a safe payload even on failure.
+      // Parse defensively and only surface a soft error if we truly got nothing.
+      const data = await res.json().catch(() => null);
+      const list = data && Array.isArray(data.posts) ? data.posts : [];
+
+      setPosts(list);
+      setNextCursor(data?.nextCursor ?? null);
+      setHasMore(Boolean(data?.hasMore));
       setUpdatedAt(new Date().toISOString());
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load posts');
+
+      // A degraded response still renders (empty state); we don't blow up the UI
+      // with raw HTTP status codes. Only show the error card if the request
+      // itself failed outright and we have no posts to show.
+      if (!data && list.length === 0) {
+        setError('Signals are temporarily unavailable. Please try again shortly.');
+      }
+    } catch {
+      setError('Signals are temporarily unavailable. Please try again shortly.');
     } finally {
       setLoading(false);
       initial.current = false;

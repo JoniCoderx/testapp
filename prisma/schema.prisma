@@ -1,17 +1,19 @@
 // MarketPulse X — Prisma schema
 //
-// The datasource `provider` below is managed automatically by
-// `scripts/prepare-db.mjs`, which runs before `prisma generate` / build.
-// It is set to "sqlite" for local dev (DATABASE_URL="file:./dev.db") and
-// rewritten to "postgresql" when DATABASE_URL points at a Postgres server
-// (e.g. on Render). You normally never need to edit the provider by hand.
+// The committed `provider` is "postgresql" so PRODUCTION (Render) is correct by
+// default — no build-time file mutation is required for the deploy to work.
+// For LOCAL dev, `scripts/prepare-db.mjs` (run via postinstall / db:push /
+// build) rewrites it to "sqlite" when DATABASE_URL is a file: URL. So:
+//   - Render (DATABASE_URL=postgres://…) → stays "postgresql"
+//   - Local (DATABASE_URL=file:./dev.db) → flipped to "sqlite"
+// You normally never edit the provider by hand.
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 

@@ -20,18 +20,28 @@ export async function GET() {
   let lastFetch: string | null = null;
   let dbError: string | null = null;
 
+  // 1) Lightweight connection check (works on sqlite + postgres).
   try {
-    postCount = await prisma.post.count();
-    analyzedCount = await prisma.analysis.count();
-    const last = await prisma.fetchLog.findFirst({
-      orderBy: { createdAt: 'desc' },
-      select: { createdAt: true },
-    });
-    lastFetch = last?.createdAt.toISOString() ?? null;
+    await prisma.$queryRaw`SELECT 1`;
     dbOk = true;
   } catch (err) {
     dbError = err instanceof Error ? err.message : 'database unavailable';
-    console.error('[health] db check failed:', err);
+    console.error('[health] db connection check failed:', err);
+  }
+
+  // 2) Best-effort stats (won't flip status if a count fails).
+  if (dbOk) {
+    try {
+      postCount = await prisma.post.count();
+      analyzedCount = await prisma.analysis.count();
+      const last = await prisma.fetchLog.findFirst({
+        orderBy: { createdAt: 'desc' },
+        select: { createdAt: true },
+      });
+      lastFetch = last?.createdAt.toISOString() ?? null;
+    } catch (err) {
+      console.error('[health] stats query failed:', err);
+    }
   }
 
   const status = dbOk ? 'ok' : 'degraded';
