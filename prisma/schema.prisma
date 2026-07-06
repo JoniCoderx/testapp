@@ -1,0 +1,93 @@
+// MarketPulse X — Prisma schema
+//
+// The datasource `provider` below is managed automatically by
+// `scripts/prepare-db.mjs`, which runs before `prisma generate` / build.
+// It is set to "sqlite" for local dev (DATABASE_URL="file:./dev.db") and
+// rewritten to "postgresql" when DATABASE_URL points at a Postgres server
+// (e.g. on Render). You normally never need to edit the provider by hand.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+/// A tracked X/Twitter account (one of the configured handles).
+model Account {
+  id          String   @id @default(cuid())
+  handle      String   @unique
+  displayName String?
+  avatarUrl   String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  posts Post[]
+
+  @@index([handle])
+}
+
+/// A single post/tweet captured from a source (Nitter RSS, etc.).
+model Post {
+  id           String   @id @default(cuid())
+  /// Stable identifier from the source (status id / guid). Used for dedupe.
+  sourcePostId String   @unique
+  url          String
+  text         String
+  authorHandle String
+  authorName   String?
+  publishedAt  DateTime
+  fetchedAt    DateTime @default(now())
+  /// Which source produced this post (e.g. "nitter:nitter.net").
+  source       String?
+
+  accountId String
+  account   Account  @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  analysis  Analysis?
+
+  @@index([authorHandle])
+  @@index([publishedAt])
+  @@index([url])
+}
+
+/// AI-generated market-impact analysis for a post (1:1 with Post).
+model Analysis {
+  id                 String   @id @default(cuid())
+  postId             String   @unique
+  post               Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  summary            String
+  globalMarketImpact String
+  cryptoImpact       String
+  /// 0-100 estimated risk/impact score.
+  impactScore        Int
+  /// bullish | bearish | neutral | mixed
+  sentiment          String
+  /// Stored as a JSON string array of tags.
+  tags               String
+  model              String?
+  createdAt          DateTime @default(now())
+
+  @@index([impactScore])
+  @@index([sentiment])
+}
+
+/// Audit log of every fetch attempt against a source, for observability.
+model FetchLog {
+  id           String   @id @default(cuid())
+  handle       String?
+  source       String?
+  instance     String?
+  success      Boolean
+  postsFound   Int      @default(0)
+  postsNew     Int      @default(0)
+  errorMessage String?
+  durationMs   Int?
+  createdAt    DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([success])
+}

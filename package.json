@@ -1,0 +1,44 @@
+{
+  "name": "marketpulse-x",
+  "version": "1.0.0",
+  "private": true,
+  "description": "MarketPulse X — Real-time social signals. Market impact decoded by AI.",
+  "scripts": {
+    "dev": "next dev",
+    "build": "node scripts/prepare-db.mjs && prisma generate && next build",
+    "start": "next start",
+    "lint": "next lint",
+    "postinstall": "node scripts/prepare-db.mjs && prisma generate",
+    "db:push": "node scripts/prepare-db.mjs && prisma db push",
+    "db:deploy": "node scripts/prepare-db.mjs && prisma db push --accept-data-loss",
+    "db:studio": "prisma studio",
+    "db:seed": "tsx scripts/seed.ts",
+    "poll": "tsx scripts/poll.ts"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.22.0",
+    "clsx": "^2.1.1",
+    "framer-motion": "^11.11.17",
+    "next": "14.2.15",
+    "openai": "^4.73.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "tailwind-merge": "^2.5.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.17.6",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^8.57.1",
+    "eslint-config-next": "14.2.15",
+    "postcss": "^8.4.49",
+    "prisma": "^5.22.0",
+    "tailwindcss": "^3.4.14",
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3"
+  },
+  "engines": {
+    "node": ">=18.18.0"
+  }
+}
