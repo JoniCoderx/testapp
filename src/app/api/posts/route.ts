@@ -122,9 +122,42 @@ function buildWhere(p: ParsedParams): Prisma.PostWhereInput {
   return and.length ? { AND: and } : {};
 }
 
-function safeError(message: string, extra: Record<string, unknown> = {}) {
-  // A safe, dashboard-friendly payload. Returns HTTP 200 so the client renders
-  // an empty/degraded state instead of a hard "Server responded 500".
+/** True when the request has no filters/cursor (i.e. the default feed view). */
+function isDefaultView(p: ParsedParams): boolean {
+  return (
+    !p.cursor &&
+    p.activeFilter === 'all' &&
+    !p.search &&
+    !p.tag &&
+    !p.sentiment &&
+    p.minImpact === undefined
+  );
+}
+
+function demoBody(limit: number) {
+  const posts = getSamplePosts().slice(0, limit);
+  return {
+    count: posts.length,
+    filter: 'all',
+    sort: 'newest',
+    hasMore: false,
+    nextCursor: null,
+    demo: true,
+    posts,
+  };
+}
+
+function safeError(message: string, p?: ParsedParams) {
+  // If demo mode is enabled and this is the default view, serve labeled demo
+  // posts even when the DB is unreachable — so the dashboard is never blank.
+  if (env.demoFallback && p && isDefaultView(p)) {
+    return NextResponse.json(demoBody(p.limit), {
+      status: 200,
+      headers: { 'Cache-Control': 'no-store' },
+    });
+  }
+  // Otherwise a safe, dashboard-friendly empty payload (HTTP 200) so the client
+  // renders an empty/degraded state instead of a hard "Server responded 500".
   return NextResponse.json(
     {
       posts: [],
@@ -133,7 +166,6 @@ function safeError(message: string, extra: Record<string, unknown> = {}) {
       nextCursor: null,
       error: message,
       degraded: true,
-      ...extra,
     },
     { status: 200, headers: { 'Cache-Control': 'no-store' } },
   );
@@ -203,10 +235,10 @@ export async function GET(req: NextRequest) {
         rows = await runQuery(false);
       } catch (err2) {
         console.error('[api/posts] retry without cursor failed:', err2);
-        return safeError('The signals database is temporarily unavailable.');
+        return safeError('The signals database is temporarily unavailable.', p);
       }
     } else {
-      return safeError('The signals database is temporarily unavailable.');
+      return safeError('The signals database is temporarily unavailable.', p);
     }
   }
 
@@ -215,21 +247,11 @@ export async function GET(req: NextRequest) {
     const page = hasMore ? rows.slice(0, p.limit) : rows;
     let posts = page.map(serializePost);
 
-    // Emergency demo fallback: empty DB + DEMO_FALLBACK + production + no
-    // filters/cursor → serve clearly-labeled sample posts so the dashboard is
-    // never blank in a fresh deployment.
+    // Emergency demo fallback: empty DB + DEMO_FALLBACK + default view → serve
+    // clearly-labeled sample posts so the dashboard is never blank on a fresh
+    // deployment (the "demo" flag drives a banner in the UI).
     let demo = false;
-    if (
-      posts.length === 0 &&
-      !p.cursor &&
-      p.activeFilter === 'all' &&
-      !p.search &&
-      !p.tag &&
-      !p.sentiment &&
-      p.minImpact === undefined &&
-      env.demoFallback &&
-      env.nodeEnv === 'production'
-    ) {
+    if (posts.length === 0 && env.demoFallback && isDefaultView(p)) {
       try {
         const total = await prisma.post.count();
         if (total === 0) {

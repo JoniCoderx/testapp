@@ -8,7 +8,8 @@
  */
 
 import OpenAI from 'openai';
-import { env, hasOpenAi } from '@/lib/env';
+import Anthropic from '@anthropic-ai/sdk';
+import { env, resolveAiProvider, activeModel } from '@/lib/env';
 
 export const VALID_TAGS = [
   'crypto',
@@ -91,10 +92,53 @@ function normalizeTags(tags: unknown): string[] {
   return Array.from(out);
 }
 
-let client: OpenAI | null = null;
-function getClient(): OpenAI {
-  if (!client) client = new OpenAI({ apiKey: env.openAiKey, maxRetries: 2 });
-  return client;
+let openaiClient: OpenAI | null = null;
+function getOpenAi(): OpenAI {
+  if (!openaiClient) openaiClient = new OpenAI({ apiKey: env.openAiKey, maxRetries: 2 });
+  return openaiClient;
+}
+
+let anthropicClient: Anthropic | null = null;
+function getAnthropic(): Anthropic {
+  if (!anthropicClient) anthropicClient = new Anthropic({ apiKey: env.anthropicKey, maxRetries: 2 });
+  return anthropicClient;
+}
+
+/** Call OpenAI and return the raw JSON string. */
+async function callOpenAi(userPrompt: string): Promise<string> {
+  const completion = await getOpenAi().chat.completions.create({
+    model: env.openAiModel,
+    temperature: 0.2,
+    max_tokens: 500,
+    response_format: { type: 'json_object' },
+    messages: [
+      { role: 'system', content: SYSTEM_PROMPT },
+      { role: 'user', content: userPrompt },
+    ],
+  });
+  return completion.choices[0]?.message?.content || '';
+}
+
+/** Call Anthropic (Claude) and return the raw JSON string. */
+async function callAnthropic(userPrompt: string): Promise<string> {
+  const message = await getAnthropic().messages.create({
+    model: env.anthropicModel,
+    max_tokens: 600,
+    system: SYSTEM_PROMPT,
+    messages: [
+      {
+        role: 'user',
+        content: `${userPrompt}\n\nRespond with ONLY the JSON object, no prose or code fences.`,
+      },
+    ],
+  });
+  // Concatenate any text blocks in the response (discriminated-union narrowing
+  // avoids depending on an exported block type name across SDK versions).
+  const parts: string[] = [];
+  for (const block of message.content) {
+    if (block.type === 'text') parts.push(block.text);
+  }
+  return parts.join('').trim();
 }
 
 /** Raised when an OpenAI-backed analysis cannot be produced. Callers should
@@ -138,7 +182,7 @@ function shapeResult(parsed: Record<string, unknown>): AnalysisResult {
     impactScore: clampScore(parsed.impactScore),
     sentiment: normalizeSentiment(parsed.sentiment),
     tags: normalizeTags(parsed.tags),
-    model: env.openAiModel,
+    model: activeModel(),
   };
 }
 
@@ -148,34 +192,29 @@ export async function analyzePost(input: {
   text: string;
   publishedAt: Date;
 }): Promise<AnalysisResult> {
+  const provider = resolveAiProvider();
+
   // Free / degraded mode: no key configured → deterministic heuristic so the
-  // app remains fully usable without spending any OpenAI credits.
-  if (!hasOpenAi()) {
+  // app remains fully usable without spending any AI credits.
+  if (provider === 'heuristic') {
     return heuristicAnalysis(input.text);
   }
 
   try {
-    const completion = await getClient().chat.completions.create({
-      model: env.openAiModel,
-      temperature: 0.2,
-      max_tokens: 500,
-      response_format: { type: 'json_object' },
-      messages: [
-        { role: 'system', content: SYSTEM_PROMPT },
-        { role: 'user', content: buildUserPrompt(input) },
-      ],
-    });
+    const userPrompt = buildUserPrompt(input);
+    const raw =
+      provider === 'anthropic'
+        ? await callAnthropic(userPrompt)
+        : await callOpenAi(userPrompt);
 
-    const raw = completion.choices[0]?.message?.content || '';
-    if (!raw.trim()) throw new AnalysisError('Empty response from OpenAI');
-
+    if (!raw.trim()) throw new AnalysisError(`Empty response from ${provider}`);
     return shapeResult(parseJsonLoose(raw));
   } catch (err) {
     // A key IS configured but the call/parse failed. Do NOT silently downgrade
     // to a heuristic (that would mask real analysis) and do NOT crash — surface
     // an AnalysisError so the pipeline leaves the post pending for retry.
     const message = err instanceof Error ? err.message : String(err);
-    console.error('[analyze] OpenAI analysis failed (post left pending):', message);
+    console.error(`[analyze] ${provider} analysis failed (post left pending):`, message);
     throw new AnalysisError(message);
   }
 }

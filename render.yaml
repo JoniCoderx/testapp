@@ -29,8 +29,15 @@ services:
         fromDatabase:
           name: marketpulse-db
           property: connectionString
-      - key: OPENAI_API_KEY
+      # --- AI provider (pick one; Anthropic Haiku is cheapest) ---
+      - key: AI_PROVIDER
+        value: auto
+      - key: ANTHROPIC_API_KEY
         sync: false # set in the Render dashboard (secret)
+      - key: ANTHROPIC_MODEL
+        value: claude-haiku-4-5
+      - key: OPENAI_API_KEY
+        sync: false # optional alternative; set in the dashboard
       - key: OPENAI_MODEL
         value: gpt-4o-mini
       - key: ADMIN_SECRET
@@ -66,6 +73,12 @@ services:
         fromDatabase:
           name: marketpulse-db
           property: connectionString
+      - key: AI_PROVIDER
+        value: auto
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: ANTHROPIC_MODEL
+        value: claude-haiku-4-5
       - key: OPENAI_API_KEY
         sync: false
       - key: OPENAI_MODEL

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { env, hasOpenAi, isAdminConfigured } from '@/lib/env';
+import { env, hasAi, activeModel, resolveAiProvider, isAdminConfigured } from '@/lib/env';
+import { APP_VERSION } from '@/lib/version';
 
 export const dynamic = 'force-dynamic';
 
@@ -54,10 +55,13 @@ export async function GET() {
     {
       status,
       timestamp: new Date().toISOString(),
+      version: APP_VERSION,
       checks: {
         database: dbOk,
         tables: tablesExist,
-        openai: hasOpenAi(),
+        ai: hasAi(),
+        aiProvider: resolveAiProvider(),
+        aiModel: activeModel(),
         adminConfigured: isAdminConfigured(),
         nitterInstances: env.nitterInstances.length,
       },

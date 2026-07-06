@@ -23,10 +23,12 @@ interface DebugInfo {
     createdAt: string;
   } | null;
   nitterInstances: string[];
-  openaiConfigured: boolean;
-  openaiModel: string;
+  aiConfigured: boolean;
+  aiProvider: string;
+  aiModel: string;
   demoFallback: boolean;
   nodeEnv: string;
+  version?: string;
   lastError: string | null;
 }
 
@@ -225,7 +227,7 @@ export default function AdminPanel() {
             <div className="space-y-2 text-sm">
               <Row label="DB connected" ok={debug.dbConnected} value={yesNo(debug.dbConnected)} dot={dot} />
               <Row label="Tables exist" ok={debug.tablesExist} value={yesNo(debug.tablesExist)} dot={dot} />
-              <Row label="OpenAI configured" ok={debug.openaiConfigured} value={debug.openaiConfigured ? debug.openaiModel : 'heuristic'} dot={dot} />
+              <Row label="AI configured" ok={debug.aiConfigured} value={debug.aiConfigured ? `${debug.aiProvider}: ${debug.aiModel}` : 'heuristic (free)'} dot={dot} />
               <div className="flex items-center justify-between">
                 <span className="text-white/50">Demo fallback</span>
                 <span className="font-mono text-white/80">{yesNo(debug.demoFallback)}</span>

@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { requireAdmin } from '@/lib/auth';
-import { env, hasOpenAi } from '@/lib/env';
+import { env, hasAi, activeModel, resolveAiProvider } from '@/lib/env';
+import { APP_VERSION } from '@/lib/version';
 
 export const dynamic = 'force-dynamic';
 
@@ -100,10 +101,12 @@ export async function GET(req: NextRequest) {
       },
       lastFetchLog,
       nitterInstances: env.nitterInstances,
-      openaiConfigured: hasOpenAi(),
-      openaiModel: env.openAiModel,
+      aiConfigured: hasAi(),
+      aiProvider: resolveAiProvider(),
+      aiModel: activeModel(),
       demoFallback: env.demoFallback,
       nodeEnv: env.nodeEnv,
+      version: APP_VERSION,
       lastError,
     },
     { status: 200, headers: { 'Cache-Control': 'no-store' } },

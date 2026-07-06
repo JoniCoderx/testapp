@@ -39,8 +39,10 @@ every feed is temporarily down.
   DB caching, per-instance + per-account fetch audit log, and a clear
   “sources temporarily unavailable” state that still serves cached posts.
 - **AI analysis** — strict financial-analyst system prompt returning structured
-  JSON with robust parsing/repair; heuristic fallback when no key is configured;
-  failed posts are left **pending** and retried (never crash the app).
+  JSON with robust parsing/repair. Pluggable provider: **Anthropic Claude**
+  (cheapest — Haiku is fractions of a cent per post), **OpenAI**, or a free
+  heuristic fallback when no key is configured. Failed posts are left **pending**
+  and retried (never crash the app).
 - **Production hardening** — protected mutating endpoints, in-memory read cache,
   basic per-IP rate limiting, input validation, and security headers.
 - **Cron-ready polling** — standalone worker, every 10–15 min.
@@ -98,8 +100,11 @@ curl -X POST http://localhost:3000/api/analyze -H "Authorization: Bearer $ADMIN_
 
 | Variable                | Default                                    | Description                                    |
 | ----------------------- | ------------------------------------------ | ---------------------------------------------- |
-| `OPENAI_API_KEY`        | —                                          | OpenAI key. Without it, a heuristic fallback runs. |
-| `OPENAI_MODEL`          | `gpt-4o-mini`                              | Model used for analysis (cost control).        |
+| `AI_PROVIDER`           | `auto`                                     | `anthropic` \| `openai` \| `auto` (prefers Anthropic, then OpenAI, then heuristic). |
+| `ANTHROPIC_API_KEY`     | —                                          | **Cheapest option** — Claude key. Haiku costs fractions of a cent per post. |
+| `ANTHROPIC_MODEL`       | `claude-haiku-4-5`                         | Claude model (Haiku is the cheapest good one). |
+| `OPENAI_API_KEY`        | —                                          | OpenAI key (alternative to Anthropic).         |
+| `OPENAI_MODEL`          | `gpt-4o-mini`                              | OpenAI model, if using OpenAI.                 |
 | `DATABASE_URL`          | `file:./dev.db`                            | SQLite locally; Postgres URL on Render.        |
 | `ADMIN_SECRET`          | —                                          | Protects `/admin` + `/api/fetch`, `/api/analyze`, `/api/admin/refresh`. |
 | `NITTER_INSTANCES`      | `nitter.net,xcancel.com,nitter.poast.org`  | Comma-separated instances, tried in order.     |
