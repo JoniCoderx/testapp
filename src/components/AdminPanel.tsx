@@ -50,11 +50,20 @@ export default function AdminPanel() {
     async (sec: string) => {
       try {
         const res = await fetch('/api/admin/debug', {
-          headers: { Authorization: `Bearer ${sec}` },
+          // Send both header forms — some proxies strip Authorization.
+          headers: { Authorization: `Bearer ${sec}`, 'x-admin-secret': sec },
           cache: 'no-store',
         });
         if (res.status === 401) {
-          setDebugError('unauthorized');
+          setDebugError('Wrong secret. Use the exact ADMIN_SECRET from Render env vars.');
+          return false;
+        }
+        if (res.status === 503) {
+          setDebugError('ADMIN_SECRET is not configured on the server. Set it in the Render dashboard, then redeploy.');
+          return false;
+        }
+        if (!res.ok) {
+          setDebugError(`Diagnostics unavailable (HTTP ${res.status}).`);
           return false;
         }
         const data = await res.json();
@@ -62,7 +71,7 @@ export default function AdminPanel() {
         setDebugError(null);
         return true;
       } catch {
-        setDebugError('Failed to load diagnostics');
+        setDebugError('Failed to reach the server.');
         return false;
       }
     },
@@ -82,9 +91,8 @@ export default function AdminPanel() {
       setSecret(val);
       setUnlocked(true);
       setInput('');
-    } else {
-      setDebugError('Unauthorized — wrong ADMIN_SECRET.');
     }
+    // On failure, loadDebug already set a specific error message.
   };
 
   const lock = () => {
@@ -102,7 +110,7 @@ export default function AdminPanel() {
       try {
         const res = await fetch(path, {
           method: 'POST',
-          headers: { Authorization: `Bearer ${secret}` },
+          headers: { Authorization: `Bearer ${secret}`, 'x-admin-secret': secret },
         });
         const data = await res.json().catch(() => ({}));
         if (res.status === 401) {
@@ -138,9 +146,22 @@ export default function AdminPanel() {
           </div>
           <h1 className="text-2xl font-bold text-white">Admin console</h1>
           <p className="mt-2 text-sm text-white/50">
-            Enter the <code className="text-white/70">ADMIN_SECRET</code> to view
-            diagnostics and manually trigger fetch/analyze/seed. The secret is
-            held only in this browser tab — never stored server-side or in the repo.
+            This password is the{' '}
+            <code className="text-white/80">ADMIN_SECRET</code> value from your
+            Render environment variables. There is no default password.
+          </p>
+          <div className="mt-3 rounded-xl border border-white/10 bg-white/[0.03] p-3 text-xs text-white/55">
+            <div className="mb-1 font-semibold text-white/70">
+              Where to find it
+            </div>
+            Open <span className="text-white/80">Render → your Web Service →
+            Environment → </span>
+            <code className="text-accent-cyan">ADMIN_SECRET</code>, and copy the
+            exact value.
+          </div>
+          <p className="mt-3 text-xs text-white/40">
+            It&apos;s held only in this browser tab — never stored server-side or
+            in the repo.
           </p>
           <div className="mt-6 space-y-3">
             <input

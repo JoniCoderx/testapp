@@ -11,9 +11,10 @@ export function isAuthorizedAdmin(req: NextRequest): boolean {
   if (!isAdminConfigured()) return false;
 
   const bearer = req.headers.get('authorization') || '';
-  const headerSecret =
+  const headerSecret = (
     req.headers.get('x-admin-secret') ||
-    (bearer.toLowerCase().startsWith('bearer ') ? bearer.slice(7).trim() : '');
+    (bearer.toLowerCase().startsWith('bearer ') ? bearer.slice(7) : '')
+  ).trim();
 
   if (!headerSecret) return false;
   return safeEqual(headerSecret, env.adminSecret);

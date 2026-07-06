@@ -13,7 +13,9 @@ export const env = {
   openAiModel: process.env.OPENAI_MODEL || 'gpt-4o-mini',
 
   databaseUrl: process.env.DATABASE_URL || 'file:./dev.db',
-  adminSecret: process.env.ADMIN_SECRET || '',
+  // Trimmed so trailing spaces/newlines in the Render env var can't cause a
+  // silent mismatch with the value the user types.
+  adminSecret: (process.env.ADMIN_SECRET || '').trim(),
 
   nitterInstances: (
     process.env.NITTER_INSTANCES ||
