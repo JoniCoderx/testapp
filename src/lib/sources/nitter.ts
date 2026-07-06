@@ -9,7 +9,13 @@
  */
 
 import { env } from '@/lib/env';
-import { FetchResult, PostSource, RawPost, SourceError } from './types';
+import {
+  FetchResult,
+  InstanceAttempt,
+  PostSource,
+  RawPost,
+  SourceError,
+} from './types';
 
 const FETCH_TIMEOUT_MS = 12_000;
 const USER_AGENT =
@@ -120,23 +126,41 @@ export class NitterSource implements PostSource {
   async fetchPostsForHandle(handle: string, limit: number): Promise<FetchResult> {
     const cleanHandle = handle.replace(/^@/, '');
     const errors: string[] = [];
+    const attempts: InstanceAttempt[] = [];
 
     if (this.instances.length === 0) {
-      throw new SourceError('No Nitter instances configured', cleanHandle);
+      throw new SourceError('No Nitter instances configured', cleanHandle, []);
     }
 
     for (const instance of this.instances) {
       const host = instance.replace(/^https?:\/\//, '');
       const url = `${instance}/${encodeURIComponent(cleanHandle)}/rss`;
+      const attemptStart = Date.now();
       try {
         const res = await fetchWithTimeout(url);
         if (!res.ok) {
           errors.push(`${host}: HTTP ${res.status}`);
+          attempts.push({
+            instance,
+            host,
+            ok: false,
+            status: res.status,
+            error: `HTTP ${res.status}`,
+            durationMs: Date.now() - attemptStart,
+          });
           continue;
         }
         const xml = await res.text();
         if (!xml.includes('<item') && !xml.includes('<rss')) {
           errors.push(`${host}: not a valid RSS feed`);
+          attempts.push({
+            instance,
+            host,
+            ok: false,
+            status: res.status,
+            error: 'not a valid RSS feed',
+            durationMs: Date.now() - attemptStart,
+          });
           continue;
         }
 
@@ -176,11 +200,20 @@ export class NitterSource implements PostSource {
           })
           .filter((p): p is RawPost => p !== null);
 
+        attempts.push({
+          instance,
+          host,
+          ok: true,
+          status: 200,
+          durationMs: Date.now() - attemptStart,
+        });
+
         return {
           handle: cleanHandle,
           posts,
           source: `nitter:${host}`,
           instance,
+          attempts,
         };
       } catch (err) {
         const reason =
@@ -190,12 +223,20 @@ export class NitterSource implements PostSource {
               : err.message
             : String(err);
         errors.push(`${host}: ${reason}`);
+        attempts.push({
+          instance,
+          host,
+          ok: false,
+          error: reason,
+          durationMs: Date.now() - attemptStart,
+        });
       }
     }
 
     throw new SourceError(
       `All Nitter instances failed for @${cleanHandle} — ${errors.join('; ')}`,
       cleanHandle,
+      attempts,
     );
   }
 }

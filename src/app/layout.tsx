@@ -15,6 +15,7 @@ const mono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://marketpulsex.online'),
   title: 'MarketPulse X — Real-time social signals, market impact decoded by AI',
   description:
     'MarketPulse X tracks posts from the most-followed voices on X and uses AI to estimate their potential impact on global and crypto markets. Not financial advice.',
@@ -27,10 +28,18 @@ export const metadata: Metadata = {
     'market impact',
   ],
   authors: [{ name: 'MarketPulse X' }],
+  alternates: { canonical: '/' },
   openGraph: {
     title: 'MarketPulse X',
     description: 'Real-time social signals. Market impact decoded by AI.',
+    url: 'https://marketpulsex.online',
+    siteName: 'MarketPulse X',
     type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'MarketPulse X',
+    description: 'Real-time social signals. Market impact decoded by AI.',
   },
 };
 

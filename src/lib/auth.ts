@@ -1,4 +1,4 @@
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { env, isAdminConfigured } from '@/lib/env';
 
 /**
@@ -17,6 +17,31 @@ export function isAuthorizedAdmin(req: NextRequest): boolean {
 
   if (!headerSecret) return false;
   return safeEqual(headerSecret, env.adminSecret);
+}
+
+/**
+ * Guard for mutating/admin endpoints. Returns a NextResponse to short-circuit
+ * with (401/503) when the caller is not an authorized admin, or `null` when the
+ * request is authorized and may proceed.
+ */
+export function requireAdmin(req: NextRequest): NextResponse | null {
+  if (!isAdminConfigured()) {
+    return NextResponse.json(
+      {
+        ok: false,
+        error:
+          'This endpoint is disabled because ADMIN_SECRET is not configured on the server.',
+      },
+      { status: 503 },
+    );
+  }
+  if (!isAuthorizedAdmin(req)) {
+    return NextResponse.json(
+      { ok: false, error: 'Unauthorized' },
+      { status: 401, headers: { 'WWW-Authenticate': 'Bearer' } },
+    );
+  }
+  return null;
 }
 
 function safeEqual(a: string, b: string): boolean {

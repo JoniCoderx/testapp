@@ -13,8 +13,29 @@
 import { getTrackedAccounts } from '@config/accounts';
 import { prisma } from '@/lib/prisma';
 import { env } from '@/lib/env';
-import { getPostSource, SourceError } from '@/lib/sources';
+import { getPostSource, SourceError, InstanceAttempt } from '@/lib/sources';
 import { analyzePost } from '@/lib/ai/analyze';
+import { clearPostsCache } from '@/lib/cache';
+
+/** Record a FetchLog row for each failed instance attempt (source health). */
+async function logInstanceFailures(handle: string, attempts: InstanceAttempt[]) {
+  const failed = attempts.filter((a) => !a.ok);
+  if (failed.length === 0) return;
+  try {
+    await prisma.fetchLog.createMany({
+      data: failed.map((a) => ({
+        handle,
+        source: `nitter:${a.host}`,
+        instance: a.instance,
+        success: false,
+        errorMessage: (a.error || `HTTP ${a.status ?? '?'}`).slice(0, 300),
+        durationMs: a.durationMs,
+      })),
+    });
+  } catch (err) {
+    console.error('[fetch] failed to write instance failure logs:', err);
+  }
+}
 
 export interface FetchSummary {
   accountsPolled: number;
@@ -110,6 +131,9 @@ export async function fetchAllAccounts(): Promise<FetchSummary> {
           durationMs: Date.now() - attemptStart,
         },
       });
+      // Also record any instances that failed before one succeeded, so the
+      // source-health view reflects flaky instances even on a good run.
+      await logInstanceFailures(acc.handle, result.attempts);
     } catch (err) {
       const message =
         err instanceof SourceError
@@ -118,6 +142,13 @@ export async function fetchAllAccounts(): Promise<FetchSummary> {
             ? err.message
             : String(err);
       failures.push({ handle: acc.handle, error: message });
+
+      // Per-instance failure records (source health).
+      if (err instanceof SourceError) {
+        await logInstanceFailures(acc.handle, err.attempts);
+      }
+
+      // Per-account failure record.
       await prisma.fetchLog.create({
         data: {
           handle: acc.handle,
@@ -128,6 +159,8 @@ export async function fetchAllAccounts(): Promise<FetchSummary> {
       });
     }
   }
+
+  if (postsNew > 0) clearPostsCache();
 
   return {
     accountsPolled: accounts.length,
@@ -174,10 +207,14 @@ export async function analyzePending(limit = 25): Promise<AnalyzeSummary> {
       });
       analyzed += 1;
     } catch (err) {
-      console.error(`[analyze] failed for post ${post.id}:`, err);
+      // On failure the post keeps analysis=null (pending) and is retried on the
+      // next run — a single AI failure never crashes the pipeline.
+      console.error(`[analyze] failed for post ${post.id} (left pending):`, err);
       failed += 1;
     }
   }
+
+  if (analyzed > 0) clearPostsCache();
 
   const remaining = await prisma.post.count({ where: { analysis: null } });
 

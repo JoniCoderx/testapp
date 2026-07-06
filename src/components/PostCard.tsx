@@ -11,12 +11,13 @@ import {
 } from '@/lib/ui';
 
 function ImpactMeter({ score }: { score: number }) {
-  const { text, bar } = impactColor(score);
+  const { text, bar, label, chip } = impactColor(score);
   return (
     <div className="w-full">
       <div className="mb-1 flex items-center justify-between">
-        <span className="text-[10px] uppercase tracking-wider text-white/40">
+        <span className="flex items-center gap-2 text-[10px] uppercase tracking-wider text-white/40">
           Impact score
+          <span className={cn('chip !py-0 !text-[9px]', chip)}>{label}</span>
         </span>
         <span className={cn('font-mono text-sm font-bold', text)}>
           {score}

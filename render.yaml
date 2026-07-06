@@ -16,12 +16,13 @@ services:
     name: marketpulse-x
     runtime: node
     plan: free
-    branch: claude/marketpulse-x-app-u1va7d
+    branch: main
+    # prisma generate + next build. The schema is synced to the DB at START
+    # (start:prod) rather than at build, so it runs when Postgres is reachable.
     buildCommand: npm install && npm run build
-    # Sync the Prisma schema to the database before each deploy goes live.
-    preDeployCommand: npm run db:deploy
-    startCommand: npm start
+    startCommand: npm run start:prod
     healthCheckPath: /api/health
+    autoDeploy: true
     envVars:
       - key: DATABASE_URL
         fromDatabase:
@@ -44,13 +45,14 @@ services:
 
   # ---------------------------------------------------------------------------
   # Cron job: poll feeds + run AI analysis on the configured interval.
-  # Runs the standalone worker (npm run poll) every 15 minutes.
+  # Runs the standalone worker (npm run poll) every 15 minutes. This is the
+  # ONLY automatic path that spends OpenAI credits; public users cannot.
   # ---------------------------------------------------------------------------
   - type: cron
     name: marketpulse-poller
     runtime: node
     plan: free
-    branch: claude/marketpulse-x-app-u1va7d
+    branch: main
     schedule: "*/15 * * * *"
     buildCommand: npm install && npm run build
     startCommand: npm run poll

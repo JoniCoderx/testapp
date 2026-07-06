@@ -93,8 +93,53 @@ function normalizeTags(tags: unknown): string[] {
 
 let client: OpenAI | null = null;
 function getClient(): OpenAI {
-  if (!client) client = new OpenAI({ apiKey: env.openAiKey });
+  if (!client) client = new OpenAI({ apiKey: env.openAiKey, maxRetries: 2 });
   return client;
+}
+
+/** Raised when an OpenAI-backed analysis cannot be produced. Callers should
+ * leave the post pending (unanalyzed) and retry on the next run. */
+export class AnalysisError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'AnalysisError';
+  }
+}
+
+/**
+ * Robustly extract a JSON object from a model response. Handles code fences and
+ * leading/trailing prose by locating the first balanced `{ … }` block.
+ */
+export function parseJsonLoose(raw: string): Record<string, unknown> {
+  const cleaned = raw.replace(/```(?:json)?/gi, '').trim();
+  try {
+    return JSON.parse(cleaned) as Record<string, unknown>;
+  } catch {
+    // Fallback: grab the outermost brace-delimited region and retry.
+    const start = cleaned.indexOf('{');
+    const end = cleaned.lastIndexOf('}');
+    if (start !== -1 && end > start) {
+      const slice = cleaned.slice(start, end + 1);
+      return JSON.parse(slice) as Record<string, unknown>;
+    }
+    throw new SyntaxError('No JSON object found in model response');
+  }
+}
+
+function shapeResult(parsed: Record<string, unknown>): AnalysisResult {
+  return {
+    summary: String(parsed.summary || '').slice(0, 400) || 'No summary available.',
+    globalMarketImpact:
+      String(parsed.globalMarketImpact || '').slice(0, 600) ||
+      'No clear global market impact identified.',
+    cryptoImpact:
+      String(parsed.cryptoImpact || '').slice(0, 600) ||
+      'No clear crypto market impact identified.',
+    impactScore: clampScore(parsed.impactScore),
+    sentiment: normalizeSentiment(parsed.sentiment),
+    tags: normalizeTags(parsed.tags),
+    model: env.openAiModel,
+  };
 }
 
 export async function analyzePost(input: {
@@ -103,6 +148,8 @@ export async function analyzePost(input: {
   text: string;
   publishedAt: Date;
 }): Promise<AnalysisResult> {
+  // Free / degraded mode: no key configured → deterministic heuristic so the
+  // app remains fully usable without spending any OpenAI credits.
   if (!hasOpenAi()) {
     return heuristicAnalysis(input.text);
   }
@@ -119,26 +166,17 @@ export async function analyzePost(input: {
       ],
     });
 
-    const raw = completion.choices[0]?.message?.content || '{}';
-    const parsed = JSON.parse(raw) as Record<string, unknown>;
+    const raw = completion.choices[0]?.message?.content || '';
+    if (!raw.trim()) throw new AnalysisError('Empty response from OpenAI');
 
-    return {
-      summary: String(parsed.summary || '').slice(0, 400) || 'No summary available.',
-      globalMarketImpact:
-        String(parsed.globalMarketImpact || '').slice(0, 600) ||
-        'No clear global market impact identified.',
-      cryptoImpact:
-        String(parsed.cryptoImpact || '').slice(0, 600) ||
-        'No clear crypto market impact identified.',
-      impactScore: clampScore(parsed.impactScore),
-      sentiment: normalizeSentiment(parsed.sentiment),
-      tags: normalizeTags(parsed.tags),
-      model: env.openAiModel,
-    };
+    return shapeResult(parseJsonLoose(raw));
   } catch (err) {
-    // Never let a single AI failure break the pipeline.
-    console.error('[analyze] OpenAI call failed, using heuristic:', err);
-    return heuristicAnalysis(input.text);
+    // A key IS configured but the call/parse failed. Do NOT silently downgrade
+    // to a heuristic (that would mask real analysis) and do NOT crash — surface
+    // an AnalysisError so the pipeline leaves the post pending for retry.
+    const message = err instanceof Error ? err.message : String(err);
+    console.error('[analyze] OpenAI analysis failed (post left pending):', message);
+    throw new AnalysisError(message);
   }
 }
 

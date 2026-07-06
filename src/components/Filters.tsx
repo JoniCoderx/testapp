@@ -5,11 +5,12 @@ import { cn } from '@/lib/ui';
 export const FILTERS = [
   { id: 'all', label: 'All' },
   { id: 'crypto', label: 'Crypto' },
+  { id: 'global', label: 'Global Markets' },
   { id: 'stocks', label: 'Stocks' },
   { id: 'geopolitics', label: 'Geopolitics' },
   { id: 'high-impact', label: 'High Impact' },
-  { id: 'bearish', label: 'Bearish' },
   { id: 'bullish', label: 'Bullish' },
+  { id: 'bearish', label: 'Bearish' },
 ] as const;
 
 export type FilterId = (typeof FILTERS)[number]['id'];

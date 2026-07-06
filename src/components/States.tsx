@@ -36,12 +36,16 @@ export function SkeletonGrid({ count = 6 }: { count?: number }) {
   );
 }
 
+/**
+ * Empty state. `filtered` distinguishes "no data has been ingested yet" from
+ * "your current filters/search matched nothing".
+ */
 export function EmptyState({
-  onRefresh,
-  refreshing,
+  filtered,
+  onClear,
 }: {
-  onRefresh?: () => void;
-  refreshing?: boolean;
+  filtered?: boolean;
+  onClear?: () => void;
 }) {
   return (
     <div className="glass flex flex-col items-center justify-center rounded-3xl px-6 py-20 text-center">
@@ -51,19 +55,16 @@ export function EmptyState({
         </svg>
       </div>
       <h3 className="mt-5 text-lg font-semibold text-white">
-        No signals yet
+        {filtered ? 'No matching signals' : 'No signals yet'}
       </h3>
       <p className="mt-2 max-w-md text-sm text-white/50">
-        Nothing matches your current view. Trigger a fetch to pull the latest
-        posts from tracked accounts, or adjust your filters and search.
+        {filtered
+          ? 'Nothing matches your current filters or search. Try clearing them to see the full feed.'
+          : 'The feed is being populated. New posts are pulled automatically every few minutes — check back shortly.'}
       </p>
-      {onRefresh && (
-        <button
-          onClick={onRefresh}
-          disabled={refreshing}
-          className="btn-primary mt-6 disabled:opacity-60"
-        >
-          {refreshing ? 'Fetching…' : 'Fetch latest posts'}
+      {filtered && onClear && (
+        <button onClick={onClear} className="btn-ghost mt-6">
+          Clear filters
         </button>
       )}
     </div>
@@ -95,6 +96,30 @@ export function ErrorState({
           Try again
         </button>
       )}
+    </div>
+  );
+}
+
+/**
+ * Non-blocking banner shown when every feed source is currently failing but
+ * cached posts are still being served (item 6).
+ */
+export function SourcesDownBanner() {
+  return (
+    <div className="flex items-start gap-3 rounded-2xl border border-amber-400/25 bg-amber-500/[0.06] px-4 py-3">
+      <svg viewBox="0 0 24 24" className="mt-0.5 h-5 w-5 shrink-0 text-amber-300" fill="none">
+        <path d="M12 9v4m0 4h.01M10.29 3.86l-8.18 14.2A2 2 0 0 0 3.83 21h16.34a2 2 0 0 0 1.72-2.94l-8.18-14.2a2 2 0 0 0-3.42 0z" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+      <div>
+        <div className="text-sm font-semibold text-amber-200">
+          Sources temporarily unavailable
+        </div>
+        <p className="mt-0.5 text-xs text-amber-100/60">
+          Public feed sources are not responding right now. You&apos;re viewing
+          the most recent cached signals — new posts will resume automatically
+          once a source recovers.
+        </p>
+      </div>
     </div>
   );
 }

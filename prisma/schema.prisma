@@ -90,4 +90,6 @@ model FetchLog {
 
   @@index([createdAt])
   @@index([success])
+  @@index([success, createdAt])
+  @@index([source, success, createdAt])
 }

@@ -75,17 +75,40 @@ export function tagMeta(tag: string) {
   );
 }
 
-/** Color for the impact score meter/label based on severity. */
+/**
+ * Impact score styling by band (item 8):
+ *   0–30   Low
+ *   31–60  Medium
+ *   61–100 High
+ */
 export function impactColor(score: number): {
+  label: 'Low' | 'Medium' | 'High';
   text: string;
   bar: string;
   ring: string;
+  chip: string;
 } {
-  if (score >= 75)
-    return { text: 'text-rose-300', bar: 'from-rose-500 to-red-400', ring: 'text-rose-400' };
-  if (score >= 50)
-    return { text: 'text-amber-300', bar: 'from-amber-500 to-orange-400', ring: 'text-amber-400' };
-  if (score >= 25)
-    return { text: 'text-cyan-300', bar: 'from-cyan-500 to-teal-400', ring: 'text-cyan-400' };
-  return { text: 'text-slate-300', bar: 'from-slate-500 to-slate-400', ring: 'text-slate-400' };
+  if (score >= 61)
+    return {
+      label: 'High',
+      text: 'text-rose-300',
+      bar: 'from-rose-500 to-red-400',
+      ring: 'text-rose-400',
+      chip: 'border-rose-400/30 bg-rose-400/10 text-rose-300',
+    };
+  if (score >= 31)
+    return {
+      label: 'Medium',
+      text: 'text-amber-300',
+      bar: 'from-amber-500 to-orange-400',
+      ring: 'text-amber-400',
+      chip: 'border-amber-400/30 bg-amber-400/10 text-amber-300',
+    };
+  return {
+    label: 'Low',
+    text: 'text-cyan-300',
+    bar: 'from-cyan-500 to-teal-400',
+    ring: 'text-cyan-400',
+    chip: 'border-cyan-400/30 bg-cyan-400/10 text-cyan-300',
+  };
 }

@@ -19,12 +19,24 @@ export interface RawPost {
   source: string;
 }
 
+/** Outcome of a single instance attempt, for source-health logging. */
+export interface InstanceAttempt {
+  instance: string;
+  host: string;
+  ok: boolean;
+  status?: number;
+  error?: string;
+  durationMs: number;
+}
+
 export interface FetchResult {
   handle: string;
   posts: RawPost[];
   /** The concrete source/instance that succeeded, for logging. */
   source: string;
   instance?: string;
+  /** Per-instance attempt outcomes (includes any failures before success). */
+  attempts: InstanceAttempt[];
 }
 
 export interface PostSource {
@@ -43,7 +55,7 @@ export class SourceError extends Error {
   constructor(
     message: string,
     public readonly handle: string,
-    public readonly instance?: string,
+    public readonly attempts: InstanceAttempt[] = [],
   ) {
     super(message);
     this.name = 'SourceError';
