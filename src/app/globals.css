@@ -12,14 +12,20 @@ body {
   margin: 0;
   background-color: #05070d;
   color: #e6edf6;
-  overflow-x: hidden;
   max-width: 100%;
+  /* `clip` prevents horizontal overflow WITHOUT turning the root into a scroll
+   * container. `overflow-x: hidden` on <html> is a known cause of frozen
+   * VERTICAL scrolling on iOS Safari; `clip` sidesteps that entirely. */
+  overflow-x: clip;
 }
 
 body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  overscroll-behavior-y: none;
+  /* Only contain overscroll on the X axis (stops horizontal rubber-banding).
+   * Do NOT constrain the Y axis — `overscroll-behavior-y: none` can make the
+   * page feel "stuck" and is unnecessary for a normal document scroll. */
+  overscroll-behavior-x: contain;
   -webkit-tap-highlight-color: transparent;
 }
 

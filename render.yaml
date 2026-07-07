@@ -17,6 +17,11 @@ services:
     runtime: node
     plan: free
     branch: main
+    # Custom domains. Render provisions a managed TLS cert for each once the
+    # domain's DNS points at Render (see README → "Custom domain & DNS").
+    domains:
+      - marketpulsex.online
+      - www.marketpulsex.online
     # Generate the Prisma client, create/sync the Postgres schema, then build.
     # The committed schema uses provider "postgresql" so this is correct on
     # Render even before prepare-db.mjs runs (it only flips to sqlite locally).

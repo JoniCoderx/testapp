@@ -333,11 +333,52 @@ curl -X POST "$APP_URL/api/admin/refresh" -H "Authorization: Bearer $ADMIN_SECRE
 
 Keep the cadence at **10–15 minutes** to respect public-instance rate limits.
 
-### Custom domain
+### Custom domain & DNS
 
-Point **marketpulsex.online** at the web service in Render → **Settings →
-Custom Domains**, and add the DNS records Render shows. `metadataBase` is already
-set to the domain.
+The blueprint declares both `marketpulsex.online` and `www.marketpulsex.online`
+on the web service, so Render registers them automatically on deploy. You still
+have to point DNS at Render and let it issue the TLS certificate:
+
+**1. Add/confirm the domains in Render**
+Render dashboard → **marketpulse-x** service → **Settings → Custom Domains**.
+Each domain shows a **verification status** and the **exact target** to use
+(the `…onrender.com` hostname is unique to your service — copy it from here).
+
+**2. Set these DNS records at your domain registrar / DNS provider**
+
+| Type  | Host / Name | Value                                   | Notes |
+| ----- | ----------- | --------------------------------------- | ----- |
+| `A`     | `@` (apex `marketpulsex.online`) | `216.24.57.1`             | Render's load-balancer IP for apex domains. |
+| `CNAME` | `www`       | `‹your-service›.onrender.com`           | Use the exact hostname Render shows in Custom Domains. |
+
+- If your DNS provider supports **ALIAS/ANAME** at the apex (Cloudflare,
+  Namecheap, DNSimple, etc.), you may instead point the apex with an
+  `ALIAS`/`ANAME` → `‹your-service›.onrender.com` rather than the `A` record.
+- **Cloudflare:** set both records to **DNS only (grey cloud)** until Render
+  finishes verification and issues the certificate. You can re-enable the proxy
+  (orange cloud) afterwards with SSL mode **Full (strict)**.
+- Remove any old/parked `A`/`CNAME`/`ALIAS` records for `@` and `www` that point
+  elsewhere — stale records are the usual reason a domain "doesn't resolve".
+
+**3. Wait for propagation + certificate**
+DNS can take from a few minutes up to ~24–48h (usually fast). Once Render's
+Custom Domains page shows the domain **Verified**, it auto-provisions a free
+Let's Encrypt certificate — **HTTPS then works with no further action**.
+
+**4. Verify**
+
+```bash
+dig +short marketpulsex.online            # → 216.24.57.1
+dig +short www.marketpulsex.online         # → ‹your-service›.onrender.com
+curl -I https://marketpulsex.online/api/health   # → HTTP/2 200
+```
+
+> **Installed-PWA note:** if you added the app to your home screen while the
+> domain was down, the PWA may show a stale cached shell (which can look like
+> "scrolling is frozen"). Once the domain resolves again, the service worker
+> (`mpx-v2`, network-first navigations) fetches fresh HTML, purges old caches,
+> and normal scrolling returns. To force it immediately: reopen in the browser,
+> hard-refresh, or reinstall the PWA.
 
 ---
 
