@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { env, hasAi, activeModel, resolveAiProvider, isAdminConfigured } from '@/lib/env';
+import { hasFinnhub } from '@/lib/finnhub';
 import { APP_VERSION } from '@/lib/version';
 
 export const dynamic = 'force-dynamic';
@@ -64,6 +65,11 @@ export async function GET() {
         aiModel: activeModel(),
         adminConfigured: isAdminConfigured(),
         nitterInstances: env.nitterInstances.length,
+        // Live-market provider. `finnhub: true` confirms FINNHUB_API_KEY is set
+        // on THIS server — the fastest way to verify the Render env var without
+        // exposing the key itself.
+        finnhub: hasFinnhub(),
+        demoFallback: env.demoFallback,
       },
       stats: {
         posts: postCount,

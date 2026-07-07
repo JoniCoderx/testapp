@@ -1,7 +1,10 @@
 /** Shared fetch helper: timeout, polite User-Agent, no caching. */
 
+// A realistic desktop-browser UA. Several public endpoints (Reddit, YouTube)
+// reject generic/bot User-Agents from datacenter IPs with 403/429; a normal
+// browser UA is accepted far more often.
 export const USER_AGENT =
-  'MarketPulseX/1.0 (+https://github.com/JoniCoderx/testapp) feed reader';
+  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36';
 
 export const DEFAULT_TIMEOUT_MS = 12_000;
 

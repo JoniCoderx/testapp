@@ -2,11 +2,23 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { rateLimit, tooManyRequests } from '@/lib/rate-limit';
 import { cacheGet, cacheSet } from '@/lib/cache';
-import { getEnabledTypes } from '@/lib/sources';
+import { isEnabled } from '@/lib/sources';
+import { usedSourceTypes } from '@config/accounts';
+import { env } from '@/lib/env';
 
 export const dynamic = 'force-dynamic';
 
 const RECENT_WINDOW_MINUTES = 90;
+
+/**
+ * Source types that are BOTH referenced by a tracked account AND enabled.
+ * Using this (instead of every possible type) is important: a type that no
+ * account uses can never log a success, so including it would keep the health
+ * rollup permanently below 100% — the dashboard could never read "Operational".
+ */
+function activeSourceTypes() {
+  return usedSourceTypes().filter(isEnabled);
+}
 // Cached via the shared read cache so the pipeline (fetch/analyze/seed) can
 // invalidate it immediately after mutating data.
 const STATUS_CACHE_KEY = 'status:v1';
@@ -17,9 +29,9 @@ function startOfUtcDay(): Date {
   return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
 }
 
-/** Build the always-present source list from the enabled source types. */
+/** Build the always-present source list from the active source types. */
 function baseInstances() {
-  return getEnabledTypes().map((type) => ({
+  return activeSourceTypes().map((type) => ({
     url: type,
     host: type,
     lastSuccessAt: null as string | null,
@@ -46,10 +58,11 @@ function safePayload(dbConnected: boolean) {
       lastFetchAt: null as string | null,
     },
     sources: {
-      configured: getEnabledTypes().length,
+      configured: activeSourceTypes().length,
       instances: baseInstances(),
       recent: { windowMinutes: RECENT_WINDOW_MINUTES, successes: 0, failures: 0 },
       allSourcesDown: false,
+      demo: false,
     },
   };
 }
@@ -120,9 +133,9 @@ export async function GET(req: NextRequest) {
       }),
     ]);
 
-    // Health per enabled source TYPE (nitter, rsshub, bluesky, reddit, …).
+    // Health per ACTIVE source TYPE (nitter, rsshub, bluesky, reddit, …).
     const instances = await Promise.all(
-      getEnabledTypes().map(async (type) => {
+      activeSourceTypes().map(async (type) => {
         const last = await prisma.fetchLog.findFirst({
           where: { success: true, source: { startsWith: `${type}:` } },
           orderBy: { createdAt: 'desc' },
@@ -138,6 +151,10 @@ export async function GET(req: NextRequest) {
 
     const recentAttempts = recentSuccesses + recentFailures;
     const allSourcesDown = recentAttempts > 0 && recentSuccesses === 0;
+    // When the DB is empty and demo fallback is on, the feed is showing sample
+    // signals. Surface that here too so the Source-status widget agrees with the
+    // feed ("Demo data") instead of contradicting it with "Awaiting first fetch".
+    const demo = totalPosts === 0 && env.demoFallback;
 
     const body = {
       ok: true,
@@ -152,7 +169,7 @@ export async function GET(req: NextRequest) {
         lastFetchAt: lastAny?.createdAt.toISOString() ?? null,
       },
       sources: {
-        configured: getEnabledTypes().length,
+        configured: activeSourceTypes().length,
         instances,
         recent: {
           windowMinutes: RECENT_WINDOW_MINUTES,
@@ -160,6 +177,7 @@ export async function GET(req: NextRequest) {
           failures: recentFailures,
         },
         allSourcesDown,
+        demo,
       },
     };
 

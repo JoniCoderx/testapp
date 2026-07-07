@@ -20,6 +20,7 @@ export interface StatusPayload {
     instances: { url: string; host: string; lastSuccessAt: string | null; healthy: boolean }[];
     recent: { windowMinutes: number; successes: number; failures: number };
     allSourcesDown: boolean;
+    demo?: boolean;
   } | null;
 }
 
@@ -33,13 +34,15 @@ export function SourceStatus({ status }: { status: StatusPayload | null }) {
     ? { label: 'Connecting…', dot: 'bg-amber-400', text: 'text-amber-300' }
     : !sources
       ? { label: 'Loading…', dot: 'bg-slate-400', text: 'text-slate-300' }
-      : sources.allSourcesDown
-        ? { label: 'Sources down', dot: 'bg-rose-400', text: 'text-rose-300' }
-        : healthyCount === 0
-          ? { label: 'Awaiting first fetch', dot: 'bg-amber-400', text: 'text-amber-300' }
-          : healthyCount < total
-            ? { label: 'Partial', dot: 'bg-amber-400', text: 'text-amber-300' }
-            : { label: 'Operational', dot: 'bg-emerald-400', text: 'text-emerald-300' };
+      : sources.demo
+        ? { label: 'Demo data', dot: 'bg-violet-400', text: 'text-violet-300' }
+        : sources.allSourcesDown
+          ? { label: 'Sources down', dot: 'bg-rose-400', text: 'text-rose-300' }
+          : healthyCount === 0
+            ? { label: 'Awaiting first fetch', dot: 'bg-amber-400', text: 'text-amber-300' }
+            : healthyCount < total
+              ? { label: 'Partial', dot: 'bg-amber-400', text: 'text-amber-300' }
+              : { label: 'Operational', dot: 'bg-emerald-400', text: 'text-emerald-300' };
 
   return (
     <div className="glass rounded-2xl p-4">

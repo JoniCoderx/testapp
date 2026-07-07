@@ -125,6 +125,7 @@ export async function getMarketNews(
   if (cached) return cached;
 
   if (!hasFinnhub()) {
+    console.warn('[finnhub] FINNHUB_API_KEY not set — serving demo market news.');
     const res = ok(demoNews(cat).slice(0, limit), true);
     cacheSet(key, res, 60_000);
     return res;
@@ -136,6 +137,7 @@ export async function getMarketNews(
     cacheSet(key, res, 5 * 60_000);
     return res;
   } catch (err) {
+    console.error(`[finnhub] market-news(${cat}) failed → demo fallback:`, msg(err));
     const res = ok(demoNews(cat).slice(0, limit), true, msg(err));
     cacheSet(key, res, 60_000);
     return res;
@@ -157,6 +159,7 @@ export async function getQuotes(symbols: string[]): Promise<Result<Quote[]>> {
   if (cached) return cached;
 
   if (!hasFinnhub()) {
+    console.warn('[finnhub] FINNHUB_API_KEY not set — serving demo quotes.');
     const res = ok(clean.map(demoQuote), true);
     cacheSet(key, res, 20_000);
     return res;
@@ -183,10 +186,14 @@ export async function getQuotes(symbols: string[]): Promise<Result<Quote[]>> {
       }),
     );
     const anyReal = quotes.some((q, i) => q.current !== demoQuote(clean[i]).current);
+    if (!anyReal) {
+      console.warn('[finnhub] quotes returned no live data — serving demo quotes.');
+    }
     const res = ok(quotes, !anyReal);
     cacheSet(key, res, 30_000);
     return res;
   } catch (err) {
+    console.error('[finnhub] quotes failed → demo fallback:', msg(err));
     const res = ok(clean.map(demoQuote), true, msg(err));
     cacheSet(key, res, 20_000);
     return res;
@@ -224,6 +231,7 @@ export async function getCompanyNews(
     cacheSet(key, res, 10 * 60_000);
     return res;
   } catch (err) {
+    console.error(`[finnhub] company-news(${sym}) failed → demo fallback:`, msg(err));
     const res = ok(demoCompanyNews(sym).slice(0, limit), true, msg(err));
     cacheSet(key, res, 60_000);
     return res;
@@ -260,6 +268,7 @@ export async function getSentiment(symbol: string): Promise<Result<Sentiment>> {
     return res;
   } catch (err) {
     // 401/403 → endpoint not available on this plan. Return demo, supported=false.
+    console.warn(`[finnhub] sentiment(${sym}) unavailable (premium endpoint?) → demo:`, msg(err));
     const res = ok({ ...demoSentiment(sym), supported: false }, true, msg(err));
     cacheSet(key, res, 5 * 60_000);
     return res;
