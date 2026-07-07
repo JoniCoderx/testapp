@@ -5,7 +5,7 @@
  *   - GET API (posts/status/health): network-first → cached response
  *   - everything non-GET (POST /api/fetch, /api/admin/*, …): never touched
  */
-const VERSION = 'mpx-v1';
+const VERSION = 'mpx-v2';
 const APP_CACHE = `mpx-app-${VERSION}`;
 const RUNTIME_CACHE = `mpx-runtime-${VERSION}`;
 const API_CACHE = `mpx-api-${VERSION}`;
@@ -57,12 +57,17 @@ function isStaticAsset(url) {
   );
 }
 
-// Only these GET API routes are safe to cache (read-only, public).
+// Only these GET API routes are safe to cache (read-only, public). Includes the
+// Finnhub-backed market routes so the Markets page shows last-known data offline.
 function isCacheableApi(url) {
   return (
     url.pathname === '/api/posts' ||
     url.pathname === '/api/status' ||
-    url.pathname === '/api/health'
+    url.pathname === '/api/health' ||
+    url.pathname === '/api/market-news' ||
+    url.pathname === '/api/quote' ||
+    url.pathname === '/api/company-news' ||
+    url.pathname === '/api/sentiment'
   );
 }
 
