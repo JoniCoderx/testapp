@@ -22,11 +22,11 @@ services:
     # domain already attached to the service and fail the deploy. See
     # README → "Custom domain & DNS" for the exact records.
     #
-    # `prisma db push` is best-effort here (`|| true`): it syncs the schema early
-    # when the DB is reachable, but a transient DB blip can NEVER fail the build.
-    # The schema is also created/synced at server boot by src/lib/ensure-schema.ts
-    # (non-fatal, self-healing), so tables always exist before traffic arrives.
-    buildCommand: npm install && npx prisma generate && (npx prisma db push --skip-generate || true) && npm run build
+    # Build toolchain (tailwindcss/postcss/typescript/tsx) lives in
+    # `dependencies`, not devDependencies, so Render's production install keeps
+    # it and `next build` can find every module. The schema is created/synced at
+    # server boot by src/lib/ensure-schema.ts (non-fatal, self-healing).
+    buildCommand: npm install && npx prisma generate && npm run build
     startCommand: npm start
     healthCheckPath: /api/health
     autoDeploy: true
