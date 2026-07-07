@@ -3,4 +3,4 @@
  * the deployed build can be identified from /api/health without guessing
  * whether Render picked up the latest commit.
  */
-export const APP_VERSION = 'mpx-10-debug';
+export const APP_VERSION = 'mpx-11-render-fix';

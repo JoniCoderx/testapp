@@ -17,15 +17,16 @@ services:
     runtime: node
     plan: free
     branch: main
-    # Custom domains. Render provisions a managed TLS cert for each once the
-    # domain's DNS points at Render (see README → "Custom domain & DNS").
-    domains:
-      - marketpulsex.online
-      - www.marketpulsex.online
-    # Generate the Prisma client, create/sync the Postgres schema, then build.
-    # The committed schema uses provider "postgresql" so this is correct on
-    # Render even before prepare-db.mjs runs (it only flips to sqlite locally).
-    buildCommand: npm install && npx prisma generate && npx prisma db push && npm run build
+    # Custom domains are managed in the Render dashboard (Settings → Custom
+    # Domains), NOT here — declaring them in the blueprint can conflict with a
+    # domain already attached to the service and fail the deploy. See
+    # README → "Custom domain & DNS" for the exact records.
+    #
+    # `prisma db push` is best-effort here (`|| true`): it syncs the schema early
+    # when the DB is reachable, but a transient DB blip can NEVER fail the build.
+    # The schema is also created/synced at server boot by src/lib/ensure-schema.ts
+    # (non-fatal, self-healing), so tables always exist before traffic arrives.
+    buildCommand: npm install && npx prisma generate && (npx prisma db push --skip-generate || true) && npm run build
     startCommand: npm start
     healthCheckPath: /api/health
     autoDeploy: true
