@@ -34,6 +34,14 @@ const nextConfig = {
         headers: securityHeaders,
       },
       {
+        // The service worker must not be HTTP-cached so updates roll out.
+        source: '/sw.js',
+        headers: [
+          { key: 'Cache-Control', value: 'no-cache, no-store, must-revalidate' },
+          { key: 'Service-Worker-Allowed', value: '/' },
+        ],
+      },
+      {
         // Public JSON API: allow cross-origin reads (safe, read-only data).
         source: '/api/:path*',
         headers: [

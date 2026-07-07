@@ -32,7 +32,7 @@ export default function Hero() {
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent-cyan opacity-75" />
               <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-accent-cyan" />
             </span>
-            LIVE · Tracking {DEFAULT_ACCOUNTS.length} of the most-followed voices on X
+            LIVE · Tracking {DEFAULT_ACCOUNTS.length} top voices across X, Reddit, YouTube &amp; more
           </span>
         </motion.div>
 
@@ -50,9 +50,10 @@ export default function Hero() {
           variants={item}
           className="mt-6 max-w-2xl text-base text-white/55 sm:text-lg"
         >
-          MarketPulse X monitors every new post from the world&apos;s most
-          influential accounts, then uses AI to estimate whether each one could
-          move <span className="text-white/80">global markets</span> or{' '}
+          MarketPulse X monitors new posts from the world&apos;s most influential
+          accounts across X, Reddit, YouTube, Bluesky &amp; more, then uses AI to
+          estimate whether each one could move{' '}
+          <span className="text-white/80">global markets</span> or{' '}
           <span className="text-white/80">crypto</span> — with an impact score,
           sentiment read, and instant summary.
         </motion.p>
@@ -83,9 +84,9 @@ export default function Hero() {
           className="mt-14 grid w-full max-w-3xl grid-cols-2 gap-3 sm:grid-cols-4"
         >
           {[
-            { k: '10', v: 'Tracked accounts' },
+            { k: String(DEFAULT_ACCOUNTS.length), v: 'Tracked accounts' },
+            { k: '7', v: 'Free sources' },
             { k: '0–100', v: 'Impact score' },
-            { k: '10+', v: 'Signal tags' },
             { k: '24/7', v: 'Auto-polling' },
           ].map((s) => (
             <div key={s.v} className="glass glow-card rounded-2xl p-4 text-center">

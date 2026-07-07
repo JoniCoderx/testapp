@@ -166,7 +166,7 @@ export default function Dashboard() {
             Signal <span className="text-gradient">Feed</span>
           </h1>
           <p className="mt-1 text-sm text-white/50">
-            AI-decoded market impact from the most-followed voices on X.
+            AI-decoded market impact from top voices across X, Reddit, YouTube &amp; more.
           </p>
         </div>
         {updatedAt && (

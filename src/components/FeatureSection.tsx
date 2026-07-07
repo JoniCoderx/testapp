@@ -135,8 +135,12 @@ export default function FeatureSection() {
               <span
                 key={a.handle}
                 className="chip border-white/10 bg-white/[0.03] text-white/70"
+                title={a.category}
               >
-                @{a.handle}
+                {a.displayName}
+                <span className="ml-1 text-[9px] uppercase tracking-wider text-white/30">
+                  {a.category}
+                </span>
               </span>
             ))}
           </div>
