@@ -109,6 +109,7 @@ curl -X POST http://localhost:3000/api/analyze -H "Authorization: Bearer $ADMIN_
 | `ANTHROPIC_MODEL`       | `claude-haiku-4-5`                         | Claude model (Haiku is the cheapest good one). |
 | `OPENAI_API_KEY`        | —                                          | OpenAI key (alternative to Anthropic).         |
 | `OPENAI_MODEL`          | `gpt-4o-mini`                              | OpenAI model, if using OpenAI.                 |
+| `FINNHUB_API_KEY`       | —                                          | Live market/news data (quotes, market news). Server-side only — never exposed. Missing → demo fallback. |
 | `DATABASE_URL`          | `file:./dev.db`                            | SQLite locally; Postgres URL on Render.        |
 | `ADMIN_SECRET`          | —                                          | Protects `/admin` + `/api/fetch`, `/api/analyze`, `/api/admin/refresh`. |
 | `NITTER_INSTANCES`      | `nitter.net,xcancel.com,nitter.poast.org`  | Comma-separated instances, tried in order.     |
@@ -151,6 +152,29 @@ The app depends only on the `PostSource` interface
 **No paid X API required.** (If you ever want a paid upgrade, a scraping
 provider like ScraperAPI or Apify slots in as just another `PostSource`.)
 
+### Live market data (Finnhub)
+
+The **Markets** page (`/markets`) shows real-time quotes and market-moving
+headlines from [Finnhub](https://finnhub.io). The integration is **server-side
+only** — the key is read via `process.env.FINNHUB_API_KEY` inside the `/api`
+routes (`src/lib/finnhub.ts`) and is **never** shipped to the browser or
+inlined into client code.
+
+- **Get a free key:** register at <https://finnhub.io/register> and copy the
+  API key. The free tier covers quotes, market news, and company news. The
+  `news-sentiment` endpoint is premium — the app handles that gracefully and
+  returns `supported: false` rather than erroring.
+- **Set it on Render:** open **Render → your Web Service → Environment → Add
+  Environment Variable**, key `FINNHUB_API_KEY`, value = your key, then **Save
+  Changes** (this triggers a redeploy). The blueprint already declares
+  `FINNHUB_API_KEY` with `sync: false`, so you only supply the value.
+- **No key? No problem.** If `FINNHUB_API_KEY` is unset (or the provider is
+  rate-limited), every route returns clean, clearly-labeled **demo** data and
+  the UI shows a "sample market data" banner — the app never crashes.
+- **Rate limits:** responses are cached in-memory server-side (quotes 30s,
+  market news 5min, company news 10min, sentiment 15min) to stay within
+  Finnhub's free-tier limits.
+
 ---
 
 ## 🌐 API reference
@@ -160,6 +184,10 @@ provider like ScraperAPI or Apify slots in as just another `PostSource`.)
 | `GET  /api/posts`            | public (RL)   | List posts. Paginated, cached, filterable.     |
 | `GET  /api/status`           | public (RL)   | Stats + source health for the dashboard.       |
 | `GET  /api/health`           | public        | Liveness probe (always 200 while up).          |
+| `GET  /api/market-news`      | public (RL)   | Live market headlines from Finnhub (`?category=general\|forex\|crypto\|merger`). |
+| `GET  /api/quote`            | public (RL)   | Real-time quotes (`?symbols=AAPL,MSFT`). Defaults to a watchlist. |
+| `GET  /api/company-news`     | public (RL)   | Company-specific headlines (`?symbol=AAPL&days=7`). |
+| `GET  /api/sentiment`        | public (RL)   | News sentiment (`?symbol=AAPL`). Premium on Finnhub free tier → `supported:false`. |
 | `POST /api/fetch`            | **admin**     | Poll all accounts and cache new posts.         |
 | `POST /api/analyze`          | **admin**     | Analyze posts that have no analysis yet.        |
 | `POST /api/admin/refresh`    | **admin**     | Fetch **and** analyze in one call (for cron).  |

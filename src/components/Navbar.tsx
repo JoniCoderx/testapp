@@ -11,6 +11,7 @@ import { usePwa } from '@/components/PwaProvider';
 const LINKS = [
   { href: '/', label: 'Home' },
   { href: '/dashboard', label: 'Dashboard' },
+  { href: '/markets', label: 'Markets' },
   { href: '/api/health', label: 'Status', external: true },
 ];
 

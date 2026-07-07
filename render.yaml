@@ -40,6 +40,9 @@ services:
         sync: false # optional alternative; set in the dashboard
       - key: OPENAI_MODEL
         value: gpt-4o-mini
+      # --- Finnhub live market/news data (server-side key; never exposed) ---
+      - key: FINNHUB_API_KEY
+        sync: false # set in the Render dashboard; missing key → demo fallback
       - key: ADMIN_SECRET
         generateValue: true
       # --- Free post sources (no paid X API) ---
