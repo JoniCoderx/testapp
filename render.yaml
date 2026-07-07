@@ -42,8 +42,15 @@ services:
         value: gpt-4o-mini
       - key: ADMIN_SECRET
         generateValue: true
+      # --- Free post sources (no paid X API) ---
       - key: NITTER_INSTANCES
         value: https://nitter.net,https://xcancel.com,https://nitter.poast.org
+      - key: RSSHUB_INSTANCES
+        value: https://rsshub.app
+      - key: BLUESKY_API
+        value: https://public.api.bsky.app
+      - key: ENABLED_SOURCES
+        value: ""
       - key: POLL_INTERVAL_MINUTES
         value: "15"
       - key: MAX_POSTS_PER_ACCOUNT
@@ -85,6 +92,12 @@ services:
         value: gpt-4o-mini
       - key: NITTER_INSTANCES
         value: https://nitter.net,https://xcancel.com,https://nitter.poast.org
+      - key: RSSHUB_INSTANCES
+        value: https://rsshub.app
+      - key: BLUESKY_API
+        value: https://public.api.bsky.app
+      - key: ENABLED_SOURCES
+        value: ""
       - key: MAX_POSTS_PER_ACCOUNT
         value: "5"
       - key: NODE_VERSION

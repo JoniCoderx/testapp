@@ -33,8 +33,12 @@ every feed is temporarily down.
 - **Private `/admin` console** — enter the `ADMIN_SECRET` to manually trigger
   fetch/analyze. Public users are strictly read-only and can never spend OpenAI
   credits.
-- **Modular source layer** — Nitter RSS today; swap in the X API, RSSHub, or a
-  scraping provider by implementing one interface.
+- **Multiple FREE sources** — pulls posts from **7 free providers** with a
+  modular, swappable interface (no paid X API): **Nitter** (X/Twitter RSS),
+  **RSSHub** (X + many platforms), **Mastodon** (account RSS), **Bluesky**
+  (public AT Protocol API), **Reddit** (public JSON), **YouTube** (channel
+  Atom feeds), and **generic RSS/Atom**. Each tracked account can list several
+  sources — they're merged and deduped, so if one is down others still deliver.
 - **Resilient ingestion** — multi-instance fallback, dedupe by source post id,
   DB caching, per-instance + per-account fetch audit log, and a clear
   “sources temporarily unavailable” state that still serves cached posts.
@@ -117,11 +121,35 @@ curl -X POST http://localhost:3000/api/analyze -H "Authorization: Bearer $ADMIN_
 The default list lives in **`config/accounts.ts`** and is easy to edit. You can
 also override at runtime with `TRACKED_HANDLES=elonmusk,NASA,BillGates`.
 
-### Swapping the data source
+### Free sources & multi-platform accounts
+
+Accounts live in **`config/accounts.ts`**. Each account lists one or more free
+`sources`; posts from all of them are merged and deduped. Source types:
+
+| Type | `ref` example | Notes |
+| --- | --- | --- |
+| `nitter` | `elonmusk` | X/Twitter via Nitter RSS (multi-instance fallback) |
+| `rsshub` | `twitter/user/elonmusk` | RSSHub route — X + many platforms |
+| `mastodon` | `Gargron@mastodon.social` | Public account RSS |
+| `bluesky` | `bsky.app` | Public AT Protocol read API (no auth) |
+| `reddit` | `r/CryptoCurrency` | Public JSON (user or subreddit) |
+| `youtube` | `UCLA_DiR1FfKNvjuUpBHmylQ` | Channel Atom feed (channel id) |
+| `rss` | `https://site/feed.xml` | Any RSS/Atom feed URL |
+
+The default config tracks the top 10 X voices (Nitter + RSSHub each) **plus**
+cross-platform accounts on Reddit, YouTube, Bluesky, and Mastodon — so the feed
+keeps flowing even when X sources are blocked.
+
+Env knobs: `NITTER_INSTANCES`, `RSSHUB_INSTANCES`, `BLUESKY_API`, and
+`ENABLED_SOURCES` (comma-separated allow-list; empty = all).
+
+### Swapping / adding a source
 
 The app depends only on the `PostSource` interface
-(`src/lib/sources/types.ts`). Implement it and select it in
-`src/lib/sources/index.ts` — nothing else changes. **No paid X API required.**
+(`src/lib/sources/types.ts`). Implement it, register it in
+`src/lib/sources/index.ts`, and reference it from an account's `sources`.
+**No paid X API required.** (If you ever want a paid upgrade, a scraping
+provider like ScraperAPI or Apify slots in as just another `PostSource`.)
 
 ---
 

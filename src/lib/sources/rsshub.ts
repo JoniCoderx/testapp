@@ -1,10 +1,10 @@
 /**
- * Nitter RSS source — X/Twitter.
+ * RSSHub source — a free, open RSS gateway for hundreds of platforms
+ * (X/Twitter, YouTube, Telegram, Weibo, and many more).
  *
- * Fetches a handle's timeline via a Nitter instance's RSS endpoint
- * (`/<handle>/rss`). Multiple instances are tried in order with automatic
- * fallback, since public Nitter instances are frequently rate-limited or
- * offline.
+ * `ref` is an RSSHub route path, e.g. "twitter/user/elonmusk" or
+ * "youtube/channel/UCxxxx". Public instances are tried in order with fallback.
+ * Configure instances via RSSHUB_INSTANCES (default https://rsshub.app).
  */
 
 import { env } from '@/lib/env';
@@ -18,37 +18,24 @@ import {
   SourceError,
 } from './types';
 
-function derivePostId(link: string | undefined, guid: string | undefined): string {
-  const candidate = guid || link || '';
-  const status = candidate.match(/status\/(\d+)/);
-  if (status) return status[1];
-  return candidate.replace(/#.*$/, '').trim() || candidate;
-}
+export class RssHubSource implements PostSource {
+  readonly type = 'rsshub' as const;
+  readonly name = 'rsshub';
 
-function toCanonicalUrl(link: string, handle: string): string {
-  const status = link.match(/status\/(\d+)/);
-  if (status) return `https://x.com/${handle}/status/${status[1]}`;
-  return link;
-}
-
-export class NitterSource implements PostSource {
-  readonly type = 'nitter' as const;
-  readonly name = 'nitter';
-
-  constructor(private readonly instances: string[] = env.nitterInstances) {}
+  constructor(private readonly instances: string[] = env.rsshubInstances) {}
 
   async fetchPosts(ref: string, limit: number): Promise<FetchResult> {
-    const handle = ref.replace(/^@/, '');
+    const route = ref.replace(/^\/+/, '');
     const errors: string[] = [];
     const attempts: InstanceAttempt[] = [];
 
     if (this.instances.length === 0) {
-      throw new SourceError('No Nitter instances configured', handle, []);
+      throw new SourceError('No RSSHub instances configured', route, []);
     }
 
     for (const instance of this.instances) {
       const host = instance.replace(/^https?:\/\//, '');
-      const url = `${instance}/${encodeURIComponent(handle)}/rss`;
+      const url = `${instance}/${route}`;
       const started = Date.now();
       try {
         const res = await fetchWithTimeout(url);
@@ -59,31 +46,31 @@ export class NitterSource implements PostSource {
         }
         const xml = await res.text();
         if (!looksLikeFeed(xml)) {
-          errors.push(`${host}: not a valid RSS feed`);
-          attempts.push({ instance, host, ok: false, status: res.status, error: 'not a valid RSS feed', durationMs: Date.now() - started });
+          errors.push(`${host}: not a valid feed`);
+          attempts.push({ instance, host, ok: false, status: res.status, error: 'not a valid feed', durationMs: Date.now() - started });
           continue;
         }
 
+        const handle = route.split('/').pop() || route;
         const posts: RawPost[] = parseFeed(xml)
           .slice(0, limit)
           .map((item): RawPost | null => {
-            const link = item.link;
             const text = stripHtml(item.title || item.content || '');
-            if (!link || !text) return null;
+            if (!item.link || !text) return null;
             return {
-              sourcePostId: derivePostId(item.link, item.id),
-              url: toCanonicalUrl(link, handle),
+              sourcePostId: `rsshub:${item.id || item.link}`,
+              url: item.link,
               text,
               authorHandle: handle,
               authorName: item.author,
               publishedAt: item.published ?? new Date(),
-              source: `nitter:${host}`,
+              source: `rsshub:${host}`,
             };
           })
           .filter((p): p is RawPost => p !== null);
 
         attempts.push({ instance, host, ok: true, status: 200, durationMs: Date.now() - started });
-        return { ref: handle, posts, source: `nitter:${host}`, attempts };
+        return { ref: route, posts, source: `rsshub:${host}`, attempts };
       } catch (err) {
         const reason = describeError(err);
         errors.push(`${host}: ${reason}`);
@@ -92,8 +79,8 @@ export class NitterSource implements PostSource {
     }
 
     throw new SourceError(
-      `All Nitter instances failed for @${handle} — ${errors.join('; ')}`,
-      handle,
+      `All RSSHub instances failed for ${route} — ${errors.join('; ')}`,
+      route,
       attempts,
     );
   }

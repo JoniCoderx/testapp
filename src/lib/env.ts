@@ -36,6 +36,24 @@ export const env = {
     .map((s) => s.trim().replace(/\/+$/, ''))
     .filter(Boolean),
 
+  // RSSHub instances (free RSS gateway for many platforms).
+  rsshubInstances: (process.env.RSSHUB_INSTANCES || 'https://rsshub.app')
+    .split(',')
+    .map((s) => s.trim().replace(/\/+$/, ''))
+    .filter(Boolean),
+
+  // Bluesky public read API (no auth required).
+  blueskyApi: (process.env.BLUESKY_API || 'https://public.api.bsky.app').replace(
+    /\/+$/,
+    '',
+  ),
+
+  // Optional allow-list of enabled source types (comma-separated). Empty = all.
+  enabledSources: (process.env.ENABLED_SOURCES || '')
+    .split(',')
+    .map((s) => s.trim().toLowerCase())
+    .filter(Boolean),
+
   pollIntervalMinutes: num(process.env.POLL_INTERVAL_MINUTES, 15),
   maxPostsPerAccount: num(process.env.MAX_POSTS_PER_ACCOUNT, 5),
 

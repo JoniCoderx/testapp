@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { env } from '@/lib/env';
 import { rateLimit, tooManyRequests } from '@/lib/rate-limit';
 import { cacheGet, cacheSet } from '@/lib/cache';
+import { getEnabledTypes } from '@/lib/sources';
 
 export const dynamic = 'force-dynamic';
 
@@ -17,11 +17,11 @@ function startOfUtcDay(): Date {
   return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
 }
 
-/** Build the always-present source list from configured instances. */
+/** Build the always-present source list from the enabled source types. */
 function baseInstances() {
-  return env.nitterInstances.map((url) => ({
-    url,
-    host: url.replace(/^https?:\/\//, ''),
+  return getEnabledTypes().map((type) => ({
+    url: type,
+    host: type,
     lastSuccessAt: null as string | null,
     healthy: false,
   }));
@@ -46,7 +46,7 @@ function safePayload(dbConnected: boolean) {
       lastFetchAt: null as string | null,
     },
     sources: {
-      configured: env.nitterInstances.length,
+      configured: getEnabledTypes().length,
       instances: baseInstances(),
       recent: { windowMinutes: RECENT_WINDOW_MINUTES, successes: 0, failures: 0 },
       allSourcesDown: false,
@@ -120,11 +120,11 @@ export async function GET(req: NextRequest) {
       }),
     ]);
 
+    // Health per enabled source TYPE (nitter, rsshub, bluesky, reddit, …).
     const instances = await Promise.all(
-      env.nitterInstances.map(async (url) => {
-        const host = url.replace(/^https?:\/\//, '');
+      getEnabledTypes().map(async (type) => {
         const last = await prisma.fetchLog.findFirst({
-          where: { success: true, source: `nitter:${host}` },
+          where: { success: true, source: { startsWith: `${type}:` } },
           orderBy: { createdAt: 'desc' },
           select: { createdAt: true },
         });
@@ -132,7 +132,7 @@ export async function GET(req: NextRequest) {
         const healthy =
           !!lastSuccessAt &&
           Date.now() - lastSuccessAt.getTime() < RECENT_WINDOW_MINUTES * 60_000;
-        return { url, host, lastSuccessAt: lastSuccessAt?.toISOString() ?? null, healthy };
+        return { url: type, host: type, lastSuccessAt: lastSuccessAt?.toISOString() ?? null, healthy };
       }),
     );
 
@@ -152,7 +152,7 @@ export async function GET(req: NextRequest) {
         lastFetchAt: lastAny?.createdAt.toISOString() ?? null,
       },
       sources: {
-        configured: env.nitterInstances.length,
+        configured: getEnabledTypes().length,
         instances,
         recent: {
           windowMinutes: RECENT_WINDOW_MINUTES,

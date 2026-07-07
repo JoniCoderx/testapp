@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { requireAdmin } from '@/lib/auth';
 import { env, hasAi, activeModel, resolveAiProvider } from '@/lib/env';
+import { getEnabledTypes } from '@/lib/sources';
 import { APP_VERSION } from '@/lib/version';
 
 export const dynamic = 'force-dynamic';
@@ -101,6 +102,8 @@ export async function GET(req: NextRequest) {
       },
       lastFetchLog,
       nitterInstances: env.nitterInstances,
+      enabledSources: getEnabledTypes(),
+      rsshubInstances: env.rsshubInstances,
       aiConfigured: hasAi(),
       aiProvider: resolveAiProvider(),
       aiModel: activeModel(),

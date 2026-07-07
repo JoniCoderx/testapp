@@ -13,19 +13,23 @@
 import { getTrackedAccounts } from '@config/accounts';
 import { prisma } from '@/lib/prisma';
 import { env } from '@/lib/env';
-import { getPostSource, SourceError, InstanceAttempt } from '@/lib/sources';
+import { getSource, SourceError, InstanceAttempt, SourceType } from '@/lib/sources';
 import { analyzePost } from '@/lib/ai/analyze';
 import { clearPostsCache } from '@/lib/cache';
 
-/** Record a FetchLog row for each failed instance attempt (source health). */
-async function logInstanceFailures(handle: string, attempts: InstanceAttempt[]) {
+/** Record a FetchLog row for each failed upstream attempt (source health). */
+async function logInstanceFailures(
+  handle: string,
+  type: SourceType,
+  attempts: InstanceAttempt[],
+) {
   const failed = attempts.filter((a) => !a.ok);
   if (failed.length === 0) return;
   try {
     await prisma.fetchLog.createMany({
       data: failed.map((a) => ({
         handle,
-        source: `nitter:${a.host}`,
+        source: `${type}:${a.host}`,
         instance: a.instance,
         success: false,
         errorMessage: (a.error || `HTTP ${a.status ?? '?'}`).slice(0, 300),
@@ -68,9 +72,42 @@ export async function ensureAccounts(): Promise<Map<string, string>> {
   return map;
 }
 
+/** Insert new (deduped) posts and return how many were newly added. */
+async function persistPosts(
+  posts: { sourcePostId: string; url: string; text: string; authorHandle: string; authorName?: string; publishedAt: Date; source: string }[],
+  accountId: string,
+  fallbackName: string,
+): Promise<number> {
+  let added = 0;
+  for (const post of posts) {
+    try {
+      const existing = await prisma.post.findUnique({
+        where: { sourcePostId: post.sourcePostId },
+        select: { id: true },
+      });
+      if (existing) continue;
+      await prisma.post.create({
+        data: {
+          sourcePostId: post.sourcePostId,
+          url: post.url,
+          text: post.text,
+          authorHandle: post.authorHandle,
+          authorName: post.authorName ?? fallbackName,
+          publishedAt: post.publishedAt,
+          source: post.source,
+          accountId,
+        },
+      });
+      added += 1;
+    } catch (err) {
+      console.error(`[fetch] failed to persist post ${post.sourcePostId}:`, err);
+    }
+  }
+  return added;
+}
+
 export async function fetchAllAccounts(): Promise<FetchSummary> {
   const start = Date.now();
-  const source = getPostSource();
   const accountMap = await ensureAccounts();
   const accounts = getTrackedAccounts();
 
@@ -78,96 +115,64 @@ export async function fetchAllAccounts(): Promise<FetchSummary> {
   let postsNew = 0;
   const failures: { handle: string; error: string }[] = [];
 
+  const totalSources = accounts.reduce((n, a) => n + a.sources.length, 0);
   console.log(
-    `[fetch] starting poll of ${accounts.length} account(s) across ${env.nitterInstances.length} instance(s)`,
+    `[fetch] starting poll of ${accounts.length} account(s), ${totalSources} source(s)`,
   );
 
   for (const acc of accounts) {
     const accountId = accountMap.get(acc.handle.toLowerCase());
     if (!accountId) continue;
 
-    const attemptStart = Date.now();
-    try {
-      console.log(`[fetch] @${acc.handle}: trying ${source.name} sources…`);
-      const result = await source.fetchPostsForHandle(
-        acc.handle,
-        env.maxPostsPerAccount,
-      );
-      postsFound += result.posts.length;
-      console.log(
-        `[fetch] @${acc.handle}: ${result.posts.length} post(s) via ${result.source}`,
-      );
+    // Poll every configured source for this account (merge + dedupe).
+    for (const ref of acc.sources) {
+      const source = getSource(ref.type);
+      if (!source) continue; // type disabled via ENABLED_SOURCES
 
-      let newForHandle = 0;
-      for (const post of result.posts) {
-        try {
-          // Dedupe by sourcePostId: only insert posts we haven't cached yet.
-          const existing = await prisma.post.findUnique({
-            where: { sourcePostId: post.sourcePostId },
-            select: { id: true },
-          });
-          if (existing) continue;
+      const attemptStart = Date.now();
+      try {
+        console.log(`[fetch] ${acc.handle}: trying ${ref.type} (${ref.ref})…`);
+        const result = await source.fetchPosts(ref.ref, env.maxPostsPerAccount);
+        postsFound += result.posts.length;
 
-          await prisma.post.create({
-            data: {
-              sourcePostId: post.sourcePostId,
-              url: post.url,
-              text: post.text,
-              authorHandle: post.authorHandle,
-              authorName: post.authorName ?? acc.displayName,
-              publishedAt: post.publishedAt,
-              source: post.source,
-              accountId,
-            },
-          });
-          newForHandle += 1;
-        } catch (err) {
-          // A unique-constraint race just means it was inserted concurrently.
-          console.error(`[fetch] failed to persist post ${post.sourcePostId}:`, err);
+        const newForSource = await persistPosts(result.posts, accountId, acc.displayName);
+        postsNew += newForSource;
+        console.log(
+          `[fetch] ${acc.handle}: ${result.posts.length} found, ${newForSource} new via ${result.source}`,
+        );
+
+        await prisma.fetchLog.create({
+          data: {
+            handle: acc.handle,
+            source: result.source,
+            instance: ref.ref,
+            success: true,
+            postsFound: result.posts.length,
+            postsNew: newForSource,
+            durationMs: Date.now() - attemptStart,
+          },
+        });
+        // Record any instances that failed before one succeeded (flaky feeds).
+        await logInstanceFailures(acc.handle, ref.type, result.attempts);
+      } catch (err) {
+        const message =
+          err instanceof Error ? err.message : String(err);
+        failures.push({ handle: `${acc.handle} (${ref.type})`, error: message });
+
+        if (err instanceof SourceError) {
+          await logInstanceFailures(acc.handle, ref.type, err.attempts);
         }
+        await prisma.fetchLog.create({
+          data: {
+            handle: acc.handle,
+            source: `${ref.type}:${ref.ref}`,
+            instance: ref.ref,
+            success: false,
+            errorMessage: message.slice(0, 500),
+            durationMs: Date.now() - attemptStart,
+          },
+        });
       }
-      postsNew += newForHandle;
-      console.log(
-        `[fetch] @${acc.handle}: inserted ${newForHandle} new post(s) (deduped)`,
-      );
-
-      await prisma.fetchLog.create({
-        data: {
-          handle: acc.handle,
-          source: result.source,
-          instance: result.instance,
-          success: true,
-          postsFound: result.posts.length,
-          postsNew: newForHandle,
-          durationMs: Date.now() - attemptStart,
-        },
-      });
-      // Also record any instances that failed before one succeeded, so the
-      // source-health view reflects flaky instances even on a good run.
-      await logInstanceFailures(acc.handle, result.attempts);
-    } catch (err) {
-      const message =
-        err instanceof SourceError
-          ? err.message
-          : err instanceof Error
-            ? err.message
-            : String(err);
-      failures.push({ handle: acc.handle, error: message });
-
-      // Per-instance failure records (source health).
-      if (err instanceof SourceError) {
-        await logInstanceFailures(acc.handle, err.attempts);
-      }
-
-      // Per-account failure record.
-      await prisma.fetchLog.create({
-        data: {
-          handle: acc.handle,
-          success: false,
-          errorMessage: message.slice(0, 500),
-          durationMs: Date.now() - attemptStart,
-        },
-      });
     }
   }
 
@@ -176,7 +181,7 @@ export async function fetchAllAccounts(): Promise<FetchSummary> {
   clearPostsCache();
 
   console.log(
-    `[fetch] done: ${postsFound} found, ${postsNew} new, ${failures.length} account(s) failed in ${Date.now() - start}ms`,
+    `[fetch] done: ${postsFound} found, ${postsNew} new, ${failures.length} source(s) failed in ${Date.now() - start}ms`,
   );
 
   return {

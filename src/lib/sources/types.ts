@@ -1,25 +1,55 @@
 /**
  * Source abstraction layer.
  *
- * A `PostSource` knows how to fetch recent posts for a given handle. The rest
- * of the app depends only on this interface, so the underlying implementation
- * (Nitter RSS today; X API, RSSHub, or a scraping provider tomorrow) can be
- * swapped without touching the pipeline, API routes, or UI.
+ * A `PostSource` knows how to fetch recent posts for a given reference (a
+ * handle, channel id, or feed URL, depending on the source). The rest of the
+ * app depends only on this interface, so the underlying implementations (free
+ * RSS / public APIs today; a paid provider tomorrow) can be swapped or extended
+ * without touching the pipeline, API routes, or UI.
  */
 
+/** Supported free source types. */
+export type SourceType =
+  | 'nitter' // X/Twitter via Nitter RSS
+  | 'rsshub' // Many platforms via RSSHub RSS
+  | 'mastodon' // Mastodon account RSS (@user@instance)
+  | 'bluesky' // Bluesky public AT Protocol API (JSON)
+  | 'reddit' // Reddit public JSON (user or subreddit)
+  | 'youtube' // YouTube channel Atom feed
+  | 'rss'; // Any generic RSS/Atom feed URL
+
+export const ALL_SOURCE_TYPES: SourceType[] = [
+  'nitter',
+  'rsshub',
+  'mastodon',
+  'bluesky',
+  'reddit',
+  'youtube',
+  'rss',
+];
+
+/** A concrete place to pull an account's posts from. */
+export interface SourceRef {
+  type: SourceType;
+  /** Meaning depends on `type` (handle, channel id, feed url, …). */
+  ref: string;
+  /** Optional human label (e.g. "X", "YouTube"). */
+  label?: string;
+}
+
 export interface RawPost {
-  /** Stable identifier from the source (status id / guid). Used for dedupe. */
+  /** Stable identifier from the source. Used for dedupe (unique across app). */
   sourcePostId: string;
   url: string;
   text: string;
   authorHandle: string;
   authorName?: string;
   publishedAt: Date;
-  /** Human-readable source id, e.g. "nitter:nitter.net". */
+  /** Human-readable source id, e.g. "nitter:nitter.net" or "bluesky:nasa.gov". */
   source: string;
 }
 
-/** Outcome of a single instance attempt, for source-health logging. */
+/** Outcome of a single upstream attempt (instance/endpoint), for logging. */
 export interface InstanceAttempt {
   instance: string;
   host: string;
@@ -30,31 +60,32 @@ export interface InstanceAttempt {
 }
 
 export interface FetchResult {
-  handle: string;
+  ref: string;
   posts: RawPost[];
-  /** The concrete source/instance that succeeded, for logging. */
+  /** The concrete source/endpoint that succeeded, for logging. */
   source: string;
-  instance?: string;
-  /** Per-instance attempt outcomes (includes any failures before success). */
+  /** Per-attempt outcomes (includes any failures before success). */
   attempts: InstanceAttempt[];
 }
 
 export interface PostSource {
-  /** Stable name for logging/telemetry, e.g. "nitter". */
+  /** Source type, e.g. "nitter". */
+  readonly type: SourceType;
+  /** Stable name for logging/telemetry. */
   readonly name: string;
 
   /**
-   * Fetch up to `limit` recent posts for `handle`.
+   * Fetch up to `limit` recent posts for `ref`.
    * Implementations should throw on unrecoverable failure so callers can log
-   * and, where relevant, fall back to another source.
+   * and move on to the next source.
    */
-  fetchPostsForHandle(handle: string, limit: number): Promise<FetchResult>;
+  fetchPosts(ref: string, limit: number): Promise<FetchResult>;
 }
 
 export class SourceError extends Error {
   constructor(
     message: string,
-    public readonly handle: string,
+    public readonly ref: string,
     public readonly attempts: InstanceAttempt[] = [],
   ) {
     super(message);
