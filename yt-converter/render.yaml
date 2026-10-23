@@ -2,7 +2,7 @@
 # In Render: New + > Blueprint > pick this repo > set Blueprint Path to yt-converter/render.yaml
 services:
   - type: web
-    name: yt-converter
+    name: tunepluck
     runtime: docker
     plan: free
     rootDir: yt-converter

@@ -1,4 +1,4 @@
-# YT Converter
+# TunePluck
 
 A small self-hosted YouTube → **MP3 / MP4** converter website, in the style of the
 Y2Mate-type sites. Paste a link (or type a song name and pick from the results),
@@ -24,8 +24,8 @@ npm start                  # http://localhost:8080
 
 ```bash
 cd yt-converter
-docker build -t yt-converter .
-docker run -p 8080:8080 yt-converter
+docker build -t tunepluck .
+docker run -p 8080:8080 tunepluck
 ```
 
 ### Free test URL on Render
@@ -34,7 +34,7 @@ docker run -p 8080:8080 yt-converter
 2. **New + → Blueprint**, pick this repository, and set **Blueprint Path** to
    `yt-converter/render.yaml`. Click **Apply**.
 3. After the build (a few minutes) the site is live at
-   `https://yt-converter.onrender.com` (or a similar name if that one is taken).
+   `https://tunepluck.onrender.com` (or a similar name if that one is taken).
 
 Free-plan services sleep after ~15 minutes without visitors; the first visit after
 that takes up to a minute to wake. Railway and Fly.io work too: deploy the
