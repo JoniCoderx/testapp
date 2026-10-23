@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>YT Converter – YouTube to MP3 &amp; MP4, Free</title>
+<meta name="description" content="Paste a YouTube link or type a song name and convert it to MP3 (128–320 kbps) or MP4 (up to 1080p). No account, no app.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<style>
+  :root {
+    --bg: #f6f7fb; --card: #ffffff; --text: #16181d; --muted: #646b7a; --line: #e3e6ee;
+    --brand: #e5262b; --brand-dark: #c11c21; --accent-bg: #fff1f1; --ok: #16a34a;
+    --shadow: 0 10px 30px rgba(20, 24, 40, .08);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0f1115; --card: #181b22; --text: #eef0f4; --muted: #9aa1b0; --line: #2a2f3a;
+      --accent-bg: #2a1517; --shadow: 0 10px 30px rgba(0,0,0,.35); }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); }
+  a { color: var(--brand); }
+  .wrap { max-width: 860px; margin: 0 auto; padding: 0 16px; }
+
+  header { background: var(--card); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 5; }
+  header .wrap { display: flex; align-items: center; justify-content: space-between; height: 60px; }
+  .logo { display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 20px; color: var(--text); text-decoration: none; }
+  .logo svg { width: 30px; height: 30px; }
+  nav a { color: var(--muted); text-decoration: none; margin-left: 18px; font-weight: 600; font-size: 15px; }
+  nav a:hover { color: var(--brand); }
+  @media (max-width: 560px) { nav a:not(.keep) { display: none; } }
+
+  .hero { text-align: center; padding: 48px 0 8px; }
+  .hero h1 { font-size: clamp(26px, 5vw, 40px); line-height: 1.15; margin: 0 0 12px; }
+  .hero h1 span { color: var(--brand); }
+  .hero p { color: var(--muted); margin: 0 auto 28px; max-width: 620px; }
+
+  .box { background: var(--card); border-radius: 16px; box-shadow: var(--shadow); padding: 22px; border: 1px solid var(--line); }
+  .search { display: flex; gap: 10px; }
+  .search input { flex: 1; min-width: 0; height: 54px; padding: 0 16px; font-size: 16px; border-radius: 12px;
+    border: 2px solid var(--line); background: var(--bg); color: var(--text); outline: none; }
+  .search input:focus { border-color: var(--brand); }
+  .btn { height: 54px; padding: 0 26px; border: 0; border-radius: 12px; background: var(--brand); color: #fff;
+    font-size: 16px; font-weight: 700; cursor: pointer; white-space: nowrap; }
+  .btn:hover { background: var(--brand-dark); }
+  .btn:disabled { opacity: .6; cursor: default; }
+  .btn.small { height: 44px; padding: 0 18px; font-size: 15px; }
+  .btn.ok { background: var(--ok); }
+  @media (max-width: 520px) { .search { flex-direction: column; } .btn { width: 100%; } }
+
+  .tabs { display: flex; gap: 8px; margin-top: 16px; justify-content: center; }
+  .tab { border: 2px solid var(--line); background: transparent; color: var(--text); padding: 8px 22px; border-radius: 999px;
+    font-weight: 700; cursor: pointer; font-size: 15px; }
+  .tab.active { border-color: var(--brand); background: var(--accent-bg); color: var(--brand); }
+
+  .msg { margin-top: 14px; padding: 12px 14px; border-radius: 10px; background: var(--accent-bg); color: var(--brand); font-weight: 600; display: none; }
+  .spinner { width: 22px; height: 22px; border: 3px solid var(--line); border-top-color: var(--brand); border-radius: 50%;
+    animation: spin .8s linear infinite; margin: 18px auto 0; display: none; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .results { margin-top: 18px; display: grid; gap: 10px; }
+  .item { display: flex; gap: 12px; align-items: center; padding: 8px; border-radius: 12px; border: 1px solid var(--line); cursor: pointer; background: var(--bg); text-align: left; color: var(--text); font: inherit; width: 100%; }
+  .item:hover { border-color: var(--brand); }
+  .item img { width: 120px; aspect-ratio: 16/9; object-fit: cover; border-radius: 8px; flex-shrink: 0; background: var(--line); }
+  .item b { display: block; font-size: 15px; line-height: 1.35; }
+  .item small { color: var(--muted); }
+
+  .video { margin-top: 18px; display: none; gap: 18px; align-items: flex-start; }
+  .video img { width: 260px; max-width: 100%; aspect-ratio: 16/9; object-fit: cover; border-radius: 12px; background: var(--line); }
+  .video h2 { font-size: 19px; margin: 0 0 4px; line-height: 1.35; }
+  .video .meta { color: var(--muted); font-size: 14px; margin-bottom: 14px; }
+  .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  select { height: 44px; border-radius: 10px; border: 2px solid var(--line); background: var(--bg); color: var(--text); padding: 0 12px; font-size: 15px; font-weight: 600; }
+  @media (max-width: 620px) { .video { flex-direction: column; } .video img { width: 100%; } }
+
+  .progress { margin-top: 14px; display: none; }
+  .bar { height: 10px; background: var(--line); border-radius: 99px; overflow: hidden; }
+  .bar i { display: block; height: 100%; width: 0; background: var(--brand); transition: width .4s; }
+  .progress small { color: var(--muted); display: block; margin-top: 6px; }
+
+  section { margin: 56px 0; }
+  section h2 { font-size: 26px; margin: 0 0 16px; }
+  .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
+  .step { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 18px; }
+  .step b { display: inline-grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: var(--accent-bg); color: var(--brand); margin-bottom: 8px; }
+  .step p { margin: 0; color: var(--muted); }
+  .formats { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+  .formats .step h3 { margin: 0 0 6px; }
+  details { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 14px 18px; margin-bottom: 10px; }
+  summary { font-weight: 700; cursor: pointer; }
+  details p { color: var(--muted); margin: 10px 0 0; }
+  footer { border-top: 1px solid var(--line); padding: 26px 0 40px; color: var(--muted); font-size: 14px; text-align: center; }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <a class="logo" href="/">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#e5262b"/><path d="M12 9v14l11-7z" fill="#fff"/></svg>
+      YT Converter
+    </a>
+    <nav>
+      <a class="keep" href="#converter">Converter</a>
+      <a href="#mp3" data-pick="mp3">MP3</a>
+      <a href="#mp4" data-pick="mp4">MP4</a>
+      <a class="keep" href="#faq">FAQ</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="hero" id="converter">
+    <h1>YouTube Converter: <span>MP3</span> &amp; <span>MP4</span>, free</h1>
+    <p>Paste a YouTube link — or type a song name and pick the video from the list. The conversion runs on our server and the file goes straight to your browser. No account, no app, no extension.</p>
+  </div>
+
+  <div class="box">
+    <form class="search" id="form" autocomplete="off">
+      <input id="q" type="text" inputmode="search" placeholder="Paste a YouTube link or type a song name" aria-label="YouTube link or song name" required>
+      <button class="btn" id="go" type="submit">Start</button>
+    </form>
+    <div class="tabs" role="tablist">
+      <button class="tab active" data-type="mp3" type="button">MP3 audio</button>
+      <button class="tab" data-type="mp4" type="button">MP4 video</button>
+    </div>
+
+    <div class="msg" id="msg"></div>
+    <div class="spinner" id="spin"></div>
+    <div class="results" id="results"></div>
+
+    <div class="video" id="video">
+      <img id="thumb" alt="">
+      <div style="flex:1;min-width:0">
+        <h2 id="title"></h2>
+        <div class="meta" id="meta"></div>
+        <div class="row">
+          <select id="quality" aria-label="Quality"></select>
+          <button class="btn small" id="convert" type="button">Convert</button>
+        </div>
+        <div class="progress" id="progress">
+          <div class="bar"><i id="barFill"></i></div>
+          <small id="stage">Starting…</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section>
+    <h2>How to convert a YouTube video</h2>
+    <div class="steps">
+      <div class="step"><b>1</b><p>Copy the video link from YouTube (or just type the song name).</p></div>
+      <div class="step"><b>2</b><p>Paste it above, choose MP3 or MP4 and the quality you want.</p></div>
+      <div class="step"><b>3</b><p>Press <strong>Convert</strong>, wait for the bar to fill, then <strong>Download</strong>.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Formats</h2>
+    <div class="formats">
+      <div class="step" id="mp3"><h3>YouTube to MP3</h3><p>Audio only, encoded as MP3 at 128, 192, 256 or 320 kbps, with the title and cover art embedded. Plays on any phone, car stereo or player.</p></div>
+      <div class="step" id="mp4"><h3>YouTube to MP4</h3><p>Video with sound at 360p, 480p, 720p or 1080p (whatever the original offers). One MP4 file that opens everywhere.</p></div>
+    </div>
+  </section>
+
+  <section id="faq">
+    <h2>FAQ</h2>
+    <details><summary>Is it free?</summary><p>Yes. No account, no sign-up and no app to install.</p></details>
+    <details><summary>Can I convert a whole playlist?</summary><p>No — one video per link. If you paste a playlist link, only the video in the link is converted.</p></details>
+    <details><summary>Is there a length limit?</summary><p>Very long videos (over 3 hours by default) are refused to keep the server fast for everyone.</p></details>
+    <details><summary>Where are my files kept?</summary><p>Converted files are deleted from the server automatically about 20 minutes after conversion.</p></details>
+    <details><summary>Is it legal?</summary><p>Only download videos you own or have permission to download (for example Creative Commons or your own uploads). Respect copyright and YouTube's Terms of Service.</p></details>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    © <span id="year"></span> YT Converter · For personal use with content you have the rights to. Not affiliated with YouTube or Google.
+  </div>
+</footer>
+
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const state = { type: 'mp3', video: null, polling: null };
+  $('year').textContent = new Date().getFullYear();
+
+  const isUrl = (s) => /^(https?:\/\/)?([\w-]+\.)*(youtube\.com|youtu\.be)\//i.test(s.trim());
+  const fmtTime = (s) => {
+    if (!s) return '';
+    s = Math.round(s);
+    const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sec = String(s % 60).padStart(2, '0');
+    return h ? `${h}:${String(m).padStart(2, '0')}:${sec}` : `${m}:${sec}`;
+  };
+  const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+  function msg(text) { $('msg').textContent = text || ''; $('msg').style.display = text ? 'block' : 'none'; }
+  function busy(on) { $('spin').style.display = on ? 'block' : 'none'; $('go').disabled = on; }
+
+  async function api(url, opts) {
+    const r = await fetch(url, opts);
+    const data = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(data.error || 'Something went wrong.');
+    return data;
+  }
+
+  function setType(type) {
+    state.type = type;
+    document.querySelectorAll('.tab').forEach((t) => t.classList.toggle('active', t.dataset.type === type));
+    fillQualities();
+  }
+
+  function fillQualities() {
+    const v = state.video;
+    const sel = $('quality');
+    const list = v ? v.qualities[state.type] : [];
+    const def = state.type === 'mp3' ? '320' : list.includes('720') ? '720' : list[list.length - 1];
+    sel.innerHTML = list.map((q) => `<option value="${q}" ${q === def ? 'selected' : ''}>${state.type === 'mp3' ? q + ' kbps' : q + 'p'}</option>`).join('');
+    resetConvert();
+  }
+
+  function resetConvert() {
+    clearInterval(state.polling);
+    $('progress').style.display = 'none';
+    $('barFill').style.width = '0';
+    const b = $('convert');
+    b.textContent = 'Convert';
+    b.classList.remove('ok');
+    b.disabled = false;
+    b.onclick = convert;
+  }
+
+  async function search(q) {
+    $('results').innerHTML = '';
+    $('video').style.display = 'none';
+    busy(true);
+    try {
+      const { results } = await api('/api/search?q=' + encodeURIComponent(q));
+      if (!results.length) return msg('No results. Try another name or paste a link.');
+      $('results').innerHTML = results.map((r) => `
+        <button class="item" type="button" data-url="${esc(r.url)}">
+          <img src="${esc(r.thumbnail)}" alt="" loading="lazy">
+          <span><b>${esc(r.title)}</b><small>${esc(r.channel)} ${r.duration ? '· ' + fmtTime(r.duration) : ''}</small></span>
+        </button>`).join('');
+    } catch (e) { msg(e.message); } finally { busy(false); }
+  }
+
+  async function loadVideo(url) {
+    $('results').innerHTML = '';
+    $('video').style.display = 'none';
+    busy(true);
+    try {
+      const v = await api('/api/info?url=' + encodeURIComponent(url));
+      state.video = v;
+      $('thumb').src = v.thumbnail || '';
+      $('title').textContent = v.title;
+      $('meta').textContent = [v.channel, fmtTime(v.duration)].filter(Boolean).join(' · ');
+      $('video').style.display = 'flex';
+      fillQualities();
+      if (v.tooLong) { msg('This video is too long to convert.'); $('convert').disabled = true; }
+    } catch (e) { msg(e.message); } finally { busy(false); }
+  }
+
+  async function convert() {
+    const v = state.video;
+    if (!v) return;
+    msg('');
+    const b = $('convert');
+    b.disabled = true;
+    b.textContent = 'Converting…';
+    $('progress').style.display = 'block';
+    $('stage').textContent = 'Starting…';
+    try {
+      const { id } = await api('/api/convert', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url: v.url, title: v.title, type: state.type, quality: $('quality').value }),
+      });
+      state.polling = setInterval(async () => {
+        try {
+          const j = await api('/api/job/' + id);
+          $('barFill').style.width = j.progress + '%';
+          $('stage').textContent = `${j.stage}${j.status === 'running' ? ' · ' + j.progress + '%' : ''}`;
+          if (j.status === 'done') {
+            clearInterval(state.polling);
+            $('stage').textContent = `Ready · ${(j.size / 1048576).toFixed(1)} MB`;
+            b.disabled = false;
+            b.classList.add('ok');
+            b.textContent = 'Download ' + state.type.toUpperCase();
+            b.onclick = () => { location.href = '/api/file/' + id; };
+          } else if (j.status === 'error') {
+            throw new Error(j.error);
+          }
+        } catch (e) { resetConvert(); msg(e.message); }
+      }, 1000);
+    } catch (e) { resetConvert(); msg(e.message); }
+  }
+
+  $('form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    msg('');
+    const q = $('q').value.trim();
+    if (!q) return;
+    if (isUrl(q)) loadVideo(/^https?:/i.test(q) ? q : 'https://' + q);
+    else search(q);
+  });
+  $('q').addEventListener('paste', () => setTimeout(() => { if (isUrl($('q').value)) $('form').requestSubmit(); }, 0));
+  $('results').addEventListener('click', (e) => {
+    const it = e.target.closest('.item');
+    if (it) { $('q').value = it.dataset.url; loadVideo(it.dataset.url); }
+  });
+  document.querySelectorAll('.tab').forEach((t) => t.addEventListener('click', () => setType(t.dataset.type)));
+  document.querySelectorAll('[data-pick]').forEach((a) => a.addEventListener('click', () => setType(a.dataset.pick)));
+})();
+</script>
+</body>
+</html>
