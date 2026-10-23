@@ -28,8 +28,17 @@ docker build -t yt-converter .
 docker run -p 8080:8080 yt-converter
 ```
 
-To deploy on Render / Railway / Fly.io, create a **Docker** web service with
-`yt-converter` as the root directory. No build command needed.
+### Free test URL on Render
+
+1. Sign in at [render.com](https://render.com) with GitHub (free, no card needed).
+2. **New + → Blueprint**, pick this repository, and set **Blueprint Path** to
+   `yt-converter/render.yaml`. Click **Apply**.
+3. After the build (a few minutes) the site is live at
+   `https://yt-converter.onrender.com` (or a similar name if that one is taken).
+
+Free-plan services sleep after ~15 minutes without visitors; the first visit after
+that takes up to a minute to wake. Railway and Fly.io work too: deploy the
+`yt-converter` folder as a Docker service.
 
 ## Configuration (env vars)
 
