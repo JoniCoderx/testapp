@@ -342,6 +342,8 @@ function mountTool(root) {
         <button class="btn ghost sm" type="button" data-new>Choose another file</button>
       </div>
       <div class="wave" data-wave><canvas></canvas><div class="busy" data-busy>Reading audio…</div></div>
+      <div class="lane"><div class="lane-head"><b>With effects</b><small data-afterlabel></small></div><canvas data-after></canvas></div>
+      <div class="lane"><div class="lane-head"><b>Equalizer</b><small data-eqlabel>Press Play or Preview to see it move</small></div><canvas data-eq></canvas></div>
       <div class="controls">
         <button class="btn ghost sm" type="button" data-play aria-label="Play selection">▶ Play</button>
         <label class="time">Start <input data-start inputmode="decimal" aria-label="Start time"></label>
@@ -368,10 +370,11 @@ function mountTool(root) {
     stage: $(root, '[data-stage]'), err: $(root, '[data-err]'), hint: $(root, '[data-hint]'),
     format: $(root, '[data-o=format]'), quality: $(root, '[data-o=quality]'), qWrap: $(root, '[data-q]'),
     fxPreview: $(root, '[data-fxpreview]'), fxStatus: $(root, '[data-fxstatus]'),
+    after: $(root, '[data-after]'), afterLabel: $(root, '[data-afterlabel]'), eq: $(root, '[data-eq]'), eqLabel: $(root, '[data-eqlabel]'),
   };
   const st = { file: null, duration: 0, buffer: null, peaks: null, sel: [0, 0], mode: 'keep',
     ctx: null, source: null, playStart: 0, playFrom: 0, raf: 0, outURL: null, busy: false };
-  const fx = mountFx(root, cfg.fx, () => { stopPlay(); resetOutput(); });
+  const fx = mountFx(root, cfg.fx, () => { st.exact = null; stopPlay(); resetOutput(); drawAfter(); });
 
   // ----- file selection -----
   els.drop.addEventListener('click', () => els.file.click());
@@ -396,7 +399,7 @@ function mountTool(root) {
     stopPlay();
     resetOutput();
     const token = (st.openToken = (st.openToken || 0) + 1); // a newer open wins over a slower older one
-    st.file = file; st.buffer = null; st.peaks = null; st.duration = 0;
+    st.file = file; st.buffer = null; st.peaks = null; st.duration = 0; st.exact = null;
     els.drop.style.display = 'none';
     els.editor.style.display = 'block';
     els.name.textContent = file.name;
@@ -478,7 +481,9 @@ function mountTool(root) {
     if (!fromInput) { els.start.value = fmt(a); els.end.value = fmt(b); }
     const full = a <= 0.05 && b >= d - 0.05;
     els.len.textContent = full ? `Whole file · ${fmt(d)}` : `Selected ${fmt(b - a)}`;
+    st.exact = null;
     draw();
+    drawAfter();
     resetOutput();
   }
   [els.start, els.end].forEach((inp) => inp.addEventListener('change', () => {
@@ -538,7 +543,130 @@ function mountTool(root) {
     [xa, xb].forEach((x) => { g.fillRect(x - 1.5, 0, 3, h); if (g.roundRect) { g.beginPath(); g.roundRect(x - 7, h / 2 - 14, 14, 28, 5); g.fill(); } else g.fillRect(x - 7, h / 2 - 14, 14, 28); });
     if (playhead != null) { g.fillStyle = brand2; g.fillRect((playhead / d) * w - 1, 0, 2, h); }
   }
-  new ResizeObserver(() => draw()).observe(els.wave);
+  new ResizeObserver(() => { draw(); drawAfter(); drawEq(); }).observe(els.wave);
+
+  // ----- "With effects" lane: instant estimate, exact after a preview -----
+  function fitCanvas(c) {
+    const dpr = window.devicePixelRatio || 1;
+    const w = c.clientWidth, h = c.clientHeight;
+    if (c.width !== Math.round(w * dpr) || c.height !== Math.round(h * dpr)) { c.width = Math.round(w * dpr); c.height = Math.round(h * dpr); }
+    const g = c.getContext('2d');
+    g.setTransform(dpr, 0, 0, dpr, 0, 0);
+    g.clearRect(0, 0, w, h);
+    return { g, w, h };
+  }
+  // Loudest sample (0..1) of a buffer between two times, sampled sparsely for speed.
+  function peakBetween(buf, t0, t1) {
+    const sr = buf.sampleRate, i0 = Math.max(0, Math.floor(t0 * sr)), i1 = Math.min(buf.length, Math.ceil(t1 * sr));
+    const step = Math.max(1, Math.floor((i1 - i0) / 64));
+    let p = 0;
+    for (let c = 0; c < buf.numberOfChannels; c++) {
+      const ch = buf.getChannelData(c);
+      for (let i = i0; i < i1; i += step) { const v = Math.abs(ch[i]); if (v > p) p = v; }
+    }
+    return Math.min(1, p);
+  }
+  // Selection as source segments, in output order (remove mode keeps the outside parts).
+  function segments() {
+    const [a, b] = st.sel;
+    return cfg.modes && st.mode === 'remove' ? [[0, a], [b, st.duration]].filter(([x, y]) => y - x > 0.01) : [[a, b]];
+  }
+  function sourceTime(segs, t) {
+    for (const [x, y] of segs) { if (t <= y - x) return x + t; t -= y - x; }
+    const last = segs[segs.length - 1]; return last[1];
+  }
+  function drawAfter() {
+    if (!st.buffer) return;
+    const { g, w, h } = fitCanvas(els.after);
+    const css = getComputedStyle(document.documentElement);
+    const brand = css.getPropertyValue('--brand').trim(), brand2 = css.getPropertyValue('--brand-2').trim(), line = css.getPropertyValue('--line').trim();
+    const fxv = fx.get(), segs = segments();
+    const len = segs.reduce((s2, [x, y]) => s2 + y - x, 0);
+    let procLen, procPeak, ghostLen = len, label, capped = false;
+    if (st.exact) {
+      procLen = st.exact.duration;
+      ghostLen = Math.min(len, procLen * fxv.speed);
+      procPeak = (t0, t1) => peakBetween(st.exact, t0, t1);
+      label = `Exact sound of your preview (first ${fmt(procLen)})`;
+    } else {
+      procLen = len / fxv.speed;
+      // Instant estimate of what the effects do to the level over time.
+      let gain = fxv.volume / 100;
+      if (fxv.normalize) {
+        let mx = 0.01; for (let i = 0; i < 200; i++) mx = Math.max(mx, peakBetween(st.buffer, ...(() => { const t = sourceTime(segs, (i / 200) * len); return [t, t + len / 200]; })()));
+        gain = 0.9 / mx;
+      }
+      if (fxv.bass > 0) gain *= 1 + fxv.bass * 0.03;
+      if (fxv.karaoke) gain *= 0.6;
+      const limit = fxv.volume > 100 || fxv.bass > 0 || fxv.reverb > 0 || fxv.normalize;
+      procPeak = (t0, t1) => {
+        const tm = (t0 + t1) / 2;
+        let tSrc = tm * fxv.speed;
+        if (fxv.reverse) tSrc = len - tSrc;
+        const s0 = sourceTime(segs, Math.max(0, tSrc - (t1 - t0) * fxv.speed / 2));
+        let v = peakBetween(st.buffer, s0, s0 + (t1 - t0) * fxv.speed) * gain;
+        if (fxv.fadeIn > 0) v *= Math.min(1, tm / Math.min(fxv.fadeIn, procLen / 2));
+        if (fxv.fadeOut > 0) v *= Math.min(1, (procLen - tm) / Math.min(fxv.fadeOut, procLen / 2));
+        if (limit && v > 0.97) { capped = true; v = 0.97; }
+        return Math.max(0, Math.min(1, v));
+      };
+      label = `Estimate · ${fmt(procLen)} long${Math.abs(procLen - len) > 0.05 ? ` (was ${fmt(len)})` : ''}`;
+    }
+    const scale = Math.max(ghostLen, procLen);
+    const mid = h / 2;
+    const bar = (x, v, style) => { const bh = Math.max(1, v * (h - 6)); g.fillStyle = style; g.fillRect(x, mid - bh / 2, 2, bh); };
+    // coloured bars = with effects; outline = original. Same loudness scale, so louder looks taller.
+    const ghostBars = Math.floor((w * ghostLen / scale) / 3);
+    const ghost = [];
+    for (let i = 0; i < ghostBars; i++) {
+      const t = (i / ghostBars) * ghostLen, dt = ghostLen / ghostBars, s0 = sourceTime(segs, t);
+      ghost.push(peakBetween(st.buffer, s0, s0 + dt));
+    }
+    const grad = g.createLinearGradient(0, 0, w, 0);
+    grad.addColorStop(0, brand); grad.addColorStop(1, brand2);
+    const procBars = Math.floor((w * procLen / scale) / 3);
+    for (let i = 0; i < procBars; i++) {
+      const t0 = (i / procBars) * procLen, t1 = ((i + 1) / procBars) * procLen;
+      const v = procPeak(t0, t1);
+      g.globalAlpha = 0.85; bar(i * 3, v, v >= 0.96 ? brand2 : grad); g.globalAlpha = 1;
+    }
+    const muted = css.getPropertyValue('--muted').trim();
+    g.strokeStyle = muted; g.lineWidth = 1.3; g.setLineDash([3, 2]);
+    for (const sign of [-1, 1]) {
+      g.beginPath();
+      ghost.forEach((v, i) => { const y = mid + sign * Math.max(0.5, v * (h - 6)) / 2; i ? g.lineTo(i * 3 + 1, y) : g.moveTo(1, y); });
+      g.stroke();
+    }
+    g.setLineDash([]);
+    els.afterLabel.textContent = label + (capped ? ' · limiter keeps it clean' : '') + ' · dotted line = original';
+  }
+
+  // ----- live equalizer (spectrum) -----
+  function drawEq() {
+    const { g, w, h } = fitCanvas(els.eq);
+    const css = getComputedStyle(document.documentElement);
+    const brand = css.getPropertyValue('--brand').trim(), brand2 = css.getPropertyValue('--brand-2').trim(), line = css.getPropertyValue('--line').trim();
+    const n = Math.max(16, Math.floor(w / 7));
+    const an = st.source && st.analyser;
+    let data;
+    if (an) { data = new Uint8Array(an.frequencyBinCount); an.getByteFrequencyData(data); }
+    const grad = g.createLinearGradient(0, h, 0, 0);
+    grad.addColorStop(0, brand); grad.addColorStop(1, brand2);
+    const nyq = (st.ctx?.sampleRate || 48000) / 2;
+    for (let i = 0; i < n; i++) {
+      let v = 0;
+      if (data) {
+        // log-spaced bands from 30 Hz to 16 kHz
+        const f0 = 30 * Math.pow(16000 / 30, i / n), f1 = 30 * Math.pow(16000 / 30, (i + 1) / n);
+        const b0 = Math.floor((f0 / nyq) * data.length), b1 = Math.max(b0 + 1, Math.ceil((f1 / nyq) * data.length));
+        for (let k = b0; k < b1 && k < data.length; k++) v = Math.max(v, data[k]);
+        v /= 255;
+      }
+      const bh = Math.max(2, v * (h - 4));
+      g.fillStyle = data ? grad : line;
+      g.fillRect(i * (w / n) + 1, h - bh, Math.max(2, w / n - 3), bh);
+    }
+  }
 
   let drag = null;
   els.wave.addEventListener('pointerdown', (e) => {
@@ -569,16 +697,21 @@ function mountTool(root) {
     cancelAnimationFrame(st.raf);
     els.play.textContent = '▶ Play';
     els.fxPreview.textContent = '🎧 Preview with effects';
+    els.eqLabel.textContent = 'Press Play or Preview to see it move';
     draw();
+    drawEq();
   }
-  function playBuffer(buffer, offset, duration, onTick) {
+  function playBuffer(buffer, offset, duration, onTick, label) {
     const src = st.ctx.createBufferSource();
     src.buffer = buffer;
-    src.connect(st.ctx.destination);
+    st.analyser ||= Object.assign(st.ctx.createAnalyser(), { fftSize: 4096, smoothingTimeConstant: 0.78 });
+    src.connect(st.analyser);
+    st.analyser.connect(st.ctx.destination);
     src.start(0, offset, duration);
     st.source = src; st.playStart = st.ctx.currentTime;
+    els.eqLabel.textContent = label;
     src.onended = () => st.source === src && stopPlay();
-    const tick = () => { onTick?.(st.ctx.currentTime - st.playStart); st.raf = requestAnimationFrame(tick); };
+    const tick = () => { onTick?.(st.ctx.currentTime - st.playStart); drawEq(); st.raf = requestAnimationFrame(tick); };
     tick();
   }
   els.play.addEventListener('click', async () => {
@@ -586,7 +719,7 @@ function mountTool(root) {
     if (!st.buffer) return;
     await st.ctx.resume();
     const [a, b] = st.sel;
-    playBuffer(st.buffer, a, b - a, (t) => draw(Math.min(a + t, b)));
+    playBuffer(st.buffer, a, b - a, (t) => draw(Math.min(a + t, b)), 'Original sound');
     els.play.textContent = '■ Stop';
   });
 
@@ -596,7 +729,8 @@ function mountTool(root) {
   root.querySelectorAll('[data-mode]').forEach((b) => b.addEventListener('click', () => {
     st.mode = b.dataset.mode;
     root.querySelectorAll('[data-mode]').forEach((x) => x.classList.toggle('on', x === b));
-    draw(); resetOutput();
+    st.exact = null;
+    draw(); drawAfter(); resetOutput();
   }));
   root.querySelectorAll('.opts select').forEach((el) => el.addEventListener('change', resetOutput));
 
@@ -684,7 +818,9 @@ function mountTool(root) {
       });
       await st.ctx.resume();
       const buf = await decodeAudio(st.ctx, wav.buffer);
-      playBuffer(buf, 0, buf.duration);
+      st.exact = buf;
+      drawAfter();
+      playBuffer(buf, 0, buf.duration, null, 'With your effects');
       els.fxPreview.textContent = '■ Stop preview';
       status(`Playing ${fmt(buf.duration)} with your effects.`);
       track('fx_preview', { tool: root.dataset.tool });

@@ -158,3 +158,10 @@ footer a:hover { color: var(--brand); }
 .guide-steps li::before { counter-increment: g; content: counter(g); position: absolute; left: 12px; top: 11px; width: 28px; height: 28px; border-radius: 50%; background: var(--grad); color: #fff; font-weight: 800; display: grid; place-items: center; font-size: 14px; }
 .callout { background: var(--brand-soft); border-radius: 14px; padding: 16px 18px; display: flex; gap: 14px; align-items: center; flex-wrap: wrap; justify-content: space-between; }
 .callout p { margin: 0; color: var(--text) !important; font-weight: 600; }
+
+/* visualizer lanes */
+.lane { margin-top: 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--bg); padding: 8px 10px 6px; }
+.lane-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; font-size: 13px; }
+.lane-head b { font-size: 13px; }
+.lane-head small { color: var(--muted); text-align: right; font-size: 12.5px; }
+.lane canvas { width: 100%; height: 64px; margin-top: 4px; }
