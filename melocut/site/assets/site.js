@@ -28,6 +28,27 @@
     });
   }
 
+  // Offline support + "install as an app".
+  if ('serviceWorker' in navigator && location.protocol === 'https:') {
+    window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => {}));
+  }
+  let installEvent = null;
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    installEvent = e;
+    document.documentElement.classList.add('can-install', 'can-native-install');
+  });
+  document.querySelectorAll('.install-btn').forEach((b) => b.addEventListener('click', async (e) => {
+    if (!installEvent) return; // no native prompt (e.g. iPhone): the link opens the install guide
+    e.preventDefault();
+    installEvent.prompt();
+    await installEvent.userChoice.catch(() => {});
+    installEvent = null;
+    document.documentElement.classList.remove('can-install', 'can-native-install');
+  }));
+  // iPhone/iPad Safari has no install prompt, so always show the guide link there.
+  if (/iPhone|iPad|iPod/.test(navigator.userAgent) && !navigator.standalone) document.documentElement.classList.add('can-install');
+
   // Analytics (privacy-friendly, optional)
   if (cfg.plausibleDomain) {
     const s = document.createElement('script');
