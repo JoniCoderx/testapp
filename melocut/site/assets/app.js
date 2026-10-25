@@ -15,7 +15,8 @@ async function ensureModel(ff) {
     if (!r.ok) throw new Error('Could not load the AI noise model. Check your connection.');
     return r.arrayBuffer();
   }).catch((e) => { rnnModel = null; throw e; });
-  await ff.writeFile(RNN_MODEL_FILE, new Uint8Array(await rnnModel));
+  // writeFile transfers (detaches) the buffer to the worker, so always hand over a copy.
+  await ff.writeFile(RNN_MODEL_FILE, new Uint8Array((await rnnModel).slice(0)));
 }
 
 const FORMATS = {
@@ -802,10 +803,12 @@ function mountTool(root) {
     st.ctx.resume(); // must start inside the tap for iOS to allow sound later
     error('');
     const check = checkJob();
-    if (check) return error(check);
+    if (check) { els.fxStatus.textContent = check; return error(check); }
+    els.fxStatus.textContent = 'Preparing preview…';
     st.busy = true;
     els.fxPreview.disabled = true;
     const status = (t) => (els.fxStatus.textContent = t);
+    els.go.disabled = true;
     st.onEngineProgress = (p) => status(`Loading audio engine (one time, ~30 MB)… ${Math.round(p * 100)}%`);
     try {
       const wav = await withInput(async (ff, inName) => {
@@ -822,13 +825,21 @@ function mountTool(root) {
       drawAfter();
       playBuffer(buf, 0, buf.duration, null, 'With your effects');
       els.fxPreview.textContent = '■ Stop preview';
+      error('');
       status(`Playing ${fmt(buf.duration)} with your effects.`);
+      // Explain a much shorter result instead of letting it look broken.
+      const fxv = fx.get();
+      const expected = Math.min(PREVIEW_SECONDS, buildArgs('x', 'y', 'wav', PREVIEW_SECONDS).outLen);
+      if (buf.duration < expected * 0.5 && (fxv.silence || fxv.aiDenoise)) {
+        status(`Only ${fmt(buf.duration)} of sound is left: ${fxv.aiDenoise ? 'AI noise removal is made for voices and removes music as "noise"' : 'most of it was quiet'}${fxv.silence ? ', and Remove silences cut the rest' : ''}. For songs, turn ${fxv.aiDenoise ? 'AI noise removal' : 'Remove silences'} off.`);
+      }
       track('fx_preview', { tool: root.dataset.tool });
     } catch (e) {
       status(e?.message || 'Preview failed.');
     } finally {
       st.busy = false;
       els.fxPreview.disabled = false;
+      els.go.disabled = false;
     }
   });
 
@@ -844,7 +855,8 @@ function mountTool(root) {
   els.go.onclick = convert;
 
   async function convert() {
-    if (!st.file || !st.buffer || st.busy) return;
+    if (st.busy) return error('Please wait a moment: the preview is still being prepared.');
+    if (!st.file || !st.buffer) return;
     error('');
     stopPlay();
     const check = checkJob();
@@ -911,17 +923,31 @@ function mountJoiner(root) {
         <div class="progress" data-progress><div class="bar"><i data-fill></i></div><small data-stage role="status" aria-live="polite"></small></div>
       </div>
       <div class="note" data-err role="alert"></div>
+      <div class="result" data-result hidden>
+        <b>🎧 Listen to the result</b>
+        <audio controls preload="metadata" data-player></audio>
+      </div>
     </div>
     <div class="private">🔒 Your files never leave your device. Nothing is uploaded.</div>`;
 
   const els = {
+    result: $(root, '[data-result]'), player: $(root, '[data-player]'),
     file: $(root, '[data-file]'), drop: $(root, '[data-drop]'), editor: $(root, '[data-editor]'), list: $(root, '[data-list]'),
     total: $(root, '[data-total]'), format: $(root, '[data-o=format]'), quality: $(root, '[data-o=quality]'), qWrap: $(root, '[data-q]'),
     xf: $(root, '[data-xf]'), xfv: $(root, '[data-xfv]'), norm: $(root, '[data-norm]'), go: $(root, '[data-go]'),
     progress: $(root, '[data-progress]'), fill: $(root, '[data-fill]'), stage: $(root, '[data-stage]'), err: $(root, '[data-err]'),
   };
-  const st = { items: [], busy: false, outURL: null };
+  const st = { items: [], busy: false, outURL: null, playing: -1 };
   const error = (msg) => { els.err.textContent = msg || ''; els.err.className = msg ? 'note err' : 'note'; };
+  // One shared player for listening to a single file in the list.
+  const filePlayer = new Audio();
+  filePlayer.onended = () => { st.playing = -1; render(); };
+  function stopFile() {
+    filePlayer.pause();
+    if (filePlayer.src) URL.revokeObjectURL(filePlayer.src);
+    filePlayer.removeAttribute('src');
+    st.playing = -1;
+  }
 
   els.drop.addEventListener('click', () => els.file.click());
   els.drop.addEventListener('keydown', (e) => (e.key === 'Enter' || e.key === ' ') && (e.preventDefault(), els.file.click()));
@@ -957,7 +983,9 @@ function mountJoiner(root) {
   }
   function render() {
     els.list.innerHTML = st.items.map((it, i) => `
-      <li><span class="jn">${i + 1}</span><b title="${it.file.name.replace(/"/g, '&quot;')}">${it.file.name.replace(/</g, '&lt;')}</b>
+      <li class="${st.playing === i ? 'playing' : ''}"><span class="jn">${i + 1}</span>
+        <button type="button" class="jplay" data-play="${i}" aria-label="${st.playing === i ? 'Stop' : 'Play'} ${it.file.name.replace(/"/g, '&quot;')}">${st.playing === i ? '■' : '▶'}</button>
+        <b title="${it.file.name.replace(/"/g, '&quot;')}">${it.file.name.replace(/</g, '&lt;')}</b>
         <small>${it.duration ? fmt(it.duration) : ''}</small>
         <span class="jb"><button type="button" data-up="${i}" aria-label="Move up" ${i ? '' : 'disabled'}>↑</button>
         <button type="button" data-down="${i}" aria-label="Move down" ${i < st.items.length - 1 ? '' : 'disabled'}>↓</button>
@@ -967,7 +995,19 @@ function mountJoiner(root) {
     els.go.disabled = st.items.length < 2;
   }
   els.list.addEventListener('click', (e) => {
-    const b = e.target.closest('button'); if (!b || st.busy) return;
+    const b = e.target.closest('button'); if (!b) return;
+    if (b.dataset.play != null) {
+      const i = Number(b.dataset.play), was = st.playing;
+      stopFile();
+      if (was !== i) {
+        els.player.pause();
+        filePlayer.src = URL.createObjectURL(st.items[i].file);
+        filePlayer.play().then(() => { st.playing = i; render(); }).catch(() => error('This file can’t be played in your browser, but it can still be joined.'));
+      }
+      return render();
+    }
+    if (st.busy) return;
+    stopFile();
     const i = Number(b.dataset.up ?? b.dataset.down ?? b.dataset.rm);
     if (b.dataset.up != null) [st.items[i - 1], st.items[i]] = [st.items[i], st.items[i - 1]];
     else if (b.dataset.down != null) [st.items[i + 1], st.items[i]] = [st.items[i], st.items[i + 1]];
@@ -980,17 +1020,21 @@ function mountJoiner(root) {
     if (st.outURL) { URL.revokeObjectURL(st.outURL); st.outURL = null; }
     els.go.textContent = 'Join files'; els.go.classList.remove('ok'); els.go.onclick = join;
     els.progress.style.display = 'none';
+    els.player.pause(); els.player.removeAttribute('src'); els.result.hidden = true;
   }
 
   async function join() {
     if (st.items.length < 2 || st.busy) return;
     error('');
+    stopFile(); render();
     st.busy = true; els.go.disabled = true; els.go.textContent = 'Working…';
     els.progress.style.display = 'block';
     const setP = (p, text) => { els.fill.style.width = `${Math.round(p * 100)}%`; els.stage.textContent = text; };
     setP(0, 'Starting…');
     const fmtKey = els.format.value, outName = `joined.${fmtKey}`;
-    const xf = Number(els.xf.value);
+    // A crossfade can't be longer than the clips it blends: shorten it for very short files.
+    const known = st.items.map((it) => it.duration).filter((d) => d > 0);
+    const xf = Math.max(0, Math.min(Number(els.xf.value), known.length ? Math.min(...known) / 2 - 0.05 : Number(els.xf.value)));
     const names = st.items.map((it, i) => `in${i}.${extOf(it.file.name)}`);
     let ff;
     try {
@@ -1007,7 +1051,7 @@ function mountJoiner(root) {
       } else {
         parts.push(`${names.map((_, i) => `[a${i}]`).join('')}concat=n=${n}:v=0:a=1[cat]`); last = 'cat';
       }
-      if (els.norm.checked) { parts.push(`[${last}]loudnorm=I=-14:TP=-1.5:LRA=11,aresample=44100[o]`); last = 'o'; }
+      if (els.norm.checked) { parts.push(`[${last}]loudnorm=I=-14:TP=-1.5:LRA=11,aresample=44100,aformat=channel_layouts=stereo[o]`); last = 'o'; }
       const args = [...names.flatMap((nm) => ['-i', nm]), '-vn', '-map_metadata', '-1', '-filter_complex', parts.join(';'), '-map', `[${last}]`,
         ...FORMATS[fmtKey].args(els.quality.value), outName];
       const outLen = st.items.reduce((s, it) => s + it.duration, 0) - xf * (n - 1);
@@ -1015,7 +1059,8 @@ function mountJoiner(root) {
       const data = await ff.readFile(outName);
       const blob = new Blob([data.buffer], { type: FORMATS[fmtKey].mime });
       st.outURL = URL.createObjectURL(blob);
-      setP(1, `Done · ${(blob.size / 1048576).toFixed(2)} MB`);
+      setP(1, `Done · ${(blob.size / 1048576).toFixed(2)} MB · listen below, then download`);
+      els.player.src = st.outURL; els.result.hidden = false;
       els.go.textContent = `⬇ Download ${fmtKey.toUpperCase()}`; els.go.classList.add('ok');
       els.go.onclick = () => { downloadURL(st.outURL, `${baseName(st.items[0].file.name)} (joined).${fmtKey}`); track('download', { tool: 'joiner', format: fmtKey }); };
       track('converted', { tool: 'joiner', format: fmtKey, count: n });

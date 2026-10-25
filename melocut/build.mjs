@@ -217,8 +217,8 @@ const PAGES = [
     badges: ['Unlimited files', 'Crossfade', 'Even volume'],
     steps: [
       ['Add your files', 'Choose two or more audio or video files. Add more at any time.'],
-      ['Put them in order', 'Use the arrows to reorder. Set the crossfade length or turn it off.'],
-      ['Join & download', 'Choose the format and press Join files, then Download.'],
+      ['Put them in order', 'Tap ▶ to listen to any file, use the arrows to reorder, and set the crossfade length or turn it off.'],
+      ['Join, listen & download', 'Press Join files, listen to the result in the player, then Download.'],
     ],
     content: `
     <h2>Make mixes, medleys and long recordings</h2>
