@@ -514,6 +514,9 @@ const PAGES = [
       <a class="card" href="/guides/install-app/"><div class="ico">${ICONS.phone}</div><b>Install MeloCut on your phone</b><p>Add it to your home screen and use it offline.</p></a>
       <a class="card" href="/guides/set-ringtone/"><div class="ico">${ICONS.bell}</div><b>Set a custom ringtone</b><p>iPhone and Android, with or without a computer.</p></a>
       <a class="card" href="/guides/find-downloads/"><div class="ico">${ICONS.book}</div><b>Where are my downloads?</b><p>Find your files on iPhone, Android, Windows and Mac.</p></a>
+      <a class="card" href="/guides/best-audio-format/"><div class="ico">${ICONS.swap}</div><b>Which audio format should you use?</b><p>MP3, M4A, WAV, FLAC and what kbps means.</p></a>
+      <a class="card" href="/guides/clean-up-voice-memo/"><div class="ico">${ICONS.sparkle}</div><b>Clean up a voice memo</b><p>Trim it, remove noise and make it louder.</p></a>
+      <a class="card" href="/guides/ringtone-from-video/"><div class="ico">${ICONS.video}</div><b>Make a ringtone from a video</b><p>Use a sound from your own videos as your ringtone.</p></a>
     </div>`,
   },
   {
@@ -612,6 +615,121 @@ const PAGES = [
     </ol>`,
   },
   {
+    path: 'guides/best-audio-format', crumb: 'Guides', plain: true,
+    title: `MP3, M4A, WAV or FLAC: Which Audio Format to Use | ${NAME}`,
+    description: 'A plain guide to audio formats and bitrates: when to use MP3, M4A, WAV, FLAC or OGG, and what 128, 192 and 320 kbps actually mean.',
+    h1: 'Which audio format should you use?',
+    lead: 'MP3, M4A, WAV, FLAC, OGG and what kbps means, explained without the jargon.',
+    content: `
+    <h2>The short answer</h2>
+    <p>Use <strong>MP3 at 320 kbps</strong> for music you want to play anywhere, <strong>MP3 at 128 kbps</strong> for speech, and <strong>WAV or FLAC</strong> only if you plan to edit the file again.</p>
+    <h2>The formats</h2>
+    <h3>MP3</h3>
+    <p>Plays on every phone, computer, car and speaker made in the last 25 years. It throws away sound most people can't hear to keep files small. At 320 kbps it's very hard to tell apart from the original.</p>
+    <h3>M4A (AAC)</h3>
+    <p>Apple's default. It sounds slightly better than MP3 at the same size, and it's what iPhone voice memos and ringtones (M4R) use. Some older players and cars don't support it.</p>
+    <h3>WAV</h3>
+    <p>Uncompressed, so nothing is lost and editing programs love it. The downside is size: about 10 MB per minute.</p>
+    <h3>FLAC</h3>
+    <p>Also lossless, but compressed to roughly half the size of WAV. Good for keeping a music collection at full quality. Not every device plays it.</p>
+    <h3>OGG and OPUS</h3>
+    <p>Open formats used by apps like WhatsApp and Telegram. They're efficient, especially for voice, but many players can't open them, which is why people convert them to MP3.</p>
+    <h2>What kbps means</h2>
+    <p>Kbps (kilobits per second) is how much data is used for each second of sound. More data means better sound and bigger files.</p>
+    <ol class="guide-steps">
+      <li><strong>128 kbps</strong>: about 1 MB per minute. Fine for podcasts, lectures and voice notes.</li>
+      <li><strong>192 kbps</strong>: about 1.4 MB per minute. Good for music on phone speakers.</li>
+      <li><strong>256 to 320 kbps</strong>: about 2 to 2.4 MB per minute. Best for music on headphones or a good speaker.</li>
+    </ol>
+    <h2>One thing to avoid</h2>
+    <p>Converting a small MP3 to WAV or a higher bitrate doesn't bring back lost quality. It just makes the file bigger. Always start from the best original you have.</p>
+    <div class="callout"><p>Ready to convert a file?</p><a class="btn sm" href="/audio-converter/">Open the converter</a></div>`,
+    faq: [
+      ['Is 320 kbps better than 128 kbps?', 'Yes, for music. For speech, 128 kbps already sounds clear and the file is less than half the size.'],
+      ['Which format do iPhones use for ringtones?', 'M4R, which is an M4A file with a different name. The Ringtone Maker creates it for you.'],
+    ],
+  },
+  {
+    path: 'guides/clean-up-voice-memo', crumb: 'Guides', plain: true,
+    title: `How to Trim and Clean Up a Voice Memo or Recording | ${NAME}`,
+    description: 'Cut the start and end of a voice memo, remove background noise and long pauses, make it louder and save it as MP3. Works on iPhone and Android.',
+    h1: 'How to clean up a voice memo',
+    lead: 'Trim it, remove background noise and long pauses, make it louder, and save it as an MP3 you can share.',
+    content: `
+    <h2>1. Get the recording onto your phone's files</h2>
+    <ol class="guide-steps">
+      <li><strong>iPhone Voice Memos:</strong> tap the memo, then <strong>Share → Save to Files</strong>.</li>
+      <li><strong>Android recorder:</strong> recordings are usually already in <strong>Files → Recordings</strong>.</li>
+      <li><strong>WhatsApp voice note:</strong> long-press it → <strong>Share</strong> or <strong>Export</strong> → Save to Files.</li>
+    </ol>
+    <h2>2. Open it in the noise remover</h2>
+    <p>Go to the <a href="/noise-remover/">AI Noise Remover</a> and open the file. AI noise removal, Auto loudness and Remove silences are already switched on.</p>
+    <h2>3. Trim the start and end</h2>
+    <p>Drag the handles on the waveform so the selection starts just before the first word and ends just after the last one. Press <strong>Play</strong> to check.</p>
+    <h2>4. Listen before saving</h2>
+    <p>Press <strong>Preview with effects</strong>. If the voice sounds thin, lower the Treble slider a little. If it's still too quiet, raise Volume.</p>
+    <h2>5. Save it</h2>
+    <p>Choose <strong>MP3</strong> and <strong>128 kbps</strong> (plenty for speech), press Convert, then Download.</p>
+    <h2>Recording tips for next time</h2>
+    <ol class="guide-steps">
+      <li>Hold the phone about a hand's width from your mouth, slightly to the side.</li>
+      <li>Record in a room with soft things like curtains or a sofa. Bare rooms echo.</li>
+      <li>Turn off fans and close the window if you can. Noise removal helps, but less noise is always better.</li>
+    </ol>`,
+    faq: [
+      ['Will AI noise removal work on music?', 'It is made for voices. On music it can remove instruments, so for songs use Reduce hiss instead.'],
+      ['Is my recording uploaded?', 'No. Everything runs on your own device.'],
+    ],
+  },
+  {
+    path: 'guides/ringtone-from-video', crumb: 'Guides', plain: true,
+    title: `How to Make a Ringtone from a Video | ${NAME}`,
+    description: 'Turn the sound from a video you recorded or saved into an iPhone or Android ringtone. Pick the best part, add a fade, set it on your phone.',
+    h1: 'How to make a ringtone from a video',
+    lead: "Got a video with a sound you love, like your kid laughing, a concert clip or a funny moment? Here's how to make it your ringtone.",
+    content: `
+    <h2>1. Open the video in the Ringtone Maker</h2>
+    <p>Go to the <a href="/ringtone-maker/">Ringtone Maker</a> and choose the video from your Photos, Gallery or Files. MeloCut uses the sound and ignores the picture.</p>
+    <h2>2. Pick the part you want</h2>
+    <p>Drag on the waveform to select up to 40 seconds. The loud parts show up as tall bars, which makes the good moments easy to find. Press <strong>Play</strong> to check.</p>
+    <h2>3. Make it sound good as a ringtone</h2>
+    <ol class="guide-steps">
+      <li>Leave <strong>Fade in</strong> and <strong>Fade out</strong> on so it doesn't start or stop abruptly.</li>
+      <li>Phone videos are often quiet. Open <strong>Effects</strong> and turn on <strong>Auto loudness</strong>.</li>
+      <li>If there's wind or crowd noise behind a voice, turn on <strong>AI noise removal</strong>.</li>
+    </ol>
+    <h2>4. Save it in the right format</h2>
+    <p>Choose <strong>M4R</strong> for iPhone or <strong>MP3</strong> for Android, then Convert and Download.</p>
+    <h2>5. Set it on your phone</h2>
+    <p>Follow the <a href="/guides/set-ringtone/">ringtone setup guide</a> for iPhone (with GarageBand or a computer) or Android.</p>`,
+    faq: [
+      ['Can I use a video I downloaded from social media?', 'Only use videos you made yourself or have permission to use, and respect copyright.'],
+      ['Why is my ringtone too quiet?', 'Turn on Auto loudness or raise Volume in Effects before converting.'],
+    ],
+  },
+  {
+    path: 'terms', crumb: null, plain: true,
+    title: `Terms of Use | ${NAME}`,
+    description: `The terms for using ${NAME}, a set of free audio tools that run in your web browser.`,
+    h1: 'Terms of use',
+    content: `
+    <p><em>Last updated: ${UPDATED}</em></p>
+    <h2>Using MeloCut</h2>
+    <p>${NAME} is free to use for personal and commercial purposes. You don't need an account. By using the site you agree to these terms.</p>
+    <h2>Your files and your responsibility</h2>
+    <p>Your files are processed on your own device and never sent to us. You are responsible for the files you open and the files you create. Only use audio and video you own or have permission to use, and respect copyright and other people's rights.</p>
+    <h2>No warranty</h2>
+    <p>${NAME} is provided as is. We work hard to make it reliable, but we can't promise it will always be available or free of errors. Keep a copy of your original files.</p>
+    <h2>Limitation of liability</h2>
+    <p>To the extent the law allows, we are not liable for any loss or damage that comes from using ${NAME}, including lost or damaged files.</p>
+    <h2>Third-party services</h2>
+    <p>The site loads its audio engine from the jsDelivr network and may show ads from Google. Their own terms and privacy policies apply to those services. See our <a href="/privacy/">privacy policy</a> for details.</p>
+    <h2>Changes</h2>
+    <p>We may update these terms. The date at the top shows when they last changed.</p>
+    <h2>Contact</h2>
+    <p>Questions about these terms: <a href="mailto:${EMAIL}">${EMAIL}</a>.</p>`,
+  },
+  {
     path: 'privacy', crumb: null, plain: true,
     title: `Privacy Policy | ${NAME}`,
     description: `How ${NAME} handles your data. Your audio and video files never leave your device.`,
@@ -640,8 +758,7 @@ const PAGES = [
     <p>We made it because most converter sites are slow, covered in pop-ups and want you to upload your personal files. ${NAME} runs the FFmpeg audio engine on your own device instead, so it's quicker and your files stay private.</p>
     <h2>Contact</h2>
     <p>Ideas, bug reports or business questions: <a href="mailto:${EMAIL}">${EMAIL}</a>.</p>
-    <h2>Terms of use</h2>
-    <p>${NAME} is provided as is, without warranty. Only use it with files you own or have permission to use, and respect copyright.</p>`,
+    <p>Please read our <a href="/terms/">terms of use</a> and <a href="/privacy/">privacy policy</a>.</p>`,
   },
 ];
 
@@ -723,7 +840,7 @@ function page(p) {
 <meta name="twitter:description" content="${esc(p.description)}">
 <meta name="twitter:image" content="${img}">
 <link rel="stylesheet" href="/assets/style.css">
-<script src="/assets/config.js"></script>
+<script src="/assets/config.js" defer></script>
 <script src="/assets/site.js" defer></script>
 ${p.tool ? '<link rel="modulepreload" href="/assets/app.js">\n<script type="module" src="/assets/app.js"></script>\n<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>' : ''}
 <script type="application/ld+json">${jsonLd(p)}</script>
@@ -760,7 +877,7 @@ ${p.tool ? '<link rel="modulepreload" href="/assets/app.js">\n<script type="modu
     <div>© <span data-year></span> ${NAME} · Free audio tools that run in your browser</div>
     <nav aria-label="Tools">${TOOLS.map((t) => `<a href="/${t.slug}/">${t.title}</a>`).join('')}</nav>
     <nav aria-label="Conversions">${CONVERSIONS.map((c) => `<a href="/${c.slug}/">${c.label}</a>`).join('')}</nav>
-    <nav aria-label="More"><a href="/guides/">Guides</a><a href="/guides/install-app/">Install the app</a><a href="/about/">About and contact</a><a href="/privacy/">Privacy</a></nav>
+    <nav aria-label="More"><a href="/guides/">Guides</a><a href="/guides/install-app/">Install the app</a><a href="/about/">About and contact</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a></nav>
   </div>
 </footer>
 </body>

@@ -283,3 +283,7 @@ footer a:hover { color: var(--brand); }
 footer .wrap { flex-direction: column; }
 footer nav { padding-top: 2px; }
 @media (max-width: 640px) { .crumbs { font-size: 12.5px; padding-top: 12px; } .crumbs + .hero { padding-top: 12px; } }
+
+/* reserve the tool's first-render height so the page doesn't jump while the script loads */
+.tool[data-tool] { min-height: 292px; }
+@media (max-width: 640px) { .tool[data-tool] { min-height: 300px; } .tool[data-tool="joiner"] { min-height: 328px; } }

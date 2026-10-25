@@ -331,8 +331,8 @@ function mountTool(root) {
   if (!cfg) return;
 
   root.innerHTML = `
-    <input type="file" class="sr" accept="${ACCEPT}" data-file>
-    <div class="drop" data-drop tabindex="0" role="button" aria-label="Choose an audio or video file">
+    <input type="file" class="sr" accept="${ACCEPT}" data-file aria-label="Choose an audio or video file" tabindex="-1">
+    <div class="drop" data-drop tabindex="0" role="button">
       <div class="ico">${UPLOAD_ICON}</div>
       <strong>Choose a file or drop it here</strong>
       <span>MP3, MP4, MOV, M4A, WAV, OGG, OPUS, WebM… up to 1 GB</span>
@@ -903,8 +903,8 @@ function mountTool(root) {
 // ---------- audio joiner (several files -> one) ----------
 function mountJoiner(root) {
   root.innerHTML = `
-    <input type="file" class="sr" accept="${ACCEPT}" multiple data-file>
-    <div class="drop" data-drop tabindex="0" role="button" aria-label="Choose audio or video files">
+    <input type="file" class="sr" accept="${ACCEPT}" multiple data-file aria-label="Choose audio or video files" tabindex="-1">
+    <div class="drop" data-drop tabindex="0" role="button">
       <div class="ico">${UPLOAD_ICON}</div>
       <strong>Choose 2 or more files, or drop them here</strong>
       <span>Songs, voice notes or videos, in any order. You can reorder them next.</span>
