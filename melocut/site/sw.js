@@ -1,6 +1,6 @@
 // MeloCut offline support: pages are network-first (fresh when online, cached when offline);
 // our static files are stale-while-revalidate; the versioned audio engine is cache-first.
-const CACHE = 'melocut-v2';
+const CACHE = 'melocut-v3';
 const CORE = ['/', '/assets/style.css', '/assets/app.js', '/assets/site.js', '/assets/config.js', '/assets/logo.svg',
   '/vendor/ffmpeg/index.js', '/vendor/ffmpeg/classes.js', '/vendor/ffmpeg/worker.js', '/vendor/ffmpeg/const.js',
   '/vendor/ffmpeg/errors.js', '/vendor/ffmpeg/utils.js', '/vendor/ffmpeg/types.js'];
@@ -21,20 +21,20 @@ self.addEventListener('fetch', (e) => {
   if (!sameOrigin && !engine) return; // ads, analytics: never cached
   if (req.mode === 'navigate') {
     e.respondWith(fetch(req).then((res) => {
-      const copy = res.clone();
-      caches.open(CACHE).then((c) => c.put(req, copy));
+      if (res.ok) { const copy = res.clone(); caches.open(CACHE).then((c) => c.put(req, copy)); }
       return res;
     }).catch(() => caches.match(req).then((r) => r || caches.match('/'))));
     return;
   }
   // The engine files are versioned (never change): cache-first. Our own files: serve the
   // cached copy instantly and refresh it in the background so updates still arrive.
-  const update = fetch(req).then((res) => {
+  const update = () => fetch(req).then((res) => {
     if (res.ok) { const copy = res.clone(); caches.open(CACHE).then((c) => c.put(req, copy)); }
     return res;
   });
   e.respondWith(caches.match(req).then((hit) => {
-    if (hit) { if (sameOrigin) e.waitUntil(update.catch(() => {})); return hit; }
-    return update;
+    if (!hit) return update();
+    if (sameOrigin) e.waitUntil(update().catch(() => {})); // refresh our own files only
+    return hit;
   }));
 });

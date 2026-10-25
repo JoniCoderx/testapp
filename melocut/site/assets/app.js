@@ -60,7 +60,7 @@ function loadEngine(onProgress) {
       const ff = new FFmpeg();
       const coreURL = await toBlobURL(`${CORE_BASE}/ffmpeg-core.js`, 'text/javascript');
       const wasmURL = await toBlobURL(`${CORE_BASE}/ffmpeg-core.wasm`, 'application/wasm', (p) => engineProgress?.(p));
-      await ff.load({ coreURL, wasmURL });
+      try { await ff.load({ coreURL, wasmURL }); } finally { URL.revokeObjectURL(coreURL); URL.revokeObjectURL(wasmURL); }
       return ff;
     })().catch((e) => { enginePromise = null; throw e; });
   }
@@ -68,6 +68,18 @@ function loadEngine(onProgress) {
 }
 // A failed run can leave the wasm engine aborted: drop it so the next try starts fresh.
 function resetEngine(ff) { try { ff?.terminate(); } catch {} enginePromise = null; }
+// One ffmpeg instance is shared, and it uses fixed file names: run jobs one at a time.
+let engineQueue = Promise.resolve();
+function exclusive(fn) {
+  const run = engineQueue.then(fn, fn);
+  engineQueue = run.catch(() => {});
+  return run;
+}
+// Promise wrapper that also works with old Safari's callback-only decodeAudioData.
+const decodeAudio = (ctx, buf) => new Promise((resolve, reject) => {
+  const r = ctx.decodeAudioData(buf, resolve, reject);
+  if (r && r.then) r.then(resolve, reject);
+});
 
 // Run one ffmpeg command, reporting progress (0..1) against the expected output length.
 async function runFFmpeg(ff, args, outLen, onProgress) {
@@ -138,7 +150,9 @@ const PRESETS = {
 
 // Filter chain for the given effects; len = input length in seconds. Returns { filters, outLen, extraArgs }.
 function effectFilters(fx, len) {
-  const f = [];
+  // Always pin the channel layout first: ffmpeg 5.1 (wasm) cannot pick an output layout for
+  // inputs with an unknown one (e.g. some mono voice notes), especially for WAV/FLAC/preview.
+  const f = ['aformat=channel_layouts=mono|stereo'];
   if (fx.aiDenoise) f.push('aresample=48000', `arnndn=m=${RNN_MODEL_FILE}`);
   if (fx.denoise) f.push('afftdn=nf=-25');
   // Classic centre-channel cancellation: removes vocals mixed in the middle of a stereo song.
@@ -164,7 +178,9 @@ function effectFilters(fx, len) {
   if (fx.volume !== 100) f.push(`volume=${(fx.volume / 100).toFixed(2)}`);
   if (fx.normalize) f.push('loudnorm=I=-14:TP=-1.5:LRA=11', 'aresample=44100');
   if (fx.volume > 100 || fx.bass > 0 || fx.reverb > 0) f.push('alimiter=limit=0.97');
-  return { filters: f, outLen, extraArgs: fx.mono && !fx.eightD ? ['-ac', '1'] : [] };
+  f.push('aformat=channel_layouts=mono|stereo'); // and again last: loudnorm can drop it on a filter re-init
+  // Mono would fold 8D back to the centre, and fold the vocal remover's L-R / R-L to silence.
+  return { filters: f, outLen, extraArgs: fx.mono && !fx.eightD && !fx.karaoke ? ['-ac', '1'] : [] };
 }
 
 const isDefaultFx = (fx) => Object.keys(FX_DEFAULTS).every((k) => fx[k] === FX_DEFAULTS[k]);
@@ -337,9 +353,9 @@ function mountTool(root) {
       <div class="note info" data-hint>${cfg.note}</div>
       <div class="go">
         <button class="btn" type="button" data-go>Convert</button>
-        <div class="progress" data-progress><div class="bar"><i data-fill></i></div><small data-stage></small></div>
+        <div class="progress" data-progress><div class="bar"><i data-fill></i></div><small data-stage role="status" aria-live="polite"></small></div>
       </div>
-      <div class="note" data-err></div>
+      <div class="note" data-err role="alert"></div>
     </div>
     <div class="private">🔒 Your file never leaves your device. Nothing is uploaded.</div>`;
 
@@ -367,18 +383,20 @@ function mountTool(root) {
   els.drop.addEventListener('drop', (e) => e.dataTransfer.files[0] && openFile(e.dataTransfer.files[0]));
   // Space toggles playback (when not typing in a field).
   document.addEventListener('keydown', (e) => {
-    if (e.code !== 'Space' || !st.buffer || /INPUT|SELECT|TEXTAREA|BUTTON/.test(document.activeElement?.tagName)) return;
+    if (e.code !== 'Space' || !st.buffer || /^(INPUT|SELECT|TEXTAREA|BUTTON|SUMMARY|A)$/.test(document.activeElement?.tagName)) return;
     e.preventDefault(); els.play.click();
   });
 
   function error(msg) { els.err.textContent = msg || ''; els.err.className = msg ? 'note err' : 'note'; }
 
   async function openFile(file) {
+    if (st.busy) return error('Please wait until the current conversion or preview has finished.');
     error('');
     if (file.size > MAX_BYTES) return showDropError('That file is over 1 GB. Please choose a smaller file.');
     stopPlay();
     resetOutput();
-    st.file = file; st.buffer = null; st.peaks = null;
+    const token = (st.openToken = (st.openToken || 0) + 1); // a newer open wins over a slower older one
+    st.file = file; st.buffer = null; st.peaks = null; st.duration = 0;
     els.drop.style.display = 'none';
     els.editor.style.display = 'block';
     els.name.textContent = file.name;
@@ -388,14 +406,18 @@ function mountTool(root) {
     els.format.value = cfg.defaultFormat;
     syncQuality();
     track('file_opened', { tool: root.dataset.tool, type: extOf(file.name) });
+    let buffer;
     try {
-      st.buffer = await decode(file);
+      buffer = await decode(file);
     } catch (e) {
-      els.busy.textContent = 'Could not read this file. Is it an audio or video file?';
+      if (token === st.openToken) els.busy.textContent = 'Could not read this file. Is it an audio or video file?';
       return;
     }
-    st.duration = st.buffer.duration;
-    if (!st.duration) { els.busy.textContent = 'This file has no audio.'; return; }
+    if (token !== st.openToken) return;
+    if (!buffer?.duration) { els.busy.textContent = 'This file has no audio.'; return; }
+    st.buffer = buffer;
+    st.duration = buffer.duration;
+    st.mono = isMono(buffer);
     els.meta.textContent = `${fmt(st.duration)} · ${(file.size / 1048576).toFixed(1)} MB`;
     st.peaks = null;
     els.busy.style.display = 'none';
@@ -411,20 +433,35 @@ function mountTool(root) {
     st.ctx ||= new (window.AudioContext || window.webkitAudioContext)();
     const data = await file.arrayBuffer();
     try {
-      return await st.ctx.decodeAudioData(data.slice(0));
+      return await decodeAudio(st.ctx, data.slice(0));
     } catch {
       // Browser can't decode this container/codec natively: let ffmpeg extract the audio first.
       els.busy.textContent = 'Preparing audio engine…';
-      const ff = await loadEngine((p) => (els.busy.textContent = `Loading audio engine… ${Math.round(p * 100)}%`));
-      const inName = `in.${extOf(file.name)}`;
-      await ff.writeFile(inName, new Uint8Array(data));
-      els.busy.textContent = 'Reading audio…';
-      await ff.exec(['-i', inName, '-vn', '-ac', '2', '-ar', '44100', '-c:a', 'pcm_s16le', 'preview.wav']);
-      const wav = await ff.readFile('preview.wav');
-      await ff.deleteFile('preview.wav').catch(() => {});
-      await ff.deleteFile(inName).catch(() => {});
-      return await st.ctx.decodeAudioData(wav.buffer);
+      const wav = await exclusive(async () => {
+        const ff = await loadEngine((p) => (els.busy.textContent = `Loading audio engine… ${Math.round(p * 100)}%`));
+        const inName = `in.${extOf(file.name)}`;
+        try {
+          await ff.writeFile(inName, new Uint8Array(data));
+          els.busy.textContent = 'Reading audio…';
+          const code = await ff.exec(['-i', inName, '-vn', '-ac', '2', '-ar', '44100', '-c:a', 'pcm_s16le', 'preview.wav']);
+          if (code !== 0) throw new Error('decode failed');
+          return await ff.readFile('preview.wav');
+        } finally {
+          await ff.deleteFile('preview.wav').catch(() => {});
+          await ff.deleteFile(inName).catch(() => {});
+        }
+      });
+      return await decodeAudio(st.ctx, wav.buffer);
     }
+  }
+  // True when both channels are (nearly) identical, i.e. there is no stereo image.
+  function isMono(buf) {
+    if (buf.numberOfChannels < 2) return true;
+    const l = buf.getChannelData(0), r = buf.getChannelData(1);
+    const step = Math.max(1, Math.floor(l.length / 20000));
+    let diff = 0, sum = 0;
+    for (let i = 0; i < l.length; i += step) { diff += Math.abs(l[i] - r[i]); sum += Math.abs(l[i]) + Math.abs(r[i]); }
+    return sum === 0 || diff / sum < 0.01;
   }
 
   // ----- selection -----
@@ -498,7 +535,7 @@ function mountTool(root) {
       g.fillRect(x, (h - bh) / 2, 2, bh);
     }
     g.fillStyle = brand;
-    [xa, xb].forEach((x) => { g.fillRect(x - 1.5, 0, 3, h); g.beginPath(); g.roundRect(x - 7, h / 2 - 14, 14, 28, 5); g.fill(); });
+    [xa, xb].forEach((x) => { g.fillRect(x - 1.5, 0, 3, h); if (g.roundRect) { g.beginPath(); g.roundRect(x - 7, h / 2 - 14, 14, 28, 5); g.fill(); } else g.fillRect(x - 7, h / 2 - 14, 14, 28); });
     if (playhead != null) { g.fillStyle = brand2; g.fillRect((playhead / d) * w - 1, 0, 2, h); }
   }
   new ResizeObserver(() => draw()).observe(els.wave);
@@ -563,6 +600,18 @@ function mountTool(root) {
   }));
   root.querySelectorAll('.opts select').forEach((el) => el.addEventListener('change', resetOutput));
 
+  // Problems to report before running ffmpeg (null when fine).
+  function checkJob() {
+    const fxv = fx.get();
+    const [a, b] = st.sel;
+    const len = cfg.modes && st.mode === 'remove' ? st.duration - (b - a) : b - a;
+    if (fxv.reverse && st.duration > 20 * 60) return 'Reverse works on files up to 20 minutes. Select a shorter part or use a shorter file.';
+    if (cfg.maxLen && len / fxv.speed > cfg.maxLen + 0.05)
+      return `With speed ${fxv.speed}× the ringtone would be ${Math.round(len / fxv.speed)} s long, but phones allow ${cfg.maxLen} s. Select a shorter part or raise the speed.`;
+    if (fxv.karaoke && st.mono) return 'This file is mono (no left/right difference), so the vocal remover would make it silent. It needs a stereo song.';
+    return null;
+  }
+
   // ----- build the ffmpeg command -----
   function buildArgs(inName, outName, fmtKey, previewSeconds) {
     const [a, b] = st.sel, d = st.duration;
@@ -595,7 +644,8 @@ function mountTool(root) {
     return { args, outLen: previewSeconds ? Math.min(previewSeconds, outLen) : outLen };
   }
 
-  async function withInput(fn) {
+  function withInput(fn) { return exclusive(() => withInputNow(fn)); }
+  async function withInputNow(fn) {
     const inName = `input.${extOf(st.file.name)}`;
     let ff;
     try {
@@ -615,7 +665,10 @@ function mountTool(root) {
   els.fxPreview.addEventListener('click', async () => {
     if (st.source) return stopPlay();
     if (!st.buffer || st.busy) return;
+    st.ctx.resume(); // must start inside the tap for iOS to allow sound later
     error('');
+    const check = checkJob();
+    if (check) return error(check);
     st.busy = true;
     els.fxPreview.disabled = true;
     const status = (t) => (els.fxStatus.textContent = t);
@@ -630,7 +683,7 @@ function mountTool(root) {
         return data;
       });
       await st.ctx.resume();
-      const buf = await st.ctx.decodeAudioData(wav.buffer);
+      const buf = await decodeAudio(st.ctx, wav.buffer);
       playBuffer(buf, 0, buf.duration);
       els.fxPreview.textContent = '■ Stop preview';
       status(`Playing ${fmt(buf.duration)} with your effects.`);
@@ -655,9 +708,11 @@ function mountTool(root) {
   els.go.onclick = convert;
 
   async function convert() {
-    if (!st.file || st.busy) return;
+    if (!st.file || !st.buffer || st.busy) return;
     error('');
     stopPlay();
+    const check = checkJob();
+    if (check) return error(check);
     st.busy = true;
     els.go.disabled = true;
     els.go.textContent = 'Working…';
@@ -680,6 +735,7 @@ function mountTool(root) {
       st.outURL = URL.createObjectURL(blob);
       const fileName = `${baseName(st.file.name)}${cfg.suffix}.${fmtKey}`;
       setP(1, `Done · ${(blob.size / 1048576).toFixed(2)} MB`);
+      error('');
       els.go.textContent = `⬇ Download ${fmtKey.toUpperCase()}`;
       els.go.classList.add('ok');
       els.go.onclick = () => { downloadURL(st.outURL, fileName); track('download', { tool: root.dataset.tool, format: fmtKey }); };
@@ -716,9 +772,9 @@ function mountJoiner(root) {
       </div>
       <div class="go">
         <button class="btn" type="button" data-go>Join files</button>
-        <div class="progress" data-progress><div class="bar"><i data-fill></i></div><small data-stage></small></div>
+        <div class="progress" data-progress><div class="bar"><i data-fill></i></div><small data-stage role="status" aria-live="polite"></small></div>
       </div>
-      <div class="note" data-err></div>
+      <div class="note" data-err role="alert"></div>
     </div>
     <div class="private">🔒 Your files never leave your device. Nothing is uploaded.</div>`;
 
@@ -732,6 +788,7 @@ function mountJoiner(root) {
   const error = (msg) => { els.err.textContent = msg || ''; els.err.className = msg ? 'note err' : 'note'; };
 
   els.drop.addEventListener('click', () => els.file.click());
+  els.drop.addEventListener('keydown', (e) => (e.key === 'Enter' || e.key === ' ') && (e.preventDefault(), els.file.click()));
   $(root, '[data-add]').addEventListener('click', () => els.file.click());
   els.file.addEventListener('change', () => { addFiles([...els.file.files]); els.file.value = ''; });
   ['dragenter', 'dragover'].forEach((t) => els.drop.addEventListener(t, (e) => { e.preventDefault(); els.drop.classList.add('over'); }));
