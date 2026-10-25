@@ -52,3 +52,24 @@ cd site && python3 -m http.server 8080   # http://localhost:8080
 More tools (each one is a new search page): audio joiner, volume booster, slowed + reverb,
 voice note converter, MP3 to WAV landing pages; translated pages (Spanish, Portuguese, Hindi,
 Indonesian, Turkish); a "Pro" tier for batch processing.
+
+## Going live on your own domain (Cloudflare Pages)
+
+Higgsfield cannot use a custom domain, and AdSense needs one, so host `site/` on Cloudflare Pages:
+
+1. Cloudflare dashboard → Workers & Pages → Create → Pages → Connect to Git → pick this repository.
+2. Production branch: `main`. Framework preset: None. Build command: leave empty.
+   Build output directory: `melocut/site`. Save and Deploy.
+3. Custom domains → Set up a domain → `melocut.com` (and `www.melocut.com`). Follow the DNS steps.
+4. Rebuild the pages for the new address and push:
+   `SITE_URL=https://melocut.com node build.mjs && PLAYWRIGHT=... node og.mjs && SITE_URL=https://melocut.com node build.mjs`
+
+`site/_headers` sets caching for Cloudflare Pages. `404.html` is used automatically.
+
+## Turning on ads
+
+1. Apply at adsense.google.com with `https://melocut.com`.
+2. Put the `ca-pub-...` id in `site/assets/config.js` (`adsenseClient`).
+3. Create `site/ads.txt` with the line AdSense shows you, e.g.
+   `google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0`
+4. In AdSense → Privacy & messaging, publish the GDPR message (needed for EU/UK visitors).
