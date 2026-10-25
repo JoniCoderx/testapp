@@ -1,0 +1,40 @@
+(() => {
+  const cfg = window.MELOCUT_CONFIG || {};
+
+  // Mobile menu
+  const top = document.querySelector('.top');
+  document.querySelector('.menu-btn')?.addEventListener('click', () => top.classList.toggle('open'));
+  document.querySelectorAll('[data-year]').forEach((el) => (el.textContent = new Date().getFullYear()));
+
+  // Ads: only when an AdSense client id is configured.
+  if (cfg.adsenseClient) {
+    document.documentElement.classList.add('ads-on');
+    const s = document.createElement('script');
+    s.async = true;
+    s.crossOrigin = 'anonymous';
+    s.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${encodeURIComponent(cfg.adsenseClient)}`;
+    document.head.appendChild(s);
+    document.querySelectorAll('.ad[data-slot]').forEach((box) => {
+      const ins = document.createElement('ins');
+      ins.className = 'adsbygoogle';
+      ins.style.display = 'block';
+      ins.dataset.adClient = cfg.adsenseClient;
+      const slot = cfg.adSlots?.[box.dataset.slot];
+      if (slot) ins.dataset.adSlot = slot;
+      ins.dataset.adFormat = 'auto';
+      ins.dataset.fullWidthResponsive = 'true';
+      box.appendChild(ins);
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
+    });
+  }
+
+  // Analytics (privacy-friendly, optional)
+  if (cfg.plausibleDomain) {
+    const s = document.createElement('script');
+    s.defer = true;
+    s.dataset.domain = cfg.plausibleDomain;
+    s.src = 'https://plausible.io/js/script.tagged-events.js';
+    document.head.appendChild(s);
+    window.plausible = window.plausible || function () { (window.plausible.q = window.plausible.q || []).push(arguments); };
+  }
+})();
