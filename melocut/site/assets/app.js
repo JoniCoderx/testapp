@@ -105,7 +105,7 @@ async function runFFmpeg(ff, args, outLen, onProgress) {
 // ---------- helpers ----------
 const $ = (root, sel) => root.querySelector(sel);
 const fmt = (t) => {
-  t = Math.max(0, t || 0);
+  t = Math.round(Math.max(0, t || 0) * 10) / 10; // round first, so 59.96 s shows as 1:00.0, not 0:60.0
   const m = Math.floor(t / 60), s = t - m * 60;
   return `${m}:${s.toFixed(1).padStart(4, '0')}`;
 };

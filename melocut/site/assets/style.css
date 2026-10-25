@@ -171,3 +171,7 @@ footer a:hover { color: var(--brand); }
 .joinlist li.playing { border-color: var(--brand); background: var(--brand-soft); }
 .result { margin-top: 14px; padding: 14px; border: 1px solid var(--brand); border-radius: 12px; background: var(--brand-soft); display: grid; gap: 8px; }
 .result audio { width: 100%; }
+
+/* clean taps on phones; visible focus ring for keyboard users */
+* { -webkit-tap-highlight-color: transparent; }
+:focus-visible { outline: 3px solid var(--brand); outline-offset: 2px; border-radius: 8px; }
