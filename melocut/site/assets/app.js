@@ -407,7 +407,7 @@ function mountTool(root) {
     els.meta.textContent = `${(file.size / 1048576).toFixed(1)} MB`;
     els.busy.style.display = 'grid';
     els.busy.textContent = 'Reading audio…';
-    els.format.value = cfg.defaultFormat;
+    els.format.value = cfg.formats.includes(root.dataset.format) ? root.dataset.format : cfg.defaultFormat;
     syncQuality();
     track('file_opened', { tool: root.dataset.tool, type: extOf(file.name) });
     let buffer;

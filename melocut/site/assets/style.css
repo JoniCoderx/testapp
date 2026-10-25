@@ -270,3 +270,16 @@ footer a:hover { color: var(--brand); }
   .cards:not(.rail) { grid-template-columns: 1fr; }
   .fx-grid, .fx-toggles { grid-template-columns: 1fr; }
 }
+
+/* breadcrumbs, conversion links, footer groups */
+.crumbs { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: 13.5px; color: var(--muted); padding-top: 16px; }
+.crumbs a { color: var(--muted); text-decoration: none; }
+.crumbs a:hover { color: var(--brand); }
+.crumbs .sep { opacity: .6; }
+.crumbs [aria-current] { color: var(--text); font-weight: 600; }
+.crumbs + .hero { padding-top: 18px; }
+.chips-links { display: flex; flex-wrap: wrap; gap: 8px; }
+.chips-links .chip { text-decoration: none; }
+footer .wrap { flex-direction: column; }
+footer nav { padding-top: 2px; }
+@media (max-width: 640px) { .crumbs { font-size: 12.5px; padding-top: 12px; } .crumbs + .hero { padding-top: 12px; } }
