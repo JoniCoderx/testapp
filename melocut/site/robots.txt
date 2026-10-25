@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://melocut.com/sitemap.xml
+Sitemap: https://melocut.higgsfield.app/sitemap.xml

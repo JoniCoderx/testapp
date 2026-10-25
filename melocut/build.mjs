@@ -254,7 +254,7 @@ function page(p) {
 <meta property="og:title" content="${esc(p.title)}">
 <meta property="og:description" content="${esc(p.description)}">
 <meta property="og:url" content="${url}">
-<meta property="og:image" content="${SITE_URL}/og.png">
+<meta property="og:image" content="${SITE_URL}/og.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="stylesheet" href="/assets/style.css">
 <script src="/assets/config.js"></script>
