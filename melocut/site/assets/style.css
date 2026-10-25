@@ -11,7 +11,7 @@
     --brand-soft: #251d47; --shadow: 0 12px 34px rgba(0, 0, 0, .4); }
 }
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; scroll-padding-top: 72px; }
 body { margin: 0; font: 16px/1.65 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); }
 a { color: var(--brand); }
 img, svg, canvas { display: block; max-width: 100%; }
@@ -175,3 +175,98 @@ footer a:hover { color: var(--brand); }
 /* clean taps on phones; visible focus ring for keyboard users */
 * { -webkit-tap-highlight-color: transparent; }
 :focus-visible { outline: 3px solid var(--brand); outline-offset: 2px; border-radius: 8px; }
+
+/* ---------- phone polish ---------- */
+@media (max-width: 640px) {
+  body { font-size: 15.5px; }
+  .wrap { padding: 0 14px; }
+  .top .wrap { height: 56px; }
+  .logo { font-size: 19px; }
+  .logo img, .logo svg { width: 28px; height: 28px; }
+  .install-btn { height: 36px; padding: 0 12px; font-size: 13.5px; border-radius: 10px; }
+  .menu-btn { width: 38px; height: 38px; }
+  .top.open .nav { top: 56px; }
+  .top.open .nav a { padding: 11px 12px; font-size: 16px; }
+
+  .hero { padding: 26px 0 14px; }
+  .hero h1 { font-size: 28px; letter-spacing: -.5px; }
+  .hero p { font-size: 15.5px; }
+  .badges { gap: 6px; margin-top: 12px; }
+  .badge { font-size: 12.5px; padding: 4px 10px; }
+
+  .section { margin: 36px 0; }
+  .section h2 { font-size: 21px; margin-bottom: 12px; }
+
+  /* tool cards: compact 2-column grid */
+  .cards { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .card { padding: 13px; border-radius: 14px; }
+  .card .ico { width: 36px; height: 36px; border-radius: 11px; margin-bottom: 8px; }
+  .card .ico svg { width: 19px; height: 19px; }
+  .card b { font-size: 14.5px; line-height: 1.3; margin-bottom: 3px; }
+  .card p { font-size: 12.5px; line-height: 1.45; }
+  .ai { font-size: 9.5px; padding: 1px 5px; margin-left: 4px; }
+  /* "More free tools": swipeable row */
+  .cards.rail { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 10px; margin: 0 -14px; padding: 2px 14px 10px; scrollbar-width: none; }
+  .cards.rail::-webkit-scrollbar { display: none; }
+  .cards.rail .card { flex: 0 0 62%; scroll-snap-align: start; }
+  .steps { grid-template-columns: 1fr; gap: 8px; }
+  .steps .card { display: grid; grid-template-columns: 32px 1fr; column-gap: 12px; align-items: start; }
+  .steps .card::before { grid-row: span 2; margin: 0; }
+
+  /* the tool */
+  .tool { padding: 14px; border-radius: 18px; }
+  .drop { padding: 30px 14px; }
+  .drop strong { font-size: 17px; }
+  .filebar { gap: 8px; }
+  .filebar .btn { height: 36px; font-size: 13.5px; padding: 0 12px; }
+  .wave { height: 104px; }
+  .lane { padding: 7px 9px 5px; }
+  .lane-head { flex-direction: column; gap: 0; }
+  .lane-head small { text-align: left; font-size: 11.5px; }
+  .lane canvas { height: 52px; }
+  .controls { gap: 8px; }
+  .controls .btn { height: 40px; }
+  .time { font-size: 13px; }
+  .time input { width: 84px; }
+  /* iOS zooms into fields under 16px: keep them at 16px */
+  input, select, textarea, .time input { font-size: 16px !important; }
+  .sel-len { width: 100%; margin-left: 0; font-size: 13px; }
+  .opts { gap: 10px 12px; }
+  .opts > label { flex: 1 1 140px; justify-content: space-between; }
+  .opts select { flex: 1; min-width: 0; }
+
+  /* effects panel */
+  .fx > summary { padding: 12px 14px; }
+  .presets { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; padding: 0 14px 8px; }
+  .presets::-webkit-scrollbar { display: none; }
+  .chip { flex: 0 0 auto; font-size: 13px; padding: 6px 12px; }
+  .fx-grid { grid-template-columns: 1fr 1fr; gap: 10px 16px; padding: 10px 14px 2px; }
+  .fx-s { font-size: 13px; }
+  .fx-toggles { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; padding: 10px 14px; }
+  .fx-t { font-size: 13px; padding: 8px 9px; gap: 6px; }
+  .fx-t input { width: 16px; height: 16px; flex-shrink: 0; }
+  .fx-preview { padding: 2px 14px 14px; }
+  .fx-preview .btn { width: 100%; }
+
+  /* Convert / Download always reachable: sticky bar at the bottom of the screen */
+  .go { position: sticky; bottom: 0; z-index: 6; margin: 14px -14px -14px; padding: 10px 14px calc(10px + env(safe-area-inset-bottom));
+    background: var(--card); border-top: 1px solid var(--line); border-radius: 0 0 18px 18px; box-shadow: 0 -8px 20px rgba(40, 24, 110, .08); }
+  .go .btn { flex: 1 1 100%; height: 50px; font-size: 16.5px; }
+  .progress { min-width: 0; flex: 1 1 100%; }
+  .note { font-size: 14px; }
+
+  /* joiner list */
+  .joinlist li { padding: 8px 9px; gap: 8px; }
+  .joinlist b { font-size: 14px; }
+  .jb button, .jplay { width: 30px; height: 30px; }
+
+  details { padding: 12px 14px; }
+  .callout { padding: 14px; }
+  .callout .btn { width: 100%; }
+  .guide-steps li { padding: 11px 12px 11px 48px; font-size: 15px; }
+  footer { padding: 24px 0 calc(32px + env(safe-area-inset-bottom)); font-size: 13px; }
+}
+@media (max-width: 360px) {
+  .cards:not(.rail) { grid-template-columns: 1fr; }
+  .fx-grid, .fx-toggles { grid-template-columns: 1fr; }
+}

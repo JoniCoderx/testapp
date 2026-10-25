@@ -553,7 +553,7 @@ function page(p) {
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>${esc(p.title)}</title>
 <meta name="description" content="${esc(p.description)}">
 <link rel="canonical" href="${url}">
@@ -597,7 +597,7 @@ ${p.tool ? '<script type="module" src="/assets/app.js"></script>\n<link rel="pre
   ${p.steps ? `<div class="section"><h2>How it works</h2><div class="steps">${p.steps.map(([n, t]) => `<div class="card"><b>${n}</b><p>${t}</p></div>`).join('')}</div></div>` : ''}
   ${p.content ? `<div class="section prose">${p.content}</div>` : ''}
   ${p.tool ? `<div class="ad" data-slot="middle"></div>${WHY}` : ''}
-  ${p.tool ? `<div class="section"><h2>More free tools</h2><div class="cards">${others.map(toolCard).join('')}</div></div>${INSTALL_CALLOUT}` : ''}
+  ${p.tool ? `<div class="section"><h2>More free tools</h2><div class="cards rail">${others.map(toolCard).join('')}</div></div>${INSTALL_CALLOUT}` : ''}
   ${p.faq ? `<div class="section"><h2>Questions &amp; answers</h2>${p.faq.map(([q, a]) => `<details><summary>${q}</summary><p>${a}</p></details>`).join('')}</div>` : ''}
   ${p.plain ? '' : '<div class="ad" data-slot="bottom"></div>'}
 </main>
