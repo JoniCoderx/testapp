@@ -356,3 +356,12 @@ input[type=range]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px va
 .jb button:not(:disabled):hover, .jplay:hover { border-color: var(--brand); color: var(--brand); }
 .fx > summary > span { white-space: nowrap; flex: none; }
 .fx > summary small { flex: 0 1 auto; }
+/* phones: play buttons share one row, start and end share the next */
+@media (max-width: 640px) {
+  .controls .btn { flex: 1 1 calc(50% - 4px); min-width: 0; padding: 0 8px; gap: 6px; font-size: 14px; }
+  .controls .btn span { overflow: hidden; text-overflow: ellipsis; }
+  .controls .time { flex: 1 1 calc(50% - 4px); min-width: 0; }
+  .controls .time input { flex: 1; width: auto; min-width: 0; }
+}
+@media (max-width: 640px) { .tool:not(.has-fx) .controls [data-play] { flex-basis: 100%; } }
+@media (max-width: 380px) { .controls .btn .i { display: none; } }
