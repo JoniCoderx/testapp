@@ -116,7 +116,7 @@ const parseTime = (str) => {
 };
 const baseName = (name) => name.replace(/\.[^.]+$/, '').slice(0, 120) || 'audio';
 const extOf = (name) => (name.match(/\.([a-z0-9]{1,5})$/i)?.[1] || 'bin').toLowerCase();
-const track = (event, props) => { try { window.plausible?.(event, { props }); window.gtag?.('event', event, props); } catch {} };
+const track = (event, props) => { try { window.umami?.track(event, props); window.plausible?.(event, { props }); window.gtag?.('event', event, props); } catch {} };
 const downloadURL = (url, name) => {
   const a = document.createElement('a');
   a.href = url; a.download = name;
@@ -338,8 +338,12 @@ function optionsHTML(cfg) {
 
 // ---------- the single-file tool widget ----------
 function mountTool(root) {
-  const cfg = TOOLS[root.dataset.tool];
+  let cfg = TOOLS[root.dataset.tool];
   if (!cfg) return;
+  // A landing page can preset effects, the hint and the file name suffix on a shared tool.
+  if (root.dataset.fx) cfg = { ...cfg, fx: JSON.parse(root.dataset.fx), fxOpen: true };
+  if (root.dataset.note) cfg = { ...cfg, note: root.dataset.note };
+  if (root.dataset.suffix) cfg = { ...cfg, suffix: root.dataset.suffix };
 
   root.innerHTML = `
     <input type="file" class="sr" accept="${ACCEPT}" data-file aria-label="Choose an audio or video file" tabindex="-1">

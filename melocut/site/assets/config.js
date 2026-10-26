@@ -6,4 +6,6 @@ window.MELOCUT_CONFIG = {
   adSlots: { top: '', middle: '', bottom: '' },
   // Optional Plausible analytics domain, e.g. 'melocut.com'. Empty = no analytics.
   plausibleDomain: '',
+  // Optional Umami analytics website id (cloud.umami.is > Settings > Websites). Empty = off.
+  umamiWebsiteId: '',
 };

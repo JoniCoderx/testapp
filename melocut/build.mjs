@@ -29,6 +29,10 @@ const ICONS = {
   sparkle: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></svg>',
   mic: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v5M3 3l18 18"/></svg>',
   reverse: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>',
+  gauge: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 14l4-4"/><path d="M3.3 19a10 10 0 1 1 17.4 0"/></svg>',
+  note: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>',
+  fade: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20 9 6h6l7 14"/></svg>',
+  silence: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h3l2-6 3 12 2-6h2"/><path d="M19 9l3 6M22 9l-3 6"/></svg>',
   book: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/><path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5"/></svg>',
 };
 
@@ -46,6 +50,12 @@ const TOOLS = [
   { slug: 'bass-booster', icon: 'bass', title: 'Bass Booster', blurb: 'Add more low end to any song.' },
   { slug: 'volume-booster', icon: 'volume', title: 'Volume Booster', blurb: 'Make quiet recordings louder.' },
   { slug: 'reverse-audio', icon: 'reverse', title: 'Reverse Audio', blurb: 'Play any sound backwards.' },
+  { slug: 'speed-up-audio', icon: 'gauge', title: 'Speed Up Audio', blurb: 'Make a song or voice note faster, same pitch.' },
+  { slug: 'slow-down-audio', icon: 'slow', title: 'Slow Down Audio', blurb: 'Play anything slower without a deep voice.' },
+  { slug: 'pitch-changer', icon: 'note', title: 'Pitch Changer', blurb: 'Change the key of a song, same speed.' },
+  { slug: 'nightcore-maker', icon: 'sparkle', title: 'Nightcore Maker', blurb: 'Faster and higher, the classic nightcore sound.' },
+  { slug: 'remove-silence', icon: 'silence', title: 'Remove Silence', blurb: 'Cut the long pauses out of a recording.' },
+  { slug: 'fade-in-fade-out', icon: 'fade', title: 'Fade In and Fade Out', blurb: 'Add a smooth start and ending to any song.' },
 ];
 // Format landing pages: same converter, output format picked in advance.
 const CONVERSIONS = [
@@ -55,6 +65,9 @@ const CONVERSIONS = [
   { slug: 'whatsapp-audio-to-mp3', label: 'WhatsApp audio to MP3' },
   { slug: 'mp3-to-wav', label: 'MP3 to WAV' },
   { slug: 'flac-to-mp3', label: 'FLAC to MP3' },
+  { slug: 'mov-to-mp3', label: 'MOV to MP3' },
+  { slug: 'ogg-to-mp3', label: 'OGG to MP3' },
+  { slug: 'aac-to-mp3', label: 'AAC to MP3' },
 ];
 const MAIN_NAV = ['video-to-mp3', 'ringtone-maker', 'audio-cutter', 'audio-converter', 'audio-joiner'];
 const toolCard = (t) => `<a class="card" href="/${t.slug}/"><div class="ico">${ICONS[t.icon]}</div><b>${t.title}${t.ai ? '<span class="ai">AI</span>' : ''}</b><p>${t.blurb}</p></a>`;
@@ -82,7 +95,7 @@ const PAGES = [
     description: 'Cut songs, make ringtones for iPhone and Android, add effects and convert video to MP3. Free, and your files never leave your device.',
     h1: 'Cut songs, make ringtones and add effects, <em>right in your browser</em>',
     lead: 'Free audio tools that work on your phone or computer. Your files are never uploaded. Pick a tool to start.',
-    badges: ['12 free tools', 'AI noise removal', 'No upload', 'No sign-up'],
+    badges: [`${TOOLS.length} free tools`, 'AI noise removal', 'No upload', 'No sign-up'],
     body: `
   <div class="cards" id="tools" style="margin-top:8px">
     ${TOOLS.map(toolCard).join('\n    ')}
@@ -504,6 +517,227 @@ const PAGES = [
     <p>Record yourself saying something and play it backwards for a reverse-speech challenge, look for "hidden messages" in songs, or make reverse cymbal swells for your own music. Add some reverb for the classic reverse-reverb sound.</p>`,
     faq: [['Can I reverse just part of a song?', 'Yes. Drag on the waveform to select the part, then convert.']],
   },
+  // ---------- more format pages ----------
+  {
+    path: 'mov-to-mp3', tool: 'video-to-mp3', format: 'mp3', crumb: 'Converters',
+    title: `MOV to MP3 Converter for iPhone Videos, Free | ${NAME}`,
+    description: 'Convert MOV videos from your iPhone or Mac to MP3 in your browser. Up to 320 kbps, no upload, no app. Works right on your iPhone.',
+    h1: '<em>MOV to MP3</em> converter',
+    lead: 'iPhones record video as MOV. Open one here and save just the sound as an MP3, right on your phone.',
+    badges: ['iPhone videos', 'Up to 320 kbps', 'No upload'],
+    steps: [
+      ['Open the MOV', 'Tap the box above and pick the video from Photos or Files.'],
+      ['Trim it if you like', 'Drag on the waveform to keep only the part you want.'],
+      ['Download the MP3', 'Press Convert, then Download. It goes to Files → Downloads.'],
+    ],
+    content: `
+    <h2>Why iPhone videos are MOV files</h2>
+    <p>The Camera app saves video in Apple's QuickTime format, which ends in <code>.mov</code>. Inside is normal video and AAC sound, so ${NAME} can pull the audio out and save it as an MP3 that plays on any phone, car or computer.</p>
+    <h3>Good uses</h3>
+    <p>Save a song from a concert you filmed, keep the audio of a lecture or a toast, or turn a funny moment into a <a href="/ringtone-maker/">ringtone</a>. If the recording is noisy, switch on <strong>AI noise removal</strong> in Effects before you convert.</p>
+    <h3>Big videos</h3>
+    <p>A long 4K video can be several gigabytes. ${NAME} handles files up to 1 GB. For longer ones, trim the video in Photos first, or record the part you need again.</p>`,
+    faq: [
+      ['How do I convert a MOV to MP3 on iPhone?', 'Open this page in Safari, tap the box, choose the video from Photos, then press Convert and Download. No app is needed.'],
+      ['Is the video uploaded?', 'No. The conversion runs on your phone or computer, so the video never leaves it.'],
+      ['Can I keep the audio as M4A instead?', 'Yes. Choose M4A in the Format menu. It is the same AAC sound the video already has.'],
+    ],
+  },
+  {
+    path: 'ogg-to-mp3', tool: 'converter', format: 'mp3', crumb: 'Converters',
+    title: `OGG to MP3 Converter, Free and Online | ${NAME}`,
+    description: 'Convert OGG and OGA audio files to MP3 so they play on iPhone, in cars and in every music app. Free, quick, and nothing is uploaded.',
+    h1: '<em>OGG to MP3</em> converter',
+    lead: 'Turn OGG files from games, Telegram, Discord or Linux apps into MP3s that play everywhere.',
+    badges: ['OGG Vorbis and Opus', 'Up to 320 kbps', 'No upload'],
+    steps: [
+      ['Open the OGG', 'Choose an .ogg or .oga file from your device.'],
+      ['Pick a quality', '192 kbps is a good middle ground. Use 320 kbps for music.'],
+      ['Download the MP3', 'Press Convert, then Download.'],
+    ],
+    content: `
+    <h2>What is an OGG file?</h2>
+    <p>OGG is an open audio format. Most OGG files hold <strong>Vorbis</strong> music, and voice messages from apps like Telegram and WhatsApp often hold <strong>Opus</strong> speech. Both sound good, but iPhones, many car stereos and older players won't open them.</p>
+    <p>${NAME} reads both kinds and saves a standard MP3. If the file is a voice message, the <a href="/whatsapp-audio-to-mp3/">voice note converter</a> page has tips for getting it out of the app first.</p>
+    <h3>Converting the other way</h3>
+    <p>Need OGG instead? Open any file in the <a href="/audio-converter/">Audio Converter</a> and choose OGG as the format.</p>`,
+    faq: [
+      ['Why won\'t my iPhone play OGG files?', 'Apple supports only some OGG files in a few apps. Converting to MP3 or M4A makes them play everywhere.'],
+      ['Does converting OGG to MP3 lose quality?', 'Both are compressed formats, so a little. At 256 or 320 kbps it is very hard to hear.'],
+    ],
+  },
+  {
+    path: 'aac-to-mp3', tool: 'converter', format: 'mp3', crumb: 'Converters',
+    title: `AAC to MP3 Converter, Free and Private | ${NAME}`,
+    description: 'Convert AAC audio files to MP3 for older players, cars and apps that need MP3. Free, quick, works on phones, and nothing is uploaded.',
+    h1: '<em>AAC to MP3</em> converter',
+    lead: 'Convert .aac files from recorders, radio apps and downloads into MP3s that every device can play.',
+    badges: ['.aac and .m4a', 'Up to 320 kbps', 'No upload'],
+    steps: [
+      ['Open the AAC', 'Choose an .aac file from your device.'],
+      ['Pick a quality', 'Keep it at or above the original bitrate. 192 kbps suits most files.'],
+      ['Download the MP3', 'Press Convert, then Download.'],
+    ],
+    content: `
+    <h2>AAC or MP3?</h2>
+    <p>AAC is the newer format and sounds a little better at the same size, which is why Apple, YouTube and many radio apps use it. MP3 is older but plays on everything, including car stereos and simple MP3 players that don't support AAC.</p>
+    <h3>Same thing as M4A?</h3>
+    <p>Almost. An M4A file is AAC audio inside an MP4 container, while a <code>.aac</code> file is the raw stream. ${NAME} opens both. For M4A files there is a separate <a href="/m4a-to-mp3/">M4A to MP3</a> page.</p>`,
+    faq: [
+      ['Which bitrate should I choose?', 'Pick at least the bitrate of the original. Going higher does not add quality, it only makes the file bigger.'],
+      ['Can I convert several AAC files into one MP3?', 'Yes. Use the Audio Joiner to put them together and save one MP3.'],
+    ],
+  },
+  // ---------- more effect pages ----------
+  {
+    path: 'speed-up-audio', tool: 'converter', crumb: 'Tools', fx: { speed: 1.25 }, suffix: ' (faster)',
+    note: 'Speed is set to 1.25×. Move the Speed slider, press Play with effects, then Convert.',
+    title: `Speed Up Audio Online: Faster MP3, Same Pitch | ${NAME}`,
+    description: 'Speed up a song, podcast or voice note without the chipmunk sound. Choose 1.1× to 2×, listen first, and download an MP3. Free, no upload.',
+    h1: '<em>Speed up</em> audio',
+    lead: 'Make a song, podcast, lecture or voice note faster while the voice keeps its normal pitch.',
+    badges: ['Up to 2×', 'Same pitch', 'Preview first'],
+    steps: [
+      ['Open your file', 'Any song, voice note, podcast or video.'],
+      ['Choose the speed', '1.25× is already set. Move the Speed slider and press Play with effects.'],
+      ['Download', 'Press Convert, then Download.'],
+    ],
+    content: `
+    <h2>Faster without the chipmunk voice</h2>
+    <p>Simply playing audio faster also raises the pitch, so voices sound like cartoons. ${NAME} uses time stretching instead: it shortens the audio while keeping every voice and note at its normal pitch.</p>
+    <h3>Which speed to pick</h3>
+    <p><strong>1.25×</strong> saves a quarter of the time and still sounds natural for speech. <strong>1.5×</strong> is popular for lectures and long voice notes. Above <strong>1.75×</strong>, speech gets hard to follow. For the sped-up song trend with a higher voice, use the <a href="/nightcore-maker/">Nightcore Maker</a>.</p>
+    <h3>Even shorter</h3>
+    <p>Switch on <strong>Remove silences</strong> as well to cut out the pauses, or use the <a href="/remove-silence/">Remove Silence</a> tool on its own.</p>`,
+    faq: [
+      ['Will the voice sound higher?', 'No. The pitch stays the same. Only the tempo changes.'],
+      ['How do I speed up a voice note?', 'Open it here, set the speed, press Convert and Download. The new file is shorter and plays anywhere.'],
+      ['Can I make a sped-up song for TikTok?', 'Yes. For the classic sped-up sound with a higher pitch, use the Nightcore preset or raise the Pitch slider too.'],
+    ],
+  },
+  {
+    path: 'slow-down-audio', tool: 'converter', crumb: 'Tools', fx: { speed: 0.8 }, suffix: ' (slower)',
+    note: 'Speed is set to 0.80×. Move the Speed slider, press Play with effects, then Convert.',
+    title: `Slow Down Audio Online Without Changing Pitch | ${NAME}`,
+    description: 'Slow down songs, speech or voice notes to learn lyrics, practice an instrument or transcribe. Same pitch, preview first, free and private.',
+    h1: '<em>Slow down</em> audio',
+    lead: 'Play a song or recording slower without the deep, dragging voice. Good for learning songs, dancing and transcribing.',
+    badges: ['Down to 0.5×', 'Same pitch', 'Preview first'],
+    steps: [
+      ['Open your file', 'A song, lesson, interview or voice note.'],
+      ['Choose the speed', '0.80× is already set. Move the Speed slider and press Play with effects.'],
+      ['Download', 'Press Convert, then Download.'],
+    ],
+    content: `
+    <h2>Slower, but still in tune</h2>
+    <p>${NAME} stretches the audio in time and keeps the pitch where it was, so a guitar solo or a fast rap verse becomes easy to follow and still sounds like the original.</p>
+    <h3>Practising an instrument</h3>
+    <p>Start around <strong>0.70×</strong>, learn the part, then go up to 0.85× and finally full speed. To loop a short section, select it on the waveform first so only that part gets exported.</p>
+    <h3>Want the slowed + reverb sound?</h3>
+    <p>That trend also lowers the pitch and adds reverb. The <a href="/slowed-reverb/">Slowed + Reverb</a> tool has it set up for you.</p>`,
+    faq: [
+      ['Does slowing down change the pitch?', 'No. The notes stay in the same key. Only the tempo changes.'],
+      ['How slow can I go?', 'Down to half speed (0.5×). Below about 0.6× some songs start to sound a bit smeared.'],
+    ],
+  },
+  {
+    path: 'pitch-changer', tool: 'converter', crumb: 'Tools', fx: { pitch: -2 }, suffix: ' (new key)',
+    note: 'Pitch is set 2 semitones lower. Move the Pitch slider, press Play with effects, then Convert.',
+    title: `Pitch Changer: Change the Key of a Song Online | ${NAME}`,
+    description: 'Change the key of any song up or down by up to 12 semitones without changing its speed. Good for singing and playing along. Free, no upload.',
+    h1: '<em>Pitch changer</em> and key shifter',
+    lead: 'Move a song up or down to a key that suits your voice or instrument. The tempo stays the same.',
+    badges: ['±12 semitones', 'Same speed', 'Preview first'],
+    steps: [
+      ['Open a song', 'Any song or video from your device.'],
+      ['Change the key', 'It starts 2 semitones lower. Move the Pitch slider and press Play with effects.'],
+      ['Download', 'Press Convert, then Download.'],
+    ],
+    content: `
+    <h2>Singing in a key that fits you</h2>
+    <p>If a song is too high to sing, lower it by <strong>2 or 3 semitones</strong>. If it's too low, raise it. One semitone is one key on a piano, and 12 semitones make a full octave.</p>
+    <h3>Playing along on guitar or piano</h3>
+    <p>Songs are sometimes tuned a little off or recorded in an awkward key. Shift the song to a key you know, or use a capo position and move the song to match it.</p>
+    <h3>Karaoke tip</h3>
+    <p>Combine it with the <strong>Vocal remover</strong> in Effects, or start in the <a href="/vocal-remover/">Vocal Remover</a>, to get a karaoke track in your own key.</p>`,
+    faq: [
+      ['Does changing the pitch change the speed?', 'No. The song keeps its tempo and length. Only the key moves.'],
+      ['How many semitones is a key change?', 'Each semitone is one step. Going from C to D is 2 semitones, and 12 semitones is one octave.'],
+    ],
+  },
+  {
+    path: 'nightcore-maker', tool: 'converter', crumb: 'Tools', fx: { speed: 1.2, pitch: 3 }, suffix: ' (nightcore)',
+    note: 'Nightcore is set up: 1.20× speed and 3 semitones higher. Press Play with effects to hear it.',
+    title: `Nightcore Maker: Make Sped Up Songs Online, Free | ${NAME}`,
+    description: 'Turn any song into a nightcore or sped up version: faster and higher pitched. Adjust speed and pitch, listen first and download an MP3. Free.',
+    h1: '<em>Nightcore</em> and sped up song maker',
+    lead: 'Make the fast, high, energetic version of any song. The settings are ready, and you can fine-tune them.',
+    badges: ['Speed and pitch', 'Preview first', 'MP3 or WAV'],
+    steps: [
+      ['Open a song', 'Choose any song from your device.'],
+      ['Adjust it', '1.20× speed and +3 semitones are set. Press Play with effects.'],
+      ['Download', 'Convert and save it as an MP3.'],
+    ],
+    content: `
+    <h2>The nightcore sound</h2>
+    <p>Nightcore edits play a song about <strong>15 to 30% faster</strong> and raise the pitch by <strong>2 to 4 semitones</strong>, which gives the bright, energetic sound. The sped up versions on TikTok and Instagram use the same idea, usually a bit less extreme.</p>
+    <h3>Ideas</h3>
+    <p>Add a little <strong>Bass</strong> so it doesn't sound thin, switch on <strong>Auto loudness</strong> to keep it punchy, or go the other way with the <a href="/slowed-reverb/">Slowed + Reverb</a> maker.</p>`,
+    faq: [
+      ['What is the difference between nightcore and sped up?', 'Both are faster and higher. Nightcore is usually more extreme. Lower the speed to about 1.1× for a softer sped up version.'],
+      ['Can I keep the original pitch?', 'Yes. Set Pitch back to 0, or use the Speed Up Audio tool, which keeps the pitch.'],
+    ],
+  },
+  {
+    path: 'remove-silence', tool: 'converter', crumb: 'Tools', fx: { silence: true }, suffix: ' (no silence)',
+    note: 'Remove silences is on. It cuts every quiet gap longer than about 0.8 seconds. Press Play with effects to check.',
+    title: `Remove Silence from Audio Online, Free | ${NAME}`,
+    description: 'Cut long pauses and dead air out of voice recordings, podcasts, lectures and voice notes automatically. Free, private, nothing uploaded.',
+    h1: '<em>Remove silence</em> from audio',
+    lead: 'Automatically cut the long pauses and dead air out of recordings, so they get shorter and easier to listen to.',
+    badges: ['Automatic', 'Voice and podcasts', 'No upload'],
+    steps: [
+      ['Open your recording', 'A voice note, podcast, lecture or video.'],
+      ['Check the result', 'Remove silences is already on. Press Play with effects.'],
+      ['Download', 'Press Convert, then Download.'],
+    ],
+    content: `
+    <h2>How it works</h2>
+    <p>${NAME} looks for stretches where the sound stays below a very quiet level for more than about <strong>0.8 seconds</strong> and cuts them out. Normal pauses between words stay, so speech still sounds natural.</p>
+    <h3>Works best on</h3>
+    <p>Voice recordings, lectures, interviews and long voice notes. On music it would also cut quiet intros and endings, so it's usually not what you want for songs.</p>
+    <h3>Noisy room?</h3>
+    <p>If there's a fan or traffic in the background, the gaps aren't really silent. Switch on <strong>AI noise removal</strong> as well, or use the <a href="/noise-remover/">AI Noise Remover</a>, which has this turned on too.</p>`,
+    faq: [
+      ['Will it cut the pauses between words?', 'No. Only quiet gaps longer than about 0.8 seconds are removed.'],
+      ['Why did nothing get removed?', 'The pauses probably contain background noise. Turn on AI noise removal or Reduce hiss and try again.'],
+    ],
+  },
+  {
+    path: 'fade-in-fade-out', tool: 'cutter', crumb: 'Tools', fx: { fadeIn: 3, fadeOut: 3 }, suffix: ' (faded)',
+    note: 'A 3 second fade in and fade out is set. Select a part if you like, then press Play with effects.',
+    title: `Add Fade In and Fade Out to MP3 Online, Free | ${NAME}`,
+    description: 'Add a smooth fade in and fade out to any song or recording. Choose the length, trim it if you like, listen first and download. Free, no upload.',
+    h1: 'Add <em>fade in</em> and <em>fade out</em>',
+    lead: 'Give a song or clip a smooth start and ending instead of a sudden cut. Pick the fade length and listen before you save.',
+    badges: ['0 to 10 seconds', 'Trim too', 'MP3, WAV, FLAC'],
+    steps: [
+      ['Open your file', 'Any song, recording or video.'],
+      ['Set the fades', '3 seconds each is set. Change them in Effects and press Play with effects.'],
+      ['Download', 'Press Convert, then Download.'],
+    ],
+    content: `
+    <h2>When a fade helps</h2>
+    <p>A fade makes music start and stop gently. It's useful for ringtones, background music in videos, a part cut out of a longer song, or a slideshow that ends before the music does.</p>
+    <h3>How long should a fade be?</h3>
+    <p>For a ringtone or short clip, <strong>1 to 2 seconds</strong>. For background music or the end of a song, <strong>3 to 6 seconds</strong>. ${NAME} never lets a fade take more than a quarter of the clip, so short clips stay audible.</p>
+    <h3>Fade only one end</h3>
+    <p>Set the other slider to <em>off</em>. To make a ringtone with fades, the <a href="/ringtone-maker/">Ringtone Maker</a> has them set up already.</p>`,
+    faq: [
+      ['Can I fade just part of a song?', 'Yes. Drag on the waveform to select the part you want. The fades are added to the start and end of your selection.'],
+      ['Does it lower the quality?', 'Pick WAV or FLAC for no loss at all, or 320 kbps MP3 to keep it very close to the original.'],
+    ],
+  },
   // ---------- guides ----------
   {
     path: 'guides', crumb: null, plain: true,
@@ -874,7 +1108,7 @@ ${p.tool ? '<link rel="modulepreload" href="/assets/app.js">\n<script type="modu
     ${p.lead ? `<p>${p.lead}</p>` : ''}
     ${p.badges ? `<div class="badges">${p.badges.map((b) => `<span class="badge">${b}</span>`).join('')}</div>` : ''}
   </div>
-  ${p.tool ? `<div class="tool" data-tool="${p.tool}"${p.format ? ` data-format="${p.format}"` : ''}><noscript>Please turn on JavaScript to use this tool.</noscript></div>
+  ${p.tool ? `<div class="tool" data-tool="${p.tool}"${p.format ? ` data-format="${p.format}"` : ''}${p.fx ? ` data-fx='${JSON.stringify(p.fx)}'` : ''}${p.note ? ` data-note="${esc(p.note)}"` : ''}${p.suffix ? ` data-suffix="${esc(p.suffix)}"` : ''}><noscript>Please turn on JavaScript to use this tool.</noscript></div>
   <div class="ad" data-slot="top"></div>` : ''}
   ${p.body || ''}
   ${p.steps ? `<div class="section"><h2>How it works</h2><div class="steps">${p.steps.map(([n, t]) => `<div class="card"><b>${n}</b><p>${t}</p></div>`).join('')}</div></div>` : ''}
