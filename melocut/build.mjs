@@ -1139,7 +1139,7 @@ function jsonLd(p) {
   const url = urlOf(p), lang = LANGS[p.lang].ui.code;
   const graph = [
     { '@type': 'WebSite', '@id': `${SITE_URL}/#site`, name: NAME, url: `${SITE_URL}/`, inLanguage: ['en', 'es', 'pt-BR'], publisher: { '@id': `${SITE_URL}/#org` } },
-    { '@type': 'Organization', '@id': `${SITE_URL}/#org`, name: NAME, url: `${SITE_URL}/`, logo: `${SITE_URL}/icon-512.png`, email: EMAIL },
+    { '@type': 'Organization', '@id': `${SITE_URL}/#org`, name: NAME, url: `${SITE_URL}/`, logo: `${SITE_URL}/icon-512.png`, email: EMAIL, sameAs: SOCIAL.map((s) => s.url) },
     { '@type': 'WebPage', '@id': `${url}#page`, url, name: p.title, description: p.description, inLanguage: lang, isPartOf: { '@id': `${SITE_URL}/#site` },
       primaryImageOfPage: ogImage(p), dateModified: UPDATED },
   ];
@@ -1158,6 +1158,9 @@ function jsonLd(p) {
   return JSON.stringify({ '@context': 'https://schema.org', '@graph': graph });
 }
 
+// Official social accounts: footer links and schema.org sameAs.
+const SOCIAL = [{ name: 'TikTok', url: 'https://www.tiktok.com/@melocutofficial',
+  icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.6 5.82A4.28 4.28 0 0 1 15.54 3h-3.09v12.4a2.59 2.59 0 0 1-2.59 2.5 2.6 2.6 0 0 1-2.6-2.6 2.6 2.6 0 0 1 3.37-2.48V9.66a5.69 5.69 0 0 0-.77-.05A5.68 5.68 0 0 0 4.18 15.3 5.68 5.68 0 0 0 9.86 21a5.68 5.68 0 0 0 5.68-5.68V9.01a7.33 7.33 0 0 0 4.28 1.38V7.32a4.28 4.28 0 0 1-3.22-1.5z"/></svg>' }];
 const GLOBE = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>';
 
 function page(p) {
@@ -1250,7 +1253,7 @@ ${p.tool ? `<link rel="modulepreload" href="${asset('assets/app.js')}">\n<script
 </main>
 <footer>
   <div class="wrap">
-    <div>© <span data-year></span> ${NAME} · ${ui.footerTagline}</div>
+    <div class="fbar"><span>© <span data-year></span> ${NAME} · ${ui.footerTagline}</span><span class="social">${SOCIAL.map((s) => `<a href="${s.url}" target="_blank" rel="noopener me" aria-label="${NAME} on ${s.name}">${s.icon}<span>${s.name}</span></a>`).join('')}</span></div>
     <div class="fcols">
       <nav aria-label="${ui.fTools}"><b>${ui.fTools}</b>${TOOLS.map((t) => { const x = toolIn(t, lang); return `<a href="${x.href}"${x.english ? ' hreflang="en"' : ''}>${x.title}${x.english ? `<span class="en-tag" title="${ui.inEnglish}">EN</span>` : ''}</a>`; }).join('')}</nav>
       ${isEn ? `<nav aria-label="Conversions"><b>Conversions</b>${CONVERSIONS.map((c) => `<a href="/${c.slug}/">${c.label}</a>`).join('')}</nav>` : ''}
