@@ -5,6 +5,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import crypto from 'node:crypto';
+import es from './i18n/es.mjs';
+import ptBR from './i18n/pt-br.mjs';
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), 'site');
 const SITE_URL = (process.env.SITE_URL || 'https://melocut.com').replace(/\/$/, '');
@@ -74,22 +76,51 @@ const CONVERSIONS = [
   { slug: 'aac-to-mp3', label: 'AAC to MP3' },
 ];
 const MAIN_NAV = ['video-to-mp3', 'ringtone-maker', 'audio-cutter', 'audio-converter'];
-const toolCard = (t) => `<a class="card" href="/${t.slug}/"><div class="ico">${ICONS[t.icon]}</div><b>${t.title}${t.ai ? '<span class="ai">AI</span>' : ''}</b><p>${t.blurb}</p></a>`;
 const CONVERSION_LINKS = `<div class="chips-links">${CONVERSIONS.map((c) => `<a class="chip" href="/${c.slug}/">${c.label}</a>`).join('')}</div>`;
-const INSTALL_CALLOUT = `
-  <div class="section"><div class="callout"><p>You can add ${NAME} to your phone's home screen and open it like an app. Use a tool once while you're online and it keeps working offline after that.</p>
-    <a class="btn sm" href="/guides/install-app/">How to install</a></div></div>`;
-
-const WHY = `
+// ---------- languages ----------
+// English is the source. Each other language supplies its site text (ui), tool names and pages.
+const EN = {
+  code: 'en', hreflang: 'en', ogLocale: 'en_US', prefix: '', name: 'English', short: 'EN',
+  home: 'Home', tools: 'Tools', allTools: 'All tools', installApp: 'Install app', menu: 'Menu',
+  howItWorks: 'How it works', faq: 'Questions and answers', moreTools: 'More free tools',
+  noscript: 'Please turn on JavaScript to use this tool.', language: 'Language', homeAria: `${NAME} home`,
+  footerTagline: 'Free audio tools that run in your browser',
+  fTools: 'Tools', fHelp: 'Help and info', fGuides: 'Guides', fInstall: 'Install the app',
+  fAbout: 'About and contact', fPrivacy: 'Privacy', fTerms: 'Terms', inEnglish: 'in English',
+  ogAlt: (h1) => `${h1} on ${NAME}`, tag: 'Free · Private · No upload',
+  install: "You can add MeloCut to your phone's home screen and open it like an app. Use a tool once while you're online and it keeps working offline after that.",
+  installHow: 'How to install',
+  whyTitle: `Why use ${NAME}`,
+  why: [
+    ['lock', 'Your files stay with you', 'Everything happens in your browser. Nothing gets uploaded, so nobody else ever sees your files.'],
+    ['bolt', 'No waiting', "There's no upload and no download queue. A song usually takes a few seconds. Long videos take a bit longer."],
+    ['phone', 'Phone or computer', 'Works in Safari, Chrome, Edge and Firefox. You can also install it on your home screen.'],
+    ['sparkle', 'Free, no watermark', 'No account and nothing added to your audio. Use it as often as you like, with files up to 1 GB.'],
+  ],
+};
+const LANGS = { en: { ui: EN, tools: {}, pages: [] }, es: es(NAME), 'pt-br': ptBR(NAME) };
+const L10N = Object.keys(LANGS).filter((l) => l !== 'en');
+const installHTML = (ui) => `
+  <div class="section"><div class="callout"><p>${ui.install}</p>
+    <a class="btn sm" href="/guides/install-app/">${ui.installHow}</a></div></div>`;
+const whyHTML = (ui) => `
   <div class="section">
-    <h2>Why use ${NAME}</h2>
+    <h2>${ui.whyTitle}</h2>
     <div class="cards">
-      <div class="card"><div class="ico">${ICONS.lock}</div><b>Your files stay with you</b><p>Everything happens in your browser. Nothing gets uploaded, so nobody else ever sees your files.</p></div>
-      <div class="card"><div class="ico">${ICONS.bolt}</div><b>No waiting</b><p>There's no upload and no download queue. A song usually takes a few seconds. Long videos take a bit longer.</p></div>
-      <div class="card"><div class="ico">${ICONS.phone}</div><b>Phone or computer</b><p>Works in Safari, Chrome, Edge and Firefox. You can also install it on your home screen.</p></div>
-      <div class="card"><div class="ico">${ICONS.sparkle}</div><b>Free, no watermark</b><p>No account and nothing added to your audio. Use it as often as you like, with files up to 1 GB.</p></div>
+      ${ui.why.map(([icon, b, t]) => `<div class="card"><div class="ico">${ICONS[icon]}</div><b>${b}</b><p>${t}</p></div>`).join('\n      ')}
     </div>
   </div>`;
+const INSTALL_CALLOUT = installHTML(EN);
+const WHY = whyHTML(EN);
+// A tool in a given language: localized name, and the localized page if there is one (else the English page).
+function toolIn(t, lang) {
+  const x = LANGS[lang].tools[t.slug] || {};
+  return { ...t, title: x.title || t.title, blurb: x.blurb || t.blurb, href: `/${x.path || t.slug}/`, english: lang !== 'en' && !x.path };
+}
+const toolCardIn = (t, lang) => {
+  const x = toolIn(t, lang);
+  return `<a class="card" href="${x.href}"${x.english ? ' hreflang="en"' : ''}><div class="ico">${ICONS[t.icon]}</div><b>${x.title}${t.ai ? '<span class="ai">AI</span>' : ''}${x.english ? `<span class="en-tag" title="${LANGS[lang].ui.inEnglish}">EN</span>` : ''}</b><p>${x.blurb}</p></a>`;
+};
 
 // ---------- pages ----------
 const PAGES = [
@@ -102,7 +133,7 @@ const PAGES = [
     badges: [`${TOOLS.length} free tools`, 'AI noise removal', 'No upload', 'No sign-up'],
     body: `
   <div class="cards" id="tools" style="margin-top:8px">
-    ${TOOLS.map(toolCard).join('\n    ')}
+    ${TOOLS.map((t) => toolCardIn(t, 'en')).join('\n    ')}
   </div>
   <div class="section"><h2>Popular conversions</h2>${CONVERSION_LINKS}</div>
   <div class="ad" data-slot="top"></div>
@@ -758,7 +789,7 @@ const PAGES = [
       <a class="card" href="/guides/clean-up-voice-memo/"><div class="ico">${ICONS.sparkle}</div><b>Clean up a voice memo</b><p>Trim it, remove noise and make it louder.</p></a>
       <a class="card" href="/guides/ringtone-from-video/"><div class="ico">${ICONS.video}</div><b>Make a ringtone from a video</b><p>Use a sound from your own videos as your ringtone.</p></a>
     </div>
-    <div class="section"><h2>Popular tools</h2><div class="cards">${TOOLS.filter((t) => ['ringtone-maker', 'video-to-mp3', 'audio-cutter', 'noise-remover'].includes(t.slug)).map(toolCard).join('')}</div></div>
+    <div class="section"><h2>Popular tools</h2><div class="cards">${TOOLS.filter((t) => ['ringtone-maker', 'video-to-mp3', 'audio-cutter', 'noise-remover'].includes(t.slug)).map((t) => toolCardIn(t, 'en')).join('')}</div></div>
     <div class="section"><h2>Popular conversions</h2>${CONVERSION_LINKS}</div>`,
   },
   {
@@ -1069,32 +1100,44 @@ const PAGES = [
 // ---------- templates ----------
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const strip = (s) => s.replace(/<[^>]+>/g, '');
+const plainH1 = (p) => strip(p.h1).replace(/\s+/g, ' ').trim();
 const urlOf = (p) => `${SITE_URL}/${p.path ? p.path + '/' : ''}`;
-const ogImage = (p) => (fs.existsSync(path.join(ROOT, 'og', `${p.path ? p.path.replace(/\//g, '-') : 'home'}.jpg`))
-  ? `${SITE_URL}/og/${p.path ? p.path.replace(/\//g, '-') : 'home'}.jpg` : `${SITE_URL}/og.jpg`);
+const slugOf = (p) => (p.path ? p.path.replace(/\//g, '-') : 'home');
+const ogImage = (p) => (fs.existsSync(path.join(ROOT, 'og', `${slugOf(p)}.jpg`)) ? `${SITE_URL}/og/${slugOf(p)}.jpg` : `${SITE_URL}/og.jpg`);
+
+// Every page with its language. The five English pages that have translations get a `key`.
+const KEY_OF = { '': 'home', 'audio-cutter': 'cutter', 'video-to-mp3': 'video', 'ringtone-maker': 'ringtone', 'audio-converter': 'converter' };
+const ALL = [
+  ...PAGES.map((p) => ({ lang: 'en', key: KEY_OF[p.path], ...p })),
+  ...L10N.flatMap((lang) => LANGS[lang].pages.map((p) => ({ lang, ...p }))),
+];
+// The same page in every language that has it, for hreflang and the language switcher.
+const versions = (p) => (p.key ? Object.keys(LANGS).map((lang) => ALL.find((q) => q.lang === lang && q.key === p.key)).filter(Boolean) : [p]);
+const homeOf = (lang) => ALL.find((q) => q.lang === lang && q.key === 'home');
 
 // Breadcrumb trail: Home › (Tools | Converters | Guides) › page
 function crumbs(p) {
-  if (!p.path || p.path === '404') return null;
-  const trail = [{ name: 'Home', url: `${SITE_URL}/` }];
-  if (p.crumb === 'Tools') trail.push({ name: 'Tools', url: `${SITE_URL}/#tools` });
+  if (!p.path || p.path === '404' || p.key === 'home') return null;
+  const ui = LANGS[p.lang].ui, home = urlOf(homeOf(p.lang));
+  const trail = [{ name: ui.home, url: home }];
+  if (p.crumb === 'Tools') trail.push({ name: ui.tools, url: `${home}#tools` });
   if (p.crumb === 'Converters') trail.push({ name: 'Audio Converter', url: `${SITE_URL}/audio-converter/` });
   if (p.crumb === 'Guides') trail.push({ name: 'Guides', url: `${SITE_URL}/guides/` });
-  trail.push({ name: strip(p.h1).replace(/\s+/g, ' ').trim(), url: urlOf(p) });
+  trail.push({ name: plainH1(p), url: urlOf(p) });
   return trail;
 }
 
 function jsonLd(p) {
-  const url = urlOf(p);
+  const url = urlOf(p), lang = LANGS[p.lang].ui.code;
   const graph = [
-    { '@type': 'WebSite', '@id': `${SITE_URL}/#site`, name: NAME, url: `${SITE_URL}/`, inLanguage: 'en', publisher: { '@id': `${SITE_URL}/#org` } },
+    { '@type': 'WebSite', '@id': `${SITE_URL}/#site`, name: NAME, url: `${SITE_URL}/`, inLanguage: ['en', 'es', 'pt-BR'], publisher: { '@id': `${SITE_URL}/#org` } },
     { '@type': 'Organization', '@id': `${SITE_URL}/#org`, name: NAME, url: `${SITE_URL}/`, logo: `${SITE_URL}/icon-512.png`, email: EMAIL },
-    { '@type': 'WebPage', '@id': `${url}#page`, url, name: p.title, description: p.description, inLanguage: 'en', isPartOf: { '@id': `${SITE_URL}/#site` },
+    { '@type': 'WebPage', '@id': `${url}#page`, url, name: p.title, description: p.description, inLanguage: lang, isPartOf: { '@id': `${SITE_URL}/#site` },
       primaryImageOfPage: ogImage(p), dateModified: UPDATED },
   ];
-  if (!p.plain && p.path) {
+  if (!p.plain && p.tool) {
     graph.push({
-      '@type': 'WebApplication', name: `${NAME} ${strip(p.h1)}`, url, applicationCategory: 'MultimediaApplication',
+      '@type': 'WebApplication', name: `${NAME} ${strip(p.h1)}`, url, applicationCategory: 'MultimediaApplication', inLanguage: lang,
       operatingSystem: 'Any (web browser)', browserRequirements: 'Requires JavaScript and a modern browser',
       offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' }, description: p.description,
       ...(p.badges ? { featureList: p.badges } : {}), isAccessibleForFree: true,
@@ -1102,20 +1145,34 @@ function jsonLd(p) {
   }
   const trail = crumbs(p);
   if (trail) graph.push({ '@type': 'BreadcrumbList', itemListElement: trail.map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: c.name, item: c.url })) });
-  if (p.faq) graph.push({ '@type': 'FAQPage', mainEntity: p.faq.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) });
-  if (p.steps) graph.push({ '@type': 'HowTo', name: strip(p.h1).replace(/\s+/g, ' ').trim(), step: p.steps.map(([n, t], i) => ({ '@type': 'HowToStep', position: i + 1, name: n, text: t })) });
+  if (p.faq) graph.push({ '@type': 'FAQPage', inLanguage: lang, mainEntity: p.faq.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) });
+  if (p.steps) graph.push({ '@type': 'HowTo', inLanguage: lang, name: plainH1(p), step: p.steps.map(([n, t], i) => ({ '@type': 'HowToStep', position: i + 1, name: n, text: t })) });
   return JSON.stringify({ '@context': 'https://schema.org', '@graph': graph });
 }
 
+const GLOBE = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>';
+
 function page(p) {
+  const lang = p.lang || 'en', ui = LANGS[lang].ui, L = { WHY: whyHTML(ui), INSTALL: installHTML(ui) };
   const url = urlOf(p);
   const img = ogImage(p);
-  const navLinks = TOOLS.filter((t) => MAIN_NAV.includes(t.slug)).map((t) => `<a href="/${t.slug}/"${p.path === t.slug ? ' aria-current="page"' : ''}>${t.nav}</a>`).join('')
-    + `<a href="/#tools">All tools</a><a href="/guides/"${p.path.startsWith('guides') ? ' aria-current="page"' : ''}>Guides</a>`;
-  const others = TOOLS.filter((t) => t.slug !== p.path);
+  const vers = versions(p);
+  const isEn = lang === 'en';
+  const body = typeof p.body === 'function' ? p.body(L) : p.body;
+  const toolPath = (t) => toolIn(t, lang).href.slice(1, -1);
+  const navLinks = TOOLS.filter((t) => MAIN_NAV.includes(t.slug)).map((t) => { const x = toolIn(t, lang); return `<a href="${x.href}"${p.path === toolPath(t) ? ' aria-current="page"' : ''}>${isEn ? t.nav : x.title}</a>`; }).join('')
+    + `<a href="${ui.prefix}/#tools">${ui.navAll || ui.allTools}</a>`;
+  // Language switcher: the same page in the other language when it exists, else that language's home page.
+  const switcher = `<details class="lang"><summary aria-label="${ui.language}">${GLOBE}<span>${ui.short}</span></summary><div class="lang-menu">${Object.keys(LANGS).map((l) => {
+    const target = vers.find((q) => q.lang === l) || homeOf(l);
+    return `<a href="${urlOf(target).replace(SITE_URL, '')}" hreflang="${LANGS[l].ui.hreflang}" lang="${LANGS[l].ui.code}"${l === lang ? ' aria-current="true"' : ''}>${LANGS[l].ui.name}</a>`;
+  }).join('')}</div></details>`;
+  const alternates = p.key ? [...vers.map((q) => `<link rel="alternate" hreflang="${LANGS[q.lang].ui.hreflang}" href="${urlOf(q)}">`),
+    `<link rel="alternate" hreflang="x-default" href="${urlOf(vers.find((q) => q.lang === 'en'))}">`].join('\n') : '';
+  const others = TOOLS.filter((t) => toolPath(t) !== p.path);
   const trail = crumbs(p);
   return `<!doctype html>
-<html lang="en">
+<html lang="${ui.code}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -1123,6 +1180,7 @@ function page(p) {
 <meta name="description" content="${esc(p.description)}">
 <meta name="robots" content="index, follow, max-image-preview:large">
 <link rel="canonical" href="${url}">
+${alternates}
 <meta name="theme-color" content="#6d4aff">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="manifest" href="/manifest.webmanifest">
@@ -1131,14 +1189,15 @@ function page(p) {
 <meta name="apple-mobile-web-app-title" content="${NAME}">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="${NAME}">
-<meta property="og:locale" content="en_US">
+<meta property="og:locale" content="${ui.ogLocale}">
+${vers.filter((q) => q.lang !== lang).map((q) => `<meta property="og:locale:alternate" content="${LANGS[q.lang].ui.ogLocale}">`).join('\n')}
 <meta property="og:title" content="${esc(p.title)}">
 <meta property="og:description" content="${esc(p.description)}">
 <meta property="og:url" content="${url}">
 <meta property="og:image" content="${img}">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="${esc(strip(p.h1).replace(/\s+/g, ' ').trim())} on ${NAME}">
+<meta property="og:image:alt" content="${esc(ui.ogAlt(plainH1(p)))}">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="${esc(p.title)}">
 <meta name="twitter:description" content="${esc(p.description)}">
@@ -1149,16 +1208,18 @@ function page(p) {
 <link rel="stylesheet" href="${asset('assets/style.css')}">
 <script src="${asset('assets/config.js')}" defer></script>
 <script src="${asset('assets/site.js')}" defer></script>
+${p.tool && !isEn ? `<script src="${asset(`assets/i18n/${lang}.js`)}" defer></script>` : ''}
 ${p.tool ? `<link rel="modulepreload" href="${asset('assets/app.js')}">\n<script type="module" src="${asset('assets/app.js')}"></script>\n<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>` : ''}
 <script type="application/ld+json">${jsonLd(p)}</script>
 </head>
 <body>
 <header class="top">
   <div class="wrap">
-    <a class="logo" href="/" aria-label="${NAME} home"><img src="/assets/logo.svg" width="32" height="32" alt="">${NAME}</a>
-    <nav class="nav" aria-label="Tools">${navLinks}</nav>
-    <a class="btn sm install-btn" href="/guides/install-app/">${ICONS.phone.replace(/22/g, '16')} Install app</a>
-    <button class="menu-btn" type="button" aria-label="Menu"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+    <a class="logo" href="${ui.prefix}/" aria-label="${ui.homeAria}"><img src="/assets/logo.svg" width="32" height="32" alt="">${NAME}</a>
+    <nav class="nav" aria-label="${ui.tools}">${navLinks}</nav>
+    <a class="btn sm install-btn" href="/guides/install-app/">${ICONS.phone.replace(/22/g, '16')}<span>${ui.installApp}</span></a>
+    ${switcher}
+    <button class="menu-btn" type="button" aria-label="${ui.menu}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
   </div>
 </header>
 <main class="wrap">
@@ -1168,24 +1229,26 @@ ${p.tool ? `<link rel="modulepreload" href="${asset('assets/app.js')}">\n<script
     ${p.lead ? `<p>${p.lead}</p>` : ''}
     ${p.badges ? `<div class="badges">${p.badges.map((b) => `<span class="badge">${b}</span>`).join('')}</div>` : ''}
   </div>
-  ${p.tool ? `<div class="tool" data-tool="${p.tool}"${p.format ? ` data-format="${p.format}"` : ''}${p.fx ? ` data-fx='${JSON.stringify(p.fx)}'` : ''}${p.note ? ` data-note="${esc(p.note)}"` : ''}${p.suffix ? ` data-suffix="${esc(p.suffix)}"` : ''}><noscript>Please turn on JavaScript to use this tool.</noscript></div>
+  ${p.home ? `<div class="cards" id="tools" style="margin-top:8px">\n    ${TOOLS.map((t) => toolCardIn(t, lang)).join('\n    ')}\n  </div>\n  <div class="ad" data-slot="top"></div>` : ''}
+  ${p.tool ? `<div class="tool" data-tool="${p.tool}"${p.format ? ` data-format="${p.format}"` : ''}${p.fx ? ` data-fx='${JSON.stringify(p.fx)}'` : ''}${p.note ? ` data-note="${esc(p.note)}"` : ''}${p.suffix ? ` data-suffix="${esc(p.suffix)}"` : ''}><noscript>${ui.noscript}</noscript></div>
   <div class="ad" data-slot="top"></div>` : ''}
-  ${p.body || ''}
-  ${p.steps ? `<div class="section"><h2>How it works</h2><div class="steps">${p.steps.map(([n, t]) => `<div class="card"><b>${n}</b><p>${t}</p></div>`).join('')}</div></div>` : ''}
+  ${body || ''}
+  ${p.steps ? `<div class="section"><h2>${ui.howItWorks}</h2><div class="steps">${p.steps.map(([n, t]) => `<div class="card"><b>${n}</b><p>${t}</p></div>`).join('')}</div></div>` : ''}
   ${p.content ? `<div class="section prose">${p.content}</div>` : ''}
   ${p.tool ? '<div class="ad" data-slot="middle"></div>' : ''}
-  ${p.tool ? `<div class="section"><h2>More free tools</h2><div class="cards rail">${others.map(toolCard).join('')}</div></div>
-  <div class="section"><h2>Popular conversions</h2>${CONVERSION_LINKS}</div>${INSTALL_CALLOUT}` : ''}
-  ${p.faq ? `<div class="section"><h2>Questions and answers</h2>${p.faq.map(([q, a]) => `<details><summary>${q}</summary><p>${a}</p></details>`).join('')}</div>` : ''}
+  ${p.tool ? `<div class="section"><h2>${ui.moreTools}</h2><div class="cards rail">${others.map((t) => toolCardIn(t, lang)).join('')}</div></div>
+  ${isEn ? `<div class="section"><h2>Popular conversions</h2>${CONVERSION_LINKS}</div>` : ''}${installHTML(ui)}` : ''}
+  ${p.faq ? `<div class="section"><h2>${ui.faq}</h2>${p.faq.map(([q, a]) => `<details><summary>${q}</summary><p>${a}</p></details>`).join('')}</div>` : ''}
   ${p.plain ? '' : '<div class="ad" data-slot="bottom"></div>'}
 </main>
 <footer>
   <div class="wrap">
-    <div>© <span data-year></span> ${NAME} · Free audio tools that run in your browser</div>
+    <div>© <span data-year></span> ${NAME} · ${ui.footerTagline}</div>
     <div class="fcols">
-      <nav aria-label="Tools"><b>Tools</b>${TOOLS.map((t) => `<a href="/${t.slug}/">${t.title}</a>`).join('')}</nav>
-      <nav aria-label="Conversions"><b>Conversions</b>${CONVERSIONS.map((c) => `<a href="/${c.slug}/">${c.label}</a>`).join('')}</nav>
-      <nav aria-label="More"><b>Help and info</b><a href="/guides/">Guides</a><a href="/guides/install-app/">Install the app</a><a href="/about/">About and contact</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a></nav>
+      <nav aria-label="${ui.fTools}"><b>${ui.fTools}</b>${TOOLS.map((t) => { const x = toolIn(t, lang); return `<a href="${x.href}"${x.english ? ' hreflang="en"' : ''}>${x.title}</a>`; }).join('')}</nav>
+      ${isEn ? `<nav aria-label="Conversions"><b>Conversions</b>${CONVERSIONS.map((c) => `<a href="/${c.slug}/">${c.label}</a>`).join('')}</nav>` : ''}
+      <nav aria-label="${ui.fHelp}"><b>${ui.fHelp}</b><a href="/guides/">${ui.fGuides}</a><a href="/guides/install-app/">${ui.fInstall}</a><a href="/about/">${ui.fAbout}</a><a href="/privacy/">${ui.fPrivacy}</a><a href="/terms/">${ui.fTerms}</a></nav>
+      <nav aria-label="${ui.language}"><b>${ui.language}</b>${Object.keys(LANGS).map((l) => { const target = vers.find((q) => q.lang === l) || homeOf(l); return `<a href="${urlOf(target).replace(SITE_URL, '')}" hreflang="${LANGS[l].ui.hreflang}" lang="${LANGS[l].ui.code}">${LANGS[l].ui.name}</a>`; }).join('')}</nav>
     </div>
   </div>
 </footer>
@@ -1194,23 +1257,25 @@ ${p.tool ? `<link rel="modulepreload" href="${asset('assets/app.js')}">\n<script
 `;
 }
 
-for (const p of PAGES) {
+for (const p of ALL) {
   const dir = path.join(ROOT, p.path);
   fs.mkdirSync(dir, { recursive: true });
   fs.writeFileSync(path.join(dir, 'index.html'), page(p));
 }
 fs.writeFileSync(path.join(ROOT, '404.html'), page({
-  path: '404', title: `Page not found | ${NAME}`, description: 'Page not found.', h1: 'Page not found',
+  lang: 'en', path: '404', title: `Page not found | ${NAME}`, description: 'Page not found.', h1: 'Page not found',
   lead: "That page doesn't exist, or it moved. Pick a tool below, or go back to the <a href=\"/\">home page</a> or the <a href=\"/guides/\">guides</a>.", plain: false,
-  body: `<div class="cards">${TOOLS.map(toolCard).join('')}</div><div class="section"><h2>Popular conversions</h2>${CONVERSION_LINKS}</div>`,
+  body: `<div class="cards">${TOOLS.map((t) => toolCardIn(t, 'en')).join('')}</div><div class="section"><h2>Popular conversions</h2>${CONVERSION_LINKS}</div>`,
 }).replace('<meta name="robots" content="index, follow, max-image-preview:large">', '<meta name="robots" content="noindex">'));
 fs.writeFileSync(path.join(ROOT, 'robots.txt'), `User-agent: *\nAllow: /\n\nSitemap: ${SITE_URL}/sitemap.xml\n`);
-const priority = (p) => (!p.path ? '1.0' : p.tool ? '0.9' : p.path.startsWith('guides') ? '0.7' : '0.4');
+const priority = (p) => (p.key === 'home' ? '1.0' : p.tool ? '0.9' : p.path.startsWith('guides') ? '0.7' : '0.4');
+const altLinks = (p) => (p.key ? versions(p).map((q) => `<xhtml:link rel="alternate" hreflang="${LANGS[q.lang].ui.hreflang}" href="${urlOf(q)}"/>`).join('')
+  + `<xhtml:link rel="alternate" hreflang="x-default" href="${urlOf(versions(p).find((q) => q.lang === 'en'))}"/>` : '');
 fs.writeFileSync(path.join(ROOT, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
-${PAGES.map((p) => `  <url><loc>${urlOf(p)}</loc><lastmod>${UPDATED}</lastmod><priority>${priority(p)}</priority><image:image><image:loc>${ogImage(p)}</image:loc></image:image></url>`).join('\n')}
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+${ALL.map((p) => `  <url><loc>${urlOf(p)}</loc><lastmod>${UPDATED}</lastmod><priority>${priority(p)}</priority>${altLinks(p)}<image:image><image:loc>${ogImage(p)}</image:loc></image:image></url>`).join('\n')}
 </urlset>
 `);
 // Page list for the social-image generator (og.mjs).
-fs.writeFileSync(path.join(path.dirname(ROOT), 'pages.json'), JSON.stringify(PAGES.map((p) => ({ slug: p.path ? p.path.replace(/\//g, '-') : 'home', h1: strip(p.h1).replace(/\s+/g, ' ').trim(), lead: strip(p.lead || '') })), null, 1));
-console.log(`Built ${PAGES.length + 1} pages for ${SITE_URL}`);
+fs.writeFileSync(path.join(path.dirname(ROOT), 'pages.json'), JSON.stringify(ALL.map((p) => ({ slug: slugOf(p), h1: plainH1(p), lead: strip(p.lead || ''), tag: LANGS[p.lang].ui.tag })), null, 1));
+console.log(`Built ${ALL.length + 1} pages for ${SITE_URL} (${Object.keys(LANGS).map((l) => `${l}: ${ALL.filter((p) => p.lang === l).length}`).join(', ')})`);
