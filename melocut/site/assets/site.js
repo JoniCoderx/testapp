@@ -6,23 +6,28 @@
   document.querySelector('.menu-btn')?.addEventListener('click', () => top.classList.toggle('open'));
   document.querySelectorAll('[data-year]').forEach((el) => (el.textContent = new Date().getFullYear()));
 
-  // Ads: only when an AdSense client id is configured.
+  // Ads. The AdSense script itself is in every page's <head> (needed for site verification
+  // and Auto ads). The fixed ad boxes only switch on for ad units that have an id in config.js,
+  // so the page never shows empty "Advertisement" boxes.
   if (cfg.adsenseClient) {
-    document.documentElement.classList.add('ads-on');
-    const s = document.createElement('script');
-    s.async = true;
-    s.crossOrigin = 'anonymous';
-    s.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${encodeURIComponent(cfg.adsenseClient)}`;
-    document.head.appendChild(s);
+    if (!document.querySelector('script[src*="adsbygoogle.js"]')) {
+      const s = document.createElement('script');
+      s.async = true;
+      s.crossOrigin = 'anonymous';
+      s.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${encodeURIComponent(cfg.adsenseClient)}`;
+      document.head.appendChild(s);
+    }
     document.querySelectorAll('.ad[data-slot]').forEach((box) => {
+      const slot = cfg.adSlots?.[box.dataset.slot];
+      if (!slot) return;
       const ins = document.createElement('ins');
       ins.className = 'adsbygoogle';
       ins.style.display = 'block';
       ins.dataset.adClient = cfg.adsenseClient;
-      const slot = cfg.adSlots?.[box.dataset.slot];
-      if (slot) ins.dataset.adSlot = slot;
+      ins.dataset.adSlot = slot;
       ins.dataset.adFormat = 'auto';
       ins.dataset.fullWidthResponsive = 'true';
+      box.classList.add('on');
       box.appendChild(ins);
       (window.adsbygoogle = window.adsbygoogle || []).push({});
     });
