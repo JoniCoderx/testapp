@@ -839,6 +839,8 @@ function page(p) {
 <meta name="twitter:title" content="${esc(p.title)}">
 <meta name="twitter:description" content="${esc(p.description)}">
 <meta name="twitter:image" content="${img}">
+<meta name="google-adsense-account" content="ca-pub-2388733415031298">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2388733415031298" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="/assets/style.css">
 <script src="/assets/config.js" defer></script>
 <script src="/assets/site.js" defer></script>
