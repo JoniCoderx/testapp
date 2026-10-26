@@ -16,7 +16,8 @@ const NAME = 'MeloCut';
 const ver = (f) => crypto.createHash('sha1').update(fs.readFileSync(path.join(ROOT, f))).digest('hex').slice(0, 8);
 const asset = (f) => `/${f}?v=${ver(f)}`;
 // The stylesheet is small (about 5 KB compressed), so it goes inside each page: no render-blocking request.
-const INLINE_CSS = fs.readFileSync(path.join(ROOT, 'assets', 'style.css'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '').replace(/\s*\n\s*/g, '\n');
+const INLINE_CSS = fs.readFileSync(path.join(ROOT, 'assets', 'style.css'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '').replace(/\s*\n\s*/g, '\n')
+  .replace('/assets/fonts/inter-latin.woff2', asset('assets/fonts/inter-latin.woff2'));
 const UPDATED = new Date().toISOString().slice(0, 10);
 const LEGAL_UPDATED = 'October 26, 2026'; // change by hand when the privacy policy or terms change
 
@@ -1210,7 +1211,7 @@ ${vers.filter((q) => q.lang !== lang).map((q) => `<meta property="og:locale:alte
 <meta name="twitter:description" content="${esc(p.description)}">
 <meta name="twitter:image" content="${img}">
 <meta name="google-adsense-account" content="ca-pub-2388733415031298">
-<link rel="preload" href="/assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="${asset('assets/fonts/inter-latin.woff2')}" as="font" type="font/woff2" crossorigin>
 <style>${INLINE_CSS}</style>
 <script src="${asset('assets/config.js')}" defer></script>
 <script src="${asset('assets/site.js')}" defer></script>
@@ -1221,7 +1222,7 @@ ${p.tool ? `<link rel="modulepreload" href="${asset('assets/app.js')}">\n<script
 <body>
 <header class="top">
   <div class="wrap">
-    <a class="logo" href="${ui.prefix}/" aria-label="${ui.homeAria}"><img src="/assets/logo.svg" width="32" height="32" alt="">${NAME}</a>
+    <a class="logo" href="${ui.prefix}/" aria-label="${ui.homeAria}"><img src="${asset('assets/logo.svg')}" width="32" height="32" alt="">${NAME}</a>
     <nav class="nav" aria-label="${ui.tools}">${navLinks}</nav>
     <a class="btn sm install-btn" href="/guides/install-app/" aria-label="${ui.installApp}">${ICONS.phone.replace(/22/g, '16')}<span>${ui.installApp}</span></a>
     ${switcher}
@@ -1284,4 +1285,8 @@ ${ALL.map((p) => `  <url><loc>${urlOf(p)}</loc><lastmod>${UPDATED}</lastmod><pri
 `);
 // Page list for the social-image generator (og.mjs).
 fs.writeFileSync(path.join(path.dirname(ROOT), 'pages.json'), JSON.stringify(ALL.map((p) => ({ slug: slugOf(p), h1: plainH1(p), lead: strip(p.lead || ''), tag: LANGS[p.lang].ui.tag })), null, 1));
+// The private admin page is hand-written; point it at the current versioned stylesheet and logo.
+const adminFile = path.join(ROOT, 'admin', 'index.html');
+if (fs.existsSync(adminFile)) fs.writeFileSync(adminFile, fs.readFileSync(adminFile, 'utf8')
+  .replace(/\/assets\/style\.css(\?v=[0-9a-f]+)?/, asset('assets/style.css')).replace(/\/assets\/logo\.svg(\?v=[0-9a-f]+)?/, asset('assets/logo.svg')));
 console.log(`Built ${ALL.length + 1} pages for ${SITE_URL} (${Object.keys(LANGS).map((l) => `${l}: ${ALL.filter((p) => p.lang === l).length}`).join(', ')})`);
