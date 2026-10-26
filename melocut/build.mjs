@@ -1163,7 +1163,7 @@ function page(p) {
   const navLinks = TOOLS.filter((t) => MAIN_NAV.includes(t.slug)).map((t) => { const x = toolIn(t, lang); return `<a href="${x.href}"${p.path === toolPath(t) ? ' aria-current="page"' : ''}>${isEn ? t.nav : x.title}</a>`; }).join('')
     + `<a href="${ui.prefix}/#tools">${ui.navAll || ui.allTools}</a>`;
   // Language switcher: the same page in the other language when it exists, else that language's home page.
-  const switcher = `<details class="lang"><summary aria-label="${ui.language}">${GLOBE}<span>${ui.short}</span></summary><div class="lang-menu">${Object.keys(LANGS).map((l) => {
+  const switcher = `<details class="lang"><summary aria-label="${ui.language}: ${ui.short}">${GLOBE}<span>${ui.short}</span></summary><div class="lang-menu">${Object.keys(LANGS).map((l) => {
     const target = vers.find((q) => q.lang === l) || homeOf(l);
     return `<a href="${urlOf(target).replace(SITE_URL, '')}" hreflang="${LANGS[l].ui.hreflang}" lang="${LANGS[l].ui.code}"${l === lang ? ' aria-current="true"' : ''}>${LANGS[l].ui.name}</a>`;
   }).join('')}</div></details>`;
@@ -1216,7 +1216,7 @@ ${p.tool ? `<link rel="modulepreload" href="${asset('assets/app.js')}">\n<script
   <div class="wrap">
     <a class="logo" href="${ui.prefix}/" aria-label="${ui.homeAria}"><img src="/assets/logo.svg" width="32" height="32" alt="">${NAME}</a>
     <nav class="nav" aria-label="${ui.tools}">${navLinks}</nav>
-    <a class="btn sm install-btn" href="/guides/install-app/">${ICONS.phone.replace(/22/g, '16')}<span>${ui.installApp}</span></a>
+    <a class="btn sm install-btn" href="/guides/install-app/" aria-label="${ui.installApp}">${ICONS.phone.replace(/22/g, '16')}<span>${ui.installApp}</span></a>
     ${switcher}
     <button class="menu-btn" type="button" aria-label="${ui.menu}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
   </div>

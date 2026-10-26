@@ -385,7 +385,7 @@ input[type=range]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px va
 .en-tag { display: inline-block; margin-left: 6px; font-size: 10.5px; font-weight: 700; letter-spacing: .4px; padding: 1px 6px; border-radius: 6px; border: 1px solid var(--line); color: var(--muted); vertical-align: middle; }
 /* "available in your language" bar */
 .lang-bar { display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; padding: 9px 16px; background: var(--brand-soft); color: var(--text); font-size: 14px; font-weight: 600; text-align: center; }
-.lang-bar a { color: var(--brand); }
+.lang-bar a { color: var(--brand-dark); font-weight: 700; }
 .lang-bar button { border: 0; background: transparent; color: var(--muted); font-size: 18px; line-height: 1; cursor: pointer; padding: 2px 6px; }
 .fcols { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
 /* the header is a bit wider than the content, so the menu, Install and language fit */
@@ -399,3 +399,4 @@ input[type=range]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px va
 .can-install .install-btn { margin-left: auto; }
 .can-install .lang { margin-left: 0; }
 footer .en-tag { margin-left: 5px; font-size: 9.5px; padding: 0 4px; }
+@media (prefers-color-scheme: dark) { .lang-bar a { color: #c9bcff; } }
