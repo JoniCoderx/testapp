@@ -60,6 +60,7 @@ async function toBlobURL(url, type, onProgress) {
 }
 
 let enginePromise = null;
+let engineReady = false;
 let engineProgress = null; // latest progress listener (the UI that asked last)
 function loadEngine(onProgress) {
   engineProgress = onProgress;
@@ -69,10 +70,17 @@ function loadEngine(onProgress) {
       const coreURL = await toBlobURL(`${CORE_BASE}/ffmpeg-core.js`, 'text/javascript');
       const wasmURL = await toBlobURL(`${CORE_BASE}/ffmpeg-core.wasm`, 'application/wasm', (p) => engineProgress?.(p));
       try { await ff.load({ coreURL, wasmURL }); } finally { URL.revokeObjectURL(coreURL); URL.revokeObjectURL(wasmURL); }
+      engineReady = true;
       return ff;
     })().catch((e) => { enginePromise = null; throw e; });
   }
   return enginePromise;
+}
+// Start downloading the engine as soon as a file is chosen, so Convert doesn't wait for it.
+// Skipped when the visitor asked to save data; then the note by the button explains the download.
+function preloadEngine(onProgress) {
+  if (engineReady || enginePromise || navigator.connection?.saveData) return null;
+  return loadEngine(onProgress).catch(() => {});
 }
 // A failed run can leave the wasm engine aborted: drop it so the next try starts fresh.
 function resetEngine(ff) { try { ff?.terminate(); } catch {} enginePromise = null; }
@@ -314,12 +322,12 @@ const TOOLS = {
     note: T('Tip: drag on the waveform to keep only part of the audio. Open Effects to add fades.'),
   },
   ringtone: {
-    formats: ['m4r', 'mp3'], defaultFormat: 'm4r', suffix: T(' (ringtone)'), maxLen: RINGTONE_MAX,
+    formats: ['m4r', 'mp3'], defaultFormat: 'm4r', suffix: T(' (ringtone)'), maxLen: RINGTONE_MAX, go: T('Make ringtone'),
     fx: { fadeIn: 1, fadeOut: 2 }, defaultSel: (d) => [0, Math.min(30, d)],
     note: T('The first 30 seconds are selected, with a short fade in and out (change them in Effects). Drag on the waveform to choose up to 40 seconds. M4R is for iPhone, MP3 for Android.'),
   },
   cutter: {
-    formats: ALL_FORMATS, defaultFormat: 'mp3', suffix: T(' (cut)'), modes: true,
+    formats: ALL_FORMATS, defaultFormat: 'mp3', suffix: T(' (cut)'), modes: true, go: T('Cut and save'),
     note: T('The whole file is selected. Drag the handles to choose a part, then keep it or remove it.'),
   },
   converter: {
@@ -378,6 +386,8 @@ function mountTool(root) {
   if (root.dataset.fx) cfg = { ...cfg, fx: JSON.parse(root.dataset.fx), fxOpen: true };
   if (root.dataset.note) cfg = { ...cfg, note: root.dataset.note };
   if (root.dataset.suffix) cfg = { ...cfg, suffix: root.dataset.suffix };
+  // The main button says what the tool does ("Cut and save"); effect pages built on a tool keep "Convert".
+  const goLabel = (!root.dataset.fx && cfg.go) || T('Convert');
 
   root.innerHTML = `
     <input type="file" class="sr" accept="${ACCEPT}" data-file aria-label="${T('Choose an audio or video file')}" tabindex="-1">
@@ -403,11 +413,12 @@ function mountTool(root) {
       </div>
       <div class="opts">${optionsHTML(cfg)}</div>
       ${fxHTML(cfg.fxOpen)}
-      <div class="note info" data-hint>${cfg.note}</div>
+      <div class="note tip" data-hint>${cfg.note}</div>
       <div class="go">
-        <button class="btn" type="button" data-go>${T('Convert')}</button>
+        <button class="btn" type="button" data-go>${goLabel}</button>
         <button class="btn ghost" type="button" data-cancel hidden>${T('Cancel')}</button>
         <div class="progress" data-progress><div class="bar"><i data-fill></i></div><small data-stage role="status" aria-live="polite"></small></div>
+        <small class="go-note" data-gonote${engineReady ? ' hidden' : ''}>${T('The first time, the audio engine downloads once (~30 MB).')}</small>
       </div>
       <div class="note" data-err role="alert"></div>
     </div>
@@ -419,7 +430,7 @@ function mountTool(root) {
     canvas: $(root, 'canvas'), busy: $(root, '[data-busy]'), play: $(root, '[data-play]'),
     start: $(root, '[data-start]'), end: $(root, '[data-end]'), len: $(root, '[data-len]'),
     go: $(root, '[data-go]'), progress: $(root, '[data-progress]'), fill: $(root, '[data-fill]'),
-    stage: $(root, '[data-stage]'), err: $(root, '[data-err]'), hint: $(root, '[data-hint]'), cancel: $(root, '[data-cancel]'),
+    stage: $(root, '[data-stage]'), err: $(root, '[data-err]'), hint: $(root, '[data-hint]'), cancel: $(root, '[data-cancel]'), goNote: $(root, '[data-gonote]'),
     format: $(root, '[data-o=format]'), quality: $(root, '[data-o=quality]'), qWrap: $(root, '[data-q]'),
     fxPreview: $(root, '[data-fxpreview]'), fxStatus: $(root, '[data-fxstatus]'),
     eqLane: $(root, '[data-eqlane]'), fxPlay: $(root, '[data-fxplay]'), after: $(root, '[data-after]'), afterLabel: $(root, '[data-afterlabel]'), eq: $(root, '[data-eq]'), eqLabel: $(root, '[data-eqlabel]'),
@@ -447,6 +458,8 @@ function mountTool(root) {
   });
 
   function error(msg) { els.err.textContent = msg || ''; els.err.className = msg ? 'note err' : 'note'; }
+  // The hint starts as a quiet tip; it is highlighted only when it tells the visitor something new.
+  function notice(msg) { els.hint.textContent = msg; els.hint.className = 'note info'; }
 
   async function openFile(file) {
     if (st.busy) return error(T('Please wait until the current conversion or preview has finished.'));
@@ -464,7 +477,7 @@ function mountTool(root) {
     els.busy.textContent = T('Reading audio…');
     els.format.value = cfg.formats.includes(root.dataset.format) ? root.dataset.format : cfg.defaultFormat;
     if (file.size > BIG_ON_PHONE && matchMedia('(pointer: coarse)').matches)
-      els.hint.textContent = T('This is a big file ({0} MB). Phones can run out of memory with files this size; if the page stops or reloads, try a shorter file or a computer.', Math.round(file.size / 1048576));
+      notice(T('This is a big file ({0} MB). Phones can run out of memory with files this size; if the page stops or reloads, try a shorter file or a computer.', Math.round(file.size / 1048576)));
     syncQuality();
     track('file_opened', { tool: root.dataset.tool, type: extOf(file.name) });
     let buffer;
@@ -488,6 +501,8 @@ function mountTool(root) {
     st.peaks = null;
     els.busy.style.display = 'none';
     setSel(...(cfg.defaultSel ? cfg.defaultSel(st.duration) : [0, st.duration]));
+    const pre = preloadEngine((p) => { if (!st.busy) els.goNote.textContent = T('Getting the audio engine ready (one time, ~30 MB)… {0}%', Math.round(p * 100)); });
+    pre?.then(() => { if (engineReady) els.goNote.hidden = true; else els.goNote.textContent = T('The first time, the audio engine downloads once (~30 MB).'); });
   }
 
   function showDropError(msg) {
@@ -538,7 +553,7 @@ function mountTool(root) {
     if (b - a < 0.1) b = Math.min(d, a + 0.1);
     if (cfg.maxLen && b - a > cfg.maxLen) {
       b = a + cfg.maxLen;
-      els.hint.textContent = T('Ringtones can be at most {0} seconds, so the selection was shortened.', cfg.maxLen);
+      notice(T('Ringtones can be at most {0} seconds, so the selection was shortened.', cfg.maxLen));
     }
     st.sel = [a, b];
     if (!fromInput) { els.start.value = fmt(a); els.end.value = fmt(b); }
@@ -873,6 +888,7 @@ function mountTool(root) {
     st.busy = on;
     root.classList.toggle('locked', on);
     lockables().forEach((el) => { el.inert = on; });
+    els.goNote.hidden = on || engineReady;
     els.cancel.hidden = !on;
     if (on) { st.cancelled = false; st.dirty = false; }
   }
@@ -941,7 +957,7 @@ function mountTool(root) {
   function resetOutput() {
     if (st.busy) { st.dirty = true; return; }
     if (st.outURL) { URL.revokeObjectURL(st.outURL); st.outURL = null; }
-    els.go.textContent = T('Convert');
+    els.go.textContent = goLabel;
     els.go.classList.remove('ok');
     els.go.onclick = convert;
     els.progress.style.display = 'none';
@@ -976,7 +992,7 @@ function mountTool(root) {
         await ff.deleteFile(outName).catch(() => {});
         return out;
       }, snap);
-      if (st.dirty) throw new Error(T('Your settings changed while converting, so that file was not kept. Press Convert again.'));
+      if (st.dirty) throw new Error(T('Your settings changed while converting, so that file was not kept. Press {0} again.', goLabel));
       const blob = new Blob([data.buffer], { type: FORMATS[fmtKey].mime });
       st.outURL = URL.createObjectURL(blob);
       const fileName = `${baseName(st.file.name)}${cfg.suffix}.${fmtKey}`;
@@ -988,8 +1004,8 @@ function mountTool(root) {
       els.go.classList.add('ok');
       els.go.onclick = () => { downloadURL(st.outURL, fileName); track('download', { tool: root.dataset.tool, format: fmtKey }); };
       track('converted', { tool: root.dataset.tool, format: fmtKey, effects: isDefaultFx(snap.fx) ? 'none' : 'yes' });
-      if (fmtKey === 'm4r') els.hint.textContent = T('iPhone: open the file with GarageBand, or drag it into Finder/iTunes with your phone connected, then choose it in Settings → Sounds.');
-      else if (root.dataset.tool === 'ringtone') els.hint.textContent = T('Android: open Settings → Sound → Phone ringtone, tap + (or Add ringtone) and pick the file from Downloads.');
+      if (fmtKey === 'm4r') notice(T('iPhone: open the file with GarageBand, or drag it into Finder/iTunes with your phone connected, then choose it in Settings → Sounds.'));
+      else if (root.dataset.tool === 'ringtone') notice(T('Android: open Settings → Sound → Phone ringtone, tap + (or Add ringtone) and pick the file from Downloads.'));
       // The Download button can end up below the screen on phones: bring it into view.
       const r = els.go.getBoundingClientRect();
       if (r.bottom > innerHeight || r.top < 0) els.go.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -1000,7 +1016,7 @@ function mountTool(root) {
         if (!st.dirty) track('failed', { tool: root.dataset.tool, format: fmtKey, type: extOf(st.file.name) });
       }
       els.progress.style.display = 'none';
-      els.go.textContent = T('Convert');
+      els.go.textContent = goLabel;
     } finally {
       setBusy(false);
       els.cancel.disabled = false;

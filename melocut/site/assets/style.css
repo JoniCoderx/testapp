@@ -1,5 +1,5 @@
 /* Inter (SIL Open Font License, assets/fonts/LICENSE.txt), self-hosted: one typeface on every device. */
-@font-face { font-family: "Inter"; src: url("/assets/fonts/inter-latin.woff2") format("woff2"); font-weight: 100 900; font-style: normal; font-display: swap; }
+@font-face { font-family: "Inter"; src: url("/assets/fonts/inter-latin.woff2") format("woff2"); font-weight: 100 900; font-style: normal; font-display: optional; }
 /* Fallback tuned to Inter's size, so text doesn't jump when the font arrives. */
 @font-face { font-family: "Inter Fallback"; src: local("Arial"), local("Helvetica"); size-adjust: 107%; ascent-override: 90%; descent-override: 22.5%; line-gap-override: 0%; }
 :root {
@@ -400,3 +400,11 @@ input[type=range]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px va
 .can-install .lang { margin-left: 0; }
 footer .en-tag { margin-left: 5px; font-size: 9.5px; padding: 0 4px; }
 @media (prefers-color-scheme: dark) { .lang-bar a { color: #c9bcff; } }
+/* the tool's hint is a quiet tip until it has news; the engine note sits under the main button */
+.note.tip { display: block; background: none; color: var(--muted); font-weight: 500; font-size: 13.5px; padding: 6px 2px 0; }
+.go-note { flex-basis: 100%; color: var(--muted); font-size: 12.5px; }
+.go-note[hidden] { display: none; }
+/* keep the sticky Convert bar above Google's bottom anchor ad on phones */
+@media (max-width: 640px) { .go { bottom: var(--anchor-ad, 0px); } }
+.section.first { margin-top: 12px; }
+.section.first h2, .section#tools h2 { font-size: 20px; }

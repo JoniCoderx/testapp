@@ -3,7 +3,7 @@
 export default (NAME) => ({
   ui: {
     code: 'es', hreflang: 'es', ogLocale: 'es_ES', prefix: '/es', name: 'Español', short: 'ES',
-    home: 'Inicio', tools: 'Herramientas', allTools: 'Todas las herramientas', navAll: 'Todas', installApp: 'Instalar app', menu: 'Menú',
+    home: 'Inicio', tools: 'Herramientas', allTools: 'Todas las herramientas', navAll: 'Todas', popular: 'Las más usadas', installApp: 'Instalar app', menu: 'Menú',
     howItWorks: 'Cómo funciona', faq: 'Preguntas frecuentes', moreTools: 'Más herramientas gratis',
     noscript: 'Activa JavaScript para usar esta herramienta.', language: 'Idioma', homeAria: `Inicio de ${NAME}`,
     footerTagline: 'Herramientas de audio gratis que funcionan en tu navegador',
@@ -80,7 +80,7 @@ export default (NAME) => ({
       steps: [
         ['Abre tu audio', 'Elige un MP3, WAV, M4A o cualquier archivo de audio o video.'],
         ['Selecciona la parte', 'Arrastra los controles sobre la onda, o escribe los tiempos exactos de inicio y fin.'],
-        ['Consérvala o quítala', 'Elige Conservar selección o Quitar selección, y luego Convertir y Descargar.'],
+        ['Consérvala o quítala', 'Elige Conservar selección o Quitar selección, y luego Cortar y guardar, y Descargar.'],
       ],
       content: `
     <h2>Corta justo donde quieres</h2>
@@ -90,7 +90,7 @@ export default (NAME) => ({
     <h3>Evita perder más calidad</h3>
     <p>Elige <strong>WAV</strong> o <strong>FLAC</strong> si vas a editar el archivo otra vez: ninguno añade pérdida por compresión. El WAV se guarda en 16 bits, la misma calidad que un CD.</p>`,
       faq: [
-        ['¿Cómo recorto un MP3?', 'Abre el MP3, arrastra los controles hasta la parte que quieres, elige Conservar selección y pulsa Convertir y luego Descargar.'],
+        ['¿Cómo recorto un MP3?', 'Abre el MP3, arrastra los controles hasta la parte que quieres, elige Conservar selección y pulsa Cortar y guardar, y luego Descargar.'],
         ['¿Puedo quitar una parte del medio?', 'Sí. Selecciona la parte que no quieres y elige Quitar selección.'],
         ['¿Cortar baja la calidad?', 'Elige MP3 a 320 kbps para que quede muy parecido al original, o WAV o FLAC para no añadir pérdida por compresión.'],
         ['¿Funciona sin conexión?', 'Sí, después de usar una herramienta una vez con conexión. El motor de audio queda guardado en tu dispositivo.'],
@@ -134,7 +134,7 @@ export default (NAME) => ({
       steps: [
         ['Elige una canción', 'Abre cualquier canción o video de tu dispositivo.'],
         ['Elige la parte que te gusta', 'Arrastra sobre la onda para seleccionar hasta 40 segundos. Pulsa Reproducir para comprobarla.'],
-        ['Descarga el tono', 'Elige M4R para iPhone o MP3 para Android, y luego Convertir y Descargar.'],
+        ['Descarga el tono', 'Elige M4R para iPhone o MP3 para Android, y luego Crear tono y Descargar.'],
       ],
       content: `
     <h2>Poner el tono en tu teléfono</h2>
