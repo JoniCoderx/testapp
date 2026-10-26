@@ -287,3 +287,16 @@ footer nav { padding-top: 2px; }
 /* reserve the tool's first-render height so the page doesn't jump while the script loads */
 .tool[data-tool] { min-height: 292px; }
 @media (max-width: 640px) { .tool[data-tool] { min-height: 300px; } .tool[data-tool="joiner"] { min-height: 328px; } }
+
+/* grouped footer */
+.fcols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; width: 100%; }
+.fcols nav { flex-direction: column; gap: 7px; }
+.fcols b { color: var(--text); font-size: 13.5px; margin-bottom: 2px; }
+@media (max-width: 640px) { .fcols { grid-template-columns: 1fr 1fr; } .fcols nav:first-child { grid-row: span 2; } }
+.install-btn { gap: 6px; align-items: center; }
+.install-btn svg { flex: none; }
+/* the equalizer only takes space once something plays */
+.lane.eq-lane { display: none; }
+.lane.eq-lane.on { display: block; }
+.btn.fx-play { display: none; }
+.has-fx .btn.fx-play { display: inline-flex; }

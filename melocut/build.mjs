@@ -10,6 +10,7 @@ const SITE_URL = (process.env.SITE_URL || 'https://melocut.com').replace(/\/$/, 
 const EMAIL = process.env.CONTACT_EMAIL || 'hello@melocut.com';
 const NAME = 'MeloCut';
 const UPDATED = new Date().toISOString().slice(0, 10);
+const LEGAL_UPDATED = 'October 26, 2026'; // change by hand when the privacy policy or terms change
 
 const ICONS = {
   video: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="14" height="14" rx="2"/><path d="m16 10 6-3v10l-6-3"/></svg>',
@@ -36,8 +37,8 @@ const TOOLS = [
   { slug: 'video-to-mp3', nav: 'Video to MP3', icon: 'video', title: 'Video to MP3', blurb: 'Get the sound out of an MP4, MOV or WebM video.' },
   { slug: 'ringtone-maker', nav: 'Ringtone Maker', icon: 'bell', title: 'Ringtone Maker', blurb: 'Turn part of a song into an iPhone or Android ringtone.' },
   { slug: 'audio-cutter', nav: 'Audio Cutter', icon: 'cut', title: 'Audio Cutter', blurb: 'Trim a song or cut a piece out of the middle.' },
-  { slug: 'audio-converter', nav: 'Converter', icon: 'swap', title: 'Audio Converter', blurb: 'Switch between MP3, WAV, M4A, OGG and FLAC.' },
-  { slug: 'audio-joiner', nav: 'Joiner', icon: 'merge', title: 'Audio Joiner', blurb: 'Put several songs or clips together into one file.' },
+  { slug: 'audio-converter', nav: 'Audio Converter', icon: 'swap', title: 'Audio Converter', blurb: 'Switch between MP3, WAV, M4A, OGG and FLAC.' },
+  { slug: 'audio-joiner', nav: 'Audio Joiner', icon: 'merge', title: 'Audio Joiner', blurb: 'Put several songs or clips together into one file.' },
   { slug: 'noise-remover', icon: 'sparkle', title: 'AI Noise Remover', ai: true, blurb: 'Clean up background noise in voice recordings.' },
   { slug: 'slowed-reverb', icon: 'slow', title: 'Slowed + Reverb', blurb: 'Make a slowed version of a song with reverb.' },
   { slug: 'vocal-remover', icon: 'mic', title: 'Vocal Remover', blurb: 'Take the singer out for a karaoke track.' },
@@ -59,7 +60,7 @@ const MAIN_NAV = ['video-to-mp3', 'ringtone-maker', 'audio-cutter', 'audio-conve
 const toolCard = (t) => `<a class="card" href="/${t.slug}/"><div class="ico">${ICONS[t.icon]}</div><b>${t.title}${t.ai ? '<span class="ai">AI</span>' : ''}</b><p>${t.blurb}</p></a>`;
 const CONVERSION_LINKS = `<div class="chips-links">${CONVERSIONS.map((c) => `<a class="chip" href="/${c.slug}/">${c.label}</a>`).join('')}</div>`;
 const INSTALL_CALLOUT = `
-  <div class="section"><div class="callout"><p>📲 You can add ${NAME} to your phone's home screen and open it like an app. It works offline too.</p>
+  <div class="section"><div class="callout"><p>You can add ${NAME} to your phone's home screen and open it like an app. After your first visit, the tools also work offline.</p>
     <a class="btn sm" href="/guides/install-app/">How to install</a></div></div>`;
 
 const WHY = `
@@ -67,9 +68,9 @@ const WHY = `
     <h2>Why use ${NAME}</h2>
     <div class="cards">
       <div class="card"><div class="ico">${ICONS.lock}</div><b>Your files stay with you</b><p>Everything happens in your browser. Nothing gets uploaded, so nobody else ever sees your files.</p></div>
-      <div class="card"><div class="ico">${ICONS.bolt}</div><b>No waiting</b><p>There's no upload and no download queue. Most files are done in a few seconds.</p></div>
-      <div class="card"><div class="ico">${ICONS.phone}</div><b>Phone or computer</b><p>Works in Safari, Chrome, Edge and Firefox. You can also install it and use it offline.</p></div>
-      <div class="card"><div class="ico">${ICONS.sparkle}</div><b>Free, no watermark</b><p>No account, no limits on how many files, and nothing added to your audio.</p></div>
+      <div class="card"><div class="ico">${ICONS.bolt}</div><b>No waiting</b><p>There's no upload and no download queue. A song usually takes a few seconds. Long videos take a bit longer.</p></div>
+      <div class="card"><div class="ico">${ICONS.phone}</div><b>Phone or computer</b><p>Works in Safari, Chrome, Edge and Firefox. You can also install it on your home screen.</p></div>
+      <div class="card"><div class="ico">${ICONS.sparkle}</div><b>Free, no watermark</b><p>No account and nothing added to your audio. Use it as often as you like, with files up to 1 GB.</p></div>
     </div>
   </div>`;
 
@@ -81,7 +82,7 @@ const PAGES = [
     description: 'Cut songs, make ringtones for iPhone and Android, add effects and convert video to MP3. Free, and your files never leave your device.',
     h1: 'Cut songs, make ringtones and add effects, <em>right in your browser</em>',
     lead: 'Free audio tools that work on your phone or computer. Your files are never uploaded. Pick a tool to start.',
-    badges: ['12 free tools', 'AI noise removal', 'Works offline', 'No sign-up'],
+    badges: ['12 free tools', 'AI noise removal', 'No upload', 'No sign-up'],
     body: `
   <div class="cards" id="tools" style="margin-top:8px">
     ${TOOLS.map(toolCard).join('\n    ')}
@@ -97,14 +98,14 @@ const PAGES = [
   ${INSTALL_CALLOUT}
   <div class="section prose">
     <h2>How it works</h2>
-    <p>Most converter sites make you upload your file, wait, and download it again. ${NAME} runs FFmpeg, the audio engine used by a lot of desktop software, directly in your browser. Your songs, voice notes and videos stay on your device the whole time, and you don't get pop-ups or fake download buttons.</p>
+    <p>Most converter sites make you upload your file, wait, and download it again. ${NAME} runs FFmpeg, the audio engine used by a lot of desktop software, directly in your browser. Your songs, voice notes and videos stay on your device the whole time. There are no pop-ups and no fake download buttons. The site is free because it shows a few ads, and they're always labelled.</p>
   </div>`,
     faq: [
-      ['Is MeloCut free?', 'Yes. Every tool is free. There is no sign-up, no watermark and no limit on the number of files.'],
+      ['Is MeloCut free?', 'Yes. Every tool is free, paid for by a few labelled ads. There is no sign-up and no watermark.'],
       ['Are my files uploaded anywhere?', 'No. All processing happens in your browser on your own device.'],
       ['Does it work on iPhone and Android?', 'Yes. It works in Safari, Chrome, Firefox and Edge on phones, tablets and computers.'],
       ['Which file types can I open?', 'MP3, MP4, MOV, M4A, WAV, OGG, OPUS, FLAC, WebM, AAC, AMR, 3GP and most other audio and video formats.'],
-      ['Can I install MeloCut as an app?', 'Yes. Add it to your home screen from Safari or Chrome. It opens full screen and works offline. The install guide shows the steps.'],
+      ['Can I install MeloCut as an app?', 'Yes. Add it to your home screen from Safari or Chrome. It opens full screen, and tools you have used before keep working offline. The install guide shows the steps.'],
       ['Does MeloCut use AI?', 'The noise remover uses RNNoise, a small neural network that separates speech from background noise. It runs on your device. The other effects are standard audio processing.'],
     ],
   },
@@ -138,8 +139,8 @@ const PAGES = [
     path: 'ringtone-maker', tool: 'ringtone', crumb: 'Tools',
     title: `Ringtone Maker for iPhone and Android, Free | ${NAME}`,
     description: 'Make a ringtone from any song. Pick the best part, add a fade and save it as M4R for iPhone or MP3 for Android. Free, no app needed.',
-    h1: 'Free <em>ringtone</em> maker',
-    lead: 'Pick your favourite part of a song and save it as a ringtone for iPhone (M4R) or Android (MP3).',
+    h1: '<em>Ringtone maker</em> for iPhone and Android',
+    lead: 'Pick your favorite part of a song and save it as a ringtone for iPhone (M4R) or Android (MP3).',
     badges: ['iPhone M4R', 'Android MP3', 'Fade in and out'],
     steps: [
       ['Choose a song', 'Open any song or video from your device.'],
@@ -166,7 +167,7 @@ const PAGES = [
     path: 'audio-cutter', tool: 'cutter', crumb: 'Tools',
     title: `Audio Cutter: Trim MP3 and Cut Songs Online | ${NAME}`,
     description: 'Trim MP3s and other audio online. Keep a part or cut one out, add fades, and save as MP3, M4A, WAV, OGG or FLAC. Free and private.',
-    h1: 'Online <em>audio cutter</em>',
+    h1: '<em>Audio cutter</em>: trim MP3 and cut songs',
     lead: 'Trim the start and end of a song, or remove a part from the middle. Add fades and save in the format you need.',
     badges: ['Keep or remove a part', 'Fade in and out', 'MP3, WAV, FLAC'],
     steps: [
@@ -185,14 +186,14 @@ const PAGES = [
       ['How do I trim an MP3?', 'Open the MP3, drag the handles to the part you want, choose Keep selection, then press Convert and Download.'],
       ['Can I cut a part out of the middle?', "Yes. Select the part you don't want and choose Remove selection."],
       ['Does cutting lower the quality?', 'Pick 320 kbps MP3 to keep it close to the original, or WAV or FLAC for no loss at all.'],
-      ['Does it work offline?', 'Yes, after the first visit. The audio engine is saved on your device.'],
+      ['Does it work offline?', 'Yes, once you have used a tool online one time. The audio engine is then saved on your device.'],
     ],
   },
   {
     path: 'audio-converter', tool: 'converter', crumb: 'Tools',
     title: `Audio Converter: MP3, WAV, M4A, OGG, FLAC | ${NAME}`,
     description: 'Convert audio online for free: MP3, WAV, M4A, OGG, FLAC and OPUS. Change speed and volume too. Works with WhatsApp voice notes. No upload.',
-    h1: 'Free online <em>audio converter</em>',
+    h1: '<em>Audio converter</em> for MP3, WAV, M4A, OGG and FLAC',
     lead: 'Convert between MP3, WAV, M4A, OGG and FLAC. It also opens WhatsApp and Telegram voice notes (OPUS).',
     badges: ['MP3, WAV, M4A, OGG, FLAC', 'Speed and volume', 'Voice notes'],
     steps: [
@@ -350,9 +351,9 @@ const PAGES = [
     path: 'audio-joiner', tool: 'joiner', crumb: 'Tools',
     title: `Audio Joiner: Merge MP3 Songs Online, Free | ${NAME}`,
     description: 'Join MP3, M4A, WAV and other audio files into one. Reorder them, listen, add a crossfade and even out the volume. Free and private.',
-    h1: 'Online <em>audio joiner</em>',
+    h1: '<em>Audio joiner</em>: merge songs into one file',
     lead: 'Put several songs, voice notes or clips together into one file. Listen to each one, change the order and add a crossfade.',
-    badges: ['As many files as you like', 'Crossfade', 'Even volume'],
+    badges: ['2 or more files', 'Crossfade', 'Even volume'],
     steps: [
       ['Add your files', 'Choose two or more audio or video files. You can add more later.'],
       ['Put them in order', 'Tap ▶ to listen, use the arrows to reorder, and set the crossfade or turn it off.'],
@@ -364,7 +365,7 @@ const PAGES = [
     <h3>Different formats are fine</h3>
     <p>You can mix MP3, M4A, WAV, OGG, OPUS and videos in one go. ${NAME} converts them all to the same format first.</p>`,
     faq: [
-      ['How many files can I join?', 'As many as your device has memory for. Most phones handle dozens of songs.'],
+      ['How many files can I join?', 'Two or more. There is no fixed limit: each file can be up to 1 GB, and the total depends on your device memory. Most phones handle dozens of songs.'],
       ['Can I join files with no gap?', 'Yes. Turn the crossfade off and they play straight after each other.'],
       ['Can I join videos?', 'Yes. MeloCut takes the sound from each video and joins the audio.'],
     ],
@@ -384,7 +385,7 @@ const PAGES = [
     content: `
     <h2>How the AI part works</h2>
     <p>${NAME} uses <strong>RNNoise</strong>, a neural network trained to tell speech apart from background noise. The model is about 300 KB and runs in your browser, so private recordings never leave your phone or computer.</p>
-    <p>In our tests on a noisy voice recording, the noise between words dropped by about 18 dB, roughly eight times quieter, while the voice stayed at the same level.</p>
+    <p>In our own test with a voice recorded next to a running fan, the noise in the pauses between words dropped by about 18 dB, which sounds roughly a third as loud, while the voice kept its level. Results depend on the recording, so press Preview and listen for yourself.</p>
     <h3>Getting the best result</h3>
     <p>It's made for speech: podcasts, interviews, voice notes and calls. On music it can remove instruments too, so for songs use <strong>Reduce hiss</strong> instead. <strong>Auto loudness</strong> and <strong>Remove silences</strong> are switched on here as well, which gives a cleaner result.</p>`,
     faq: [
@@ -418,8 +419,8 @@ const PAGES = [
     title: `Vocal Remover: Karaoke and Instrumental, Free | ${NAME}`,
     description: 'Remove vocals from songs to make karaoke and instrumental tracks. Free, private and quick. Nothing is uploaded.',
     h1: '<em>Vocal remover</em> and karaoke maker',
-    lead: 'Take the singer out of a song to make a karaoke or instrumental version.',
-    badges: ['Karaoke', 'Instrumental', 'Preview first'],
+    lead: 'Take the singer out of a stereo song for a karaoke version. It removes what sits in the middle of the mix, so it is not AI stem separation: bass and drums get a bit quieter too.',
+    badges: ['Karaoke', 'Stereo songs', 'Preview first'],
     steps: [
       ['Open a song', 'Choose a stereo song from your device.'],
       ['Listen first', 'The vocal remover is already on. Press Preview with effects.'],
@@ -431,8 +432,8 @@ const PAGES = [
     <h3>What it can't do</h3>
     <p>Bass and drums are often in the middle too, so they get quieter. Reverb on the voice can stay behind. Live recordings and mono files don't work, and ${NAME} will tell you if a file is mono. Turning up <strong>Bass</strong> in Effects brings some of the low end back.</p>`,
     faq: [
-      ['Does it work on every song?', 'It works best on studio songs with the vocal in the centre. Mono recordings cannot be separated this way.'],
-      ['Why is the bass quieter?', 'Bass is often in the centre of the mix too. Raise the Bass slider to bring it back.'],
+      ['Does it work on every song?', 'It works best on studio songs with the vocal in the center. Mono recordings cannot be separated this way.'],
+      ['Why is the bass quieter?', 'Bass is often in the center of the mix too. Raise the Bass slider to bring it back.'],
     ],
   },
   {
@@ -511,7 +512,7 @@ const PAGES = [
     h1: 'Guides',
     lead: 'Short step-by-step guides.',
     body: `<div class="cards">
-      <a class="card" href="/guides/install-app/"><div class="ico">${ICONS.phone}</div><b>Install MeloCut on your phone</b><p>Add it to your home screen and use it offline.</p></a>
+      <a class="card" href="/guides/install-app/"><div class="ico">${ICONS.phone}</div><b>Install MeloCut on your phone</b><p>Add it to your home screen in a few taps.</p></a>
       <a class="card" href="/guides/set-ringtone/"><div class="ico">${ICONS.bell}</div><b>Set a custom ringtone</b><p>iPhone and Android, with or without a computer.</p></a>
       <a class="card" href="/guides/find-downloads/"><div class="ico">${ICONS.book}</div><b>Where are my downloads?</b><p>Find your files on iPhone, Android, Windows and Mac.</p></a>
       <a class="card" href="/guides/best-audio-format/"><div class="ico">${ICONS.swap}</div><b>Which audio format should you use?</b><p>MP3, M4A, WAV, FLAC and what kbps means.</p></a>
@@ -522,11 +523,11 @@ const PAGES = [
   {
     path: 'guides/install-app', crumb: 'Guides', plain: true,
     title: `How to Install ${NAME} on iPhone and Android | ${NAME}`,
-    description: `Add ${NAME} to your iPhone or Android home screen in a few taps. It opens like an app and works offline. Free, no app store needed.`,
+    description: `Add ${NAME} to your iPhone or Android home screen in a few taps. It opens like an app and keeps working offline once you've used it. Free, no app store needed.`,
     h1: 'Install MeloCut on your phone',
-    lead: "You don't need an app store. Add MeloCut to your home screen and it opens full screen like any other app, even offline.",
+    lead: "You don't need an app store. Add MeloCut to your home screen and it opens full screen like any other app.",
     content: `
-    <div class="callout install-native"><p>Your browser can install MeloCut right now.</p><a class="btn sm install-btn" href="#">📲 Install app</a></div>
+    <div class="callout install-native"><p>Your browser can install MeloCut right now.</p><a class="btn sm install-btn" href="#">Install app</a></div>
     <h2>iPhone and iPad (Safari)</h2>
     <ol class="guide-steps">
       <li>Open <strong>${SITE_URL.replace('https://', '')}</strong> in <strong>Safari</strong>.</li>
@@ -547,7 +548,7 @@ const PAGES = [
       <li>Click <strong>Install</strong>. MeloCut opens in its own window and gets a desktop icon.</li>
     </ol>
     <h2>Using it offline</h2>
-    <p>Once you've used a tool, the audio engine is saved on your device, so the tools keep working on a plane or with a bad connection.</p>`,
+    <p>The first time you use a tool you need an internet connection, because the audio engine (about 30 MB) is downloaded then. After that it is saved on your device, so the tools keep working on a plane or with a bad connection. Open one tool while you're online before you travel.</p>`,
     faq: [
       ['Is the app free?', 'Yes. It is the same free website, just on your home screen.'],
       ['How much space does it take?', 'About 30 MB for the audio engine, which is less than most apps.'],
@@ -713,11 +714,11 @@ const PAGES = [
     description: `The terms for using ${NAME}, a set of free audio tools that run in your web browser.`,
     h1: 'Terms of use',
     content: `
-    <p><em>Last updated: ${UPDATED}</em></p>
+    <p><em>Last updated: ${LEGAL_UPDATED}</em></p>
     <h2>Using MeloCut</h2>
-    <p>${NAME} is free to use for personal and commercial purposes. You don't need an account. By using the site you agree to these terms.</p>
+    <p>${NAME} is free to use, at home or at work. You don't need an account. By using the site you agree to these terms.</p>
     <h2>Your files and your responsibility</h2>
-    <p>Your files are processed on your own device and never sent to us. You are responsible for the files you open and the files you create. Only use audio and video you own or have permission to use, and respect copyright and other people's rights.</p>
+    <p>Your files are processed on your own device and never sent to us. You are responsible for the files you open and the files you create. Only use audio and video you own or have permission to use. Editing a song with ${NAME} does not give you any rights to it: you can share or sell what you make only if you hold the rights to the original audio.</p>
     <h2>No warranty</h2>
     <p>${NAME} is provided as is. We work hard to make it reliable, but we can't promise it will always be available or free of errors. Keep a copy of your original files.</p>
     <h2>Limitation of liability</h2>
@@ -735,17 +736,27 @@ const PAGES = [
     description: `How ${NAME} handles your data. Your audio and video files never leave your device.`,
     h1: 'Privacy policy',
     content: `
-    <p><em>Last updated: ${UPDATED}</em></p>
+    <p><em>Last updated: ${LEGAL_UPDATED}</em></p>
+    <h2>Who we are</h2>
+    <p>${NAME} (melocut.com) is run by an independent developer. For anything about your data, email <a href="mailto:${EMAIL}">${EMAIL}</a>.</p>
     <h2>Your files</h2>
-    <p>${NAME} processes audio and video files entirely inside your web browser. Your files are <strong>never uploaded</strong> to our servers or anyone else's. We can't see, store or share them.</p>
-    <h2>Technical data</h2>
-    <p>Like any website, our hosting provider receives standard technical information when you load a page, such as your IP address and browser type. The audio engine, and the small RNNoise model if you use AI noise removal, are downloaded from the jsDelivr network and then run on your device.</p>
+    <p>${NAME} processes audio and video files entirely inside your web browser. Your files are <strong>never uploaded</strong> to our servers or anyone else's. We can't see, store or share them, so there is nothing for us to keep or delete.</p>
+    <h2>Services the site uses</h2>
+    <ol class="guide-steps">
+      <li><strong>Cloudflare</strong> hosts the site. Like any web host, it receives your IP address and browser details when you load a page, to deliver the page and protect it from attacks. Cloudflare keeps these logs for a short time under its own <a href="https://www.cloudflare.com/privacypolicy/" rel="nofollow">privacy policy</a>.</li>
+      <li><strong>jsDelivr</strong> delivers the audio engine and, if you use AI noise removal, the small RNNoise model. Your browser downloads them once and they then run on your device. See the <a href="https://www.jsdelivr.com/terms/privacy-policy-jsdelivr-net" rel="nofollow">jsDelivr privacy policy</a>.</li>
+      <li><strong>Google AdSense</strong> shows ads, as described below.</li>
+    </ol>
     <h2>Advertising and cookies</h2>
-    <p>${NAME} may show ads from Google AdSense. Google and its partners use cookies to show ads based on your earlier visits to this and other websites. You can turn off personalised ads at <a href="https://adssettings.google.com" rel="nofollow">Google Ads Settings</a> or <a href="https://www.aboutads.info/choices" rel="nofollow">aboutads.info</a>. More details are in <a href="https://policies.google.com/technologies/ads" rel="nofollow">how Google uses information from sites that use its services</a>.</p>
-    <p>Visitors in the EEA, the UK and Switzerland are asked for consent before personalised ads are shown.</p>
+    <p>${NAME} is free because it shows ads from Google AdSense. Google and its partners may use cookies and similar technology to show ads and to measure them, including ads based on your earlier visits to this and other websites. You can turn off personalized ads at <a href="https://adssettings.google.com" rel="nofollow">Google Ads Settings</a> or <a href="https://www.aboutads.info/choices" rel="nofollow">aboutads.info</a>. More details are in <a href="https://policies.google.com/technologies/ads" rel="nofollow">how Google uses information from sites that use its services</a>.</p>
+    <p>Visitors in the EEA, the UK and Switzerland see a consent message from Google before any personalized ads are shown, and can change their choice at any time with the privacy link it adds to the page.</p>
+    <p>${NAME} itself sets no cookies. The site saves its own files (the pages and the audio engine) in your browser's cache so the tools load faster and work offline. You can remove them by clearing your browser's site data.</p>
     <h2>Analytics</h2>
-    <p>We may use cookie-free analytics to count page views and see which tools are used. It doesn't collect personal data.</p>
-    <h2>Contact</h2>
+    <p>We don't use any analytics or tracking of our own.</p>
+    <h2>Your rights</h2>
+    <p>Since we don't collect personal data ourselves, there is usually nothing for us to show, change or delete. For data held by Google or Cloudflare, use the links above. You can still email us with any question or request.</p>
+    <h2>Changes</h2>
+    <p>If this policy changes, we update it here and change the date at the top.</p>
     <p>Questions? Email <a href="mailto:${EMAIL}">${EMAIL}</a>.</p>`,
   },
   {
@@ -852,7 +863,7 @@ ${p.tool ? '<link rel="modulepreload" href="/assets/app.js">\n<script type="modu
   <div class="wrap">
     <a class="logo" href="/" aria-label="${NAME} home"><img src="/assets/logo.svg" width="32" height="32" alt="">${NAME}</a>
     <nav class="nav" aria-label="Tools">${navLinks}</nav>
-    <a class="btn sm install-btn" href="/guides/install-app/">📲 Install</a>
+    <a class="btn sm install-btn" href="/guides/install-app/">${ICONS.phone.replace(/22/g, '16')} Install app</a>
     <button class="menu-btn" type="button" aria-label="Menu"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
   </div>
 </header>
@@ -868,7 +879,7 @@ ${p.tool ? '<link rel="modulepreload" href="/assets/app.js">\n<script type="modu
   ${p.body || ''}
   ${p.steps ? `<div class="section"><h2>How it works</h2><div class="steps">${p.steps.map(([n, t]) => `<div class="card"><b>${n}</b><p>${t}</p></div>`).join('')}</div></div>` : ''}
   ${p.content ? `<div class="section prose">${p.content}</div>` : ''}
-  ${p.tool ? `<div class="ad" data-slot="middle"></div>${WHY}` : ''}
+  ${p.tool ? '<div class="ad" data-slot="middle"></div>' : ''}
   ${p.tool ? `<div class="section"><h2>More free tools</h2><div class="cards rail">${others.map(toolCard).join('')}</div></div>
   <div class="section"><h2>Popular conversions</h2>${CONVERSION_LINKS}</div>${INSTALL_CALLOUT}` : ''}
   ${p.faq ? `<div class="section"><h2>Questions and answers</h2>${p.faq.map(([q, a]) => `<details><summary>${q}</summary><p>${a}</p></details>`).join('')}</div>` : ''}
@@ -877,9 +888,11 @@ ${p.tool ? '<link rel="modulepreload" href="/assets/app.js">\n<script type="modu
 <footer>
   <div class="wrap">
     <div>© <span data-year></span> ${NAME} · Free audio tools that run in your browser</div>
-    <nav aria-label="Tools">${TOOLS.map((t) => `<a href="/${t.slug}/">${t.title}</a>`).join('')}</nav>
-    <nav aria-label="Conversions">${CONVERSIONS.map((c) => `<a href="/${c.slug}/">${c.label}</a>`).join('')}</nav>
-    <nav aria-label="More"><a href="/guides/">Guides</a><a href="/guides/install-app/">Install the app</a><a href="/about/">About and contact</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a></nav>
+    <div class="fcols">
+      <nav aria-label="Tools"><b>Tools</b>${TOOLS.map((t) => `<a href="/${t.slug}/">${t.title}</a>`).join('')}</nav>
+      <nav aria-label="Conversions"><b>Conversions</b>${CONVERSIONS.map((c) => `<a href="/${c.slug}/">${c.label}</a>`).join('')}</nav>
+      <nav aria-label="More"><b>Help and info</b><a href="/guides/">Guides</a><a href="/guides/install-app/">Install the app</a><a href="/about/">About and contact</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a></nav>
+    </div>
   </div>
 </footer>
 </body>
@@ -894,8 +907,8 @@ for (const p of PAGES) {
 }
 fs.writeFileSync(path.join(ROOT, '404.html'), page({
   path: '404', title: `Page not found | ${NAME}`, description: 'Page not found.', h1: 'Page not found',
-  lead: "That page doesn't exist. Try one of these tools:", plain: false,
-  body: `<div class="cards">${TOOLS.map(toolCard).join('')}</div>`,
+  lead: "That page doesn't exist, or it moved. Pick a tool below, or go back to the <a href=\"/\">home page</a> or the <a href=\"/guides/\">guides</a>.", plain: false,
+  body: `<div class="cards">${TOOLS.map(toolCard).join('')}</div><div class="section"><h2>Popular conversions</h2>${CONVERSION_LINKS}</div>`,
 }).replace('<meta name="robots" content="index, follow, max-image-preview:large">', '<meta name="robots" content="noindex">'));
 fs.writeFileSync(path.join(ROOT, 'robots.txt'), `User-agent: *\nAllow: /\n\nSitemap: ${SITE_URL}/sitemap.xml\n`);
 const priority = (p) => (!p.path ? '1.0' : p.tool ? '0.9' : p.path.startsWith('guides') ? '0.7' : '0.4');
