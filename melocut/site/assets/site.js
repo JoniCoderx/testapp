@@ -4,6 +4,24 @@
   // One address only: send www visitors to melocut.com (the server-side redirect rule does this too).
   if (location.hostname === 'www.melocut.com') { location.replace(`https://melocut.com${location.pathname}${location.search}${location.hash}`); return; }
 
+  // Language: close the switcher when tapping elsewhere, and offer (never force) the visitor's language.
+  const langBox = document.querySelector('.lang');
+  document.addEventListener('click', (e) => { if (langBox?.open && !langBox.contains(e.target)) langBox.open = false; });
+  const OFFER = { es: ['Esta página también está en español.', 'Ver en español'], 'pt-BR': ['Esta página também está em português.', 'Ver em português'],
+    en: ['This page is also available in English.', 'View in English'] };
+  try {
+    const here = document.documentElement.lang;
+    const want = (navigator.languages || [navigator.language]).map((l) => (/^pt/i.test(l) ? 'pt-BR' : l.slice(0, 2).toLowerCase())).find((l) => OFFER[l]);
+    const alt = want && want !== here && document.querySelector(`link[rel=alternate][hreflang="${want}"]`);
+    if (alt && !localStorage.getItem('lang-offer-closed')) {
+      const bar = document.createElement('div');
+      bar.className = 'lang-bar'; bar.lang = want;
+      bar.innerHTML = `<span>${OFFER[want][0]}</span><a href="${new URL(alt.href).pathname}">${OFFER[want][1]}</a><button type="button" aria-label="Close">×</button>`;
+      bar.querySelector('button').addEventListener('click', () => { bar.remove(); try { localStorage.setItem('lang-offer-closed', '1'); } catch {} });
+      document.body.prepend(bar);
+    }
+  } catch {}
+
   // Mobile menu
   const top = document.querySelector('.top');
   document.querySelector('.menu-btn')?.addEventListener('click', () => top.classList.toggle('open'));

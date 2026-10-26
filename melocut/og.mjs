@@ -32,7 +32,7 @@ for (const p of pages) {
     <div style="display:flex;align-items:center;gap:18px"><div style="width:72px;height:72px">${logo}</div><div style="font-size:46px;font-weight:800;letter-spacing:-1px">MeloCut</div></div>
     <div style="font-size:${p.h1.length > 34 ? 60 : 72}px;font-weight:800;line-height:1.05;margin-top:40px;letter-spacing:-1.5px;max-width:960px;background:linear-gradient(90deg,#fff 40%,#ffb3cf);-webkit-background-clip:text;color:transparent">${esc(p.h1)}</div>
     <div style="font-size:28px;margin-top:24px;color:#d6cdf7;max-width:900px;line-height:1.35">${esc(lead)}</div>
-    <div style="font-size:24px;margin-top:30px;color:#bfb3ef;font-weight:600">Free · Private · No upload</div>
+    <div style="font-size:24px;margin-top:30px;color:#bfb3ef;font-weight:600">${esc(p.tag || 'Free · Private · No upload')}</div>
     <svg style="position:absolute;right:60px;bottom:50px;opacity:.28" width="408" height="120" viewBox="0 0 408 120"><g fill="#fff">${bars}</g></svg>
   </body></html>`);
   await page.evaluate(() => document.fonts.ready);

@@ -73,3 +73,18 @@ Higgsfield cannot use a custom domain, and AdSense needs one, so host `site/` on
 3. Create `site/ads.txt` with the line AdSense shows you, e.g.
    `google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0`
 4. In AdSense → Privacy & messaging, publish the GDPR message (needed for EU/UK visitors).
+
+## Languages
+
+English is the source. Spanish (`/es/`) and Brazilian Portuguese (`/pt-br/`) cover the home page and the
+Audio Cutter, Video to MP3, Ringtone Maker and Audio Converter.
+
+- **Tool interface** (buttons, progress, errors): every string in `site/assets/app.js` goes through `T('English text')`.
+  The translations live in `i18n/ui.py`; run `python3 i18n/ui.py` to write `site/assets/i18n/<lang>.js`.
+  It fails if a string is missing or a `{0}` slot was lost.
+- **Pages and site text** (titles, descriptions, FAQ, header, footer): `i18n/es.mjs` and `i18n/pt-br.mjs`.
+  A page with the same `key` as an English page gets reciprocal `hreflang` links, an `x-default`, sitemap
+  alternates and a language switcher entry. Tool cards for pages that aren't translated yet link to the
+  English page with an "EN" tag.
+- **Add a language:** copy `i18n/es.mjs`, add its dictionary to `i18n/ui.py`, register it in `LANGS` in
+  `build.mjs`, then run `python3 i18n/ui.py && node build.mjs && node og.mjs && node build.mjs`.
