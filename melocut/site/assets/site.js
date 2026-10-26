@@ -1,6 +1,9 @@
 (() => {
   const cfg = window.MELOCUT_CONFIG || {};
 
+  // One address only: send www visitors to melocut.com (the server-side redirect rule does this too).
+  if (location.hostname === 'www.melocut.com') { location.replace(`https://melocut.com${location.pathname}${location.search}${location.hash}`); return; }
+
   // Mobile menu
   const top = document.querySelector('.top');
   document.querySelector('.menu-btn')?.addEventListener('click', () => top.classList.toggle('open'));

@@ -163,9 +163,10 @@ function effectFilters(fx, len) {
   if (fx.pitch) f.push('aresample=48000', `asetrate=${Math.round(48000 * pitchRatio)}`, 'aresample=48000');
   f.push(...atempoChain(fx.speed / pitchRatio));
   const outLen = len / fx.speed;
-  if (fx.fadeIn > 0) f.push(`afade=t=in:st=0:d=${Math.min(fx.fadeIn, outLen / 2).toFixed(2)}`);
+  // A fade never takes more than a quarter of the clip, so short clips stay audible.
+  if (fx.fadeIn > 0) f.push(`afade=t=in:st=0:d=${Math.min(fx.fadeIn, outLen / 4).toFixed(2)}`);
   if (fx.fadeOut > 0) {
-    const d = Math.min(fx.fadeOut, outLen / 2);
+    const d = Math.min(fx.fadeOut, outLen / 4);
     f.push(`afade=t=out:st=${Math.max(0, outLen - d).toFixed(2)}:d=${d.toFixed(2)}`);
   }
   if (fx.bass) f.push(`bass=g=${fx.bass}:f=110`);
@@ -185,6 +186,15 @@ function effectFilters(fx, len) {
 }
 
 const isDefaultFx = (fx) => Object.keys(FX_DEFAULTS).every((k) => fx[k] === FX_DEFAULTS[k]);
+const FX_NAMES = { fadeIn: 'Fade in', fadeOut: 'Fade out', volume: 'Volume', normalize: 'Auto loudness', speed: 'Speed', pitch: 'Pitch',
+  bass: 'Bass', treble: 'Treble', reverb: 'Reverb', eightD: '8D', aiDenoise: 'AI noise removal', denoise: 'Reduce hiss',
+  karaoke: 'Vocal remover', silence: 'Remove silences', reverse: 'Reverse', mono: 'Mono' };
+// Short list of the effects that are switched on, e.g. "Fade in 1s, Fade out 2s".
+function fxNames(fx) {
+  const on = Object.keys(FX_DEFAULTS).filter((k) => fx[k] !== FX_DEFAULTS[k])
+    .map((k) => (k === 'fadeIn' || k === 'fadeOut' ? `${FX_NAMES[k]} ${fx[k]}s` : FX_NAMES[k]));
+  return on.length > 3 ? `${on.slice(0, 2).join(', ')} +${on.length - 2} more` : on.join(', ');
+}
 
 function slider(key, label, min, max, step, unit) {
   return `<label class="fx-s"><span>${label} <output data-fxv="${key}"></output></span>
@@ -213,12 +223,12 @@ function fxHTML(open) {
       ${toggle('eightD', '8D audio', 'Sound moves around your head (use headphones)')}
       ${toggle('aiDenoise', '✨ AI noise removal', 'A neural network (RNNoise) removes background noise from voices')}
       ${toggle('denoise', 'Reduce hiss', 'Remove steady background hiss and hum')}
-      ${toggle('karaoke', 'Vocal remover', 'Karaoke: removes vocals that sit in the centre of a stereo song')}
+      ${toggle('karaoke', 'Vocal remover', 'Karaoke: removes vocals that sit in the center of a stereo song')}
       ${toggle('silence', 'Remove silences', 'Cut out quiet gaps')}
       ${toggle('reverse', 'Reverse', 'Play the audio backwards')}
       ${toggle('mono', 'Mono', 'Mix to one channel')}
     </div>
-    <div class="fx-preview"><button type="button" class="btn ghost sm" data-fxpreview>🎧 Preview with effects</button><small data-fxstatus>Hear the first ${PREVIEW_SECONDS} seconds with your effects.</small></div>
+    <div class="fx-preview"><button type="button" class="btn ghost sm" data-fxpreview>🎧 Preview with effects</button><small data-fxstatus>Plays the first ${PREVIEW_SECONDS} seconds of your selection with the effects. The full file gets them when you convert.</small></div>
   </details>`;
 }
 const fmtFx = (key, v) => {
@@ -245,8 +255,7 @@ function mountFx(root, initial, onChange) {
       const out = box.querySelector(`[data-fxv="${k}"]`);
       if (out) out.textContent = fmtFx(k, fx[k]);
     });
-    const n = Object.keys(FX_DEFAULTS).filter((k) => fx[k] !== FX_DEFAULTS[k]).length;
-    $(box, '[data-fxcount]').textContent = n ? `${n} on` : '';
+    $(box, '[data-fxcount]').textContent = fxNames(fx);
   }
   inputs.forEach((el) => el.addEventListener(el.type === 'checkbox' ? 'change' : 'input', () => {
     fx[el.dataset.fx] = el.type === 'checkbox' ? el.checked : Number(el.value);
@@ -267,17 +276,17 @@ function mountFx(root, initial, onChange) {
 const TOOLS = {
   'video-to-mp3': {
     formats: ['mp3', 'm4a', 'wav'], defaultFormat: 'mp3', suffix: '',
+    drop: 'MP4, MOV, WebM, MKV, AVI, 3GP… up to 1 GB',
     note: 'Tip: drag on the waveform to keep only part of the audio. Open Effects to add fades.',
   },
   ringtone: {
     formats: ['m4r', 'mp3'], defaultFormat: 'm4r', suffix: ' (ringtone)', maxLen: RINGTONE_MAX,
     fx: { fadeIn: 1, fadeOut: 2 }, defaultSel: (d) => [0, Math.min(30, d)],
-    note: 'Drag on the waveform to choose up to 40 seconds. M4R is for iPhone, MP3 for Android.',
+    note: 'The first 30 seconds are selected, with a short fade in and out (change them in Effects). Drag on the waveform to choose up to 40 seconds. M4R is for iPhone, MP3 for Android.',
   },
   cutter: {
-    formats: ALL_FORMATS, defaultFormat: 'mp3', suffix: ' (cut)', modes: true, fx: { fadeOut: 2 },
-    defaultSel: (d) => [d * 0.1, d * 0.9],
-    note: 'Drag the handles to choose a part, then keep it or remove it.',
+    formats: ALL_FORMATS, defaultFormat: 'mp3', suffix: ' (cut)', modes: true,
+    note: 'The whole file is selected. Drag the handles to choose a part, then keep it or remove it.',
   },
   converter: {
     formats: ALL_FORMATS, defaultFormat: 'mp3', suffix: '',
@@ -305,10 +314,12 @@ const TOOLS = {
   },
   karaoke: {
     formats: ALL_FORMATS, defaultFormat: 'mp3', suffix: ' (karaoke)', fx: PRESETS.karaoke.fx, fxOpen: true,
-    note: 'Works best on studio songs where the singer is in the centre. Press Preview to check.',
+    drop: 'Stereo songs: MP3, M4A, WAV, FLAC, OGG… up to 1 GB',
+    note: 'Works best on studio songs where the singer is in the center. Bass and drums get a little quieter too. Press Preview to check.',
   },
   reverse: {
     formats: ALL_FORMATS, defaultFormat: 'mp3', suffix: ' (reversed)', fx: { reverse: true }, fxOpen: true,
+    drop: 'Any song, voice note or video, up to 20 minutes',
     note: 'Press Preview to hear it backwards.',
   },
 };
@@ -335,7 +346,7 @@ function mountTool(root) {
     <div class="drop" data-drop tabindex="0" role="button">
       <div class="ico">${UPLOAD_ICON}</div>
       <strong>Choose a file or drop it here</strong>
-      <span>MP3, MP4, MOV, M4A, WAV, OGG, OPUS, WebM… up to 1 GB</span>
+      <span>${cfg.drop || 'MP3, M4A, WAV, OGG, OPUS, FLAC or a video… up to 1 GB'}</span>
     </div>
     <div class="editor" data-editor>
       <div class="filebar">
@@ -344,9 +355,10 @@ function mountTool(root) {
       </div>
       <div class="wave" data-wave><canvas></canvas><div class="busy" data-busy>Reading audio…</div></div>
       <div class="lane"><div class="lane-head"><b>With effects</b><small data-afterlabel></small></div><canvas data-after></canvas></div>
-      <div class="lane"><div class="lane-head"><b>Equalizer</b><small data-eqlabel>Press Play or Preview to see it move</small></div><canvas data-eq></canvas></div>
+      <div class="lane eq-lane" data-eqlane><div class="lane-head"><b>Equalizer</b><small data-eqlabel>Press Play or Preview to see it move</small></div><canvas data-eq></canvas></div>
       <div class="controls">
-        <button class="btn ghost sm" type="button" data-play aria-label="Play selection">▶ Play</button>
+        <button class="btn ghost sm" type="button" data-play aria-label="Play the original selection">▶ Play original</button>
+        <button class="btn ghost sm fx-play" type="button" data-fxplay>🎧 Play with effects</button>
         <label class="time">Start <input data-start inputmode="decimal" aria-label="Start time"></label>
         <label class="time">End <input data-end inputmode="decimal" aria-label="End time"></label>
         <span class="sel-len" data-len></span>
@@ -371,11 +383,15 @@ function mountTool(root) {
     stage: $(root, '[data-stage]'), err: $(root, '[data-err]'), hint: $(root, '[data-hint]'),
     format: $(root, '[data-o=format]'), quality: $(root, '[data-o=quality]'), qWrap: $(root, '[data-q]'),
     fxPreview: $(root, '[data-fxpreview]'), fxStatus: $(root, '[data-fxstatus]'),
-    after: $(root, '[data-after]'), afterLabel: $(root, '[data-afterlabel]'), eq: $(root, '[data-eq]'), eqLabel: $(root, '[data-eqlabel]'),
+    eqLane: $(root, '[data-eqlane]'), fxPlay: $(root, '[data-fxplay]'), after: $(root, '[data-after]'), afterLabel: $(root, '[data-afterlabel]'), eq: $(root, '[data-eq]'), eqLabel: $(root, '[data-eqlabel]'),
   };
   const st = { file: null, duration: 0, buffer: null, peaks: null, sel: [0, 0], mode: 'keep',
     ctx: null, source: null, playStart: 0, playFrom: 0, raf: 0, outURL: null, busy: false };
-  const fx = mountFx(root, cfg.fx, () => { st.exact = null; stopPlay(); resetOutput(); drawAfter(); });
+  const fx = mountFx(root, cfg.fx, () => { st.exact = null; stopPlay(); resetOutput(); drawAfter(); syncFx(); });
+  // The extra "Play with effects" button only shows when some effect is on.
+  function syncFx() { root.classList.toggle('has-fx', !isDefaultFx(fx.get())); }
+  syncFx();
+  els.fxPlay.addEventListener('click', () => els.fxPreview.click());
 
   // ----- file selection -----
   els.drop.addEventListener('click', () => els.file.click());
@@ -606,8 +622,8 @@ function mountTool(root) {
         if (fxv.reverse) tSrc = len - tSrc;
         const s0 = sourceTime(segs, Math.max(0, tSrc - (t1 - t0) * fxv.speed / 2));
         let v = peakBetween(st.buffer, s0, s0 + (t1 - t0) * fxv.speed) * gain;
-        if (fxv.fadeIn > 0) v *= Math.min(1, tm / Math.min(fxv.fadeIn, procLen / 2));
-        if (fxv.fadeOut > 0) v *= Math.min(1, (procLen - tm) / Math.min(fxv.fadeOut, procLen / 2));
+        if (fxv.fadeIn > 0) v *= Math.min(1, tm / Math.min(fxv.fadeIn, procLen / 4));
+        if (fxv.fadeOut > 0) v *= Math.min(1, (procLen - tm) / Math.min(fxv.fadeOut, procLen / 4));
         if (limit && v > 0.97) { capped = true; v = 0.97; }
         return Math.max(0, Math.min(1, v));
       };
@@ -696,8 +712,9 @@ function mountTool(root) {
   function stopPlay() {
     if (st.source) { try { st.source.stop(); } catch {} st.source = null; }
     cancelAnimationFrame(st.raf);
-    els.play.textContent = '▶ Play';
+    els.play.textContent = '▶ Play original';
     els.fxPreview.textContent = '🎧 Preview with effects';
+    els.fxPlay.textContent = '🎧 Play with effects';
     els.eqLabel.textContent = 'Press Play or Preview to see it move';
     draw();
     drawEq();
@@ -711,6 +728,7 @@ function mountTool(root) {
     src.start(0, offset, duration);
     st.source = src; st.playStart = st.ctx.currentTime;
     els.eqLabel.textContent = label;
+    els.eqLane.classList.add('on');
     src.onended = () => st.source === src && stopPlay();
     const tick = () => { onTick?.(st.ctx.currentTime - st.playStart); drawEq(); st.raf = requestAnimationFrame(tick); };
     tick();
@@ -800,6 +818,7 @@ function mountTool(root) {
   els.fxPreview.addEventListener('click', async () => {
     if (st.source) return stopPlay();
     if (!st.buffer || st.busy) return;
+    if (!els.fxPreview.closest('details').open) els.fxPreview.closest('details').open = true;
     st.ctx.resume(); // must start inside the tap for iOS to allow sound later
     error('');
     const check = checkJob();
@@ -825,6 +844,7 @@ function mountTool(root) {
       drawAfter();
       playBuffer(buf, 0, buf.duration, null, 'With your effects');
       els.fxPreview.textContent = '■ Stop preview';
+      els.fxPlay.textContent = '■ Stop';
       error('');
       status(`Playing ${fmt(buf.duration)} with your effects.`);
       // Explain a much shorter result instead of letting it look broken.
@@ -870,11 +890,13 @@ function mountTool(root) {
     st.onEngineProgress = (p) => setP(p * 0.3, `Loading audio engine (one time, ~30 MB)… ${Math.round(p * 100)}%`);
     const fmtKey = els.format.value;
     const outName = `output.${fmtKey}`;
+    let outLen = 0;
     try {
       const data = await withInput(async (ff, inName) => {
         setP(0.3, 'Processing…');
-        const { args, outLen } = buildArgs(inName, outName, fmtKey);
-        await runFFmpeg(ff, args, outLen, (r) => setP(0.3 + r * 0.7, `Processing… ${Math.round(r * 100)}%`));
+        const job = buildArgs(inName, outName, fmtKey);
+        outLen = job.outLen;
+        await runFFmpeg(ff, job.args, outLen, (r) => setP(0.3 + r * 0.7, `Processing… ${Math.round(r * 100)}%`));
         const out = await ff.readFile(outName);
         await ff.deleteFile(outName).catch(() => {});
         return out;
@@ -882,13 +904,18 @@ function mountTool(root) {
       const blob = new Blob([data.buffer], { type: FORMATS[fmtKey].mime });
       st.outURL = URL.createObjectURL(blob);
       const fileName = `${baseName(st.file.name)}${cfg.suffix}.${fmtKey}`;
-      setP(1, `Done · ${(blob.size / 1048576).toFixed(2)} MB`);
+      const fxOn = fxNames(fx.get());
+      setP(1, `Done · ${fileName} · ${fmt(outLen)} · ${(blob.size / 1048576).toFixed(2)} MB${fxOn ? ` · ${fxOn}` : ''}`);
       error('');
       els.go.textContent = `⬇ Download ${fmtKey.toUpperCase()}`;
       els.go.classList.add('ok');
       els.go.onclick = () => { downloadURL(st.outURL, fileName); track('download', { tool: root.dataset.tool, format: fmtKey }); };
       track('converted', { tool: root.dataset.tool, format: fmtKey, effects: isDefaultFx(fx.get()) ? 'none' : 'yes' });
       if (fmtKey === 'm4r') els.hint.textContent = 'iPhone: open the file with GarageBand, or drag it into Finder/iTunes with your phone connected, then choose it in Settings → Sounds.';
+      else if (root.dataset.tool === 'ringtone') els.hint.textContent = 'Android: open Settings → Sound → Phone ringtone, tap + (or Add ringtone) and pick the file from Downloads.';
+      // The Download button can end up below the screen on phones: bring it into view.
+      const r = els.go.getBoundingClientRect();
+      if (r.bottom > innerHeight || r.top < 0) els.go.scrollIntoView({ behavior: 'smooth', block: 'center' });
     } catch (e) {
       error(e?.message || 'Something went wrong.');
       els.progress.style.display = 'none';
@@ -907,7 +934,7 @@ function mountJoiner(root) {
     <div class="drop" data-drop tabindex="0" role="button">
       <div class="ico">${UPLOAD_ICON}</div>
       <strong>Choose 2 or more files, or drop them here</strong>
-      <span>Songs, voice notes or videos, in any order. You can reorder them next.</span>
+      <span>Songs, voice notes or videos, up to 1 GB each. You can reorder them next.</span>
     </div>
     <div class="editor" data-editor>
       <ol class="joinlist" data-list></ol>
@@ -1059,9 +1086,11 @@ function mountJoiner(root) {
       const data = await ff.readFile(outName);
       const blob = new Blob([data.buffer], { type: FORMATS[fmtKey].mime });
       st.outURL = URL.createObjectURL(blob);
-      setP(1, `Done · ${(blob.size / 1048576).toFixed(2)} MB · listen below, then download`);
+      setP(1, `Done · ${fmt(outLen)} · ${(blob.size / 1048576).toFixed(2)} MB · listen below, then download`);
       els.player.src = st.outURL; els.result.hidden = false;
       els.go.textContent = `⬇ Download ${fmtKey.toUpperCase()}`; els.go.classList.add('ok');
+      const r = els.go.getBoundingClientRect();
+      if (r.bottom > innerHeight || r.top < 0) els.go.scrollIntoView({ behavior: 'smooth', block: 'center' });
       els.go.onclick = () => { downloadURL(st.outURL, `${baseName(st.items[0].file.name)} (joined).${fmtKey}`); track('download', { tool: 'joiner', format: fmtKey }); };
       track('converted', { tool: 'joiner', format: fmtKey, count: n });
     } catch (e) {
