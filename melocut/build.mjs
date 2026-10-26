@@ -148,7 +148,7 @@ const PAGES = [
     faq: [
       ['How do I convert MP4 to MP3?', 'Open the MP4 above, choose MP3 and a quality, press Convert and then Download. It takes a few seconds.'],
       ['Can I convert iPhone videos?', 'Yes. Pick the video from Photos or Files and it converts like any other.'],
-      ['Is there a size limit?', 'Files up to 1 GB work. Very large files depend on how much memory your device has.'],
+      ['Is there a size limit?', 'Files up to 1 GB open on a computer. Audio needs much more memory once it is unpacked, so on phones files under about 300 MB work best. For long videos, use a computer or trim the video first.'],
       ['Can I convert YouTube videos?', 'MeloCut works with files on your device. It does not download from YouTube or other sites.'],
     ],
   },
@@ -197,12 +197,12 @@ const PAGES = [
     <p>The waveform shows where the music gets loud or quiet. Drag the handles to the right spot and press Play to listen before you save. For exact cuts, type the times yourself, for example <code>1:23.5</code>.</p>
     <h3>Remove something from the middle</h3>
     <p>Switch to <strong>Remove selection</strong> to take out an intro, a long pause, a mistake or an ad. The two parts on either side get joined automatically.</p>
-    <h3>Keep full quality</h3>
-    <p>Choose <strong>WAV</strong> or <strong>FLAC</strong> if you'll edit the file again later. Both are lossless.</p>`,
+    <h3>Avoid extra quality loss</h3>
+    <p>Choose <strong>WAV</strong> or <strong>FLAC</strong> if you'll edit the file again later: neither adds compression loss. WAV is saved as 16-bit, the same as CD audio, which is plenty for listening and most editing.</p>`,
     faq: [
       ['How do I trim an MP3?', 'Open the MP3, drag the handles to the part you want, choose Keep selection, then press Convert and Download.'],
       ['Can I cut a part out of the middle?', "Yes. Select the part you don't want and choose Remove selection."],
-      ['Does cutting lower the quality?', 'Pick 320 kbps MP3 to keep it close to the original, or WAV or FLAC for no loss at all.'],
+      ['Does cutting lower the quality?', 'Pick 320 kbps MP3 to keep it close to the original, or WAV or FLAC to avoid any extra compression loss. WAV is saved as 16-bit (CD quality).'],
       ['Does it work offline?', 'Yes, once you have used a tool online one time. The audio engine is then saved on your device.'],
     ],
   },
@@ -540,7 +540,7 @@ const PAGES = [
     <h3>Good uses</h3>
     <p>Save a song from a concert you filmed, keep the audio of a lecture or a toast, or turn a funny moment into a <a href="/ringtone-maker/">ringtone</a>. If the recording is noisy, switch on <strong>AI noise removal</strong> in Effects before you convert.</p>
     <h3>Big videos</h3>
-    <p>A long 4K video can be several gigabytes. ${NAME} handles files up to 1 GB. For longer ones, trim the video in Photos first, or record the part you need again.</p>`,
+    <p>A long 4K video can be several gigabytes. ${NAME} opens files up to 1 GB on a computer; on a phone, videos under about 300 MB work best. For longer ones, trim the video in Photos first, or use a computer.</p>`,
     faq: [
       ['How do I convert a MOV to MP3 on iPhone?', 'Open this page in Safari, tap the box, choose the video from Photos, then press Convert and Download. No app is needed.'],
       ['Is the video uploaded?', 'No. The conversion runs on your phone or computer, so the video never leaves it.'],
@@ -899,7 +899,7 @@ const PAGES = [
     <h3>M4A (AAC)</h3>
     <p>Apple's default. It sounds slightly better than MP3 at the same size, and it's what iPhone voice memos and ringtones (M4R) use. Some older players and cars don't support it.</p>
     <h3>WAV</h3>
-    <p>Uncompressed, so nothing is lost and editing programs love it. The downside is size: about 10 MB per minute.</p>
+    <p>Uncompressed, so no compression loss and editing programs love it. The downside is size: about 10 MB per minute. ${NAME} saves WAV as 16-bit, the same as CD audio.</p>
     <h3>FLAC</h3>
     <p>Also lossless, but compressed to roughly half the size of WAV. Good for keeping a music collection at full quality. Not every device plays it.</p>
     <h3>OGG and OPUS</h3>
