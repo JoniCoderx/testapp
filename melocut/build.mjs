@@ -1245,7 +1245,7 @@ ${p.tool ? `<link rel="modulepreload" href="${asset('assets/app.js')}">\n<script
   <div class="wrap">
     <div>© <span data-year></span> ${NAME} · ${ui.footerTagline}</div>
     <div class="fcols">
-      <nav aria-label="${ui.fTools}"><b>${ui.fTools}</b>${TOOLS.map((t) => { const x = toolIn(t, lang); return `<a href="${x.href}"${x.english ? ' hreflang="en"' : ''}>${x.title}</a>`; }).join('')}</nav>
+      <nav aria-label="${ui.fTools}"><b>${ui.fTools}</b>${TOOLS.map((t) => { const x = toolIn(t, lang); return `<a href="${x.href}"${x.english ? ' hreflang="en"' : ''}>${x.title}${x.english ? `<span class="en-tag" title="${ui.inEnglish}">EN</span>` : ''}</a>`; }).join('')}</nav>
       ${isEn ? `<nav aria-label="Conversions"><b>Conversions</b>${CONVERSIONS.map((c) => `<a href="/${c.slug}/">${c.label}</a>`).join('')}</nav>` : ''}
       <nav aria-label="${ui.fHelp}"><b>${ui.fHelp}</b><a href="/guides/">${ui.fGuides}</a><a href="/guides/install-app/">${ui.fInstall}</a><a href="/about/">${ui.fAbout}</a><a href="/privacy/">${ui.fPrivacy}</a><a href="/terms/">${ui.fTerms}</a></nav>
       <nav aria-label="${ui.language}"><b>${ui.language}</b>${Object.keys(LANGS).map((l) => { const target = vers.find((q) => q.lang === l) || homeOf(l); return `<a href="${urlOf(target).replace(SITE_URL, '')}" hreflang="${LANGS[l].ui.hreflang}" lang="${LANGS[l].ui.code}">${LANGS[l].ui.name}</a>`; }).join('')}</nav>

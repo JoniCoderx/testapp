@@ -9,14 +9,19 @@
   document.addEventListener('click', (e) => { if (langBox?.open && !langBox.contains(e.target)) langBox.open = false; });
   const OFFER = { es: ['Esta página también está en español.', 'Ver en español'], 'pt-BR': ['Esta página também está em português.', 'Ver em português'],
     en: ['This page is also available in English.', 'View in English'] };
+  // A language picked on purpose (switcher, footer or the bar itself) is remembered, and the bar stops offering.
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest('.lang-menu a[hreflang], footer a[lang], .lang-bar a');
+    if (a) try { localStorage.setItem('lang-choice', a.getAttribute('hreflang') || a.closest('[lang]')?.lang || '1'); } catch {}
+  });
   try {
     const here = document.documentElement.lang;
     const want = (navigator.languages || [navigator.language]).map((l) => (/^pt/i.test(l) ? 'pt-BR' : l.slice(0, 2).toLowerCase())).find((l) => OFFER[l]);
     const alt = want && want !== here && document.querySelector(`link[rel=alternate][hreflang="${want}"]`);
-    if (alt && !localStorage.getItem('lang-offer-closed')) {
+    if (alt && !localStorage.getItem('lang-offer-closed') && !localStorage.getItem('lang-choice')) {
       const bar = document.createElement('div');
       bar.className = 'lang-bar'; bar.lang = want;
-      bar.innerHTML = `<span>${OFFER[want][0]}</span><a href="${new URL(alt.href).pathname}">${OFFER[want][1]}</a><button type="button" aria-label="Close">×</button>`;
+      bar.innerHTML = `<span>${OFFER[want][0]}</span><a href="${new URL(alt.href).pathname}" hreflang="${want}">${OFFER[want][1]}</a><button type="button" aria-label="Close">×</button>`;
       bar.querySelector('button').addEventListener('click', () => { bar.remove(); try { localStorage.setItem('lang-offer-closed', '1'); } catch {} });
       document.body.prepend(bar);
     }

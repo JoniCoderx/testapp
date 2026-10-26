@@ -128,7 +128,7 @@ const parseTime = (str) => {
 };
 const baseName = (name) => name.replace(/\.[^.]+$/, '').slice(0, 120) || 'audio';
 const extOf = (name) => (name.match(/\.([a-z0-9]{1,5})$/i)?.[1] || 'bin').toLowerCase();
-const track = (event, props) => { try { props = { page: location.pathname, ...props }; window.umami?.track(event, props); window.plausible?.(event, { props }); window.gtag?.('event', event, props); } catch {} };
+const track = (event, props) => { try { props = { page: location.pathname, lang: document.documentElement.lang, ...props }; window.umami?.track(event, props); window.plausible?.(event, { props }); window.gtag?.('event', event, props); } catch {} };
 const downloadURL = (url, name) => {
   const a = document.createElement('a');
   a.href = url; a.download = name;
