@@ -122,6 +122,21 @@ const downloadURL = (url, name) => {
   a.href = url; a.download = name;
   document.body.appendChild(a); a.click(); a.remove();
 };
+// One icon set (24px grid, 2px rounded strokes) so buttons look the same on every device.
+const svg = (d, fill) => `<svg class="i" width="18" height="18" viewBox="0 0 24 24" fill="${fill ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+const I = {
+  play: svg('<path d="M7 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L8.5 4.64A1 1 0 0 0 7 5.5z"/>', true),
+  stop: svg('<rect x="6" y="6" width="12" height="12" rx="2"/>', true),
+  phones: svg('<path d="M3 14v-2a9 9 0 0 1 18 0v2"/><path d="M21 15a2 2 0 0 1-2 2h-1v-5h3zM3 15a2 2 0 0 0 2 2h1v-5H3z"/>'),
+  sliders: svg('<path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/>'),
+  download: svg('<path d="M12 4v11M7 10l5 5 5-5"/><path d="M5 20h14"/>'),
+  lock: svg('<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>'),
+  spark: svg('<path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/>'),
+  up: svg('<path d="M12 19V5M6 11l6-6 6 6"/>'),
+  down: svg('<path d="M12 5v14M6 13l6 6 6-6"/>'),
+  x: svg('<path d="M6 6l12 12M18 6 6 18"/>'),
+};
+const label = (icon, text) => `${I[icon]}<span>${text}</span>`;
 const ACCEPT = 'audio/*,video/*,.mp3,.mp4,.m4a,.wav,.ogg,.opus,.flac,.webm,.mov,.mkv,.aac,.amr,.3gp';
 const UPLOAD_ICON = '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4M6 10l6-6 6 6"/><path d="M4 18v2h16v-2"/></svg>';
 
@@ -145,7 +160,7 @@ const PRESETS = {
   eightD: { label: '8D Audio', fx: { eightD: true, reverb: 20 } },
   bass: { label: 'Bass Boosted', fx: { bass: 10, normalize: true } },
   loud: { label: 'Louder', fx: { volume: 180, normalize: true } },
-  voice: { label: '✨ AI Clean Voice', fx: { aiDenoise: true, normalize: true, silence: true, treble: 2 } },
+  voice: { label: 'AI Clean Voice', ai: true, fx: { aiDenoise: true, normalize: true, silence: true, treble: 2 } },
   karaoke: { label: 'Karaoke', fx: { karaoke: true } },
 };
 
@@ -205,8 +220,8 @@ function toggle(key, label, tip) {
 }
 function fxHTML(open) {
   return `<details class="fx" data-fxbox ${open ? 'open' : ''}>
-    <summary>🎛️ Effects &amp; filters <small data-fxcount></small></summary>
-    <div class="presets">${Object.entries(PRESETS).map(([k, p]) => `<button type="button" class="chip" data-preset="${k}">${p.label}</button>`).join('')}
+    <summary>${I.sliders}<span>Effects &amp; filters</span> <small data-fxcount></small></summary>
+    <div class="presets">${Object.entries(PRESETS).map(([k, p]) => `<button type="button" class="chip" data-preset="${k}">${p.ai ? I.spark : ''}${p.label}</button>`).join('')}
       <button type="button" class="chip ghost" data-preset="reset">Reset</button></div>
     <div class="fx-grid">
       ${slider('fadeIn', 'Fade in', 0, 10, 0.5, 's')}
@@ -221,14 +236,14 @@ function fxHTML(open) {
     <div class="fx-toggles">
       ${toggle('normalize', 'Auto loudness', 'Make the volume even and as loud as streaming apps')}
       ${toggle('eightD', '8D audio', 'Sound moves around your head (use headphones)')}
-      ${toggle('aiDenoise', '✨ AI noise removal', 'A neural network (RNNoise) removes background noise from voices')}
+      ${toggle('aiDenoise', `${I.spark}AI noise removal`, 'A neural network (RNNoise) removes background noise from voices')}
       ${toggle('denoise', 'Reduce hiss', 'Remove steady background hiss and hum')}
       ${toggle('karaoke', 'Vocal remover', 'Karaoke: removes vocals that sit in the center of a stereo song')}
       ${toggle('silence', 'Remove silences', 'Cut out quiet gaps')}
       ${toggle('reverse', 'Reverse', 'Play the audio backwards')}
       ${toggle('mono', 'Mono', 'Mix to one channel')}
     </div>
-    <div class="fx-preview"><button type="button" class="btn ghost sm" data-fxpreview>🎧 Preview with effects</button><small data-fxstatus>Plays the first ${PREVIEW_SECONDS} seconds of your selection with the effects. The full file gets them when you convert.</small></div>
+    <div class="fx-preview"><button type="button" class="btn ghost sm" data-fxpreview>${label('phones', 'Preview with effects')}</button><small data-fxstatus>Plays the first ${PREVIEW_SECONDS} seconds of your selection with the effects. The full file gets them when you convert.</small></div>
   </details>`;
 }
 const fmtFx = (key, v) => {
@@ -243,6 +258,9 @@ const fmtFx = (key, v) => {
   }
 };
 
+// Colors a slider's track up to its thumb (CSS reads --p).
+const fillRange = (el) => el.style.setProperty('--p', `${((el.value - el.min) / (el.max - el.min)) * 100}%`);
+
 // Wires an effects panel inside `root`. Returns { get(), set(fx), onChange }.
 function mountFx(root, initial, onChange) {
   const box = $(root, '[data-fxbox]');
@@ -251,7 +269,8 @@ function mountFx(root, initial, onChange) {
   function render() {
     inputs.forEach((el) => {
       const k = el.dataset.fx;
-      if (el.type === 'checkbox') el.checked = !!fx[k]; else el.value = fx[k];
+      if (el.type === 'checkbox') el.checked = !!fx[k];
+      else { el.value = fx[k]; fillRange(el); }
       const out = box.querySelector(`[data-fxv="${k}"]`);
       if (out) out.textContent = fmtFx(k, fx[k]);
     });
@@ -361,8 +380,8 @@ function mountTool(root) {
       <div class="lane"><div class="lane-head"><b>With effects</b><small data-afterlabel></small></div><canvas data-after></canvas></div>
       <div class="lane eq-lane" data-eqlane><div class="lane-head"><b>Equalizer</b><small data-eqlabel>Press Play or Preview to see it move</small></div><canvas data-eq></canvas></div>
       <div class="controls">
-        <button class="btn ghost sm" type="button" data-play aria-label="Play the original selection">▶ Play original</button>
-        <button class="btn ghost sm fx-play" type="button" data-fxplay>🎧 Play with effects</button>
+        <button class="btn ghost sm" type="button" data-play aria-label="Play the original selection">${label('play', 'Play original')}</button>
+        <button class="btn ghost sm fx-play" type="button" data-fxplay>${label('phones', 'Play with effects')}</button>
         <label class="time">Start <input data-start inputmode="decimal" aria-label="Start time"></label>
         <label class="time">End <input data-end inputmode="decimal" aria-label="End time"></label>
         <span class="sel-len" data-len></span>
@@ -376,7 +395,7 @@ function mountTool(root) {
       </div>
       <div class="note" data-err role="alert"></div>
     </div>
-    <div class="private">🔒 Your file never leaves your device. Nothing is uploaded.</div>`;
+    <div class="private">${I.lock}Your file never leaves your device. Nothing is uploaded.</div>`;
 
   const els = {
     file: $(root, '[data-file]'), drop: $(root, '[data-drop]'), editor: $(root, '[data-editor]'),
@@ -717,9 +736,9 @@ function mountTool(root) {
   function stopPlay() {
     if (st.source) { try { st.source.stop(); } catch {} st.source = null; }
     cancelAnimationFrame(st.raf);
-    els.play.textContent = '▶ Play original';
-    els.fxPreview.textContent = '🎧 Preview with effects';
-    els.fxPlay.textContent = '🎧 Play with effects';
+    els.play.innerHTML = label('play', 'Play original');
+    els.fxPreview.innerHTML = label('phones', 'Preview with effects');
+    els.fxPlay.innerHTML = label('phones', 'Play with effects');
     els.eqLabel.textContent = 'Press Play or Preview to see it move';
     draw();
     drawEq();
@@ -744,7 +763,7 @@ function mountTool(root) {
     await st.ctx.resume();
     const [a, b] = st.sel;
     playBuffer(st.buffer, a, b - a, (t) => draw(Math.min(a + t, b)), 'Original sound');
-    els.play.textContent = '■ Stop';
+    els.play.innerHTML = label('stop', 'Stop');
   });
 
   // ----- options -----
@@ -848,8 +867,8 @@ function mountTool(root) {
       st.exact = buf;
       drawAfter();
       playBuffer(buf, 0, buf.duration, null, 'With your effects');
-      els.fxPreview.textContent = '■ Stop preview';
-      els.fxPlay.textContent = '■ Stop';
+      els.fxPreview.innerHTML = label('stop', 'Stop preview');
+      els.fxPlay.innerHTML = label('stop', 'Stop');
       error('');
       status(`Playing ${fmt(buf.duration)} with your effects.`);
       // Explain a much shorter result instead of letting it look broken.
@@ -912,7 +931,7 @@ function mountTool(root) {
       const fxOn = fxNames(fx.get());
       setP(1, `Done · ${fileName} · ${fmt(outLen)} · ${(blob.size / 1048576).toFixed(2)} MB${fxOn ? ` · ${fxOn}` : ''}`);
       error('');
-      els.go.textContent = `⬇ Download ${fmtKey.toUpperCase()}`;
+      els.go.innerHTML = label('download', `Download ${fmtKey.toUpperCase()}`);
       els.go.classList.add('ok');
       els.go.onclick = () => { downloadURL(st.outURL, fileName); track('download', { tool: root.dataset.tool, format: fmtKey }); };
       track('converted', { tool: root.dataset.tool, format: fmtKey, effects: isDefaultFx(fx.get()) ? 'none' : 'yes' });
@@ -957,11 +976,11 @@ function mountJoiner(root) {
       </div>
       <div class="note" data-err role="alert"></div>
       <div class="result" data-result hidden>
-        <b>🎧 Listen to the result</b>
+        <b>${I.phones}Listen to the result</b>
         <audio controls preload="metadata" data-player></audio>
       </div>
     </div>
-    <div class="private">🔒 Your files never leave your device. Nothing is uploaded.</div>`;
+    <div class="private">${I.lock}Your files never leave your device. Nothing is uploaded.</div>`;
 
   const els = {
     result: $(root, '[data-result]'), player: $(root, '[data-player]'),
@@ -990,7 +1009,9 @@ function mountJoiner(root) {
   ['dragleave', 'drop'].forEach((t) => els.drop.addEventListener(t, (e) => { e.preventDefault(); els.drop.classList.remove('over'); }));
   els.drop.addEventListener('drop', (e) => addFiles([...e.dataTransfer.files]));
   els.format.addEventListener('change', () => { els.qWrap.style.display = LOSSY.includes(els.format.value) ? '' : 'none'; reset(); });
-  els.xf.addEventListener('input', () => { els.xfv.textContent = Number(els.xf.value) ? `${els.xf.value}s` : 'off'; reset(); });
+  fillRange(els.xf);
+  els.xf.addEventListener('input', () => {
+    fillRange(els.xf); els.xfv.textContent = Number(els.xf.value) ? `${els.xf.value}s` : 'off'; reset(); });
   els.norm.addEventListener('change', reset);
   els.go.onclick = join;
 
@@ -1017,12 +1038,12 @@ function mountJoiner(root) {
   function render() {
     els.list.innerHTML = st.items.map((it, i) => `
       <li class="${st.playing === i ? 'playing' : ''}"><span class="jn">${i + 1}</span>
-        <button type="button" class="jplay" data-play="${i}" aria-label="${st.playing === i ? 'Stop' : 'Play'} ${it.file.name.replace(/"/g, '&quot;')}">${st.playing === i ? '■' : '▶'}</button>
+        <button type="button" class="jplay" data-play="${i}" aria-label="${st.playing === i ? 'Stop' : 'Play'} ${it.file.name.replace(/"/g, '&quot;')}">${st.playing === i ? I.stop : I.play}</button>
         <b title="${it.file.name.replace(/"/g, '&quot;')}">${it.file.name.replace(/</g, '&lt;')}</b>
         <small>${it.duration ? fmt(it.duration) : ''}</small>
-        <span class="jb"><button type="button" data-up="${i}" aria-label="Move up" ${i ? '' : 'disabled'}>↑</button>
-        <button type="button" data-down="${i}" aria-label="Move down" ${i < st.items.length - 1 ? '' : 'disabled'}>↓</button>
-        <button type="button" data-rm="${i}" aria-label="Remove">✕</button></span></li>`).join('');
+        <span class="jb"><button type="button" data-up="${i}" aria-label="Move up" ${i ? '' : 'disabled'}>${I.up}</button>
+        <button type="button" data-down="${i}" aria-label="Move down" ${i < st.items.length - 1 ? '' : 'disabled'}>${I.down}</button>
+        <button type="button" data-rm="${i}" aria-label="Remove">${I.x}</button></span></li>`).join('');
     const total = st.items.reduce((s, it) => s + it.duration, 0);
     els.total.textContent = `${st.items.length} file${st.items.length === 1 ? '' : 's'} · ${fmt(total)}`;
     els.go.disabled = st.items.length < 2;
@@ -1094,7 +1115,7 @@ function mountJoiner(root) {
       st.outURL = URL.createObjectURL(blob);
       setP(1, `Done · ${fmt(outLen)} · ${(blob.size / 1048576).toFixed(2)} MB · listen below, then download`);
       els.player.src = st.outURL; els.result.hidden = false;
-      els.go.textContent = `⬇ Download ${fmtKey.toUpperCase()}`; els.go.classList.add('ok');
+      els.go.innerHTML = label('download', `Download ${fmtKey.toUpperCase()}`); els.go.classList.add('ok');
       const r = els.go.getBoundingClientRect();
       if (r.bottom > innerHeight || r.top < 0) els.go.scrollIntoView({ behavior: 'smooth', block: 'center' });
       els.go.onclick = () => { downloadURL(st.outURL, `${baseName(st.items[0].file.name)} (joined).${fmtKey}`); track('download', { tool: 'joiner', format: fmtKey }); };
