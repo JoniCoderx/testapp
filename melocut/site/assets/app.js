@@ -4,8 +4,10 @@ import { FFmpeg } from '../vendor/ffmpeg/index.js';
 
 const CORE_BASE = 'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.10/dist/esm';
 const MAX_BYTES = 1024 * 1024 * 1024; // 1 GB
+const BIG_ON_PHONE = 300 * 1024 * 1024; // above this, warn on touch devices
 const RINGTONE_MAX = 40; // iPhone ringtone limit (seconds)
 const PREVIEW_SECONDS = 15;
+const CANCELLED = 'cancelled';
 // RNNoise neural-network model for the AI noise removal (fetched only when used).
 const RNN_MODEL_URL = 'https://cdn.jsdelivr.net/gh/GregorR/rnnoise-models@master/somnolent-hogwash-2018-09-01/sh.rnnn';
 const RNN_MODEL_FILE = 'voice.rnnn';
@@ -23,7 +25,7 @@ const FORMATS = {
   mp3: { label: 'MP3', mime: 'audio/mpeg', args: (q) => ['-c:a', 'libmp3lame', '-b:a', `${q}k`] },
   m4a: { label: 'M4A (AAC)', mime: 'audio/mp4', args: (q) => ['-c:a', 'aac', '-b:a', `${q}k`] },
   m4r: { label: 'M4R (iPhone ringtone)', mime: 'audio/mp4', args: () => ['-c:a', 'aac', '-b:a', '192k', '-f', 'ipod'] },
-  wav: { label: 'WAV', mime: 'audio/wav', args: () => ['-c:a', 'pcm_s16le'] },
+  wav: { label: 'WAV (16-bit)', mime: 'audio/wav', args: () => ['-c:a', 'pcm_s16le'] },
   // Vorbis rejects fixed bitrates it can't hit (e.g. 320k mono), so use quality mode.
   ogg: { label: 'OGG (Vorbis)', mime: 'audio/ogg', args: (q) => ['-c:a', 'libvorbis', '-q:a', { 128: '4', 192: '6', 256: '8', 320: '9' }[q] || '6'] },
   flac: { label: 'FLAC (lossless)', mime: 'audio/flac', args: () => ['-c:a', 'flac'] },
@@ -83,12 +85,16 @@ const decodeAudio = (ctx, buf) => new Promise((resolve, reject) => {
 });
 
 // Run one ffmpeg command, reporting progress (0..1) against the expected output length.
+// Resolves with the real length of what was written (ffmpeg's last time= report), or null.
 async function runFFmpeg(ff, args, outLen, onProgress) {
   const logTail = [];
+  let written = null;
   const onLog = ({ message }) => {
     logTail.push(message); if (logTail.length > 30) logTail.shift();
     const m = message.match(/time=(\d+):(\d+):([\d.]+)/);
-    if (m && onProgress) onProgress(Math.min(1, (+m[1] * 3600 + +m[2] * 60 + +m[3]) / Math.max(outLen, 0.1)));
+    if (!m) return;
+    written = +m[1] * 3600 + +m[2] * 60 + +m[3];
+    onProgress?.(Math.min(1, written / Math.max(outLen, 0.1)));
   };
   ff.on('log', onLog);
   try {
@@ -97,6 +103,7 @@ async function runFFmpeg(ff, args, outLen, onProgress) {
       console.error('ffmpeg failed', args.join(' '), '\n' + logTail.join('\n'));
       throw new Error('Processing failed. The file may be damaged or use an unusual format.');
     }
+    return written;
   } finally {
     ff.off('log', onLog);
   }
@@ -178,12 +185,9 @@ function effectFilters(fx, len) {
   if (fx.pitch) f.push('aresample=48000', `asetrate=${Math.round(48000 * pitchRatio)}`, 'aresample=48000');
   f.push(...atempoChain(fx.speed / pitchRatio));
   const outLen = len / fx.speed;
-  // A fade never takes more than a quarter of the clip, so short clips stay audible.
-  if (fx.fadeIn > 0) f.push(`afade=t=in:st=0:d=${Math.min(fx.fadeIn, outLen / 4).toFixed(2)}`);
-  if (fx.fadeOut > 0) {
-    const d = Math.min(fx.fadeOut, outLen / 4);
-    f.push(`afade=t=out:st=${Math.max(0, outLen - d).toFixed(2)}:d=${d.toFixed(2)}`);
-  }
+  const { fi, fo } = fadeLens(fx, outLen);
+  if (fi > 0) f.push(`afade=t=in:st=0:d=${fi.toFixed(2)}`);
+  if (fo > 0) f.push(`afade=t=out:st=${Math.max(0, outLen - fo).toFixed(2)}:d=${fo.toFixed(2)}`);
   if (fx.bass) f.push(`bass=g=${fx.bass}:f=110`);
   if (fx.treble) f.push(`treble=g=${fx.treble}:f=3000`);
   if (fx.reverb > 0) {
@@ -200,6 +204,12 @@ function effectFilters(fx, len) {
   return { filters: f, outLen, extraArgs: fx.mono && !fx.eightD && !fx.karaoke ? ['-ac', '1'] : [] };
 }
 
+// Fade lengths actually used: as set, unless fade in + fade out is longer than the clip,
+// then both shrink in proportion so they still fit. `shortened` says when that happened.
+function fadeLens(fx, len) {
+  const fi = Math.max(0, fx.fadeIn), fo = Math.max(0, fx.fadeOut), k = fi + fo > len ? len / (fi + fo) : 1;
+  return { fi: fi * k, fo: fo * k, shortened: k < 1 };
+}
 const isDefaultFx = (fx) => Object.keys(FX_DEFAULTS).every((k) => fx[k] === FX_DEFAULTS[k]);
 const FX_NAMES = { fadeIn: 'Fade in', fadeOut: 'Fade out', volume: 'Volume', normalize: 'Auto loudness', speed: 'Speed', pitch: 'Pitch',
   bass: 'Bass', treble: 'Treble', reverb: 'Reverb', eightD: '8D', aiDenoise: 'AI noise removal', denoise: 'Reduce hiss',
@@ -391,6 +401,7 @@ function mountTool(root) {
       <div class="note info" data-hint>${cfg.note}</div>
       <div class="go">
         <button class="btn" type="button" data-go>Convert</button>
+        <button class="btn ghost" type="button" data-cancel hidden>Cancel</button>
         <div class="progress" data-progress><div class="bar"><i data-fill></i></div><small data-stage role="status" aria-live="polite"></small></div>
       </div>
       <div class="note" data-err role="alert"></div>
@@ -403,7 +414,7 @@ function mountTool(root) {
     canvas: $(root, 'canvas'), busy: $(root, '[data-busy]'), play: $(root, '[data-play]'),
     start: $(root, '[data-start]'), end: $(root, '[data-end]'), len: $(root, '[data-len]'),
     go: $(root, '[data-go]'), progress: $(root, '[data-progress]'), fill: $(root, '[data-fill]'),
-    stage: $(root, '[data-stage]'), err: $(root, '[data-err]'), hint: $(root, '[data-hint]'),
+    stage: $(root, '[data-stage]'), err: $(root, '[data-err]'), hint: $(root, '[data-hint]'), cancel: $(root, '[data-cancel]'),
     format: $(root, '[data-o=format]'), quality: $(root, '[data-o=quality]'), qWrap: $(root, '[data-q]'),
     fxPreview: $(root, '[data-fxpreview]'), fxStatus: $(root, '[data-fxstatus]'),
     eqLane: $(root, '[data-eqlane]'), fxPlay: $(root, '[data-fxplay]'), after: $(root, '[data-after]'), afterLabel: $(root, '[data-afterlabel]'), eq: $(root, '[data-eq]'), eqLabel: $(root, '[data-eqlabel]'),
@@ -447,13 +458,19 @@ function mountTool(root) {
     els.busy.style.display = 'grid';
     els.busy.textContent = 'Reading audio…';
     els.format.value = cfg.formats.includes(root.dataset.format) ? root.dataset.format : cfg.defaultFormat;
+    if (file.size > BIG_ON_PHONE && matchMedia('(pointer: coarse)').matches)
+      els.hint.textContent = `This is a big file (${Math.round(file.size / 1048576)} MB). Phones can run out of memory with files this size; if the page stops or reloads, try a shorter file or a computer.`;
     syncQuality();
     track('file_opened', { tool: root.dataset.tool, type: extOf(file.name) });
     let buffer;
     try {
       buffer = await decode(file);
     } catch (e) {
-      if (token === st.openToken) els.busy.textContent = 'Could not read this file. Is it an audio or video file?';
+      // A long video can need more memory than a phone has once its audio is unpacked.
+      const oom = /memory|allocat|RangeError/i.test(`${e?.name} ${e?.message}`);
+      if (token === st.openToken) els.busy.textContent = oom
+        ? 'Your device ran out of memory opening this file. Try a shorter file, or use a computer for long videos.'
+        : 'Could not read this file. Is it an audio or video file?';
       track('unreadable', { tool: root.dataset.tool, type: extOf(file.name) });
       return;
     }
@@ -640,18 +657,20 @@ function mountTool(root) {
       if (fxv.bass > 0) gain *= 1 + fxv.bass * 0.03;
       if (fxv.karaoke) gain *= 0.6;
       const limit = fxv.volume > 100 || fxv.bass > 0 || fxv.reverb > 0 || fxv.normalize;
+      const fades = fadeLens(fxv, procLen);
       procPeak = (t0, t1) => {
         const tm = (t0 + t1) / 2;
         let tSrc = tm * fxv.speed;
         if (fxv.reverse) tSrc = len - tSrc;
         const s0 = sourceTime(segs, Math.max(0, tSrc - (t1 - t0) * fxv.speed / 2));
         let v = peakBetween(st.buffer, s0, s0 + (t1 - t0) * fxv.speed) * gain;
-        if (fxv.fadeIn > 0) v *= Math.min(1, tm / Math.min(fxv.fadeIn, procLen / 4));
-        if (fxv.fadeOut > 0) v *= Math.min(1, (procLen - tm) / Math.min(fxv.fadeOut, procLen / 4));
+        if (fades.fi > 0) v *= Math.min(1, tm / fades.fi);
+        if (fades.fo > 0) v *= Math.min(1, (procLen - tm) / fades.fo);
         if (limit && v > 0.97) { capped = true; v = 0.97; }
         return Math.max(0, Math.min(1, v));
       };
-      label = `Estimate · ${fmt(procLen)} long${Math.abs(procLen - len) > 0.05 ? ` (was ${fmt(len)})` : ''}`;
+      label = `Estimate · ${fmt(procLen)} long${Math.abs(procLen - len) > 0.05 ? ` (was ${fmt(len)})` : ''}`
+        + (fades.shortened ? ` · fades shortened to ${fades.fi.toFixed(1)}s and ${fades.fo.toFixed(1)}s to fit` : '');
     }
     const scale = Math.max(ghostLen, procLen);
     const mid = h / 2;
@@ -782,7 +801,7 @@ function mountTool(root) {
     const fxv = fx.get();
     const [a, b] = st.sel;
     const len = cfg.modes && st.mode === 'remove' ? st.duration - (b - a) : b - a;
-    if (fxv.reverse && st.duration > 20 * 60) return 'Reverse works on files up to 20 minutes. Select a shorter part or use a shorter file.';
+    if (fxv.reverse && len > 20 * 60) return 'Reverse works on up to 20 minutes at a time. Select a shorter part.';
     if (cfg.maxLen && len / fxv.speed > cfg.maxLen + 0.05)
       return `With speed ${fxv.speed}× the ringtone would be ${Math.round(len / fxv.speed)} s long, but phones allow ${cfg.maxLen} s. Select a shorter part or raise the speed.`;
     if (fxv.karaoke && st.mono) return 'This file is mono (no left/right difference), so the vocal remover would make it silent. It needs a stereo song.';
@@ -790,9 +809,11 @@ function mountTool(root) {
   }
 
   // ----- build the ffmpeg command -----
-  function buildArgs(inName, outName, fmtKey, previewSeconds) {
-    const [a, b] = st.sel, d = st.duration;
-    const removing = cfg.modes && st.mode === 'remove';
+  // Everything a job depends on, captured when Convert or Preview is pressed.
+  const snapshot = () => ({ fx: fx.get(), sel: [...st.sel], mode: st.mode, quality: els.quality.value });
+  function buildArgs(inName, outName, fmtKey, previewSeconds, snap = snapshot()) {
+    const [a, b] = snap.sel, d = st.duration;
+    const removing = cfg.modes && snap.mode === 'remove';
     const full = a <= 0.05 && b >= d - 0.05;
     const pre = [];
     let complex = null;
@@ -807,7 +828,7 @@ function mountTool(root) {
     } else {
       len = d;
     }
-    const { filters, outLen, extraArgs } = effectFilters(fx.get(), len);
+    const { filters, outLen, extraArgs } = effectFilters(snap.fx, len);
     const args = [...pre, '-i', inName, '-vn', '-map_metadata', '-1'];
     if (complex) {
       const chain = filters.length ? `${complex};[c]${filters.join(',')}[o]` : complex.replace('[c]', '[o]');
@@ -817,26 +838,44 @@ function mountTool(root) {
     }
     args.push(...extraArgs);
     if (previewSeconds) args.push('-t', String(previewSeconds), '-c:a', 'pcm_s16le', outName);
-    else args.push(...FORMATS[fmtKey].args(els.quality.value), outName);
+    else args.push(...FORMATS[fmtKey].args(snap.quality), outName);
     return { args, outLen: previewSeconds ? Math.min(previewSeconds, outLen) : outLen };
   }
 
-  function withInput(fn) { return exclusive(() => withInputNow(fn)); }
-  async function withInputNow(fn) {
+  function withInput(fn, snap) { return exclusive(() => withInputNow(fn, snap)); }
+  async function withInputNow(fn, snap) {
     const inName = `input.${extOf(st.file.name)}`;
     let ff;
     try {
       ff = await loadEngine(st.onEngineProgress);
-      if (fx.get().aiDenoise) await ensureModel(ff);
+      st.ff = ff;
+      if (st.cancelled) throw new Error(CANCELLED);
+      if (snap.fx.aiDenoise) await ensureModel(ff);
       await ff.writeFile(inName, new Uint8Array(await st.file.arrayBuffer()));
       return await fn(ff, inName);
     } catch (e) {
       resetEngine(ff); ff = null;
-      throw e;
+      throw st.cancelled ? new Error(CANCELLED) : e;
     } finally {
+      st.ff = null;
       if (ff) await ff.deleteFile(inName).catch(() => {});
     }
   }
+
+  // While a job runs, its settings can't be changed (and Cancel is offered).
+  const lockables = () => root.querySelectorAll('.wave, .controls .time, .opts, .presets, .fx-grid, .fx-toggles, [data-new]');
+  function setBusy(on) {
+    st.busy = on;
+    root.classList.toggle('locked', on);
+    lockables().forEach((el) => { el.inert = on; });
+    els.cancel.hidden = !on;
+    if (on) { st.cancelled = false; st.dirty = false; }
+  }
+  els.cancel.addEventListener('click', () => {
+    st.cancelled = true;
+    els.cancel.disabled = true;
+    if (st.ff) resetEngine(st.ff); // stops ffmpeg right away; the job then ends as cancelled
+  });
 
   // ----- preview with effects -----
   els.fxPreview.addEventListener('click', async () => {
@@ -848,20 +887,22 @@ function mountTool(root) {
     const check = checkJob();
     if (check) { els.fxStatus.textContent = check; return error(check); }
     els.fxStatus.textContent = 'Preparing preview…';
-    st.busy = true;
+    const snap = snapshot();
+    setBusy(true);
     els.fxPreview.disabled = true;
     const status = (t) => (els.fxStatus.textContent = t);
     els.go.disabled = true;
     st.onEngineProgress = (p) => status(`Loading audio engine (one time, ~30 MB)… ${Math.round(p * 100)}%`);
     try {
       const wav = await withInput(async (ff, inName) => {
-        const { args, outLen } = buildArgs(inName, 'fxpreview.wav', 'wav', PREVIEW_SECONDS);
+        const { args, outLen } = buildArgs(inName, 'fxpreview.wav', 'wav', PREVIEW_SECONDS, snap);
         status('Applying effects…');
         await runFFmpeg(ff, args, outLen, (r) => status(`Applying effects… ${Math.round(r * 100)}%`));
         const data = await ff.readFile('fxpreview.wav');
         await ff.deleteFile('fxpreview.wav').catch(() => {});
         return data;
-      });
+      }, snap);
+      if (st.dirty) throw new Error('Your settings changed while the preview was being made. Press Preview again.');
       await st.ctx.resume();
       const buf = await decodeAudio(st.ctx, wav.buffer);
       st.exact = buf;
@@ -872,16 +913,17 @@ function mountTool(root) {
       error('');
       status(`Playing ${fmt(buf.duration)} with your effects.`);
       // Explain a much shorter result instead of letting it look broken.
-      const fxv = fx.get();
-      const expected = Math.min(PREVIEW_SECONDS, buildArgs('x', 'y', 'wav', PREVIEW_SECONDS).outLen);
+      const fxv = snap.fx;
+      const expected = Math.min(PREVIEW_SECONDS, buildArgs('x', 'y', 'wav', PREVIEW_SECONDS, snap).outLen);
       if (buf.duration < expected * 0.5 && (fxv.silence || fxv.aiDenoise)) {
         status(`Only ${fmt(buf.duration)} of sound is left: ${fxv.aiDenoise ? 'AI noise removal is made for voices and removes music as "noise"' : 'most of it was quiet'}${fxv.silence ? ', and Remove silences cut the rest' : ''}. For songs, turn ${fxv.aiDenoise ? 'AI noise removal' : 'Remove silences'} off.`);
       }
       track('fx_preview', { tool: root.dataset.tool });
     } catch (e) {
-      status(e?.message || 'Preview failed.');
+      status(e?.message === CANCELLED ? 'Preview cancelled.' : e?.message || 'Preview failed.');
     } finally {
-      st.busy = false;
+      setBusy(false);
+      els.cancel.disabled = false;
       els.fxPreview.disabled = false;
       els.go.disabled = false;
     }
@@ -889,7 +931,7 @@ function mountTool(root) {
 
   // ----- convert -----
   function resetOutput() {
-    if (st.busy) return;
+    if (st.busy) { st.dirty = true; return; }
     if (st.outURL) { URL.revokeObjectURL(st.outURL); st.outURL = null; }
     els.go.textContent = 'Convert';
     els.go.classList.remove('ok');
@@ -905,7 +947,8 @@ function mountTool(root) {
     stopPlay();
     const check = checkJob();
     if (check) return error(check);
-    st.busy = true;
+    const snap = snapshot();
+    setBusy(true);
     els.go.disabled = true;
     els.go.textContent = 'Working…';
     els.progress.style.display = 'block';
@@ -918,35 +961,41 @@ function mountTool(root) {
     try {
       const data = await withInput(async (ff, inName) => {
         setP(0.3, 'Processing…');
-        const job = buildArgs(inName, outName, fmtKey);
-        outLen = job.outLen;
-        await runFFmpeg(ff, job.args, outLen, (r) => setP(0.3 + r * 0.7, `Processing… ${Math.round(r * 100)}%`));
+        const job = buildArgs(inName, outName, fmtKey, 0, snap);
+        // Show the length that was really written (Remove silences, for one, can't be known in advance).
+        outLen = (await runFFmpeg(ff, job.args, job.outLen, (r) => setP(0.3 + r * 0.7, `Processing… ${Math.round(r * 100)}%`))) ?? job.outLen;
         const out = await ff.readFile(outName);
         await ff.deleteFile(outName).catch(() => {});
         return out;
-      });
+      }, snap);
+      if (st.dirty) throw new Error('Your settings changed while converting, so that file was not kept. Press Convert again.');
       const blob = new Blob([data.buffer], { type: FORMATS[fmtKey].mime });
       st.outURL = URL.createObjectURL(blob);
       const fileName = `${baseName(st.file.name)}${cfg.suffix}.${fmtKey}`;
-      const fxOn = fxNames(fx.get());
+      const fades = fadeLens(snap.fx, outLen);
+      const fxOn = fades.shortened ? `${fxNames(snap.fx)} (fades shortened to ${fades.fi.toFixed(1)}s and ${fades.fo.toFixed(1)}s to fit)` : fxNames(snap.fx);
       setP(1, `Done · ${fileName} · ${fmt(outLen)} · ${(blob.size / 1048576).toFixed(2)} MB${fxOn ? ` · ${fxOn}` : ''}`);
       error('');
       els.go.innerHTML = label('download', `Download ${fmtKey.toUpperCase()}`);
       els.go.classList.add('ok');
       els.go.onclick = () => { downloadURL(st.outURL, fileName); track('download', { tool: root.dataset.tool, format: fmtKey }); };
-      track('converted', { tool: root.dataset.tool, format: fmtKey, effects: isDefaultFx(fx.get()) ? 'none' : 'yes' });
+      track('converted', { tool: root.dataset.tool, format: fmtKey, effects: isDefaultFx(snap.fx) ? 'none' : 'yes' });
       if (fmtKey === 'm4r') els.hint.textContent = 'iPhone: open the file with GarageBand, or drag it into Finder/iTunes with your phone connected, then choose it in Settings → Sounds.';
       else if (root.dataset.tool === 'ringtone') els.hint.textContent = 'Android: open Settings → Sound → Phone ringtone, tap + (or Add ringtone) and pick the file from Downloads.';
       // The Download button can end up below the screen on phones: bring it into view.
       const r = els.go.getBoundingClientRect();
       if (r.bottom > innerHeight || r.top < 0) els.go.scrollIntoView({ behavior: 'smooth', block: 'center' });
     } catch (e) {
-      error(e?.message || 'Something went wrong.');
-      track('failed', { tool: root.dataset.tool, format: fmtKey, type: extOf(st.file.name) });
+      if (e?.message === CANCELLED) error('');
+      else {
+        error(e?.message || 'Something went wrong.');
+        if (!st.dirty) track('failed', { tool: root.dataset.tool, format: fmtKey, type: extOf(st.file.name) });
+      }
       els.progress.style.display = 'none';
       els.go.textContent = 'Convert';
     } finally {
-      st.busy = false;
+      setBusy(false);
+      els.cancel.disabled = false;
       els.go.disabled = false;
     }
   }
@@ -972,6 +1021,7 @@ function mountJoiner(root) {
       </div>
       <div class="go">
         <button class="btn" type="button" data-go>Join files</button>
+        <button class="btn ghost" type="button" data-cancel hidden>Cancel</button>
         <div class="progress" data-progress><div class="bar"><i data-fill></i></div><small data-stage role="status" aria-live="polite"></small></div>
       </div>
       <div class="note" data-err role="alert"></div>
@@ -988,8 +1038,19 @@ function mountJoiner(root) {
     total: $(root, '[data-total]'), format: $(root, '[data-o=format]'), quality: $(root, '[data-o=quality]'), qWrap: $(root, '[data-q]'),
     xf: $(root, '[data-xf]'), xfv: $(root, '[data-xfv]'), norm: $(root, '[data-norm]'), go: $(root, '[data-go]'),
     progress: $(root, '[data-progress]'), fill: $(root, '[data-fill]'), stage: $(root, '[data-stage]'), err: $(root, '[data-err]'),
+    cancel: $(root, '[data-cancel]'),
   };
-  const st = { items: [], busy: false, outURL: null, playing: -1 };
+  const st = { items: [], busy: false, outURL: null, playing: -1, ff: null, cancelled: false };
+  // While joining, the list and options are frozen and Cancel is offered.
+  function setBusy(on) {
+    st.busy = on;
+    root.classList.toggle('locked', on);
+    root.querySelectorAll('.joinlist .jb, .opts, [data-add]').forEach((el) => { el.inert = on; });
+    els.cancel.hidden = !on;
+    els.cancel.disabled = false;
+    if (on) st.cancelled = false;
+  }
+  els.cancel.addEventListener('click', () => { st.cancelled = true; els.cancel.disabled = true; if (st.ff) resetEngine(st.ff); });
   const error = (msg) => { els.err.textContent = msg || ''; els.err.className = msg ? 'note err' : 'note'; };
   // One shared player for listening to a single file in the list.
   const filePlayer = new Audio();
@@ -1081,7 +1142,7 @@ function mountJoiner(root) {
     if (st.items.length < 2 || st.busy) return;
     error('');
     stopFile(); render();
-    st.busy = true; els.go.disabled = true; els.go.textContent = 'Working…';
+    setBusy(true); els.go.disabled = true; els.go.textContent = 'Working…';
     els.progress.style.display = 'block';
     const setP = (p, text) => { els.fill.style.width = `${Math.round(p * 100)}%`; els.stage.textContent = text; };
     setP(0, 'Starting…');
@@ -1093,6 +1154,8 @@ function mountJoiner(root) {
     let ff;
     try {
       ff = await loadEngine((p) => setP(p * 0.3, `Loading audio engine (one time, ~30 MB)… ${Math.round(p * 100)}%`));
+      st.ff = ff;
+      if (st.cancelled) throw new Error(CANCELLED);
       setP(0.3, 'Reading files…');
       for (let i = 0; i < names.length; i++) await ff.writeFile(names[i], new Uint8Array(await st.items[i].file.arrayBuffer()));
       // Bring every input to the same format, then crossfade or concatenate them.
@@ -1109,11 +1172,11 @@ function mountJoiner(root) {
       const args = [...names.flatMap((nm) => ['-i', nm]), '-vn', '-map_metadata', '-1', '-filter_complex', parts.join(';'), '-map', `[${last}]`,
         ...FORMATS[fmtKey].args(els.quality.value), outName];
       const outLen = st.items.reduce((s, it) => s + it.duration, 0) - xf * (n - 1);
-      await runFFmpeg(ff, args, outLen, (r) => setP(0.3 + r * 0.7, `Joining… ${Math.round(r * 100)}%`));
+      const written = (await runFFmpeg(ff, args, outLen, (r) => setP(0.3 + r * 0.7, `Joining… ${Math.round(r * 100)}%`))) ?? outLen;
       const data = await ff.readFile(outName);
       const blob = new Blob([data.buffer], { type: FORMATS[fmtKey].mime });
       st.outURL = URL.createObjectURL(blob);
-      setP(1, `Done · ${fmt(outLen)} · ${(blob.size / 1048576).toFixed(2)} MB · listen below, then download`);
+      setP(1, `Done · ${fmt(written)} · ${(blob.size / 1048576).toFixed(2)} MB · listen below, then download`);
       els.player.src = st.outURL; els.result.hidden = false;
       els.go.innerHTML = label('download', `Download ${fmtKey.toUpperCase()}`); els.go.classList.add('ok');
       const r = els.go.getBoundingClientRect();
@@ -1122,12 +1185,12 @@ function mountJoiner(root) {
       track('converted', { tool: 'joiner', format: fmtKey, count: n });
     } catch (e) {
       resetEngine(ff); ff = null;
-      error(e?.message || 'Something went wrong.');
-      track('failed', { tool: 'joiner', format: fmtKey });
+      if (st.cancelled) error('');
+      else { error(e?.message || 'Something went wrong.'); track('failed', { tool: 'joiner', format: fmtKey }); }
       els.progress.style.display = 'none'; els.go.textContent = 'Join files';
     } finally {
       if (ff) for (const nm of [...names, outName]) await ff.deleteFile(nm).catch(() => {});
-      st.busy = false; els.go.disabled = st.items.length < 2;
+      st.ff = null; setBusy(false); els.go.disabled = st.items.length < 2;
     }
   }
 }

@@ -365,3 +365,7 @@ input[type=range]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px va
 }
 @media (max-width: 640px) { .tool:not(.has-fx) .controls [data-play] { flex-basis: 100%; } }
 @media (max-width: 380px) { .controls .btn .i { display: none; } }
+/* a running job: its settings are frozen, Cancel is offered */
+.btn[hidden] { display: none; }
+.tool.locked .wave, .tool.locked .controls .time, .tool.locked .opts, .tool.locked .presets,
+.tool.locked .fx-grid, .tool.locked .fx-toggles, .tool.locked [data-new], .tool.locked .joinlist .jb, .tool.locked [data-add] { opacity: .5; pointer-events: none; }
