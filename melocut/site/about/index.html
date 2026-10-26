@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>About and Contact | MeloCut</title>
-<meta name="description" content="About MeloCut, a set of free audio tools that run in your browser, and how to get in touch.">
+<meta name="description" content="What MeloCut is, how its free audio tools work in your browser without uploading your files, how the site stays free, and how to get in touch.">
 <meta name="robots" content="index, follow, max-image-preview:large">
 <link rel="canonical" href="https://melocut.com/about/">
 <meta name="theme-color" content="#6d4aff">
@@ -17,7 +17,7 @@
 <meta property="og:site_name" content="MeloCut">
 <meta property="og:locale" content="en_US">
 <meta property="og:title" content="About and Contact | MeloCut">
-<meta property="og:description" content="About MeloCut, a set of free audio tools that run in your browser, and how to get in touch.">
+<meta property="og:description" content="What MeloCut is, how its free audio tools work in your browser without uploading your files, how the site stays free, and how to get in touch.">
 <meta property="og:url" content="https://melocut.com/about/">
 <meta property="og:image" content="https://melocut.com/og/about.jpg">
 <meta property="og:image:width" content="1200">
@@ -25,15 +25,15 @@
 <meta property="og:image:alt" content="About MeloCut on MeloCut">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="About and Contact | MeloCut">
-<meta name="twitter:description" content="About MeloCut, a set of free audio tools that run in your browser, and how to get in touch.">
+<meta name="twitter:description" content="What MeloCut is, how its free audio tools work in your browser without uploading your files, how the site stays free, and how to get in touch.">
 <meta name="twitter:image" content="https://melocut.com/og/about.jpg">
 <meta name="google-adsense-account" content="ca-pub-2388733415031298">
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2388733415031298" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="/assets/style.css?v=0c728a0b">
+<link rel="stylesheet" href="/assets/style.css?v=3d31fac7">
 <script src="/assets/config.js?v=303fd877" defer></script>
 <script src="/assets/site.js?v=36679896" defer></script>
 
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://melocut.com/#site","name":"MeloCut","url":"https://melocut.com/","inLanguage":"en","publisher":{"@id":"https://melocut.com/#org"}},{"@type":"Organization","@id":"https://melocut.com/#org","name":"MeloCut","url":"https://melocut.com/","logo":"https://melocut.com/icon-512.png","email":"hello@melocut.com"},{"@type":"WebPage","@id":"https://melocut.com/about/#page","url":"https://melocut.com/about/","name":"About and Contact | MeloCut","description":"About MeloCut, a set of free audio tools that run in your browser, and how to get in touch.","inLanguage":"en","isPartOf":{"@id":"https://melocut.com/#site"},"primaryImageOfPage":"https://melocut.com/og/about.jpg","dateModified":"2026-10-26"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://melocut.com/"},{"@type":"ListItem","position":2,"name":"About MeloCut","item":"https://melocut.com/about/"}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://melocut.com/#site","name":"MeloCut","url":"https://melocut.com/","inLanguage":"en","publisher":{"@id":"https://melocut.com/#org"}},{"@type":"Organization","@id":"https://melocut.com/#org","name":"MeloCut","url":"https://melocut.com/","logo":"https://melocut.com/icon-512.png","email":"hello@melocut.com"},{"@type":"WebPage","@id":"https://melocut.com/about/#page","url":"https://melocut.com/about/","name":"About and Contact | MeloCut","description":"What MeloCut is, how its free audio tools work in your browser without uploading your files, how the site stays free, and how to get in touch.","inLanguage":"en","isPartOf":{"@id":"https://melocut.com/#site"},"primaryImageOfPage":"https://melocut.com/og/about.jpg","dateModified":"2026-10-26"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://melocut.com/"},{"@type":"ListItem","position":2,"name":"About MeloCut","item":"https://melocut.com/about/"}]}]}</script>
 </head>
 <body>
 <header class="top">
@@ -55,10 +55,23 @@
   
   
   <div class="section prose">
-    <p>MeloCut is a set of free audio tools: a ringtone maker, an audio cutter and joiner, a video to MP3 converter, an audio converter, an AI noise remover and an effects panel. They all run in your web browser.</p>
-    <p>We made it because most converter sites are slow, covered in pop-ups and want you to upload your personal files. MeloCut runs the FFmpeg audio engine on your own device instead, so it's quicker and your files stay private.</p>
+    <p>MeloCut is a set of free audio tools that run in your web browser: a ringtone maker, an audio cutter and joiner, converters for video and audio, an AI noise remover, and effects like slowed + reverb, nightcore, 8D audio and bass boost. There are 18 tools in total, and every one of them works on phones as well as computers.</p>
+    <h2>Why we built it</h2>
+    <p>Most "online MP3 cutter" sites work the same way: you upload your file to their server, wait in a queue, then dodge fake download buttons and pop-ups to get it back. That's slow, and it means a stranger's server gets a copy of your voice notes, recordings and music.</p>
+    <p>MeloCut does the work on your own device instead. Nothing is uploaded, so it's quicker, it works with large files and bad connections, and your files stay private.</p>
+    <h2>How it works</h2>
+    <p>Under the hood, MeloCut runs <strong>FFmpeg</strong>, the open source audio and video engine used by VLC, YouTube and countless editing apps. It's compiled to WebAssembly, a format that lets your browser run it at close to native speed. The waveform, playback and equalizer use the browser's built-in Web Audio.</p>
+    <p>The AI noise remover uses <strong>RNNoise</strong>, a small open source neural network made by Xiph.org and Mozilla researchers to separate speech from background noise. It also runs on your device.</p>
+    <h2>How the site stays free</h2>
+    <p>MeloCut shows a few ads from Google AdSense, always labelled. There are no paid plans, no sign-up, no limits on how often you use it and no watermark on your audio. See the <a href="/privacy/">privacy policy</a> for what that means for your data.</p>
+    <h2>What we care about</h2>
+    <ol class="guide-steps">
+      <li><strong>Your files are yours.</strong> They never leave your device.</li>
+      <li><strong>Honest buttons.</strong> One Download button, no tricks.</li>
+      <li><strong>Plain answers.</strong> Each tool says what it can and can't do, like the vocal remover, which is not AI stem separation.</li>
+    </ol>
     <h2>Contact</h2>
-    <p>Ideas, bug reports or business questions: <a href="mailto:hello@melocut.com">hello@melocut.com</a>.</p>
+    <p>Ideas for new tools, bug reports or business questions: <a href="mailto:hello@melocut.com">hello@melocut.com</a>. If something doesn't work, tell us the file type and your phone or browser, and we'll look into it.</p>
     <p>Please read our <a href="/terms/">terms of use</a> and <a href="/privacy/">privacy policy</a>.</p></div>
   
   
