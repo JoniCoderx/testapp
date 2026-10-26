@@ -4,11 +4,15 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import crypto from 'node:crypto';
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), 'site');
 const SITE_URL = (process.env.SITE_URL || 'https://melocut.com').replace(/\/$/, '');
 const EMAIL = process.env.CONTACT_EMAIL || 'hello@melocut.com';
 const NAME = 'MeloCut';
+// Content hash for asset URLs, so a new version is never served from an old cache.
+const ver = (f) => crypto.createHash('sha1').update(fs.readFileSync(path.join(ROOT, f))).digest('hex').slice(0, 8);
+const asset = (f) => `/${f}?v=${ver(f)}`;
 const UPDATED = new Date().toISOString().slice(0, 10);
 const LEGAL_UPDATED = 'October 26, 2026'; // change by hand when the privacy policy or terms change
 
@@ -1087,10 +1091,10 @@ function page(p) {
 <meta name="twitter:image" content="${img}">
 <meta name="google-adsense-account" content="ca-pub-2388733415031298">
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2388733415031298" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="/assets/style.css">
-<script src="/assets/config.js" defer></script>
-<script src="/assets/site.js" defer></script>
-${p.tool ? '<link rel="modulepreload" href="/assets/app.js">\n<script type="module" src="/assets/app.js"></script>\n<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>' : ''}
+<link rel="stylesheet" href="${asset('assets/style.css')}">
+<script src="${asset('assets/config.js')}" defer></script>
+<script src="${asset('assets/site.js')}" defer></script>
+${p.tool ? `<link rel="modulepreload" href="${asset('assets/app.js')}">\n<script type="module" src="${asset('assets/app.js')}"></script>\n<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>` : ''}
 <script type="application/ld+json">${jsonLd(p)}</script>
 </head>
 <body>
