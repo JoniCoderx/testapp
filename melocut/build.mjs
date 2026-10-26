@@ -15,6 +15,8 @@ const NAME = 'MeloCut';
 // Content hash for asset URLs, so a new version is never served from an old cache.
 const ver = (f) => crypto.createHash('sha1').update(fs.readFileSync(path.join(ROOT, f))).digest('hex').slice(0, 8);
 const asset = (f) => `/${f}?v=${ver(f)}`;
+// The stylesheet is small (about 5 KB compressed), so it goes inside each page: no render-blocking request.
+const INLINE_CSS = fs.readFileSync(path.join(ROOT, 'assets', 'style.css'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '').replace(/\s*\n\s*/g, '\n');
 const UPDATED = new Date().toISOString().slice(0, 10);
 const LEGAL_UPDATED = 'October 26, 2026'; // change by hand when the privacy policy or terms change
 
@@ -81,7 +83,7 @@ const CONVERSION_LINKS = `<div class="chips-links">${CONVERSIONS.map((c) => `<a 
 // English is the source. Each other language supplies its site text (ui), tool names and pages.
 const EN = {
   code: 'en', hreflang: 'en', ogLocale: 'en_US', prefix: '', name: 'English', short: 'EN',
-  home: 'Home', tools: 'Tools', allTools: 'All tools', installApp: 'Install app', menu: 'Menu',
+  home: 'Home', tools: 'Tools', allTools: 'All tools', popular: 'Popular', installApp: 'Install app', menu: 'Menu',
   howItWorks: 'How it works', faq: 'Questions and answers', moreTools: 'More free tools',
   noscript: 'Please turn on JavaScript to use this tool.', language: 'Language', homeAria: `${NAME} home`,
   footerTagline: 'Free audio tools that run in your browser',
@@ -117,6 +119,13 @@ function toolIn(t, lang) {
   const x = LANGS[lang].tools[t.slug] || {};
   return { ...t, title: x.title || t.title, blurb: x.blurb || t.blurb, href: `/${x.path || t.slug}/`, english: lang !== 'en' && !x.path };
 }
+// Home page tool list: the four most used tools first, then everything else.
+const POPULAR = ['video-to-mp3', 'ringtone-maker', 'audio-cutter', 'audio-converter'];
+const toolGrid = (lang) => {
+  const ui = LANGS[lang].ui, card = (t) => toolCardIn(t, lang);
+  return `<div class="section first"><h2>${ui.popular}</h2><div class="cards">${TOOLS.filter((t) => POPULAR.includes(t.slug)).map(card).join('')}</div></div>
+  <div class="section" id="tools"><h2>${ui.allTools}</h2><div class="cards">${TOOLS.filter((t) => !POPULAR.includes(t.slug)).map(card).join('')}</div></div>`;
+};
 const toolCardIn = (t, lang) => {
   const x = toolIn(t, lang);
   return `<a class="card" href="${x.href}"${x.english ? ' hreflang="en"' : ''}><div class="ico">${ICONS[t.icon]}</div><b>${x.title}${t.ai ? '<span class="ai">AI</span>' : ''}${x.english ? `<span class="en-tag" title="${LANGS[lang].ui.inEnglish}">EN</span>` : ''}</b><p>${x.blurb}</p></a>`;
@@ -132,9 +141,7 @@ const PAGES = [
     lead: 'Free audio tools that work on your phone or computer. Your files are never uploaded. Pick a tool to start.',
     badges: [`${TOOLS.length} free tools`, 'AI noise removal', 'No upload', 'No sign-up'],
     body: `
-  <div class="cards" id="tools" style="margin-top:8px">
-    ${TOOLS.map((t) => toolCardIn(t, 'en')).join('\n    ')}
-  </div>
+  ${toolGrid('en')}
   <div class="section"><h2>Popular conversions</h2>${CONVERSION_LINKS}</div>
   <div class="ad" data-slot="top"></div>
   <div class="section prose">
@@ -193,7 +200,7 @@ const PAGES = [
     steps: [
       ['Choose a song', 'Open any song or video from your device.'],
       ['Pick the part you like', 'Drag on the waveform to select up to 40 seconds. Press Play to check it.'],
-      ['Download the ringtone', 'Choose M4R for iPhone or MP3 for Android, then Convert and Download.'],
+      ['Download the ringtone', 'Choose M4R for iPhone or MP3 for Android, then Make ringtone and Download.'],
     ],
     content: `
     <h2>Setting the ringtone on your phone</h2>
@@ -221,7 +228,7 @@ const PAGES = [
     steps: [
       ['Open your audio', 'Choose an MP3, WAV, M4A or any audio or video file.'],
       ['Select the part', 'Drag the handles on the waveform, or type the exact start and end times.'],
-      ['Keep it or remove it', 'Choose Keep selection or Remove selection, then Convert and Download.'],
+      ['Keep it or remove it', 'Choose Keep selection or Remove selection, then Cut and save, and Download.'],
     ],
     content: `
     <h2>Cut exactly where you want</h2>
@@ -231,7 +238,7 @@ const PAGES = [
     <h3>Avoid extra quality loss</h3>
     <p>Choose <strong>WAV</strong> or <strong>FLAC</strong> if you'll edit the file again later: neither adds compression loss. WAV is saved as 16-bit, the same as CD audio, which is plenty for listening and most editing.</p>`,
     faq: [
-      ['How do I trim an MP3?', 'Open the MP3, drag the handles to the part you want, choose Keep selection, then press Convert and Download.'],
+      ['How do I trim an MP3?', 'Open the MP3, drag the handles to the part you want, choose Keep selection, then press Cut and save, and Download.'],
       ['Can I cut a part out of the middle?', "Yes. Select the part you don't want and choose Remove selection."],
       ['Does cutting lower the quality?', 'Pick 320 kbps MP3 to keep it close to the original, or WAV or FLAC to avoid any extra compression loss. WAV is saved as 16-bit (CD quality).'],
       ['Does it work offline?', 'Yes, once you have used a tool online one time. The audio engine is then saved on your device.'],
@@ -1204,7 +1211,7 @@ ${vers.filter((q) => q.lang !== lang).map((q) => `<meta property="og:locale:alte
 <meta name="twitter:image" content="${img}">
 <meta name="google-adsense-account" content="ca-pub-2388733415031298">
 <link rel="preload" href="/assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="${asset('assets/style.css')}">
+<style>${INLINE_CSS}</style>
 <script src="${asset('assets/config.js')}" defer></script>
 <script src="${asset('assets/site.js')}" defer></script>
 ${p.tool && !isEn ? `<script src="${asset(`assets/i18n/${lang}.js`)}" defer></script>` : ''}
@@ -1228,7 +1235,7 @@ ${p.tool ? `<link rel="modulepreload" href="${asset('assets/app.js')}">\n<script
     ${p.lead ? `<p>${p.lead}</p>` : ''}
     ${p.badges ? `<div class="badges">${p.badges.map((b) => `<span class="badge">${b}</span>`).join('')}</div>` : ''}
   </div>
-  ${p.home ? `<div class="cards" id="tools" style="margin-top:8px">\n    ${TOOLS.map((t) => toolCardIn(t, lang)).join('\n    ')}\n  </div>\n  <div class="ad" data-slot="top"></div>` : ''}
+  ${p.home ? `${toolGrid(lang)}\n  <div class="ad" data-slot="top"></div>` : ''}
   ${p.tool ? `<div class="tool" data-tool="${p.tool}"${p.format ? ` data-format="${p.format}"` : ''}${p.fx ? ` data-fx='${JSON.stringify(p.fx)}'` : ''}${p.note ? ` data-note="${esc(p.note)}"` : ''}${p.suffix ? ` data-suffix="${esc(p.suffix)}"` : ''}><noscript>${ui.noscript}</noscript></div>
   <div class="ad" data-slot="top"></div>` : ''}
   ${body || ''}

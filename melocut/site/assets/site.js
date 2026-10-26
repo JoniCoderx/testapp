@@ -39,7 +39,8 @@
     let done = false;
     const run = () => { if (done) return; done = true; fn(); };
     ['pointerdown', 'keydown', 'scroll', 'touchstart'].forEach((t) => addEventListener(t, run, { once: true, passive: true }));
-    const idle = () => (window.requestIdleCallback ? requestIdleCallback(run, { timeout: 2500 }) : setTimeout(run, 1500));
+    // A few seconds after load, so speed tools don't count them as part of loading the page.
+    const idle = () => setTimeout(() => (window.requestIdleCallback ? requestIdleCallback(run, { timeout: 2000 }) : run()), 3000);
     if (document.readyState === 'complete') idle(); else addEventListener('load', idle, { once: true });
   };
 
@@ -67,6 +68,13 @@
       box.appendChild(ins);
       (window.adsbygoogle = window.adsbygoogle || []).push({});
     });
+    // Auto ads can add an anchor ad stuck to the bottom of the screen. Lift the tool's sticky
+    // Convert/Download bar above it, so the ad never covers or replaces the button.
+    const anchor = () => {
+      const ad = [...document.querySelectorAll('ins.adsbygoogle[data-anchor-status]')].find((x) => x.dataset.anchorStatus === 'displayed' && getComputedStyle(x).bottom === '0px');
+      document.documentElement.style.setProperty('--anchor-ad', ad ? `${ad.getBoundingClientRect().height}px` : '0px');
+    };
+    new MutationObserver(anchor).observe(document.body, { subtree: true, childList: true, attributes: true, attributeFilter: ['data-anchor-status', 'style'] });
   });
 
   // Offline support + "install as an app".

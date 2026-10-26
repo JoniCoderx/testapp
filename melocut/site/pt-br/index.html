@@ -35,9 +35,354 @@
 <meta name="twitter:image" content="https://melocut.com/og/pt-br.jpg">
 <meta name="google-adsense-account" content="ca-pub-2388733415031298">
 <link rel="preload" href="/assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/style.css?v=cd66f567">
+<style>
+@font-face { font-family: "Inter"; src: url("/assets/fonts/inter-latin.woff2") format("woff2"); font-weight: 100 900; font-style: normal; font-display: optional; }
+@font-face { font-family: "Inter Fallback"; src: local("Arial"), local("Helvetica"); size-adjust: 107%; ascent-override: 90%; descent-override: 22.5%; line-gap-override: 0%; }
+:root {
+--bg: #f7f6fc; --card: #ffffff; --text: #17142b; --muted: #635f7a; --line: #e6e3f2;
+--brand: #6d4aff; --brand-2: #ff4f8b; --brand-dark: #5634e6; --brand-soft: #f0ecff;
+--ok: #12a150; --warn: #c2410c;
+--grad: linear-gradient(135deg, var(--brand) 0%, var(--brand-2) 100%);
+--shadow: 0 12px 34px rgba(40, 24, 110, .09);
+--radius: 16px;
+}
+@media (prefers-color-scheme: dark) {
+:root { --bg: #0f0d1a; --card: #181527; --text: #f1effa; --muted: #a29dbd; --line: #2c2843;
+--brand-soft: #251d47; --shadow: 0 12px 34px rgba(0, 0, 0, .4); }
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 72px; }
+body { margin: 0; font: 16px/1.65 "Inter", "Inter Fallback", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; font-feature-settings: "cv11", "ss03"; -webkit-font-smoothing: antialiased; background: var(--bg); color: var(--text); }
+a { color: var(--brand); }
+img, svg, canvas { display: block; max-width: 100%; }
+.wrap { max-width: 960px; margin: 0 auto; padding: 0 16px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+.top { background: var(--card); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 10; }
+.top .wrap { display: flex; align-items: center; justify-content: space-between; height: 62px; gap: 12px; }
+.logo { display: flex; align-items: center; gap: 9px; font-weight: 800; font-size: 21px; color: var(--text); text-decoration: none; letter-spacing: -.3px; }
+.logo svg { width: 32px; height: 32px; }
+.nav { display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; }
+.nav a { color: var(--muted); text-decoration: none; font-weight: 600; font-size: 14.5px; padding: 7px 9px; border-radius: 9px; white-space: nowrap; }
+.nav a:hover, .nav a[aria-current] { color: var(--brand); background: var(--brand-soft); }
+@media (max-width: 1150px) { .nav { display: none; } .menu-btn { display: grid !important; } .install-btn { margin-left: auto; } }
+.menu-btn { display: none; place-items: center; width: 42px; height: 42px; border: 1px solid var(--line); background: transparent; border-radius: 10px; color: var(--text); cursor: pointer; }
+.top.open .nav { display: flex; position: absolute; top: 62px; left: 0; right: 0; flex-direction: column; background: var(--card); border-bottom: 1px solid var(--line); padding: 8px 16px 14px; }
+.hero { text-align: center; padding: 44px 0 22px; }
+.hero h1 { font-size: clamp(28px, 5.2vw, 44px); line-height: 1.12; margin: 0 0 12px; letter-spacing: -.8px; }
+.hero h1 em { font-style: normal; background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.hero p { color: var(--muted); margin: 0 auto; max-width: 640px; font-size: 17px; }
+.badges { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 16px; }
+.badge { font-size: 13.5px; font-weight: 600; color: var(--muted); background: var(--card); border: 1px solid var(--line); padding: 5px 12px; border-radius: 99px; }
+.tool { background: var(--card); border: 1px solid var(--line); border-radius: 20px; box-shadow: var(--shadow); padding: 22px; margin-top: 8px; }
+.drop { border: 2.5px dashed var(--line); border-radius: var(--radius); padding: 40px 18px; text-align: center; cursor: pointer; transition: .15s; background: var(--bg); }
+.drop:hover, .drop.over { border-color: var(--brand); background: var(--brand-soft); }
+.drop strong { display: block; font-size: 19px; margin: 10px 0 4px; }
+.drop span { color: var(--muted); font-size: 14.5px; }
+.drop .ico { width: 54px; height: 54px; margin: 0 auto; border-radius: 16px; background: var(--grad); display: grid; place-items: center; color: #fff; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 48px; padding: 0 24px; border: 0; border-radius: 12px;
+background: var(--grad); color: #fff; font: inherit; font-weight: 700; cursor: pointer; text-decoration: none; white-space: nowrap; }
+.btn:hover { filter: brightness(1.07); }
+.btn:disabled { opacity: .55; cursor: default; filter: none; }
+.btn.ghost { background: transparent; color: var(--text); border: 2px solid var(--line); }
+.btn.ghost:hover { border-color: var(--brand); color: var(--brand); }
+.btn.ok { background: var(--ok); }
+.btn.sm { height: 40px; padding: 0 14px; font-size: 14.5px; }
+.editor { display: none; }
+.filebar { display: flex; align-items: center; gap: 12px; justify-content: space-between; flex-wrap: wrap; margin-bottom: 12px; }
+.filebar b { font-size: 16px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; display: block; }
+.filebar small { color: var(--muted); }
+.wave { position: relative; height: 128px; border-radius: 12px; background: var(--bg); border: 1px solid var(--line); touch-action: none; cursor: crosshair; user-select: none; }
+.wave canvas { width: 100%; height: 100%; }
+.wave .busy { position: absolute; inset: 0; display: grid; place-items: center; color: var(--muted); font-size: 14px; }
+.controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 12px; }
+.time { display: flex; align-items: center; gap: 6px; font-size: 14px; color: var(--muted); font-weight: 600; }
+.time input { width: 92px; height: 40px; border-radius: 10px; border: 2px solid var(--line); background: var(--bg); color: var(--text); padding: 0 10px; font: inherit; font-weight: 700; font-variant-numeric: tabular-nums; }
+.sel-len { margin-left: auto; font-size: 14px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.opts { display: flex; flex-wrap: wrap; gap: 14px 18px; align-items: center; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--line); }
+.opts label { font-size: 14.5px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+select { height: 42px; border-radius: 10px; border: 2px solid var(--line); background: var(--bg); color: var(--text); padding: 0 10px; font: inherit; font-weight: 600; }
+input[type=checkbox] { width: 18px; height: 18px; accent-color: var(--brand); }
+input[type=range] { accent-color: var(--brand); width: 140px; }
+.seg { display: inline-flex; border: 2px solid var(--line); border-radius: 11px; overflow: hidden; }
+.seg button { border: 0; background: transparent; color: var(--text); font: inherit; font-weight: 700; font-size: 14px; padding: 8px 14px; cursor: pointer; }
+.seg button.on { background: var(--brand-soft); color: var(--brand); }
+.go { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-top: 18px; }
+.progress { flex: 1; min-width: 200px; display: none; }
+.bar { height: 10px; background: var(--line); border-radius: 99px; overflow: hidden; }
+.bar i { display: block; height: 100%; width: 0; background: var(--grad); transition: width .25s; }
+.progress small { display: block; color: var(--muted); margin-top: 5px; font-size: 13.5px; }
+.note { margin-top: 12px; padding: 10px 14px; border-radius: 10px; font-size: 14.5px; font-weight: 600; display: none; }
+.note.err { display: block; background: #fdecec; color: #b42318; }
+.note.info { display: block; background: var(--brand-soft); color: var(--brand); }
+@media (prefers-color-scheme: dark) { .note.err { background: #3b1518; color: #ffb4ab; } }
+.private { display: flex; gap: 8px; align-items: center; justify-content: center; color: var(--muted); font-size: 13.5px; margin-top: 14px; }
+.ad { display: none; margin: 26px auto; text-align: center; min-height: 90px; }
+.ad.on { display: block; }
+.ad::before { content: "Advertisement"; display: block; font-size: 11px; color: var(--muted); letter-spacing: .5px; text-transform: uppercase; margin-bottom: 4px; }
+.section { margin: 54px 0; }
+.section h2 { font-size: 26px; margin: 0 0 14px; letter-spacing: -.4px; }
+.section h3 { font-size: 18px; margin: 22px 0 6px; }
+.section p, .section li { color: var(--muted); }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px; text-decoration: none; color: var(--text); transition: .15s; display: block; }
+a.card:hover { border-color: var(--brand); transform: translateY(-2px); box-shadow: var(--shadow); }
+.card .ico { width: 44px; height: 44px; border-radius: 13px; background: var(--brand-soft); color: var(--brand); display: grid; place-items: center; margin-bottom: 10px; }
+.card b { display: block; font-size: 17px; margin-bottom: 4px; }
+.card p { margin: 0; color: var(--muted); font-size: 14.5px; }
+.steps { counter-reset: s; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
+.steps .card::before { counter-increment: s; content: counter(s); display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: var(--grad); color: #fff; font-weight: 800; margin-bottom: 10px; }
+details { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 14px 18px; margin-bottom: 10px; }
+summary { font-weight: 700; cursor: pointer; }
+details p { margin: 10px 0 0; }
+.prose { max-width: 720px; }
+footer { border-top: 1px solid var(--line); padding: 30px 0 44px; color: var(--muted); font-size: 14px; }
+footer .wrap { display: flex; flex-wrap: wrap; gap: 14px 26px; justify-content: space-between; }
+footer nav { display: flex; flex-wrap: wrap; gap: 8px 18px; }
+footer a { color: var(--muted); text-decoration: none; }
+footer a:hover { color: var(--brand); }
+.fx { margin-top: 16px; border: 1px solid var(--line); border-radius: 14px; padding: 0; background: var(--bg); }
+.fx > summary { padding: 14px 16px; font-weight: 800; list-style: none; display: flex; align-items: center; gap: 8px; }
+.fx > summary::-webkit-details-marker { display: none; }
+.fx > summary::after { content: "▾"; margin-left: auto; color: var(--muted); transition: transform .2s; }
+.fx[open] > summary::after { transform: rotate(180deg); }
+.fx > summary small { background: var(--grad); color: #fff; font-size: 12px; padding: 2px 8px; border-radius: 99px; }
+.fx > summary small:empty { display: none; }
+.presets { display: flex; flex-wrap: wrap; gap: 8px; padding: 0 16px 6px; }
+.chip { border: 2px solid var(--line); background: var(--card); color: var(--text); font: inherit; font-size: 13.5px; font-weight: 700; padding: 6px 13px; border-radius: 99px; cursor: pointer; }
+.chip:hover { border-color: var(--brand); color: var(--brand); }
+.chip.on { border-color: transparent; background: var(--grad); color: #fff; }
+.chip.ghost { color: var(--muted); }
+.fx-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px 22px; padding: 12px 16px 4px; }
+.fx-s { display: flex; flex-direction: column; gap: 4px; font-size: 14px; font-weight: 700; }
+.fx-s span { display: flex; justify-content: space-between; gap: 10px; width: 100%; }
+.fx-s output { color: var(--brand); font-weight: 700; font-variant-numeric: tabular-nums; }
+.fx-s input[type=range] { width: 100%; }
+.fx-toggles { display: flex; flex-wrap: wrap; gap: 8px; padding: 12px 16px; }
+.fx-t { display: inline-flex; align-items: center; gap: 7px; font-size: 14px; font-weight: 700; border: 1px solid var(--line); background: var(--card); border-radius: 10px; padding: 7px 11px; cursor: pointer; }
+.fx-t:has(input:checked) { border-color: var(--brand); background: var(--brand-soft); color: var(--brand); }
+.fx-preview { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 4px 16px 16px; }
+.fx-preview small { color: var(--muted); font-size: 13.5px; }
+.joinlist { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.joinlist li { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--bg); min-width: 0; }
+.joinlist b { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 15px; }
+.joinlist small { color: var(--muted); font-variant-numeric: tabular-nums; }
+.jn { width: 26px; height: 26px; flex-shrink: 0; border-radius: 50%; background: var(--grad); color: #fff; font-weight: 800; font-size: 13px; display: grid; place-items: center; }
+.jb { display: flex; gap: 4px; }
+.jb button { width: 32px; height: 32px; border: 1px solid var(--line); border-radius: 8px; background: var(--card); color: var(--text); cursor: pointer; font-weight: 700; }
+.jb button:disabled { opacity: .35; cursor: default; }
+.ai { display: inline-block; font-size: 11px; font-weight: 800; letter-spacing: .4px; padding: 2px 7px; border-radius: 99px; background: var(--grad); color: #fff; vertical-align: middle; margin-left: 6px; }
+.install-btn { display: none; }
+.can-install .install-btn { display: inline-flex; }
+.install-native { display: none !important; }
+.can-native-install .install-native { display: flex !important; }
+.guide-steps { counter-reset: g; list-style: none; padding: 0; display: grid; gap: 10px; }
+.guide-steps li { position: relative; padding: 12px 14px 12px 52px; background: var(--card); border: 1px solid var(--line); border-radius: 12px; color: var(--text) !important; }
+.guide-steps li::before { counter-increment: g; content: counter(g); position: absolute; left: 12px; top: 11px; width: 28px; height: 28px; border-radius: 50%; background: var(--grad); color: #fff; font-weight: 800; display: grid; place-items: center; font-size: 14px; }
+.callout { background: var(--brand-soft); border-radius: 14px; padding: 16px 18px; display: flex; gap: 14px; align-items: center; flex-wrap: wrap; justify-content: space-between; }
+.callout p { margin: 0; color: var(--text) !important; font-weight: 600; }
+.lane { margin-top: 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--bg); padding: 8px 10px 6px; }
+.lane-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; font-size: 13px; }
+.lane-head b { font-size: 13px; }
+.lane-head small { color: var(--muted); text-align: right; font-size: 12.5px; }
+.lane canvas { width: 100%; height: 64px; margin-top: 4px; }
+.jplay { width: 32px; height: 32px; flex-shrink: 0; border: 1px solid var(--line); border-radius: 50%; background: var(--card); color: var(--brand); cursor: pointer; font-size: 12px; display: grid; place-items: center; }
+.joinlist li.playing { border-color: var(--brand); background: var(--brand-soft); }
+.result { margin-top: 14px; padding: 14px; border: 1px solid var(--brand); border-radius: 12px; background: var(--brand-soft); display: grid; gap: 8px; }
+.result audio { width: 100%; }
+.result[hidden] { display: none; }
+.opts .fx-t { justify-content: flex-start; }
+* { -webkit-tap-highlight-color: transparent; }
+:focus-visible { outline: 3px solid var(--brand); outline-offset: 2px; border-radius: 8px; }
+@media (max-width: 640px) {
+body { font-size: 15.5px; }
+.wrap { padding: 0 14px; }
+.top .wrap { height: 56px; }
+.logo { font-size: 19px; }
+.logo img, .logo svg { width: 28px; height: 28px; }
+.install-btn { height: 36px; padding: 0 12px; font-size: 13.5px; border-radius: 10px; }
+.menu-btn { width: 38px; height: 38px; }
+.top.open .nav { top: 56px; }
+.top.open .nav a { padding: 11px 12px; font-size: 16px; }
+.hero { padding: 26px 0 14px; }
+.hero h1 { font-size: 28px; letter-spacing: -.5px; }
+.hero p { font-size: 15.5px; }
+.badges { gap: 6px; margin-top: 12px; }
+.badge { font-size: 12.5px; padding: 4px 10px; }
+.section { margin: 36px 0; }
+.section h2 { font-size: 21px; margin-bottom: 12px; }
+.cards { grid-template-columns: 1fr 1fr; gap: 10px; }
+.card { padding: 13px; border-radius: 14px; }
+.card .ico { width: 36px; height: 36px; border-radius: 11px; margin-bottom: 8px; }
+.card .ico svg { width: 19px; height: 19px; }
+.card b { font-size: 14.5px; line-height: 1.3; margin-bottom: 3px; }
+.card p { font-size: 12.5px; line-height: 1.45; }
+.ai { font-size: 9.5px; padding: 1px 5px; margin-left: 4px; }
+.cards.rail { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 10px; margin: 0 -14px; padding: 2px 14px 10px; scrollbar-width: none; }
+.cards.rail::-webkit-scrollbar { display: none; }
+.cards.rail .card { flex: 0 0 62%; scroll-snap-align: start; }
+.steps { grid-template-columns: 1fr; gap: 8px; }
+.steps .card { display: grid; grid-template-columns: 32px 1fr; column-gap: 12px; align-items: start; }
+.steps .card::before { grid-row: span 2; margin: 0; }
+.tool { padding: 14px; border-radius: 18px; }
+.drop { padding: 30px 14px; }
+.drop strong { font-size: 17px; }
+.filebar { gap: 8px; }
+.filebar .btn { height: 36px; font-size: 13.5px; padding: 0 12px; }
+.wave { height: 104px; }
+.lane { padding: 7px 9px 5px; }
+.lane-head { flex-direction: column; gap: 0; }
+.lane-head small { text-align: left; font-size: 11.5px; }
+.lane canvas { height: 52px; }
+.controls { gap: 8px; }
+.controls .btn { height: 40px; }
+.time { font-size: 13px; }
+.time input { width: 84px; }
+input, select, textarea, .time input { font-size: 16px !important; }
+.sel-len { width: 100%; margin-left: 0; font-size: 13px; }
+.opts { gap: 10px 12px; }
+.opts > label { flex: 1 1 140px; justify-content: space-between; }
+.opts select { flex: 1; min-width: 0; }
+.fx > summary { padding: 12px 14px; }
+.presets { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; padding: 0 14px 8px; }
+.presets::-webkit-scrollbar { display: none; }
+.chip { flex: 0 0 auto; font-size: 13px; padding: 6px 12px; }
+.fx-grid { grid-template-columns: 1fr 1fr; gap: 10px 16px; padding: 10px 14px 2px; }
+.fx-s { font-size: 13px; }
+.fx-toggles { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; padding: 10px 14px; }
+.fx-t { font-size: 13px; padding: 8px 9px; gap: 6px; }
+.fx-t input { width: 16px; height: 16px; flex-shrink: 0; }
+.fx-preview { padding: 2px 14px 14px; }
+.fx-preview .btn { width: 100%; }
+.go { position: sticky; bottom: 0; z-index: 6; margin: 14px -14px -14px; padding: 10px 14px calc(10px + env(safe-area-inset-bottom));
+background: var(--card); border-top: 1px solid var(--line); border-radius: 0 0 18px 18px; box-shadow: 0 -8px 20px rgba(40, 24, 110, .08); }
+.go .btn { flex: 1 1 100%; height: 50px; font-size: 16.5px; }
+.progress { min-width: 0; flex: 1 1 100%; }
+.note { font-size: 14px; }
+.joinlist li { padding: 8px 9px; gap: 8px; }
+.joinlist b { font-size: 14px; }
+.jb button, .jplay { width: 30px; height: 30px; }
+details { padding: 12px 14px; }
+.callout { padding: 14px; }
+.callout .btn { width: 100%; }
+.guide-steps li { padding: 11px 12px 11px 48px; font-size: 15px; }
+footer { padding: 24px 0 calc(32px + env(safe-area-inset-bottom)); font-size: 13px; }
+}
+@media (max-width: 360px) {
+.cards:not(.rail) { grid-template-columns: 1fr; }
+.fx-grid, .fx-toggles { grid-template-columns: 1fr; }
+}
+.crumbs { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: 13.5px; color: var(--muted); padding-top: 16px; }
+.crumbs a { color: var(--muted); text-decoration: none; }
+.crumbs a:hover { color: var(--brand); }
+.crumbs .sep { opacity: .6; }
+.crumbs [aria-current] { color: var(--text); font-weight: 600; }
+.crumbs + .hero { padding-top: 18px; }
+.chips-links { display: flex; flex-wrap: wrap; gap: 8px; }
+.chips-links .chip { text-decoration: none; }
+footer .wrap { flex-direction: column; }
+footer nav { padding-top: 2px; }
+@media (max-width: 640px) { .crumbs { font-size: 12.5px; padding-top: 12px; } .crumbs + .hero { padding-top: 12px; } }
+.tool[data-tool] { min-height: 292px; }
+@media (max-width: 640px) { .tool[data-tool] { min-height: 300px; } .tool[data-tool="joiner"] { min-height: 328px; } }
+.fcols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; width: 100%; }
+.fcols nav { flex-direction: column; gap: 7px; }
+.fcols b { color: var(--text); font-size: 13.5px; margin-bottom: 2px; }
+@media (max-width: 640px) { .fcols { grid-template-columns: 1fr 1fr; } .fcols nav:first-child { grid-row: span 2; } }
+.install-btn { gap: 6px; align-items: center; }
+.install-btn svg { flex: none; }
+.lane.eq-lane { display: none; }
+.lane.eq-lane.on { display: block; }
+.btn.fx-play { display: none; }
+.has-fx .btn.fx-play { display: inline-flex; }
+h1, h2, h3, .logo { font-weight: 800; }
+.hero h1 { letter-spacing: -1.2px; }
+.section h2 { letter-spacing: -.6px; }
+.card b, .filebar b, summary, .lane-head b { font-weight: 700; }
+.btn { font-weight: 650; letter-spacing: -.1px; }
+.btn .i { width: 18px; height: 18px; flex: none; }
+.btn.sm .i { width: 16px; height: 16px; }
+.btn.ghost { background: var(--card); border-width: 1.5px; box-shadow: 0 1px 2px rgba(23, 20, 43, .05); }
+.btn.ghost:hover { background: var(--brand-soft); }
+.time input, select { border-width: 1.5px; font-weight: 600; }
+.time input:focus, select:focus { outline: none; border-color: var(--brand); box-shadow: 0 0 0 3px var(--brand-soft); }
+.time, .opts label, .fx-s, .fx-t, .seg button, .chip, .nav a, .badge { font-weight: 600; }
+.seg, .chip { border-width: 1.5px; }
+.drop { border-width: 2px; }
+select { -webkit-appearance: none; appearance: none; padding-right: 34px; cursor: pointer;
+background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23635f7a' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+background-repeat: no-repeat; background-position: right 12px center; }
+input[type=range] { -webkit-appearance: none; appearance: none; height: 22px; background: transparent; cursor: pointer; }
+input[type=range]::-webkit-slider-runnable-track { height: 6px; border-radius: 99px; background: linear-gradient(90deg, var(--brand) var(--p, 0%), var(--line) var(--p, 0%)); }
+input[type=range]::-moz-range-track { height: 6px; border-radius: 99px; background: var(--line); }
+input[type=range]::-moz-range-progress { height: 6px; border-radius: 99px; background: var(--brand); }
+input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; margin-top: -6px; border-radius: 50%; background: var(--brand); border: 3px solid var(--card); box-shadow: 0 1px 4px rgba(40, 24, 110, .35); }
+input[type=range]::-moz-range-thumb { width: 14px; height: 14px; border-radius: 50%; background: var(--brand); border: 3px solid var(--card); box-shadow: 0 1px 4px rgba(40, 24, 110, .35); }
+input[type=range]:focus-visible { outline: none; }
+input[type=range]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px var(--brand-soft); }
+.fx > summary { font-weight: 700; gap: 10px; }
+.fx > summary .i { width: 20px; height: 20px; color: var(--brand); flex: none; }
+.fx > summary::after { content: ""; width: 8px; height: 8px; border-right: 2px solid var(--muted); border-bottom: 2px solid var(--muted); transform: translateY(-2px) rotate(45deg); }
+.fx[open] > summary::after { transform: translateY(2px) rotate(-135deg); }
+.fx > summary small { background: var(--brand-soft); color: var(--brand); font-size: 12.5px; font-weight: 650; padding: 3px 10px; border: 1px solid color-mix(in srgb, var(--brand) 25%, transparent); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.chip { display: inline-flex; align-items: center; gap: 6px; }
+.chip .i { width: 14px; height: 14px; }
+.chip.on { background: var(--brand-soft); color: var(--brand); border-color: var(--brand); }
+.fx-t { border-width: 1.5px; }
+.fx-t .i { width: 14px; height: 14px; color: var(--brand); }
+.private .i { width: 15px; height: 15px; }
+.result b { display: flex; align-items: center; gap: 8px; }
+.result b .i { color: var(--brand); }
+.jplay .i { width: 14px; height: 14px; }
+.jb button { display: grid; place-items: center; border-width: 1.5px; }
+.jb button .i { width: 15px; height: 15px; }
+.jb button:not(:disabled):hover, .jplay:hover { border-color: var(--brand); color: var(--brand); }
+.fx > summary > span { white-space: nowrap; flex: none; }
+.fx > summary small { flex: 0 1 auto; }
+@media (max-width: 640px) {
+.controls .btn { flex: 1 1 calc(50% - 4px); min-width: 0; padding: 0 8px; gap: 6px; font-size: 14px; }
+.controls .btn span { overflow: hidden; text-overflow: ellipsis; }
+.controls .time { flex: 1 1 calc(50% - 4px); min-width: 0; }
+.controls .time input { flex: 1; width: auto; min-width: 0; }
+}
+@media (max-width: 640px) { .tool:not(.has-fx) .controls [data-play] { flex-basis: 100%; } }
+@media (max-width: 380px) { .controls .btn .i { display: none; } }
+.btn[hidden] { display: none; }
+.tool.locked .wave, .tool.locked .controls .time, .tool.locked .opts, .tool.locked .presets,
+.tool.locked .fx-grid, .tool.locked .fx-toggles, .tool.locked [data-new], .tool.locked .joinlist .jb, .tool.locked [data-add] { opacity: .5; pointer-events: none; }
+.lang { position: relative; flex: none; background: none; border: 0; padding: 0; margin: 0; border-radius: 0; }
+.lang > summary { list-style: none; display: flex; align-items: center; gap: 5px; height: 38px; padding: 0 10px; border: 1px solid var(--line); border-radius: 10px; font-size: 13.5px; font-weight: 650; color: var(--text); cursor: pointer; }
+.lang > summary::-webkit-details-marker { display: none; }
+.lang > summary:hover, .lang[open] > summary { border-color: var(--brand); color: var(--brand); }
+.lang-menu { position: absolute; right: 0; top: calc(100% + 6px); min-width: 150px; background: var(--card); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow); padding: 6px; z-index: 20; display: grid; }
+.lang-menu a { padding: 9px 12px; border-radius: 8px; color: var(--text); text-decoration: none; font-size: 14.5px; font-weight: 600; }
+.lang-menu a:hover { background: var(--brand-soft); color: var(--brand); }
+.lang-menu a[aria-current] { color: var(--brand); }
+.lang-menu a[aria-current]::after { content: " ✓"; }
+@media (max-width: 640px) { .lang > summary { height: 36px; padding: 0 8px; } }
+.en-tag { display: inline-block; margin-left: 6px; font-size: 10.5px; font-weight: 700; letter-spacing: .4px; padding: 1px 6px; border-radius: 6px; border: 1px solid var(--line); color: var(--muted); vertical-align: middle; }
+.lang-bar { display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; padding: 9px 16px; background: var(--brand-soft); color: var(--text); font-size: 14px; font-weight: 600; text-align: center; }
+.lang-bar a { color: var(--brand-dark); font-weight: 700; }
+.lang-bar button { border: 0; background: transparent; color: var(--muted); font-size: 18px; line-height: 1; cursor: pointer; padding: 2px 6px; }
+.fcols { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+.top .wrap { max-width: 1120px; }
+.logo, .menu-btn, .install-btn { flex: none; }
+@media (max-width: 420px) { .install-btn span { display: none; } .install-btn { padding: 0 10px; } }
+.top .wrap { justify-content: flex-start; }
+.nav { margin-left: 8px; }
+.lang { margin-left: auto; }
+.can-install .install-btn { margin-left: auto; }
+.can-install .lang { margin-left: 0; }
+footer .en-tag { margin-left: 5px; font-size: 9.5px; padding: 0 4px; }
+@media (prefers-color-scheme: dark) { .lang-bar a { color: #c9bcff; } }
+.note.tip { display: block; background: none; color: var(--muted); font-weight: 500; font-size: 13.5px; padding: 6px 2px 0; }
+.go-note { flex-basis: 100%; color: var(--muted); font-size: 12.5px; }
+.go-note[hidden] { display: none; }
+@media (max-width: 640px) { .go { bottom: var(--anchor-ad, 0px); } }
+.section.first { margin-top: 12px; }
+.section.first h2, .section#tools h2 { font-size: 20px; }
+</style>
 <script src="/assets/config.js?v=303fd877" defer></script>
-<script src="/assets/site.js?v=87089791" defer></script>
+<script src="/assets/site.js?v=480155a9" defer></script>
 
 
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://melocut.com/#site","name":"MeloCut","url":"https://melocut.com/","inLanguage":["en","es","pt-BR"],"publisher":{"@id":"https://melocut.com/#org"}},{"@type":"Organization","@id":"https://melocut.com/#org","name":"MeloCut","url":"https://melocut.com/","logo":"https://melocut.com/icon-512.png","email":"hello@melocut.com"},{"@type":"WebPage","@id":"https://melocut.com/pt-br/#page","url":"https://melocut.com/pt-br/","name":"Cortar música, criar toque e converter para MP3 grátis | MeloCut","description":"Corte músicas, crie toques para iPhone e Android, adicione efeitos e converta vídeos para MP3. Grátis, e seus arquivos nunca saem do seu aparelho.","inLanguage":"pt-BR","isPartOf":{"@id":"https://melocut.com/#site"},"primaryImageOfPage":"https://melocut.com/og/pt-br.jpg","dateModified":"2026-10-26"},{"@type":"FAQPage","inLanguage":"pt-BR","mainEntity":[{"@type":"Question","name":"O MeloCut é grátis?","acceptedAnswer":{"@type":"Answer","text":"Sim. Todas as ferramentas são grátis e mantidas por alguns anúncios identificados. Não precisa de cadastro e não há marca d'água."}},{"@type":"Question","name":"Meus arquivos são enviados para algum lugar?","acceptedAnswer":{"@type":"Answer","text":"Não. Todo o processamento acontece no seu navegador, no seu próprio aparelho."}},{"@type":"Question","name":"Funciona no iPhone e no Android?","acceptedAnswer":{"@type":"Answer","text":"Sim. Funciona no Safari, Chrome, Firefox e Edge, em celulares, tablets e computadores."}},{"@type":"Question","name":"Quais tipos de arquivo posso abrir?","acceptedAnswer":{"@type":"Answer","text":"MP3, MP4, MOV, M4A, WAV, OGG, OPUS, FLAC, WebM, AAC, AMR, 3GP e a maioria dos formatos de áudio e vídeo."}},{"@type":"Question","name":"Posso instalar o MeloCut como app?","acceptedAnswer":{"@type":"Answer","text":"Sim. Adicione à tela inicial pelo Safari ou Chrome. Ele abre em tela cheia, e as ferramentas que você já usou continuam funcionando offline."}},{"@type":"Question","name":"O MeloCut usa IA?","acceptedAnswer":{"@type":"Answer","text":"A ferramenta de remover ruído usa o RNNoise, uma pequena rede neural que separa a voz do ruído de fundo. Ela roda no seu aparelho. Os outros efeitos são processamento de áudio comum."}}]}]}</script>
@@ -59,26 +404,8 @@
     <p>Ferramentas de áudio grátis para celular e computador. Seus arquivos nunca são enviados. Escolha uma ferramenta para começar.</p>
     <div class="badges"><span class="badge">18 ferramentas grátis</span><span class="badge">Remove ruído com IA</span><span class="badge">Sem upload</span><span class="badge">Sem cadastro</span></div>
   </div>
-  <div class="cards" id="tools" style="margin-top:8px">
-    <a class="card" href="/pt-br/video-para-mp3/"><div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="14" height="14" rx="2"/><path d="m16 10 6-3v10l-6-3"/></svg></div><b>Vídeo para MP3</b><p>Tire o som de um vídeo MP4, MOV ou WebM.</p></a>
-    <a class="card" href="/pt-br/criar-toque/"><div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.9 1.9 0 0 0 3.4 0"/></svg></div><b>Criar toque</b><p>Transforme um trecho de música em toque para iPhone ou Android.</p></a>
-    <a class="card" href="/pt-br/cortar-audio/"><div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.1 15.9M14.5 14.5 20 20M8.1 8.1 12 12"/></svg></div><b>Cortar áudio</b><p>Corte uma música ou tire um trecho do meio.</p></a>
-    <a class="card" href="/pt-br/conversor-de-audio/"><div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3l4 4-4 4"/><path d="M3 7h18"/><path d="M7 21l-4-4 4-4"/><path d="M21 17H3"/></svg></div><b>Conversor de áudio</b><p>Converta entre MP3, WAV, M4A, OGG e FLAC.</p></a>
-    <a class="card" href="/audio-joiner/" hreflang="en"><div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg></div><b>Juntar áudios<span class="en-tag" title="em inglês">EN</span></b><p>Junte várias músicas ou áudios em um só arquivo.</p></a>
-    <a class="card" href="/noise-remover/" hreflang="en"><div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></svg></div><b>Remover ruído com IA<span class="ai">AI</span><span class="en-tag" title="em inglês">EN</span></b><p>Limpe o ruído de fundo de gravações de voz.</p></a>
-    <a class="card" href="/slowed-reverb/" hreflang="en"><div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><b>Slowed + Reverb<span class="en-tag" title="em inglês">EN</span></b><p>Faça uma versão lenta de uma música com reverb.</p></a>
-    <a class="card" href="/vocal-remover/" hreflang="en"><div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v5M3 3l18 18"/></svg></div><b>Remover voz<span class="en-tag" title="em inglês">EN</span></b><p>Tire o cantor para ter uma faixa de karaokê.</p></a>
-    <a class="card" href="/8d-audio/" hreflang="en"><div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 14v-2a9 9 0 0 1 18 0v2"/><path d="M21 15a2 2 0 0 1-2 2h-1v-5h3zM3 15a2 2 0 0 0 2 2h1v-5H3z"/></svg></div><b>Áudio 8D<span class="en-tag" title="em inglês">EN</span></b><p>Som que passa de um ouvido para o outro. Use fones.</p></a>
-    <a class="card" href="/bass-booster/" hreflang="en"><div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><circle cx="12" cy="14" r="4"/><path d="M12 6h.01"/></svg></div><b>Aumentar grave<span class="en-tag" title="em inglês">EN</span></b><p>Coloque mais grave em qualquer música.</p></a>
-    <a class="card" href="/volume-booster/" hreflang="en"><div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/></svg></div><b>Aumentar volume<span class="en-tag" title="em inglês">EN</span></b><p>Deixe gravações baixas mais altas.</p></a>
-    <a class="card" href="/reverse-audio/" hreflang="en"><div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg></div><b>Áudio ao contrário<span class="en-tag" title="em inglês">EN</span></b><p>Toque qualquer som ao contrário.</p></a>
-    <a class="card" href="/speed-up-audio/" hreflang="en"><div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 14l4-4"/><path d="M3.3 19a10 10 0 1 1 17.4 0"/></svg></div><b>Acelerar áudio<span class="en-tag" title="em inglês">EN</span></b><p>Deixe uma música ou áudio mais rápido, com o mesmo tom.</p></a>
-    <a class="card" href="/slow-down-audio/" hreflang="en"><div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><b>Desacelerar áudio<span class="en-tag" title="em inglês">EN</span></b><p>Toque tudo mais devagar sem voz grossa.</p></a>
-    <a class="card" href="/pitch-changer/" hreflang="en"><div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div><b>Mudar o tom<span class="en-tag" title="em inglês">EN</span></b><p>Mude o tom de uma música sem mudar a velocidade.</p></a>
-    <a class="card" href="/nightcore-maker/" hreflang="en"><div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></svg></div><b>Criar nightcore<span class="en-tag" title="em inglês">EN</span></b><p>Mais rápido e mais agudo, o som nightcore clássico.</p></a>
-    <a class="card" href="/remove-silence/" hreflang="en"><div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h3l2-6 3 12 2-6h2"/><path d="M19 9l3 6M22 9l-3 6"/></svg></div><b>Remover silêncios<span class="en-tag" title="em inglês">EN</span></b><p>Corte as pausas longas de uma gravação.</p></a>
-    <a class="card" href="/fade-in-fade-out/" hreflang="en"><div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20 9 6h6l7 14"/></svg></div><b>Fade in e fade out<span class="en-tag" title="em inglês">EN</span></b><p>Coloque um começo e um fim suaves em qualquer música.</p></a>
-  </div>
+  <div class="section first"><h2>As mais usadas</h2><div class="cards"><a class="card" href="/pt-br/video-para-mp3/"><div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="14" height="14" rx="2"/><path d="m16 10 6-3v10l-6-3"/></svg></div><b>Vídeo para MP3</b><p>Tire o som de um vídeo MP4, MOV ou WebM.</p></a><a class="card" href="/pt-br/criar-toque/"><div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.9 1.9 0 0 0 3.4 0"/></svg></div><b>Criar toque</b><p>Transforme um trecho de música em toque para iPhone ou Android.</p></a><a class="card" href="/pt-br/cortar-audio/"><div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.1 15.9M14.5 14.5 20 20M8.1 8.1 12 12"/></svg></div><b>Cortar áudio</b><p>Corte uma música ou tire um trecho do meio.</p></a><a class="card" href="/pt-br/conversor-de-audio/"><div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3l4 4-4 4"/><path d="M3 7h18"/><path d="M7 21l-4-4 4-4"/><path d="M21 17H3"/></svg></div><b>Conversor de áudio</b><p>Converta entre MP3, WAV, M4A, OGG e FLAC.</p></a></div></div>
+  <div class="section" id="tools"><h2>Todas as ferramentas</h2><div class="cards"><a class="card" href="/audio-joiner/" hreflang="en"><div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg></div><b>Juntar áudios<span class="en-tag" title="em inglês">EN</span></b><p>Junte várias músicas ou áudios em um só arquivo.</p></a><a class="card" href="/noise-remover/" hreflang="en"><div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></svg></div><b>Remover ruído com IA<span class="ai">AI</span><span class="en-tag" title="em inglês">EN</span></b><p>Limpe o ruído de fundo de gravações de voz.</p></a><a class="card" href="/slowed-reverb/" hreflang="en"><div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><b>Slowed + Reverb<span class="en-tag" title="em inglês">EN</span></b><p>Faça uma versão lenta de uma música com reverb.</p></a><a class="card" href="/vocal-remover/" hreflang="en"><div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v5M3 3l18 18"/></svg></div><b>Remover voz<span class="en-tag" title="em inglês">EN</span></b><p>Tire o cantor para ter uma faixa de karaokê.</p></a><a class="card" href="/8d-audio/" hreflang="en"><div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 14v-2a9 9 0 0 1 18 0v2"/><path d="M21 15a2 2 0 0 1-2 2h-1v-5h3zM3 15a2 2 0 0 0 2 2h1v-5H3z"/></svg></div><b>Áudio 8D<span class="en-tag" title="em inglês">EN</span></b><p>Som que passa de um ouvido para o outro. Use fones.</p></a><a class="card" href="/bass-booster/" hreflang="en"><div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><circle cx="12" cy="14" r="4"/><path d="M12 6h.01"/></svg></div><b>Aumentar grave<span class="en-tag" title="em inglês">EN</span></b><p>Coloque mais grave em qualquer música.</p></a><a class="card" href="/volume-booster/" hreflang="en"><div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/></svg></div><b>Aumentar volume<span class="en-tag" title="em inglês">EN</span></b><p>Deixe gravações baixas mais altas.</p></a><a class="card" href="/reverse-audio/" hreflang="en"><div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg></div><b>Áudio ao contrário<span class="en-tag" title="em inglês">EN</span></b><p>Toque qualquer som ao contrário.</p></a><a class="card" href="/speed-up-audio/" hreflang="en"><div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 14l4-4"/><path d="M3.3 19a10 10 0 1 1 17.4 0"/></svg></div><b>Acelerar áudio<span class="en-tag" title="em inglês">EN</span></b><p>Deixe uma música ou áudio mais rápido, com o mesmo tom.</p></a><a class="card" href="/slow-down-audio/" hreflang="en"><div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><b>Desacelerar áudio<span class="en-tag" title="em inglês">EN</span></b><p>Toque tudo mais devagar sem voz grossa.</p></a><a class="card" href="/pitch-changer/" hreflang="en"><div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div><b>Mudar o tom<span class="en-tag" title="em inglês">EN</span></b><p>Mude o tom de uma música sem mudar a velocidade.</p></a><a class="card" href="/nightcore-maker/" hreflang="en"><div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></svg></div><b>Criar nightcore<span class="en-tag" title="em inglês">EN</span></b><p>Mais rápido e mais agudo, o som nightcore clássico.</p></a><a class="card" href="/remove-silence/" hreflang="en"><div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h3l2-6 3 12 2-6h2"/><path d="M19 9l3 6M22 9l-3 6"/></svg></div><b>Remover silêncios<span class="en-tag" title="em inglês">EN</span></b><p>Corte as pausas longas de uma gravação.</p></a><a class="card" href="/fade-in-fade-out/" hreflang="en"><div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20 9 6h6l7 14"/></svg></div><b>Fade in e fade out<span class="en-tag" title="em inglês">EN</span></b><p>Coloque um começo e um fim suaves em qualquer música.</p></a></div></div>
   <div class="ad" data-slot="top"></div>
   
   
