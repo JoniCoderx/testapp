@@ -814,7 +814,7 @@ const PAGES = [
     h1: 'How to set a custom ringtone',
     lead: 'First make your ringtone with the free Ringtone Maker, then follow the steps for your phone.',
     content: `
-    <div class="callout"><p>🔔 No ringtone yet? Making one takes about 30 seconds.</p><a class="btn sm" href="/ringtone-maker/">Open Ringtone Maker</a></div>
+    <div class="callout"><p>No ringtone yet? Making one takes about 30 seconds.</p><a class="btn sm" href="/ringtone-maker/">Open Ringtone Maker</a></div>
     <h2>iPhone without a computer (GarageBand)</h2>
     <ol class="guide-steps">
       <li>In the Ringtone Maker choose <strong>MP3</strong> (or M4A) and download your ringtone. It goes to the <strong>Files</strong> app, in Downloads.</li>
@@ -1145,6 +1145,7 @@ function page(p) {
 <meta name="twitter:image" content="${img}">
 <meta name="google-adsense-account" content="ca-pub-2388733415031298">
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2388733415031298" crossorigin="anonymous"></script>
+<link rel="preload" href="/assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="${asset('assets/style.css')}">
 <script src="${asset('assets/config.js')}" defer></script>
 <script src="${asset('assets/site.js')}" defer></script>
