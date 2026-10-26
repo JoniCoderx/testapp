@@ -171,6 +171,8 @@ footer a:hover { color: var(--brand); }
 .joinlist li.playing { border-color: var(--brand); background: var(--brand-soft); }
 .result { margin-top: 14px; padding: 14px; border: 1px solid var(--brand); border-radius: 12px; background: var(--brand-soft); display: grid; gap: 8px; }
 .result audio { width: 100%; }
+.result[hidden] { display: none; }
+.opts .fx-t { justify-content: flex-start; }
 
 /* clean taps on phones; visible focus ring for keyboard users */
 * { -webkit-tap-highlight-color: transparent; }

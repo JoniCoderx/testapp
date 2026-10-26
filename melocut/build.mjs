@@ -507,7 +507,7 @@ const PAGES = [
   {
     path: 'reverse-audio', tool: 'reverse', crumb: 'Tools',
     title: `Reverse Audio: Play Songs Backwards Online | ${NAME}`,
-    description: 'Reverse any song, voice note or sound and hear it backwards. Free, quick and private. Nothing is uploaded.',
+    description: 'Reverse any song, voice note or sound and hear it backwards. Listen first, then download an MP3. Free, quick and private: nothing is uploaded.',
     h1: '<em>Reverse</em> audio',
     lead: 'Play any sound, voice or song backwards. Good for challenges, sound effects and finding "hidden messages".',
     badges: ['Quick', 'Any format', 'No upload'],
@@ -748,15 +748,18 @@ const PAGES = [
     title: `Guides: Ringtones, Installing the App and More | ${NAME}`,
     description: `Step-by-step guides: install ${NAME} on your phone, set a custom ringtone on iPhone and Android, and find your downloaded files.`,
     h1: 'Guides',
-    lead: 'Short step-by-step guides.',
-    body: `<div class="cards">
+    lead: 'Short, step-by-step guides for the things people ask us most: ringtones, downloads, formats and cleaning up recordings.',
+    body: `<div class="section prose" style="margin-top:0"><p>Every guide works with the free ${NAME} tools, on iPhone, Android and computers. The steps use the real menu names, and they're kept up to date when phones change them.</p></div>
+    <div class="cards">
       <a class="card" href="/guides/install-app/"><div class="ico">${ICONS.phone}</div><b>Install MeloCut on your phone</b><p>Add it to your home screen in a few taps.</p></a>
       <a class="card" href="/guides/set-ringtone/"><div class="ico">${ICONS.bell}</div><b>Set a custom ringtone</b><p>iPhone and Android, with or without a computer.</p></a>
       <a class="card" href="/guides/find-downloads/"><div class="ico">${ICONS.book}</div><b>Where are my downloads?</b><p>Find your files on iPhone, Android, Windows and Mac.</p></a>
       <a class="card" href="/guides/best-audio-format/"><div class="ico">${ICONS.swap}</div><b>Which audio format should you use?</b><p>MP3, M4A, WAV, FLAC and what kbps means.</p></a>
       <a class="card" href="/guides/clean-up-voice-memo/"><div class="ico">${ICONS.sparkle}</div><b>Clean up a voice memo</b><p>Trim it, remove noise and make it louder.</p></a>
       <a class="card" href="/guides/ringtone-from-video/"><div class="ico">${ICONS.video}</div><b>Make a ringtone from a video</b><p>Use a sound from your own videos as your ringtone.</p></a>
-    </div>`,
+    </div>
+    <div class="section"><h2>Popular tools</h2><div class="cards">${TOOLS.filter((t) => ['ringtone-maker', 'video-to-mp3', 'audio-cutter', 'noise-remover'].includes(t.slug)).map(toolCard).join('')}</div></div>
+    <div class="section"><h2>Popular conversions</h2>${CONVERSION_LINKS}</div>`,
   },
   {
     path: 'guides/install-app', crumb: 'Guides', plain: true,
@@ -785,12 +788,23 @@ const PAGES = [
       <li>In <strong>Chrome</strong> or <strong>Edge</strong>, click the install icon at the right end of the address bar.</li>
       <li>Click <strong>Install</strong>. MeloCut opens in its own window and gets a desktop icon.</li>
     </ol>
+    <h2>Why install it?</h2>
+    <p>It opens straight to the tools without the browser's address bar, it's one tap away on your home screen, and it keeps working offline. It takes almost no space, and it updates itself whenever the site does.</p>
+    <h2>Can't find "Add to Home Screen"?</h2>
+    <ol class="guide-steps">
+      <li><strong>iPhone:</strong> make sure you're in Safari. In Chrome on iPhone, tap the Share button in the address bar instead; on older iOS versions only Safari can do it.</li>
+      <li><strong>Samsung Internet:</strong> tap the menu (☰) → <strong>Add page to</strong> → <strong>Home screen</strong>.</li>
+      <li><strong>Private or incognito tab:</strong> switch to a normal tab first. Installing doesn't work in private mode.</li>
+      <li><strong>Firefox on Android:</strong> tap ⋮ → <strong>Install</strong> (or <strong>Add to Home screen</strong>).</li>
+    </ol>
     <h2>Using it offline</h2>
     <p>The first time you use a tool you need an internet connection, because the audio engine (about 30 MB) is downloaded then. After that it is saved on your device, so the tools keep working on a plane or with a bad connection. Open one tool while you're online before you travel.</p>`,
     faq: [
       ['Is the app free?', 'Yes. It is the same free website, just on your home screen.'],
       ['How much space does it take?', 'About 30 MB for the audio engine, which is less than most apps.'],
       ['How do I remove it?', 'Like any other app: long-press the icon and choose Remove.'],
+      ['Does it update itself?', 'Yes. Each time you open it with a connection, it loads the newest version in the background.'],
+      ['Is it in the App Store or Google Play?', 'No. It is a web app, so you install it from the browser. That is why it needs no account and no store download.'],
     ],
   },
   {
@@ -847,11 +861,28 @@ const PAGES = [
       <li>Open the <strong>Files</strong> or <strong>My Files</strong> app → <strong>Downloads</strong>.</li>
       <li>Most music players find new MP3s on their own. If yours doesn't, move the file to the <strong>Music</strong> folder.</li>
     </ol>
+    <h2>Samsung phones</h2>
+    <ol class="guide-steps">
+      <li>Open <strong>My Files</strong> → <strong>Downloads</strong>, or <strong>Audio</strong> to see every sound file on the phone.</li>
+      <li>In Samsung Internet, the menu (☰) → <strong>Downloads</strong> also lists them.</li>
+    </ol>
     <h2>Windows and Mac</h2>
     <ol class="guide-steps">
       <li>Open your <strong>Downloads</strong> folder in File Explorer (Windows) or Finder (Mac).</li>
       <li>In Chrome you can also press <strong>Ctrl+J</strong> on Windows or <strong>⌘+Shift+J</strong> on Mac to see recent downloads.</li>
-    </ol>`,
+    </ol>
+    <h2>Nothing downloaded?</h2>
+    <ol class="guide-steps">
+      <li>Make sure you pressed the green <strong>Download</strong> button after converting. The first button only converts.</li>
+      <li>On iPhone, Safari may ask "Do you want to download…?". Tap <strong>Download</strong>, then look for the blue arrow in the address bar.</li>
+      <li>Check whether your browser saves to a different folder: in Safari go to <em>Settings → Apps → Safari → Downloads</em>, in Chrome open <em>Settings → Downloads</em>.</li>
+    </ol>
+    <h2>Getting the file into your music app</h2>
+    <p>On Android, most music players pick up new MP3s by themselves, or after you move them to the <strong>Music</strong> folder. On iPhone the Music app only takes songs synced from a computer, so play your files from the <strong>Files</strong> app or a player like VLC, or send them to yourself in WhatsApp.</p>`,
+    faq: [
+      ['Why is my file called something different?', 'MeloCut keeps your original name and adds what you did in brackets, for example "song (ringtone).m4r", so the original is never overwritten.'],
+      ['Can I change where downloads go?', 'Yes. Each browser has a Downloads setting where you can pick a folder or ask every time.'],
+    ],
   },
   {
     path: 'guides/best-audio-format', crumb: 'Guides', plain: true,
@@ -940,16 +971,22 @@ const PAGES = [
     <h2>4. Save it in the right format</h2>
     <p>Choose <strong>M4R</strong> for iPhone or <strong>MP3</strong> for Android, then Convert and Download.</p>
     <h2>5. Set it on your phone</h2>
-    <p>Follow the <a href="/guides/set-ringtone/">ringtone setup guide</a> for iPhone (with GarageBand or a computer) or Android.</p>`,
+    <p>Follow the <a href="/guides/set-ringtone/">ringtone setup guide</a> for iPhone (with GarageBand or a computer) or Android.</p>
+    <h2>Picking a good moment</h2>
+    <p>A ringtone has to work in the first two seconds, because that's often all you hear before you answer. Start right on the sound you want, not on silence before it. Short, distinctive sounds work best: a laugh, a shout, a chorus, a catchphrase. Keep it between 10 and 30 seconds; it loops if nobody answers.</p>
+    <h2>Videos from other people</h2>
+    <p>Saved a clip from a group chat? It works the same way: save the video to your phone first, then open it in the Ringtone Maker. For a sound from social media, only use clips you're allowed to use.</p>`,
     faq: [
       ['Can I use a video I downloaded from social media?', 'Only use videos you made yourself or have permission to use, and respect copyright.'],
       ['Why is my ringtone too quiet?', 'Turn on Auto loudness or raise Volume in Effects before converting.'],
+      ['Can I use a WhatsApp video?', 'Yes. Save it to your phone from the chat (Share → Save), then open it in the Ringtone Maker.'],
+      ['What if the video is very long?', 'That is fine. MeloCut only uses the part you select, up to 40 seconds, and files up to 1 GB open normally.'],
     ],
   },
   {
     path: 'terms', crumb: null, plain: true,
     title: `Terms of Use | ${NAME}`,
-    description: `The terms for using ${NAME}, a set of free audio tools that run in your web browser.`,
+    description: `The terms for using ${NAME}, a set of free audio tools that run in your browser: your files, copyright, acceptable use, ads and liability.`,
     h1: 'Terms of use',
     content: `
     <p><em>Last updated: ${LEGAL_UPDATED}</em></p>
@@ -957,6 +994,10 @@ const PAGES = [
     <p>${NAME} is free to use, at home or at work. You don't need an account. By using the site you agree to these terms.</p>
     <h2>Your files and your responsibility</h2>
     <p>Your files are processed on your own device and never sent to us. You are responsible for the files you open and the files you create. Only use audio and video you own or have permission to use. Editing a song with ${NAME} does not give you any rights to it: you can share or sell what you make only if you hold the rights to the original audio.</p>
+    <h2>Acceptable use</h2>
+    <p>Don't use ${NAME} for anything illegal, and don't try to disrupt the site, overload it or copy it in bulk with automated tools. Normal personal and business use is welcome.</p>
+    <h2>Ads</h2>
+    <p>${NAME} is free because it shows ads. Please don't click ads you aren't interested in: invalid clicks can get the site's ads switched off.</p>
     <h2>No warranty</h2>
     <p>${NAME} is provided as is. We work hard to make it reliable, but we can't promise it will always be available or free of errors. Keep a copy of your original files.</p>
     <h2>Limitation of liability</h2>
@@ -971,7 +1012,7 @@ const PAGES = [
   {
     path: 'privacy', crumb: null, plain: true,
     title: `Privacy Policy | ${NAME}`,
-    description: `How ${NAME} handles your data. Your audio and video files never leave your device.`,
+    description: `How ${NAME} handles your data: your audio and video files never leave your device. Which services the site uses, cookies, ads and your rights.`,
     h1: 'Privacy policy',
     content: `
     <p><em>Last updated: ${LEGAL_UPDATED}</em></p>
@@ -1001,13 +1042,26 @@ const PAGES = [
   {
     path: 'about', crumb: null, plain: true,
     title: `About and Contact | ${NAME}`,
-    description: `About ${NAME}, a set of free audio tools that run in your browser, and how to get in touch.`,
+    description: `What ${NAME} is, how its free audio tools work in your browser without uploading your files, how the site stays free, and how to get in touch.`,
     h1: 'About MeloCut',
     content: `
-    <p>${NAME} is a set of free audio tools: a ringtone maker, an audio cutter and joiner, a video to MP3 converter, an audio converter, an AI noise remover and an effects panel. They all run in your web browser.</p>
-    <p>We made it because most converter sites are slow, covered in pop-ups and want you to upload your personal files. ${NAME} runs the FFmpeg audio engine on your own device instead, so it's quicker and your files stay private.</p>
+    <p>${NAME} is a set of free audio tools that run in your web browser: a ringtone maker, an audio cutter and joiner, converters for video and audio, an AI noise remover, and effects like slowed + reverb, nightcore, 8D audio and bass boost. There are ${TOOLS.length} tools in total, and every one of them works on phones as well as computers.</p>
+    <h2>Why we built it</h2>
+    <p>Most "online MP3 cutter" sites work the same way: you upload your file to their server, wait in a queue, then dodge fake download buttons and pop-ups to get it back. That's slow, and it means a stranger's server gets a copy of your voice notes, recordings and music.</p>
+    <p>${NAME} does the work on your own device instead. Nothing is uploaded, so it's quicker, it works with large files and bad connections, and your files stay private.</p>
+    <h2>How it works</h2>
+    <p>Under the hood, ${NAME} runs <strong>FFmpeg</strong>, the open source audio and video engine used by VLC, YouTube and countless editing apps. It's compiled to WebAssembly, a format that lets your browser run it at close to native speed. The waveform, playback and equalizer use the browser's built-in Web Audio.</p>
+    <p>The AI noise remover uses <strong>RNNoise</strong>, a small open source neural network made by Xiph.org and Mozilla researchers to separate speech from background noise. It also runs on your device.</p>
+    <h2>How the site stays free</h2>
+    <p>${NAME} shows a few ads from Google AdSense, always labelled. There are no paid plans, no sign-up, no limits on how often you use it and no watermark on your audio. See the <a href="/privacy/">privacy policy</a> for what that means for your data.</p>
+    <h2>What we care about</h2>
+    <ol class="guide-steps">
+      <li><strong>Your files are yours.</strong> They never leave your device.</li>
+      <li><strong>Honest buttons.</strong> One Download button, no tricks.</li>
+      <li><strong>Plain answers.</strong> Each tool says what it can and can't do, like the vocal remover, which is not AI stem separation.</li>
+    </ol>
     <h2>Contact</h2>
-    <p>Ideas, bug reports or business questions: <a href="mailto:${EMAIL}">${EMAIL}</a>.</p>
+    <p>Ideas for new tools, bug reports or business questions: <a href="mailto:${EMAIL}">${EMAIL}</a>. If something doesn't work, tell us the file type and your phone or browser, and we'll look into it.</p>
     <p>Please read our <a href="/terms/">terms of use</a> and <a href="/privacy/">privacy policy</a>.</p>`,
   },
 ];

@@ -1,12 +1,13 @@
 // MeloCut offline support: pages are network-first (fresh when online, cached when offline);
 // our static files are stale-while-revalidate; the versioned audio engine is cache-first.
-const CACHE = 'melocut-v6';
+const CACHE = 'melocut-v7';
 const CORE = ['/', '/assets/style.css', '/assets/app.js', '/assets/site.js', '/assets/config.js', '/assets/logo.svg',
   '/vendor/ffmpeg/index.js', '/vendor/ffmpeg/classes.js', '/vendor/ffmpeg/worker.js', '/vendor/ffmpeg/const.js',
   '/vendor/ffmpeg/errors.js', '/vendor/ffmpeg/utils.js', '/vendor/ffmpeg/types.js'];
 
 self.addEventListener('install', (e) => {
-  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(CORE)).then(() => self.skipWaiting()));
+  // cache: 'reload' skips the browser's HTTP cache, so the copies saved here are current.
+  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(CORE.map((u) => new Request(u, { cache: 'reload' })))).then(() => self.skipWaiting()));
 });
 self.addEventListener('activate', (e) => {
   e.waitUntil(caches.keys().then((keys) => Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k))))
@@ -33,7 +34,8 @@ self.addEventListener('fetch', (e) => {
     return res;
   });
   e.respondWith(caches.match(req).then((hit) => {
-    if (!hit) return update();
+    // Offline with a newer ?v= than we saved: fall back to the saved copy of the same file.
+    if (!hit) return update().catch((err) => caches.match(req, { ignoreSearch: true }).then((r) => r || Promise.reject(err)));
     if (sameOrigin) e.waitUntil(update().catch(() => {})); // refresh our own files only
     return hit;
   }));
