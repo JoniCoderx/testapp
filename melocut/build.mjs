@@ -73,11 +73,11 @@ const CONVERSIONS = [
   { slug: 'ogg-to-mp3', label: 'OGG to MP3' },
   { slug: 'aac-to-mp3', label: 'AAC to MP3' },
 ];
-const MAIN_NAV = ['video-to-mp3', 'ringtone-maker', 'audio-cutter', 'audio-converter', 'audio-joiner'];
+const MAIN_NAV = ['video-to-mp3', 'ringtone-maker', 'audio-cutter', 'audio-converter'];
 const toolCard = (t) => `<a class="card" href="/${t.slug}/"><div class="ico">${ICONS[t.icon]}</div><b>${t.title}${t.ai ? '<span class="ai">AI</span>' : ''}</b><p>${t.blurb}</p></a>`;
 const CONVERSION_LINKS = `<div class="chips-links">${CONVERSIONS.map((c) => `<a class="chip" href="/${c.slug}/">${c.label}</a>`).join('')}</div>`;
 const INSTALL_CALLOUT = `
-  <div class="section"><div class="callout"><p>You can add ${NAME} to your phone's home screen and open it like an app. After your first visit, the tools also work offline.</p>
+  <div class="section"><div class="callout"><p>You can add ${NAME} to your phone's home screen and open it like an app. Use a tool once while you're online and it keeps working offline after that.</p>
     <a class="btn sm" href="/guides/install-app/">How to install</a></div></div>`;
 
 const WHY = `
@@ -186,7 +186,7 @@ const PAGES = [
     description: 'Trim MP3s and other audio online. Keep a part or cut one out, add fades, and save as MP3, M4A, WAV, OGG or FLAC. Free and private.',
     h1: '<em>Audio cutter</em>: trim MP3 and cut songs',
     lead: 'Trim the start and end of a song, or remove a part from the middle. Add fades and save in the format you need.',
-    badges: ['Keep or remove a part', 'Fade in and out', 'MP3, WAV, FLAC'],
+    badges: ['Keep or remove a part', 'Fade in and out', 'MP3, M4A, WAV, OGG, FLAC'],
     steps: [
       ['Open your audio', 'Choose an MP3, WAV, M4A or any audio or video file.'],
       ['Select the part', 'Drag the handles on the waveform, or type the exact start and end times.'],
