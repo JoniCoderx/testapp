@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Admin | MeloCut</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#6d4aff">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/style.css">
+<style>
+  /* Private stats page: not linked anywhere, not in the sitemap, no tracking. */
+  body { display: flex; flex-direction: column; height: 100dvh; margin: 0; }
+  .abar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 10px 16px; background: var(--card); border-bottom: 1px solid var(--line); }
+  .abar .logo { font-size: 19px; }
+  .abar .logo img { width: 28px; height: 28px; }
+  .abar .tag { font-size: 12px; font-weight: 700; color: #fff; background: var(--grad); padding: 2px 8px; border-radius: 99px; }
+  .abar nav { display: flex; gap: 6px; flex-wrap: wrap; margin-left: auto; }
+  .abar nav a { font-size: 13.5px; font-weight: 600; color: var(--muted); text-decoration: none; padding: 6px 10px; border: 1px solid var(--line); border-radius: 9px; white-space: nowrap; }
+  .abar nav a:hover { color: var(--brand); border-color: var(--brand); }
+  .frame { flex: 1; position: relative; }
+  .frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; background: var(--bg); }
+  .frame p { position: absolute; inset: 0; display: grid; place-items: center; margin: 0; color: var(--muted); font-size: 14px; }
+  @media (max-width: 640px) { .abar nav { margin-left: 0; width: 100%; overflow-x: auto; flex-wrap: nowrap; } }
+</style>
+</head>
+<body>
+<header class="abar">
+  <a class="logo" href="/"><img src="/assets/logo.svg" width="28" height="28" alt="">MeloCut</a>
+  <span class="tag">Admin</span>
+  <nav aria-label="Dashboards">
+    <a href="https://cloud.umami.is/share/bW2k0TuFjIh8O06W" target="_blank" rel="noopener">Open full screen</a>
+    <a href="https://dash.cloudflare.com/?to=/:account/web-analytics" target="_blank" rel="noopener">Cloudflare</a>
+    <a href="https://www.google.com/adsense/" target="_blank" rel="noopener">AdSense</a>
+    <a href="https://search.google.com/search-console?resource_id=sc-domain:melocut.com" target="_blank" rel="noopener">Search Console</a>
+    <a href="https://www.bing.com/webmasters/home?siteUrl=https://melocut.com/" target="_blank" rel="noopener">Bing</a>
+  </nav>
+</header>
+<main class="frame">
+  <p>Loading stats… If nothing shows, use "Open full screen".</p>
+  <iframe src="https://cloud.umami.is/share/bW2k0TuFjIh8O06W" title="MeloCut visitor stats" loading="eager" referrerpolicy="no-referrer"></iframe>
+</main>
+</body>
+</html>
