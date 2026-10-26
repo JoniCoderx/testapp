@@ -58,6 +58,13 @@
   if (/iPhone|iPad|iPod/.test(navigator.userAgent) && !navigator.standalone) document.documentElement.classList.add('can-install');
 
   // Analytics (privacy-friendly, optional)
+  if (cfg.umamiWebsiteId) {
+    const s = document.createElement('script');
+    s.defer = true;
+    s.dataset.websiteId = cfg.umamiWebsiteId;
+    s.src = 'https://cloud.umami.is/script.js';
+    document.head.appendChild(s);
+  }
   if (cfg.plausibleDomain) {
     const s = document.createElement('script');
     s.defer = true;
