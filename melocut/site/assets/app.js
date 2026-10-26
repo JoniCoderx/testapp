@@ -116,7 +116,7 @@ const parseTime = (str) => {
 };
 const baseName = (name) => name.replace(/\.[^.]+$/, '').slice(0, 120) || 'audio';
 const extOf = (name) => (name.match(/\.([a-z0-9]{1,5})$/i)?.[1] || 'bin').toLowerCase();
-const track = (event, props) => { try { window.umami?.track(event, props); window.plausible?.(event, { props }); window.gtag?.('event', event, props); } catch {} };
+const track = (event, props) => { try { props = { page: location.pathname, ...props }; window.umami?.track(event, props); window.plausible?.(event, { props }); window.gtag?.('event', event, props); } catch {} };
 const downloadURL = (url, name) => {
   const a = document.createElement('a');
   a.href = url; a.download = name;
@@ -435,6 +435,7 @@ function mountTool(root) {
       buffer = await decode(file);
     } catch (e) {
       if (token === st.openToken) els.busy.textContent = 'Could not read this file. Is it an audio or video file?';
+      track('unreadable', { tool: root.dataset.tool, type: extOf(file.name) });
       return;
     }
     if (token !== st.openToken) return;
@@ -922,6 +923,7 @@ function mountTool(root) {
       if (r.bottom > innerHeight || r.top < 0) els.go.scrollIntoView({ behavior: 'smooth', block: 'center' });
     } catch (e) {
       error(e?.message || 'Something went wrong.');
+      track('failed', { tool: root.dataset.tool, format: fmtKey, type: extOf(st.file.name) });
       els.progress.style.display = 'none';
       els.go.textContent = 'Convert';
     } finally {
@@ -1100,6 +1102,7 @@ function mountJoiner(root) {
     } catch (e) {
       resetEngine(ff); ff = null;
       error(e?.message || 'Something went wrong.');
+      track('failed', { tool: 'joiner', format: fmtKey });
       els.progress.style.display = 'none'; els.go.textContent = 'Join files';
     } finally {
       if (ff) for (const nm of [...names, outName]) await ff.deleteFile(nm).catch(() => {});

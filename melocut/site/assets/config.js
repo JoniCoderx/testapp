@@ -7,5 +7,5 @@ window.MELOCUT_CONFIG = {
   // Optional Plausible analytics domain, e.g. 'melocut.com'. Empty = no analytics.
   plausibleDomain: '',
   // Optional Umami analytics website id (cloud.umami.is > Settings > Websites). Empty = off.
-  umamiWebsiteId: '',
+  umamiWebsiteId: 'abbf2b71-8fe5-4be5-ba69-7cad347ec2b2',
 };

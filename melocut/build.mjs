@@ -979,7 +979,7 @@ const PAGES = [
     <ol class="guide-steps">
       <li><strong>Cloudflare</strong> hosts the site. Like any web host, it receives your IP address and browser details when you load a page, to deliver the page and protect it from attacks. Cloudflare keeps these logs for a short time under its own <a href="https://www.cloudflare.com/privacypolicy/" rel="nofollow">privacy policy</a>.</li>
       <li><strong>jsDelivr</strong> delivers the audio engine and, if you use AI noise removal, the small RNNoise model. Your browser downloads them once and they then run on your device. See the <a href="https://www.jsdelivr.com/terms/privacy-policy-jsdelivr-net" rel="nofollow">jsDelivr privacy policy</a>.</li>
-      <li><strong>Cloudflare Web Analytics</strong> counts visits without cookies, as described below.</li>
+      <li><strong>Cloudflare Web Analytics</strong> and <strong>Umami</strong> count visits and tool use without cookies, as described below.</li>
       <li><strong>Google AdSense</strong> shows ads, as described below.</li>
     </ol>
     <h2>Advertising and cookies</h2>
@@ -987,7 +987,7 @@ const PAGES = [
     <p>Visitors in the EEA, the UK and Switzerland see a consent message from Google before any personalized ads are shown, and can change their choice at any time with the privacy link it adds to the page.</p>
     <p>${NAME} itself sets no cookies. The site saves its own files (the pages and the audio engine) in your browser's cache so the tools load faster and work offline. You can remove them by clearing your browser's site data.</p>
     <h2>Analytics</h2>
-    <p>We use <strong>Cloudflare Web Analytics</strong> to count visits and see which pages are popular. It sets no cookies, doesn't follow you across sites and doesn't build a profile of you. See <a href="https://www.cloudflare.com/web-analytics/" rel="nofollow">how Cloudflare Web Analytics works</a>.</p>
+    <p>We use <strong>Cloudflare Web Analytics</strong> and <strong>Umami</strong> to count visits, see which pages are popular and how often each tool is used (for example "a file was converted to MP3"). Neither sets cookies, follows you across sites or builds a profile of you, and neither ever sees your files or their names. See <a href="https://www.cloudflare.com/web-analytics/" rel="nofollow">Cloudflare Web Analytics</a> and the <a href="https://umami.is/privacy" rel="nofollow">Umami privacy policy</a>.</p>
     <h2>Your rights</h2>
     <p>Since we don't collect personal data ourselves, there is usually nothing for us to show, change or delete. For data held by Google or Cloudflare, use the links above. You can still email us with any question or request.</p>
     <h2>Changes</h2>

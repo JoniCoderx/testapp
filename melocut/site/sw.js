@@ -1,6 +1,6 @@
 // MeloCut offline support: pages are network-first (fresh when online, cached when offline);
 // our static files are stale-while-revalidate; the versioned audio engine is cache-first.
-const CACHE = 'melocut-v4';
+const CACHE = 'melocut-v5';
 const CORE = ['/', '/assets/style.css', '/assets/app.js', '/assets/site.js', '/assets/config.js', '/assets/logo.svg',
   '/vendor/ffmpeg/index.js', '/vendor/ffmpeg/classes.js', '/vendor/ffmpeg/worker.js', '/vendor/ffmpeg/const.js',
   '/vendor/ffmpeg/errors.js', '/vendor/ffmpeg/utils.js', '/vendor/ffmpeg/types.js'];
