@@ -398,3 +398,4 @@ input[type=range]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px va
 .lang { margin-left: auto; }
 .can-install .install-btn { margin-left: auto; }
 .can-install .lang { margin-left: 0; }
+footer .en-tag { margin-left: 5px; font-size: 9.5px; padding: 0 4px; }
