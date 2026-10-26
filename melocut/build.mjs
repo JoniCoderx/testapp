@@ -1203,7 +1203,6 @@ ${vers.filter((q) => q.lang !== lang).map((q) => `<meta property="og:locale:alte
 <meta name="twitter:description" content="${esc(p.description)}">
 <meta name="twitter:image" content="${img}">
 <meta name="google-adsense-account" content="ca-pub-2388733415031298">
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2388733415031298" crossorigin="anonymous"></script>
 <link rel="preload" href="/assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="${asset('assets/style.css')}">
 <script src="${asset('assets/config.js')}" defer></script>

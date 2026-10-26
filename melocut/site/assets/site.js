@@ -32,10 +32,20 @@
   document.querySelector('.menu-btn')?.addEventListener('click', () => top.classList.toggle('open'));
   document.querySelectorAll('[data-year]').forEach((el) => (el.textContent = new Date().getFullYear()));
 
-  // Ads. The AdSense script itself is in every page's <head> (needed for site verification
-  // and Auto ads). The fixed ad boxes only switch on for ad units that have an id in config.js,
+  // Ads and analytics load just after the page is ready (or on the first tap or scroll, if sooner),
+  // so they never compete with the page itself for a slow phone's connection and CPU.
+  // The google-adsense-account meta tag in <head> keeps the AdSense verification.
+  const later = (fn) => {
+    let done = false;
+    const run = () => { if (done) return; done = true; fn(); };
+    ['pointerdown', 'keydown', 'scroll', 'touchstart'].forEach((t) => addEventListener(t, run, { once: true, passive: true }));
+    const idle = () => (window.requestIdleCallback ? requestIdleCallback(run, { timeout: 2500 }) : setTimeout(run, 1500));
+    if (document.readyState === 'complete') idle(); else addEventListener('load', idle, { once: true });
+  };
+
+  // The fixed ad boxes only switch on for ad units that have an id in config.js,
   // so the page never shows empty "Advertisement" boxes.
-  if (cfg.adsenseClient) {
+  if (cfg.adsenseClient) later(() => {
     if (!document.querySelector('script[src*="adsbygoogle.js"]')) {
       const s = document.createElement('script');
       s.async = true;
@@ -57,7 +67,7 @@
       box.appendChild(ins);
       (window.adsbygoogle = window.adsbygoogle || []).push({});
     });
-  }
+  });
 
   // Offline support + "install as an app".
   if ('serviceWorker' in navigator && location.protocol === 'https:') {
@@ -81,13 +91,15 @@
   if (/iPhone|iPad|iPod/.test(navigator.userAgent) && !navigator.standalone) document.documentElement.classList.add('can-install');
 
   // Analytics (privacy-friendly, optional)
-  if (cfg.umamiWebsiteId) {
+  if (cfg.umamiWebsiteId) later(() => {
     const s = document.createElement('script');
     s.defer = true;
     s.dataset.websiteId = cfg.umamiWebsiteId;
     s.src = 'https://cloud.umami.is/script.js';
+    // Events sent by the tools before the script arrived are queued in window.__mq.
+    s.onload = () => { (window.__mq || []).forEach(([e, p]) => window.umami?.track(e, p)); window.__mq = []; };
     document.head.appendChild(s);
-  }
+  });
   if (cfg.plausibleDomain) {
     const s = document.createElement('script');
     s.defer = true;
