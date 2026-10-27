@@ -79,6 +79,28 @@ const CONVERSIONS = [
   { slug: 'aac-to-mp3', label: 'AAC to MP3' },
 ];
 const MAIN_NAV = ['video-to-mp3', 'ringtone-maker', 'audio-cutter', 'audio-converter'];
+// Short how-to video shown on the ringtone guides (made in-house, also posted on TikTok).
+const RINGTONE_VIDEO = {
+  src: '/media/set-ringtone.mp4', poster: '/media/set-ringtone.jpg', width: 720, height: 1280, duration: 'PT40S', uploaded: '2026-10-27',
+  name: 'How to set a custom ringtone on iPhone and Android',
+  description: 'Set your new ringtone in a few taps: the iOS 26 Files app method (Share, Use as Ringtone), GarageBand for older iPhones, and Android and Samsung settings.',
+  caption: 'Watch: setting the ringtone on iPhone (iOS 26) and Android, in 40 seconds.',
+};
+// Guides, in the order they're listed on /guides/ and in "More guides".
+const GUIDES = [
+  { slug: 'iphone-ringtone', icon: 'bell', title: 'Set any song as your iPhone ringtone', blurb: 'No computer needed. The new Files app way and GarageBand.' },
+  { slug: 'set-ringtone', icon: 'bell', title: 'Set a custom ringtone', blurb: 'iPhone and Android, with or without a computer.' },
+  { slug: 'samsung-ringtone', icon: 'phone', title: 'Custom ringtone on Samsung Galaxy', blurb: 'Set any song as your Samsung ringtone in a few taps.' },
+  { slug: 'contact-ringtone', icon: 'phone', title: 'Ringtone for one contact', blurb: 'Know who is calling before you look at the phone.' },
+  { slug: 'make-slowed-reverb', icon: 'slow', title: 'Make slowed + reverb songs', blurb: 'The settings that sound right, step by step.' },
+  { slug: 'remove-vocals', icon: 'mic', title: 'Remove vocals from a song', blurb: 'Make a karaoke or instrumental track for free.' },
+  { slug: 'install-app', icon: 'phone', title: 'Install MeloCut on your phone', blurb: 'Add it to your home screen in a few taps.' },
+  { slug: 'find-downloads', icon: 'book', title: 'Where are my downloads?', blurb: 'Find your files on iPhone, Android, Windows and Mac.' },
+  { slug: 'best-audio-format', icon: 'swap', title: 'Which audio format should you use?', blurb: 'MP3, M4A, WAV, FLAC and what kbps means.' },
+  { slug: 'clean-up-voice-memo', icon: 'sparkle', title: 'Clean up a voice memo', blurb: 'Trim it, remove noise and make it louder.' },
+  { slug: 'ringtone-from-video', icon: 'video', title: 'Make a ringtone from a video', blurb: 'Use a sound from your own videos as your ringtone.' },
+];
+const guideCard = (g) => `<a class="card" href="/guides/${g.slug}/"><div class="ico">${ICONS[g.icon]}</div><b>${g.title}</b><p>${g.blurb}</p></a>`;
 const CONVERSION_LINKS = `<div class="chips-links">${CONVERSIONS.map((c) => `<a class="chip" href="/${c.slug}/">${c.label}</a>`).join('')}</div>`;
 // ---------- languages ----------
 // English is the source. Each other language supplies its site text (ui), tool names and pages.
@@ -206,14 +228,14 @@ const PAGES = [
     content: `
     <h2>Setting the ringtone on your phone</h2>
     <h3>iPhone</h3>
-    <p>With a computer: download the <strong>M4R</strong> file, connect your iPhone and drag the file onto it in Finder (Mac) or iTunes (Windows). It then shows up in <em>Settings → Sounds &amp; Haptics → Ringtone</em>. Without a computer, open the file in <strong>GarageBand</strong> on your iPhone and use <em>Share → Ringtone</em>.</p>
+    <p>On iOS 26 and newer: keep it under 30 seconds, download it, open it in the <strong>Files</strong> app and tap <em>Share → Use as Ringtone</em>. On older versions with a computer: download the <strong>M4R</strong> file, connect your iPhone and drag the file onto it in Finder (Mac) or iTunes (Windows). It then shows up in <em>Settings → Sounds &amp; Haptics → Ringtone</em>. Without a computer, open the file in <strong>GarageBand</strong> on your iPhone and use <em>Share → Ringtone</em>.</p>
     <h3>Android</h3>
     <p>Download the <strong>MP3</strong>, go to <em>Settings → Sound → Phone ringtone</em> and pick it. On some phones you tap "+" or "Add ringtone" first.</p>
-    <p>The <a href="/guides/set-ringtone/">ringtone guide</a> walks through every step, including the exact menu names on each phone.</p>
+    <p>Step-by-step guides: <a href="/guides/iphone-ringtone/">iPhone without a computer</a>, <a href="/guides/samsung-ringtone/">Samsung Galaxy</a>, <a href="/guides/contact-ringtone/">a ringtone for one contact</a> and <a href="/guides/set-ringtone/">every phone</a>.</p>
     <h3>A few tips</h3>
     <p>Start just before the chorus, keep it between 20 and 30 seconds, and leave the fades on so it doesn't start or stop suddenly.</p>`,
     faq: [
-      ['How long can a ringtone be?', 'iPhone allows up to 40 seconds, so MeloCut stops your selection there.'],
+      ['How long can a ringtone be?', 'Under 30 seconds if you set it from the iPhone Files app, and up to 40 seconds with GarageBand or a computer. MeloCut selects 29 seconds to start with and stops your selection at 40.'],
       ['What is an M4R file?', 'It is the ringtone format iPhones use. Inside it is a normal M4A (AAC) audio file.'],
       ['Can I make a ringtone from a video?', 'Yes. Open the video and MeloCut uses its sound.'],
       ['Is it free?', 'Yes, completely free, with no watermark and no sign-up.'],
@@ -464,7 +486,7 @@ const PAGES = [
     ],
     content: `
     <h2>Good starting settings</h2>
-    <p>Most slowed + reverb edits use a speed of <strong>0.80 to 0.90×</strong>, pitch <strong>1 to 3 semitones lower</strong> and reverb around <strong>35 to 55%</strong>. For a sped-up or nightcore version, tap the <em>Nightcore</em> preset.</p>`,
+    <p>The <a href="/guides/make-slowed-reverb/">slowed + reverb guide</a> explains each setting. Most slowed + reverb edits use a speed of <strong>0.80 to 0.90×</strong>, pitch <strong>1 to 3 semitones lower</strong> and reverb around <strong>35 to 55%</strong>. For a sped-up or nightcore version, tap the <em>Nightcore</em> preset.</p>`,
     faq: [
       ['How do I make a slowed + reverb song?', 'Open the song here. The effect is already set, so press Preview, change anything you like, then Convert and Download.'],
       ['Can I make a sped-up version?', 'Yes. Tap the Nightcore preset or raise the speed and pitch.'],
@@ -486,7 +508,7 @@ const PAGES = [
     <h2>How it works</h2>
     <p>In most studio songs the lead vocal sits in the middle of the stereo mix, while instruments are spread left and right. The vocal remover cancels out what's in the middle and keeps the rest.</p>
     <h3>What it can't do</h3>
-    <p>Bass and drums are often in the middle too, so they get quieter. Reverb on the voice can stay behind. Live recordings and mono files don't work, and ${NAME} will tell you if a file is mono. Turning up <strong>Bass</strong> in Effects brings some of the low end back.</p>`,
+    <p>Bass and drums are often in the middle too, so they get quieter. Reverb on the voice can stay behind. Live recordings and mono files don't work, and ${NAME} will tell you if a file is mono. Turning up <strong>Bass</strong> in Effects brings some of the low end back. See <a href="/guides/remove-vocals/">how to remove vocals from a song</a> for more tips.</p>`,
     faq: [
       ['Does it work on every song?', 'It works best on studio songs with the vocal in the center. Mono recordings cannot be separated this way.'],
       ['Why is the bass quieter?', 'Bass is often in the center of the mix too. Raise the Bass slider to bring it back.'],
@@ -789,14 +811,7 @@ const PAGES = [
     h1: 'Guides',
     lead: 'Short, step-by-step guides for the things people ask us most: ringtones, downloads, formats and cleaning up recordings.',
     body: `<div class="section prose" style="margin-top:0"><p>Every guide works with the free ${NAME} tools, on iPhone, Android and computers. The steps use the real menu names, and they're kept up to date when phones change them.</p></div>
-    <div class="cards">
-      <a class="card" href="/guides/install-app/"><div class="ico">${ICONS.phone}</div><b>Install MeloCut on your phone</b><p>Add it to your home screen in a few taps.</p></a>
-      <a class="card" href="/guides/set-ringtone/"><div class="ico">${ICONS.bell}</div><b>Set a custom ringtone</b><p>iPhone and Android, with or without a computer.</p></a>
-      <a class="card" href="/guides/find-downloads/"><div class="ico">${ICONS.book}</div><b>Where are my downloads?</b><p>Find your files on iPhone, Android, Windows and Mac.</p></a>
-      <a class="card" href="/guides/best-audio-format/"><div class="ico">${ICONS.swap}</div><b>Which audio format should you use?</b><p>MP3, M4A, WAV, FLAC and what kbps means.</p></a>
-      <a class="card" href="/guides/clean-up-voice-memo/"><div class="ico">${ICONS.sparkle}</div><b>Clean up a voice memo</b><p>Trim it, remove noise and make it louder.</p></a>
-      <a class="card" href="/guides/ringtone-from-video/"><div class="ico">${ICONS.video}</div><b>Make a ringtone from a video</b><p>Use a sound from your own videos as your ringtone.</p></a>
-    </div>
+    <div class="cards">${GUIDES.map(guideCard).join('')}</div>
     <div class="section"><h2>Popular tools</h2><div class="cards">${TOOLS.filter((t) => ['ringtone-maker', 'video-to-mp3', 'audio-cutter', 'noise-remover'].includes(t.slug)).map((t) => toolCardIn(t, 'en')).join('')}</div></div>
     <div class="section"><h2>Popular conversions</h2>${CONVERSION_LINKS}</div>`,
   },
@@ -847,14 +862,21 @@ const PAGES = [
     ],
   },
   {
-    path: 'guides/set-ringtone', crumb: 'Guides', plain: true,
+    path: 'guides/set-ringtone', crumb: 'Guides', plain: true, video: RINGTONE_VIDEO,
     title: `How to Set a Custom Ringtone on iPhone and Android | ${NAME}`,
     description: 'Make a ringtone from any song and set it on your iPhone (with GarageBand or a computer) or Android phone. Step by step, free.',
     h1: 'How to set a custom ringtone',
     lead: 'First make your ringtone with the free Ringtone Maker, then follow the steps for your phone.',
     content: `
     <div class="callout"><p>No ringtone yet? Making one takes about 30 seconds.</p><a class="btn sm" href="/ringtone-maker/">Open Ringtone Maker</a></div>
-    <h2>iPhone without a computer (GarageBand)</h2>
+    <h2>iPhone with iOS 26 or newer (easiest)</h2>
+    <ol class="guide-steps">
+      <li>In the Ringtone Maker keep the selection <strong>under 30 seconds</strong> (the first 29 seconds are selected for you), then download it. It goes to the <strong>Files</strong> app, in Downloads.</li>
+      <li>Open <strong>Files → Downloads</strong> and tap the ringtone so it opens.</li>
+      <li>Tap <strong>Share</strong> → <strong>Use as Ringtone</strong>. Settings opens with it selected.</li>
+    </ol>
+    <p>The <a href="/guides/iphone-ringtone/">iPhone ringtone guide</a> has more detail and fixes for when the option is missing.</p>
+    <h2>Older iPhones without a computer (GarageBand)</h2>
     <ol class="guide-steps">
       <li>In the Ringtone Maker choose <strong>MP3</strong> (or M4A) and download your ringtone. It goes to the <strong>Files</strong> app, in Downloads.</li>
       <li>Install <strong>GarageBand</strong> (free, made by Apple) and open it. Start any instrument, for example Audio Recorder.</li>
@@ -879,7 +901,7 @@ const PAGES = [
     <h2>Tips</h2>
     <p>Keep it between 20 and 30 seconds, start just before the chorus and leave the fades on. If it's too quiet, raise <strong>Volume</strong> in Effects.</p>`,
     faq: [
-      ["Why doesn't my ringtone show up on my iPhone?", 'It has to be under 40 seconds, and in M4R format if you copy it from a computer. MeloCut takes care of both.'],
+      ["Why doesn't my ringtone show up on my iPhone?", 'From the Files app it has to be under 30 seconds. From a computer it can be up to 40 seconds and must be an M4R file. MeloCut makes both.'],
       ['Can I set a text tone too?', 'Yes. On iPhone choose Text Tone in Sounds & Haptics. On Android choose Notification sound.'],
     ],
   },
@@ -1023,6 +1045,191 @@ const PAGES = [
     ],
   },
   {
+    path: 'guides/iphone-ringtone', crumb: 'Guides', plain: true, video: RINGTONE_VIDEO,
+    title: `Set Any Song as Your iPhone Ringtone, No Computer | ${NAME}`,
+    description: 'Set any song as your iPhone ringtone without a computer or iTunes. The new iOS 26 Files app method in four taps, plus GarageBand for older iPhones. Free.',
+    h1: 'How to set any song as your iPhone ringtone',
+    lead: "No computer, no iTunes and no paid app. On iOS 26 it takes four taps from the Files app, and older iPhones can do it with GarageBand.",
+    content: `
+    <div class="callout"><p>First make the ringtone: pick the best part of your song. It takes about 30 seconds.</p><a class="btn sm" href="/ringtone-maker/">Open Ringtone Maker</a></div>
+    <h2>Step 1: Make the ringtone</h2>
+    <ol class="guide-steps">
+      <li>Open the <a href="/ringtone-maker/">Ringtone Maker</a> in Safari and choose your song from Files, Photos or Music downloads.</li>
+      <li>Drag on the waveform to pick the part you want. <strong>Keep it under 30 seconds</strong>; the first 29 seconds are selected for you.</li>
+      <li>Leave the format on <strong>M4R</strong> (MP3 works too), press <strong>Make ringtone</strong>, then <strong>Download</strong>. The file is saved in the <strong>Files</strong> app, in <strong>Downloads</strong>.</li>
+    </ol>
+    <h2>Step 2: Set it (iOS 26 and newer)</h2>
+    <ol class="guide-steps">
+      <li>Open the <strong>Files</strong> app → <strong>Browse</strong> → <strong>Downloads</strong> and tap your ringtone so it opens.</li>
+      <li>Tap the <strong>Share</strong> button (the square with an arrow pointing up).</li>
+      <li>Tap <strong>Use as Ringtone</strong>. If you don't see it, scroll the list of actions to the bottom or tap <strong>More</strong>.</li>
+      <li>Settings opens with your new ringtone selected. You'll also find it in <strong>Settings → Sounds &amp; Haptics → Ringtone</strong>.</li>
+    </ol>
+    <p>Not sure which version you have? Open <strong>Settings → General → About → iOS Version</strong>.</p>
+    <h2>Step 2 on older iPhones (GarageBand)</h2>
+    <ol class="guide-steps">
+      <li>Install <strong>GarageBand</strong> from the App Store (free, made by Apple) and open it. Start any instrument, for example Audio Recorder.</li>
+      <li>Tap the <strong>tracks view</strong> button, then the <strong>loop</strong> icon in the top right → <strong>Files</strong> → <strong>Browse items from the Files app</strong>, and pick your ringtone.</li>
+      <li>Drag it onto the track, then tap the <strong>⌄</strong> arrow in the top left → <strong>My Songs</strong>.</li>
+      <li>Long-press the song → <strong>Share</strong> → <strong>Ringtone</strong> → <strong>Export</strong> → <strong>Use sound as… Standard Ringtone</strong>.</li>
+    </ol>
+    <h2>"Use as Ringtone" is missing or doesn't work</h2>
+    <ol class="guide-steps">
+      <li><strong>The file is too long.</strong> The Files app only accepts sounds under 30 seconds. Open it in the Ringtone Maker again and select a shorter part.</li>
+      <li><strong>It's an Apple Music song.</strong> Songs from an Apple Music subscription are copy-protected and can't be used. Use a song file you own, or a sound from your own videos.</li>
+      <li><strong>The file didn't finish downloading.</strong> Download it again and wait for the blue arrow in Safari's address bar to finish.</li>
+      <li><strong>Still nothing?</strong> Close the Files app completely and open it again, or use the GarageBand method above.</li>
+    </ol>
+    <h2>Set it for one person only</h2>
+    <p>Open <strong>Contacts</strong>, pick the person, tap <strong>Edit</strong> → <strong>Ringtone</strong> and choose your new sound. The <a href="/guides/contact-ringtone/">contact ringtone guide</a> has the steps for Android too.</p>`,
+    faq: [
+      ['Can I set a ringtone on iPhone without a computer?', 'Yes. On iOS 26 and newer, open the file in the Files app and tap Share → Use as Ringtone. On older versions, use GarageBand.'],
+      ['How long can an iPhone ringtone be?', 'Under 30 seconds for the Files app method. GarageBand and a computer allow up to 40 seconds.'],
+      ['Do I need an M4R file?', 'Not for the Files app method, MP3 works too. M4R is needed only if you copy the ringtone from a computer.'],
+      ['Can I use a song from Apple Music?', 'No. Apple Music songs are copy-protected, so iPhone won\'t use them as ringtones. Songs you bought or own as files work.'],
+      ['Is it free?', `Yes. The ${NAME} Ringtone Maker is free with no watermark, and the Files app and GarageBand are free too.`],
+    ],
+  },
+  {
+    path: 'guides/samsung-ringtone', crumb: 'Guides', plain: true,
+    title: `How to Set a Custom Ringtone on Samsung Galaxy | ${NAME}`,
+    description: 'Set any song as your ringtone on a Samsung Galaxy phone: make the ringtone, then Settings → Sounds and vibration → Ringtone → +. Also for one contact and dual SIM.',
+    h1: 'How to set a custom ringtone on Samsung',
+    lead: 'Any Samsung Galaxy phone can use your own song as a ringtone. Make the ringtone first, then it takes a few taps in Settings.',
+    content: `
+    <div class="callout"><p>Make the ringtone first. Pick the best part of a song in about 30 seconds.</p><a class="btn sm" href="/ringtone-maker/">Open Ringtone Maker</a></div>
+    <h2>Step 1: Make the ringtone</h2>
+    <ol class="guide-steps">
+      <li>Open the <a href="/ringtone-maker/">Ringtone Maker</a> in Chrome or Samsung Internet and choose your song.</li>
+      <li>Drag on the waveform to pick the part you want, then choose <strong>MP3</strong>.</li>
+      <li>Press <strong>Make ringtone</strong>, then <strong>Download</strong>. It's saved in <strong>My Files → Downloads</strong>.</li>
+    </ol>
+    <h2>Step 2: Set it as your ringtone</h2>
+    <ol class="guide-steps">
+      <li>Open <strong>Settings</strong> → <strong>Sounds and vibration</strong> → <strong>Ringtone</strong>.</li>
+      <li>If you have two SIM cards, pick <strong>SIM 1</strong> or <strong>SIM 2</strong>.</li>
+      <li>Tap the <strong>+</strong> at the top right of the list.</li>
+      <li>Find your file (look in <strong>Downloads</strong> or under <strong>Audio</strong>), tap it and tap <strong>Done</strong>.</li>
+    </ol>
+    <h2>Only for one contact</h2>
+    <ol class="guide-steps">
+      <li>Open <strong>Contacts</strong> and tap the person.</li>
+      <li>Tap <strong>Edit</strong>, then <strong>View more</strong> at the bottom.</li>
+      <li>Tap <strong>Ringtone</strong>, then <strong>+</strong>, pick your file and save.</li>
+    </ol>
+    <h2>As a notification sound</h2>
+    <p>Go to <strong>Settings → Sounds and vibration → Notification sound</strong> and add your file the same way. Keep notification sounds short: 1 to 3 seconds works best. The <a href="/audio-cutter/">audio cutter</a> can trim a sound that short.</p>
+    <h2>The song doesn't show up in the list</h2>
+    <ol class="guide-steps">
+      <li>Check that the download finished: open <strong>My Files → Downloads</strong> and play it.</li>
+      <li>Restart the Settings app, or the phone, so it scans for new sounds.</li>
+      <li>Move the file to the <strong>Ringtones</strong> folder in My Files (Internal storage → Ringtones). Files there always show up.</li>
+    </ol>`,
+    faq: [
+      ['How long can a Samsung ringtone be?', 'There is no strict limit, but 20 to 30 seconds is plenty. The ringtone loops until you answer.'],
+      ['Which format do Samsung phones use?', 'MP3 works on every Samsung phone. M4A and OGG work too.'],
+      ['Can I use a different ringtone for each SIM?', 'Yes. Under Ringtone, pick SIM 1 or SIM 2 and set each one separately.'],
+    ],
+  },
+  {
+    path: 'guides/contact-ringtone', crumb: 'Guides', plain: true,
+    title: `Set a Ringtone for One Contact: iPhone and Android | ${NAME}`,
+    description: 'Give one person their own ringtone so you know who is calling. Steps for iPhone, Samsung and Google Pixel and other Android phones.',
+    h1: 'How to set a ringtone for one contact',
+    lead: "A different sound for your partner, your mom or your boss means you know who's calling before you look at the phone.",
+    content: `
+    <div class="callout"><p>Want a song or a funny sound for them? Make the ringtone first.</p><a class="btn sm" href="/ringtone-maker/">Open Ringtone Maker</a></div>
+    <h2>iPhone</h2>
+    <ol class="guide-steps">
+      <li>Add your new sound to the iPhone first (see <a href="/guides/iphone-ringtone/">set any song as your iPhone ringtone</a>). It doesn't have to become your main ringtone.</li>
+      <li>Open <strong>Contacts</strong> (or Phone → Contacts) and tap the person.</li>
+      <li>Tap <strong>Edit</strong> → <strong>Ringtone</strong>, choose the sound and tap <strong>Done</strong>.</li>
+      <li>Want their texts to sound different too? Set <strong>Text Tone</strong> on the same screen.</li>
+    </ol>
+    <h2>Samsung Galaxy</h2>
+    <ol class="guide-steps">
+      <li>Open <strong>Contacts</strong> and tap the person.</li>
+      <li>Tap <strong>Edit</strong> → <strong>View more</strong> → <strong>Ringtone</strong>.</li>
+      <li>Tap <strong>+</strong>, pick the file from Downloads and save.</li>
+    </ol>
+    <h2>Google Pixel and most other Android phones</h2>
+    <ol class="guide-steps">
+      <li>Open the <strong>Contacts</strong> app and tap the person.</li>
+      <li>Tap the <strong>⋮</strong> menu in the top right → <strong>Set ringtone</strong>.</li>
+      <li>Choose <strong>My sounds</strong> or scroll to the bottom and tap <strong>Add ringtone</strong>, then pick your file.</li>
+    </ol>
+    <h2>Ideas that work well</h2>
+    <p>A short clip of their favorite song, their laugh from a video (see <a href="/guides/ringtone-from-video/">make a ringtone from a video</a>), or a slowed + reverb version of "your" song. Pick something that's recognizable in the first two seconds, since that's often all you hear.</p>`,
+    faq: [
+      ['Does a contact ringtone change my main ringtone?', 'No. Everyone else still gets your normal ringtone.'],
+      ['Does it work for WhatsApp calls?', 'No, WhatsApp has its own setting: open the chat, tap the name → Notifications (Android) or Sound (iPhone).'],
+    ],
+  },
+  {
+    path: 'guides/make-slowed-reverb', crumb: 'Guides', plain: true,
+    title: `How to Make Slowed and Reverb Songs, Free on Your Phone | ${NAME}`,
+    description: 'Make your own slowed + reverb version of any song on your phone or computer: the speed, pitch and reverb settings that sound right, step by step. Free.',
+    h1: 'How to make slowed + reverb songs',
+    lead: 'The dreamy, slowed-down sound from TikTok and YouTube takes about a minute to make yourself, for free, right in your browser.',
+    content: `
+    <h2>Step by step</h2>
+    <ol class="guide-steps">
+      <li>Open the <a href="/slowed-reverb/">Slowed + Reverb maker</a> and choose a song from your phone or computer.</li>
+      <li>The classic settings are already on: speed <strong>0.85×</strong> with reverb. Press <strong>Preview with effects</strong> to listen.</li>
+      <li>Adjust it to taste (see the settings below), then press <strong>Convert</strong> and <strong>Download</strong> your MP3.</li>
+    </ol>
+    <h2>Settings that sound right</h2>
+    <ol class="guide-steps">
+      <li><strong>Speed 0.80 to 0.90×.</strong> Slower than 0.80 starts to sound muddy, faster than 0.90 is barely noticeable.</li>
+      <li><strong>Pitch 1 to 3 semitones lower.</strong> This gives the deep, sleepy voice. Leave it at 0 if the singer sounds too dark.</li>
+      <li><strong>Reverb 35 to 55%.</strong> Enough to sound like a big room, not so much that the words get lost.</li>
+      <li><strong>A little extra bass</strong> (+3 to +6 dB) makes it feel fuller on headphones.</li>
+    </ol>
+    <h2>Other versions to try</h2>
+    <ol class="guide-steps">
+      <li><strong>Sped up or nightcore:</strong> speed 1.15 to 1.30× with the pitch raised. Use the <a href="/nightcore-maker/">nightcore maker</a>.</li>
+      <li><strong>8D:</strong> the sound circles around your head on headphones. Use the <a href="/8d-audio/">8D audio converter</a>.</li>
+      <li><strong>Slowed ringtone:</strong> make your slowed version, then open it in the <a href="/ringtone-maker/">Ringtone Maker</a>.</li>
+    </ol>
+    <h2>Posting it</h2>
+    <p>TikTok, Instagram and YouTube can mute or block songs you don't have the rights to, even slowed down. For your own listening it's fine; for posting, use music you made or are allowed to use, or add the original song from the app's own music library.</p>`,
+    faq: [
+      ['What speed is slowed + reverb?', 'Usually 0.80 to 0.90 times the original speed, with the pitch 1 to 3 semitones lower.'],
+      ['Can I make it on my phone?', 'Yes. The Slowed + Reverb maker works in Safari and Chrome on iPhone and Android, with nothing to install.'],
+      ['Is there a watermark?', 'No. The MP3 is yours, with no watermark and no sign-up.'],
+    ],
+  },
+  {
+    path: 'guides/remove-vocals', crumb: 'Guides', plain: true,
+    title: `How to Remove Vocals from a Song for Free (Karaoke) | ${NAME}`,
+    description: 'Remove the singer from a song to make a karaoke or instrumental track, free and in your browser. How it works, what to expect and tips for better results.',
+    h1: 'How to remove vocals from a song',
+    lead: 'Make a karaoke or instrumental version of a song for free. Here is how, and what results to expect.',
+    content: `
+    <h2>Step by step</h2>
+    <ol class="guide-steps">
+      <li>Open the <a href="/vocal-remover/">Vocal Remover</a> and choose a <strong>stereo</strong> studio song from your device.</li>
+      <li>The vocal remover is already on. Press <strong>Preview with effects</strong> to listen.</li>
+      <li>If the bass got too quiet, raise <strong>Bass</strong> in Effects a little.</li>
+      <li>Press <strong>Convert</strong> and <strong>Download</strong> your karaoke track.</li>
+    </ol>
+    <h2>How it works</h2>
+    <p>In most studio songs the lead vocal is placed in the middle of the stereo mix, while guitars, keys and backing vocals are spread to the left and right. The vocal remover cancels what's in the middle and keeps the sides. It's fast and runs on your own device, but it isn't AI stem separation, so the results depend on how the song was mixed.</p>
+    <h2>What to expect</h2>
+    <ol class="guide-steps">
+      <li><strong>Works best:</strong> pop, rock and hip-hop studio songs with one lead singer.</li>
+      <li><strong>Works less well:</strong> songs with lots of reverb on the voice, live recordings and old mono recordings. ${NAME} warns you when a file is mono.</li>
+      <li><strong>Side effect:</strong> bass and kick drum are often in the middle too, so they get quieter. Raising Bass brings some of it back.</li>
+    </ol>
+    <h2>Tips</h2>
+    <p>Start from the best-quality file you have; a 320 kbps MP3 or a WAV gives a cleaner result than a small, compressed file. For practicing, you can also slow the karaoke track down with the <a href="/slow-down-audio/">slow down tool</a> without changing its pitch.</p>`,
+    faq: [
+      ['Can I remove vocals for free?', `Yes. The ${NAME} Vocal Remover is free, with no sign-up and no watermark.`],
+      ['Why can I still hear some of the singer?', 'Reverb and backing vocals are often spread to the sides of the mix, so they stay. It depends on how the song was mixed.'],
+      ['Can it remove the music and keep the voice?', 'Not this tool. For cleaning up a voice recording, use the AI Noise Remover instead.'],
+    ],
+  },
+  {
     path: 'terms', crumb: null, plain: true,
     title: `Terms of Use | ${NAME}`,
     description: `The terms for using ${NAME}, a set of free audio tools that run in your browser: your files, copyright, acceptable use, ads and liability.`,
@@ -1154,6 +1361,10 @@ function jsonLd(p) {
   const trail = crumbs(p);
   if (trail) graph.push({ '@type': 'BreadcrumbList', itemListElement: trail.map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: c.name, item: c.url })) });
   if (p.faq) graph.push({ '@type': 'FAQPage', inLanguage: lang, mainEntity: p.faq.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) });
+  if (p.crumb === 'Guides') graph.push({ '@type': 'Article', '@id': `${url}#article`, headline: plainH1(p), description: p.description, inLanguage: lang, image: ogImage(p),
+    dateModified: UPDATED, author: { '@id': `${SITE_URL}/#org` }, publisher: { '@id': `${SITE_URL}/#org` }, mainEntityOfPage: { '@id': `${url}#page` } });
+  if (p.video) graph.push({ '@type': 'VideoObject', name: p.video.name, description: p.video.description, thumbnailUrl: `${SITE_URL}${p.video.poster}`,
+    contentUrl: `${SITE_URL}${p.video.src}`, uploadDate: p.video.uploaded, duration: p.video.duration, inLanguage: lang });
   if (p.steps) graph.push({ '@type': 'HowTo', inLanguage: lang, name: plainH1(p), step: p.steps.map(([n, t], i) => ({ '@type': 'HowToStep', position: i + 1, name: n, text: t })) });
   return JSON.stringify({ '@context': 'https://schema.org', '@graph': graph });
 }
@@ -1198,7 +1409,7 @@ ${alternates}
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="${NAME}">
-<meta property="og:type" content="website">
+<meta property="og:type" content="${p.crumb === 'Guides' ? 'article' : 'website'}">
 <meta property="og:site_name" content="${NAME}">
 <meta property="og:locale" content="${ui.ogLocale}">
 ${vers.filter((q) => q.lang !== lang).map((q) => `<meta property="og:locale:alternate" content="${LANGS[q.lang].ui.ogLocale}">`).join('\n')}
@@ -1244,11 +1455,13 @@ ${p.tool ? `<link rel="modulepreload" href="${asset('assets/app.js')}">\n<script
   <div class="ad" data-slot="top"></div>` : ''}
   ${body || ''}
   ${p.steps ? `<div class="section"><h2>${ui.howItWorks}</h2><div class="steps">${p.steps.map(([n, t]) => `<div class="card"><b>${n}</b><p>${t}</p></div>`).join('')}</div></div>` : ''}
+  ${p.video ? `<figure class="howto-video"><video controls playsinline preload="none" width="${p.video.width}" height="${p.video.height}" poster="${p.video.poster}"><source src="${p.video.src}" type="video/mp4"></video><figcaption>${p.video.caption}</figcaption></figure>` : ''}
   ${p.content ? `<div class="section prose">${p.content}</div>` : ''}
   ${p.tool ? '<div class="ad" data-slot="middle"></div>' : ''}
   ${p.tool ? `<div class="section"><h2>${ui.moreTools}</h2><div class="cards rail">${others.map((t) => toolCardIn(t, lang)).join('')}</div></div>
   ${isEn ? `<div class="section"><h2>Popular conversions</h2>${CONVERSION_LINKS}</div>` : ''}${installHTML(ui)}` : ''}
   ${p.faq ? `<div class="section"><h2>${ui.faq}</h2>${p.faq.map(([q, a]) => `<details><summary>${q}</summary><p>${a}</p></details>`).join('')}</div>` : ''}
+  ${p.crumb === 'Guides' ? `<div class="section"><h2>More guides</h2><div class="cards">${GUIDES.filter((g) => `guides/${g.slug}` !== p.path).slice(0, 6).map(guideCard).join('')}</div></div>` : ''}
   ${p.plain ? '' : '<div class="ad" data-slot="bottom"></div>'}
 </main>
 <footer>

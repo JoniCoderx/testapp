@@ -10,3 +10,5 @@
   Cache-Control: public, max-age=604800
 /sw.js
   Cache-Control: no-cache
+/media/*
+  Cache-Control: public, max-age=604800

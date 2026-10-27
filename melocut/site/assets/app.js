@@ -323,8 +323,8 @@ const TOOLS = {
   },
   ringtone: {
     formats: ['m4r', 'mp3'], defaultFormat: 'm4r', suffix: T(' (ringtone)'), maxLen: RINGTONE_MAX, go: T('Make ringtone'),
-    fx: { fadeIn: 1, fadeOut: 2 }, defaultSel: (d) => [0, Math.min(30, d)],
-    note: T('The first 30 seconds are selected, with a short fade in and out (change them in Effects). Drag on the waveform to choose up to 40 seconds. M4R is for iPhone, MP3 for Android.'),
+    fx: { fadeIn: 1, fadeOut: 2 }, defaultSel: (d) => [0, Math.min(29, d)],
+    note: T('The first 29 seconds are selected, short enough to set straight from the iPhone Files app, with a short fade in and out (change them in Effects). Drag on the waveform to choose up to 40 seconds. M4R is for iPhone, MP3 for Android.'),
   },
   cutter: {
     formats: ALL_FORMATS, defaultFormat: 'mp3', suffix: T(' (cut)'), modes: true, go: T('Cut and save'),

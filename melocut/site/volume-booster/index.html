@@ -357,8 +357,8 @@ input[type=range]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px va
 @media (max-width: 640px) { .lang > summary { height: 36px; padding: 0 8px; } }
 .en-tag { display: inline-block; margin-left: 6px; font-size: 10.5px; font-weight: 700; letter-spacing: .4px; padding: 1px 6px; border-radius: 6px; border: 1px solid var(--line); color: var(--muted); vertical-align: middle; }
 .lang-bar { display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; padding: 9px 16px; background: var(--brand-soft); color: var(--text); font-size: 14px; font-weight: 600; text-align: center; }
-.lang-bar a { color: var(--brand-dark); font-weight: 700; }
-.lang-bar button { border: 0; background: transparent; color: var(--muted); font-size: 18px; line-height: 1; cursor: pointer; padding: 2px 6px; }
+.lang-bar a { color: var(--brand-dark); font-weight: 700; display: inline-flex; align-items: center; min-height: 28px; }
+.lang-bar button { border: 0; background: transparent; color: var(--muted); font-size: 18px; line-height: 1; cursor: pointer; padding: 2px 6px; min-width: 32px; min-height: 32px; }
 .fcols { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
 .top .wrap { max-width: 1120px; }
 .logo, .menu-btn, .install-btn { flex: none; }
@@ -380,14 +380,17 @@ footer .en-tag { margin-left: 5px; font-size: 9.5px; padding: 0 4px; }
 .social { display: flex; gap: 8px; }
 .social a { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border: 1px solid var(--line); border-radius: 99px; color: var(--text); text-decoration: none; font-size: 13.5px; font-weight: 600; }
 .social a:hover { border-color: var(--brand); color: var(--brand); }
+.howto-video { margin: 24px auto 0; max-width: 300px; text-align: center; }
+.howto-video video { width: 100%; height: auto; border-radius: 18px; background: #000; box-shadow: 0 18px 40px -20px rgba(60, 30, 140, .45); }
+.howto-video figcaption { margin-top: 8px; font-size: 14px; color: var(--muted); }
 </style>
 <script src="/assets/config.js?v=303fd877" defer></script>
 <script src="/assets/site.js?v=480155a9" defer></script>
 
-<link rel="modulepreload" href="/assets/app.js?v=79268b9e">
-<script type="module" src="/assets/app.js?v=79268b9e"></script>
+<link rel="modulepreload" href="/assets/app.js?v=4080d867">
+<script type="module" src="/assets/app.js?v=4080d867"></script>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://melocut.com/#site","name":"MeloCut","url":"https://melocut.com/","inLanguage":["en","es","pt-BR"],"publisher":{"@id":"https://melocut.com/#org"}},{"@type":"Organization","@id":"https://melocut.com/#org","name":"MeloCut","url":"https://melocut.com/","logo":"https://melocut.com/icon-512.png","email":"hello@melocut.com","sameAs":["https://www.tiktok.com/@melocutofficial"]},{"@type":"WebPage","@id":"https://melocut.com/volume-booster/#page","url":"https://melocut.com/volume-booster/","name":"Volume Booster: Make Audio Louder Online, Free | MeloCut","description":"Make quiet MP3s, voice notes and videos louder. Auto loudness evens the volume out without distortion. Free, no upload.","inLanguage":"en","isPartOf":{"@id":"https://melocut.com/#site"},"primaryImageOfPage":"https://melocut.com/og/volume-booster.jpg","dateModified":"2026-10-26"},{"@type":"WebApplication","name":"MeloCut Volume booster","url":"https://melocut.com/volume-booster/","applicationCategory":"MultimediaApplication","inLanguage":"en","operatingSystem":"Any (web browser)","browserRequirements":"Requires JavaScript and a modern browser","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Make quiet MP3s, voice notes and videos louder. Auto loudness evens the volume out without distortion. Free, no upload.","featureList":["Up to 300%","Auto loudness","No distortion"],"isAccessibleForFree":true},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://melocut.com/"},{"@type":"ListItem","position":2,"name":"Tools","item":"https://melocut.com/#tools"},{"@type":"ListItem","position":3,"name":"Volume booster","item":"https://melocut.com/volume-booster/"}]},{"@type":"FAQPage","inLanguage":"en","mainEntity":[{"@type":"Question","name":"Will boosting the volume cause distortion?","acceptedAnswer":{"@type":"Answer","text":"No. A limiter keeps the peaks under control, so the result is louder without clipping."}}]},{"@type":"HowTo","inLanguage":"en","name":"Volume booster","step":[{"@type":"HowToStep","position":1,"name":"Open your file","text":"A quiet song, voice note, lecture or video."},{"@type":"HowToStep","position":2,"name":"Choose the boost","text":"Auto loudness is on. Change the Volume slider and press Preview."},{"@type":"HowToStep","position":3,"name":"Download","text":"Convert and save."}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://melocut.com/#site","name":"MeloCut","url":"https://melocut.com/","inLanguage":["en","es","pt-BR"],"publisher":{"@id":"https://melocut.com/#org"}},{"@type":"Organization","@id":"https://melocut.com/#org","name":"MeloCut","url":"https://melocut.com/","logo":"https://melocut.com/icon-512.png","email":"hello@melocut.com","sameAs":["https://www.tiktok.com/@melocutofficial"]},{"@type":"WebPage","@id":"https://melocut.com/volume-booster/#page","url":"https://melocut.com/volume-booster/","name":"Volume Booster: Make Audio Louder Online, Free | MeloCut","description":"Make quiet MP3s, voice notes and videos louder. Auto loudness evens the volume out without distortion. Free, no upload.","inLanguage":"en","isPartOf":{"@id":"https://melocut.com/#site"},"primaryImageOfPage":"https://melocut.com/og/volume-booster.jpg","dateModified":"2026-10-27"},{"@type":"WebApplication","name":"MeloCut Volume booster","url":"https://melocut.com/volume-booster/","applicationCategory":"MultimediaApplication","inLanguage":"en","operatingSystem":"Any (web browser)","browserRequirements":"Requires JavaScript and a modern browser","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Make quiet MP3s, voice notes and videos louder. Auto loudness evens the volume out without distortion. Free, no upload.","featureList":["Up to 300%","Auto loudness","No distortion"],"isAccessibleForFree":true},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://melocut.com/"},{"@type":"ListItem","position":2,"name":"Tools","item":"https://melocut.com/#tools"},{"@type":"ListItem","position":3,"name":"Volume booster","item":"https://melocut.com/volume-booster/"}]},{"@type":"FAQPage","inLanguage":"en","mainEntity":[{"@type":"Question","name":"Will boosting the volume cause distortion?","acceptedAnswer":{"@type":"Answer","text":"No. A limiter keeps the peaks under control, so the result is louder without clipping."}}]},{"@type":"HowTo","inLanguage":"en","name":"Volume booster","step":[{"@type":"HowToStep","position":1,"name":"Open your file","text":"A quiet song, voice note, lecture or video."},{"@type":"HowToStep","position":2,"name":"Choose the boost","text":"Auto loudness is on. Change the Volume slider and press Preview."},{"@type":"HowToStep","position":3,"name":"Download","text":"Convert and save."}]}]}</script>
 </head>
 <body>
 <header class="top">
@@ -411,6 +414,7 @@ footer .en-tag { margin-left: 5px; font-size: 9.5px; padding: 0 4px; }
   <div class="ad" data-slot="top"></div>
   
   <div class="section"><h2>How it works</h2><div class="steps"><div class="card"><b>Open your file</b><p>A quiet song, voice note, lecture or video.</p></div><div class="card"><b>Choose the boost</b><p>Auto loudness is on. Change the Volume slider and press Preview.</p></div><div class="card"><b>Download</b><p>Convert and save.</p></div></div></div>
+  
   <div class="section prose">
     <h2>Louder, but still clean</h2>
     <p><strong>Auto loudness</strong> measures the whole file and brings it to about the same loudness Spotify and YouTube use, so quiet recordings become clear. A limiter keeps the loudest moments from crackling.</p></div>
@@ -420,6 +424,7 @@ footer .en-tag { margin-left: 5px; font-size: 9.5px; padding: 0 4px; }
   <div class="section"><div class="callout"><p>You can add MeloCut to your phone's home screen and open it like an app. Use a tool once while you're online and it keeps working offline after that.</p>
     <a class="btn sm" href="/guides/install-app/">How to install</a></div></div>
   <div class="section"><h2>Questions and answers</h2><details><summary>Will boosting the volume cause distortion?</summary><p>No. A limiter keeps the peaks under control, so the result is louder without clipping.</p></details></div>
+  
   <div class="ad" data-slot="bottom"></div>
 </main>
 <footer>

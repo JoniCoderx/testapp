@@ -145,7 +145,7 @@ export default (NAME) => ({
     <h3>Algunos consejos</h3>
     <p>Empieza justo antes del estribillo, deja el tono entre 20 y 30 segundos y mantén los fundidos para que no empiece ni termine de golpe.</p>`,
       faq: [
-        ['¿Cuánto puede durar un tono?', 'El iPhone permite hasta 40 segundos, así que MeloCut limita tu selección a ese tiempo.'],
+        ['¿Cuánto puede durar un tono?', 'Menos de 30 segundos si lo pones desde la app Archivos del iPhone, y hasta 40 segundos con GarageBand o un ordenador. MeloCut selecciona 29 segundos al empezar y limita tu selección a 40.'],
         ['¿Qué es un archivo M4R?', 'Es el formato de tono que usa el iPhone. Por dentro es un archivo de audio M4A (AAC) normal.'],
         ['¿Puedo hacer un tono a partir de un video?', 'Sí. Abre el video y MeloCut usa su sonido.'],
         ['¿Es gratis?', 'Sí, totalmente gratis, sin marca de agua y sin registro.'],
