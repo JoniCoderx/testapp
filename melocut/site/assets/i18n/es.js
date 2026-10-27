@@ -45,7 +45,7 @@ window.MELOCUT_I18N = {
 "MP4, MOV, WebM, MKV, AVI, 3GP… up to 1 GB": "MP4, MOV, WebM, MKV, AVI, 3GP… hasta 1 GB",
 "Tip: drag on the waveform to keep only part of the audio. Open Effects to add fades.": "Consejo: arrastra sobre la onda para quedarte solo con una parte del audio. Abre Efectos para añadir fundidos.",
 " (ringtone)": " (tono)",
-"The first 30 seconds are selected, with a short fade in and out (change them in Effects). Drag on the waveform to choose up to 40 seconds. M4R is for iPhone, MP3 for Android.": "Están seleccionados los primeros 30 segundos, con una entrada y salida suaves (cámbialas en Efectos). Arrastra sobre la onda para elegir hasta 40 segundos. M4R es para iPhone y MP3 para Android.",
+"The first 29 seconds are selected, short enough to set straight from the iPhone Files app, with a short fade in and out (change them in Effects). Drag on the waveform to choose up to 40 seconds. M4R is for iPhone, MP3 for Android.": "Están seleccionados los primeros 29 segundos, lo bastante corto para ponerlo directamente desde la app Archivos del iPhone, con una entrada y salida suaves (cámbialas en Efectos). Arrastra sobre la onda para elegir hasta 40 segundos. M4R es para iPhone y MP3 para Android.",
 " (cut)": " (recortado)",
 "The whole file is selected. Drag the handles to choose a part, then keep it or remove it.": "Está seleccionado todo el archivo. Arrastra los controles para elegir una parte y luego consérvala o quítala.",
 "Converts the whole file. Drag on the waveform if you only want part of it.": "Convierte el archivo completo. Arrastra sobre la onda si solo quieres una parte.",

@@ -145,7 +145,7 @@ export default (NAME) => ({
     <h3>Algumas dicas</h3>
     <p>Comece logo antes do refrão, deixe o toque entre 20 e 30 segundos e mantenha os fades para ele não começar nem terminar de repente.</p>`,
       faq: [
-        ['Quanto tempo um toque pode ter?', 'O iPhone aceita até 40 segundos, então o MeloCut limita sua seleção a esse tempo.'],
+        ['Quanto tempo um toque pode ter?', 'Menos de 30 segundos se você definir pelo app Arquivos do iPhone, e até 40 segundos com o GarageBand ou um computador. O MeloCut seleciona 29 segundos no início e limita sua seleção a 40.'],
         ['O que é um arquivo M4R?', 'É o formato de toque que o iPhone usa. Por dentro é um arquivo de áudio M4A (AAC) normal.'],
         ['Posso fazer um toque a partir de um vídeo?', 'Sim. Abra o vídeo e o MeloCut usa o som dele.'],
         ['É grátis?', 'Sim, totalmente grátis, sem marca d\'água e sem cadastro.'],
