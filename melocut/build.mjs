@@ -135,7 +135,7 @@ const EN = {
     ['lock', 'Your files stay with you', 'Everything happens in your browser. Nothing gets uploaded, so nobody else ever sees your files.'],
     ['bolt', 'No waiting', "There's no upload and no download queue. A song usually takes a few seconds. Long videos take a bit longer."],
     ['phone', 'Phone or computer', 'Works in Safari, Chrome, Edge and Firefox. You can also install it on your home screen.'],
-    ['sparkle', 'Free, no watermark', 'No account and nothing added to your audio. Use it as often as you like, with files up to 1 GB.'],
+    ['sparkle', 'Free, no watermark', 'No account and nothing added to your audio. Use it as often as you like.'],
   ],
 };
 const LANGS = { en: { ui: EN, tools: {}, pages: [] }, es: es(NAME), 'pt-br': ptBR(NAME) };
@@ -224,7 +224,7 @@ const PAGES = [
     faq: [
       ['How do I convert MP4 to MP3?', 'Open the MP4 above, choose MP3 and a quality, press Convert and then Download. It takes a few seconds.'],
       ['Can I convert iPhone videos?', 'Yes. Pick the video from Photos or Files and it converts like any other.'],
-      ['Is there a size limit?', 'Files up to 1 GB open on a computer. Audio needs much more memory once it is unpacked, so on phones files under about 300 MB work best. For long videos, use a computer or trim the video first.'],
+      ['Is there a size limit?', 'File limits depend on your device and browser. Computers handle much bigger files than phones, and MeloCut does not accept files over 1 GB. For long videos, use a computer or trim the video first.'],
       ['Can I convert YouTube videos?', 'MeloCut works with files on your device. It does not download from YouTube or other sites.'],
     ],
   },
@@ -458,7 +458,7 @@ const PAGES = [
     <h3>Different formats are fine</h3>
     <p>You can mix MP3, M4A, WAV, OGG, OPUS and videos in one go. ${NAME} converts them all to the same format first.</p>`,
     faq: [
-      ['How many files can I join?', 'Two or more. There is no fixed limit: each file can be up to 1 GB, and the total depends on your device memory. Most phones handle dozens of songs.'],
+      ['How many files can I join?', 'Two or more. There is no fixed number: how much you can join depends on your device and browser.'],
       ['Can I join files with no gap?', 'Yes. Turn the crossfade off and they play straight after each other.'],
       ['Can I join videos?', 'Yes. MeloCut takes the sound from each video and joins the audio.'],
     ],
@@ -616,7 +616,7 @@ const PAGES = [
     <h3>Good uses</h3>
     <p>Save a song from a concert you filmed, keep the audio of a lecture or a toast, or turn a funny moment into a <a href="/ringtone-maker/">ringtone</a>. If the recording is noisy, switch on <strong>AI noise removal</strong> in Effects before you convert.</p>
     <h3>Big videos</h3>
-    <p>A long 4K video can be several gigabytes. ${NAME} opens files up to 1 GB on a computer; on a phone, videos under about 300 MB work best. For longer ones, trim the video in Photos first, or use a computer.</p>`,
+    <p>A long 4K video can be several gigabytes. File limits depend on your device and browser: computers handle much bigger videos than phones, and ${NAME} does not accept files over 1 GB. For long videos, trim the video in Photos first, or use a computer.</p>`,
     faq: [
       ['How do I convert a MOV to MP3 on iPhone?', 'Open this page in Safari, tap the box, choose the video from Photos, then press Convert and Download. No app is needed.'],
       ['Is the video uploaded?', 'No. The conversion runs on your phone or computer, so the video never leaves it.'],
@@ -1056,7 +1056,7 @@ const PAGES = [
       ['Can I use a video I downloaded from social media?', 'Only use videos you made yourself or have permission to use, and respect copyright.'],
       ['Why is my ringtone too quiet?', 'Turn on Auto loudness or raise Volume in Effects before converting.'],
       ['Can I use a WhatsApp video?', 'Yes. Save it to your phone from the chat (Share → Save), then open it in the Ringtone Maker.'],
-      ['What if the video is very long?', 'That is fine. MeloCut only uses the part you select, up to 40 seconds, and files up to 1 GB open normally.'],
+      ['What if the video is very long?', 'MeloCut only uses the part you select, up to 40 seconds. How big a video can be depends on your device and browser; very long videos work best on a computer.'],
     ],
   },
   {
@@ -1314,7 +1314,7 @@ const PAGES = [
     h1: 'How to get the audio from a video',
     lead: 'Turn a video from your gallery or computer into an MP3: a song from a concert clip, a speech, a voice message or a sound you love.',
     content: `
-    <div class="callout"><p>Works with MP4, MOV, WebM and MKV videos, up to 1 GB.</p><a class="btn sm" href="/video-to-mp3/">Open Video to MP3</a></div>
+    <div class="callout"><p>Works with MP4, MOV, WebM and MKV videos.</p><a class="btn sm" href="/video-to-mp3/">Open Video to MP3</a></div>
     <h2>Step by step</h2>
     <ol class="guide-steps">
       <li>Open <a href="/video-to-mp3/">Video to MP3</a>. On a phone, tap <strong>Choose a file</strong> → <strong>Photo Library</strong> (iPhone) or <strong>Gallery</strong> (Android). On a computer, drop the video on the page.</li>
@@ -1334,7 +1334,7 @@ const PAGES = [
     <p>Extract audio from videos you made or have permission to use. Downloading other people's music from streaming sites isn't allowed by their terms.</p>`,
     faq: [
       ['How do I extract audio from a video on iPhone?', 'Open Video to MP3 in Safari, choose the video from your Photo Library, then convert and download the MP3. No app needed.'],
-      ['Is there a size limit?', 'Videos up to 1 GB open normally. Bigger videos depend on how much memory your device has.'],
+      ['Is there a size limit?', 'File limits depend on your device and browser. Computers handle much bigger files than phones, and MeloCut does not accept files over 1 GB. For long videos, use a computer or trim the video first.'],
       ['Is the video uploaded?', 'No. The sound is extracted on your own device, which is also why it is fast.'],
     ],
   },
