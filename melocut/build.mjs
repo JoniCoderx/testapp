@@ -88,6 +88,7 @@ const RINGTONE_VIDEO = {
 };
 // Guides, in the order they're listed on /guides/ and in "More guides".
 const GUIDES = [
+  { slug: 'make-ringtone', icon: 'bell', title: 'Make a song your ringtone', blurb: 'Any song, any phone, in about two minutes.' },
   { slug: 'iphone-ringtone', icon: 'bell', title: 'Set any song as your iPhone ringtone', blurb: 'No computer needed. The new Files app way and GarageBand.' },
   { slug: 'set-ringtone', icon: 'bell', title: 'Set a custom ringtone', blurb: 'iPhone and Android, with or without a computer.' },
   { slug: 'samsung-ringtone', icon: 'phone', title: 'Custom ringtone on Samsung Galaxy', blurb: 'Set any song as your Samsung ringtone in a few taps.' },
@@ -114,7 +115,7 @@ const GUIDES = [
 const TOOL_GUIDE = { 'audio-cutter': 'cut-song-iphone', 'video-to-mp3': 'extract-audio-from-video', 'mp4-to-mp3': 'extract-audio-from-video', 'mov-to-mp3': 'extract-audio-from-video',
   'whatsapp-audio-to-mp3': 'whatsapp-voice-to-mp3', 'ogg-to-mp3': 'whatsapp-voice-to-mp3', 'm4a-to-mp3': 'voice-memo-to-mp3', 'noise-remover': 'remove-background-noise',
   '8d-audio': 'make-8d-audio', 'nightcore-maker': 'make-nightcore', 'speed-up-audio': 'make-nightcore', 'bass-booster': 'bass-boost-song', 'volume-booster': 'make-audio-louder',
-  'audio-joiner': 'combine-songs', 'slowed-reverb': 'make-slowed-reverb', 'vocal-remover': 'remove-vocals', 'ringtone-maker': 'iphone-ringtone' };
+  'audio-joiner': 'combine-songs', 'slowed-reverb': 'make-slowed-reverb', 'vocal-remover': 'remove-vocals', 'ringtone-maker': 'make-ringtone' };
 const guideCard = (g) => `<a class="card" href="/guides/${g.slug}/"><div class="ico">${ICONS[g.icon]}</div><b>${g.title}</b><p>${g.blurb}</p></a>`;
 const CONVERSION_LINKS = `<div class="chips-links">${CONVERSIONS.map((c) => `<a class="chip" href="/${c.slug}/">${c.label}</a>`).join('')}</div>`;
 // ---------- languages ----------
@@ -181,6 +182,7 @@ const PAGES = [
     body: `
   ${toolGrid('en')}
   <div class="section"><h2>Popular conversions</h2>${CONVERSION_LINKS}</div>
+  <div class="section"><h2>Popular guides</h2><div class="cards">${GUIDES.filter((g) => ['make-ringtone', 'iphone-ringtone', 'extract-audio-from-video', 'make-slowed-reverb'].includes(g.slug)).map(guideCard).join('')}</div></div>
   <div class="ad" data-slot="top"></div>
   <div class="section prose">
     <h2>Effects in every tool</h2>
@@ -246,7 +248,7 @@ const PAGES = [
     <p>On iOS 26 and newer: keep it under 30 seconds, download it, open it in the <strong>Files</strong> app and tap <em>Share → Use as Ringtone</em>. On older versions with a computer: download the <strong>M4R</strong> file, connect your iPhone and drag the file onto it in Finder (Mac) or iTunes (Windows). It then shows up in <em>Settings → Sounds &amp; Haptics → Ringtone</em>. Without a computer, open the file in <strong>GarageBand</strong> on your iPhone and use <em>Share → Ringtone</em>.</p>
     <h3>Android</h3>
     <p>Download the <strong>MP3</strong>, go to <em>Settings → Sound → Phone ringtone</em> and pick it. On some phones you tap "+" or "Add ringtone" first.</p>
-    <p>Step-by-step guides: <a href="/guides/iphone-ringtone/">iPhone without a computer</a>, <a href="/guides/samsung-ringtone/">Samsung Galaxy</a>, <a href="/guides/contact-ringtone/">a ringtone for one contact</a> and <a href="/guides/set-ringtone/">every phone</a>.</p>
+    <p>Step-by-step guides: <a href="/guides/make-ringtone/">how to make a song your ringtone</a>, <a href="/guides/iphone-ringtone/">iPhone without a computer</a>, <a href="/guides/samsung-ringtone/">Samsung Galaxy</a>, <a href="/guides/contact-ringtone/">a ringtone for one contact</a> and <a href="/guides/set-ringtone/">every phone</a>.</p>
     <h3>A few tips</h3>
     <p>Start just before the chorus, keep it between 20 and 30 seconds, and leave the fades on so it doesn't start or stop suddenly.</p>`,
     faq: [
@@ -1057,6 +1059,51 @@ const PAGES = [
       ['Why is my ringtone too quiet?', 'Turn on Auto loudness or raise Volume in Effects before converting.'],
       ['Can I use a WhatsApp video?', 'Yes. Save it to your phone from the chat (Share → Save), then open it in the Ringtone Maker.'],
       ['What if the video is very long?', 'MeloCut only uses the part you select, up to 40 seconds. How big a video can be depends on your device and browser; very long videos work best on a computer.'],
+    ],
+  },
+  {
+    path: 'guides/make-ringtone', crumb: 'Guides', plain: true, video: RINGTONE_VIDEO,
+    title: `How to Make a Song Your Ringtone on iPhone and Android | ${NAME}`,
+    description: 'Make any song your ringtone in 2 minutes, free: pick the best part, download it and set it on iPhone (Files → Use as Ringtone) or Android.',
+    h1: 'How to make a song your ringtone',
+    lead: 'Any song, any phone, free and in about two minutes. First make the ringtone, then set it.',
+    content: `
+    <div class="callout answer"><p><strong>Short answer:</strong> open a free ringtone maker like the <a href="/ringtone-maker/">MeloCut Ringtone Maker</a>, pick your song, select the best part (under 30 seconds) and download it. On iPhone, open the file in Files and tap <strong>Share → Use as Ringtone</strong>. On Android, go to <strong>Settings → Sound → Phone ringtone</strong> and add the file.</p></div>
+    <h2>Step 1: Make the ringtone</h2>
+    <ol class="guide-steps">
+      <li>Open the <a href="/ringtone-maker/">Ringtone Maker</a> in Safari or Chrome. No app or account needed.</li>
+      <li>Tap <strong>Choose a file</strong> and pick a song, or a video from your gallery.</li>
+      <li>Drag on the waveform to select the part you want, usually just before the chorus. The first 29 seconds are selected for you.</li>
+      <li>Choose <strong>M4R</strong> for iPhone or <strong>MP3</strong> for Android, press <strong>Make ringtone</strong>, then <strong>Download</strong>.</li>
+    </ol>
+    <h2>Step 2: Set it on your phone</h2>
+    <h3>iPhone (iOS 26 or newer)</h3>
+    <ol class="guide-steps">
+      <li>Open <strong>Files → Downloads</strong> and tap the ringtone.</li>
+      <li>Tap <strong>Share → Use as Ringtone</strong>. Done.</li>
+    </ol>
+    <p>Older iPhone, or the option is missing? See <a href="/guides/iphone-ringtone/">set any song as your iPhone ringtone</a> (GarageBand and fixes).</p>
+    <h3>Android</h3>
+    <ol class="guide-steps">
+      <li>Open <strong>Settings → Sound &amp; vibration → Phone ringtone</strong>.</li>
+      <li>Tap <strong>+</strong>, <strong>My sounds</strong> or <strong>Add ringtone</strong> and pick the file from Downloads.</li>
+    </ol>
+    <p>On a Samsung phone the menu names are different: see <a href="/guides/samsung-ringtone/">custom ringtone on Samsung</a>.</p>
+    <h2>Tips for a good ringtone</h2>
+    <ol class="guide-steps">
+      <li><strong>Start on the hook.</strong> You often hear only the first 2 seconds before you answer, so skip quiet intros.</li>
+      <li><strong>Keep it short.</strong> 15 to 29 seconds is plenty; it loops until you pick up.</li>
+      <li><strong>Leave the fades on</strong> so it doesn't start or stop abruptly.</li>
+      <li><strong>Too quiet?</strong> Turn up Volume in Effects before you download.</li>
+    </ol>
+    <h2>More ideas</h2>
+    <p>Give one person their own sound with a <a href="/guides/contact-ringtone/">contact ringtone</a>, use a sound from your own clips with <a href="/guides/ringtone-from-video/">a ringtone from a video</a>, or make a <a href="/guides/make-slowed-reverb/">slowed + reverb</a> version first for a softer ringtone.</p>`,
+    faq: [
+      ['How do I make a song my ringtone for free?', 'Use a free online ringtone maker like MeloCut: pick the song, select up to 30 seconds and download it, then set it in your phone\'s sound settings (Android) or with Files → Share → Use as Ringtone (iPhone).'],
+      ['Can I make a ringtone without an app?', 'Yes. MeloCut works in Safari and Chrome, so there is nothing to install, and iOS 26 can set the ringtone straight from the Files app.'],
+      ['How long can a ringtone be?', 'For the iPhone Files app method, under 30 seconds. With GarageBand or a computer, up to 40 seconds. Android has no strict limit.'],
+      ['Can I use a song from Spotify or Apple Music?', 'No. Streaming songs are copy-protected and cannot be edited. Use song files you own, or a sound from your own videos.'],
+      ['Which format do I need?', 'M4R for iPhone (MP3 also works with the Files app method) and MP3 for Android.'],
     ],
   },
   {
