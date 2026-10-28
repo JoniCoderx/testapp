@@ -2136,11 +2136,16 @@ fs.writeFileSync(path.join(ROOT, '404.html'), page({
 }).replace('<meta name="robots" content="index, follow, max-image-preview:large">', '<meta name="robots" content="noindex">'));
 fs.writeFileSync(path.join(ROOT, 'robots.txt'), `User-agent: *\nAllow: /\n\nSitemap: ${SITE_URL}/sitemap.xml\n`);
 const priority = (p) => (p.key === 'home' ? '1.0' : p.tool ? '0.9' : p.path.startsWith('guides') ? '0.7' : '0.4');
+// Video sitemap entry for pages that embed the how-to video.
+const xmlEsc = (s) => esc(s).replace(/'/g, '&apos;');
+const videoEntry = (p) => (p.video ? `<video:video><video:thumbnail_loc>${SITE_URL}${p.video.poster}</video:thumbnail_loc><video:title>${xmlEsc(p.video.name)}</video:title>`
+  + `<video:description>${xmlEsc(p.video.description)}</video:description><video:content_loc>${SITE_URL}${p.video.src}</video:content_loc>`
+  + `<video:duration>${parseInt(p.video.duration.replace(/\D/g, ''), 10)}</video:duration><video:publication_date>${p.video.uploaded}</video:publication_date><video:family_friendly>yes</video:family_friendly></video:video>` : '');
 const altLinks = (p) => (p.key ? versions(p).map((q) => `<xhtml:link rel="alternate" hreflang="${LANGS[q.lang].ui.hreflang}" href="${urlOf(q)}"/>`).join('')
   + `<xhtml:link rel="alternate" hreflang="x-default" href="${urlOf(versions(p).find((q) => q.lang === 'en'))}"/>` : '');
 fs.writeFileSync(path.join(ROOT, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:xhtml="http://www.w3.org/1999/xhtml">
-${ALL.map((p) => `  <url><loc>${urlOf(p)}</loc><lastmod>${UPDATED}</lastmod><priority>${priority(p)}</priority>${altLinks(p)}<image:image><image:loc>${ogImage(p)}</image:loc></image:image></url>`).join('\n')}
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+${ALL.map((p) => `  <url><loc>${urlOf(p)}</loc><lastmod>${UPDATED}</lastmod><priority>${priority(p)}</priority>${altLinks(p)}<image:image><image:loc>${ogImage(p)}</image:loc></image:image>${videoEntry(p)}</url>`).join('\n')}
 </urlset>
 `);
 // Page list for the social-image generator (og.mjs).
