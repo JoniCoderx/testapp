@@ -150,6 +150,7 @@ const I = {
   phones: svg('<path d="M3 14v-2a9 9 0 0 1 18 0v2"/><path d="M21 15a2 2 0 0 1-2 2h-1v-5h3zM3 15a2 2 0 0 0 2 2h1v-5H3z"/>'),
   sliders: svg('<path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/>'),
   download: svg('<path d="M12 4v11M7 10l5 5 5-5"/><path d="M5 20h14"/>'),
+  share: svg('<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/>'),
   lock: svg('<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>'),
   spark: svg('<path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/>'),
   up: svg('<path d="M12 19V5M6 11l6-6 6 6"/>'),
@@ -285,6 +286,30 @@ const fmtFx = (key, v) => {
 const fillRange = (el) => el.style.setProperty('--p', `${((el.value - el.min) / (el.max - el.min)) * 100}%`);
 
 // Wires an effects panel inside `root`. Returns { get(), set(fx), onChange }.
+// After a download: let people send the file (or the tool's link) to friends.
+const SHARE_HTML = () => `<div class="share-row" data-share hidden><button class="btn ghost sm" type="button" data-sharebtn>${I.share}${T('Send to a friend')}</button><small data-sharemsg role="status" aria-live="polite"></small></div>`;
+function mountShare(root) {
+  const box = $(root, '[data-share]'), btn = $(root, '[data-sharebtn]'), msg = $(root, '[data-sharemsg]');
+  const link = location.origin + location.pathname;
+  const text = T('Made for free with MeloCut: {0}', link);
+  let file = null;
+  const copy = async () => {
+    try { await navigator.clipboard.writeText(link); msg.textContent = T('Link copied. Paste it in any chat.'); track('share', { tool: root.dataset.tool, kind: 'copy' }); } catch { msg.textContent = link; }
+  };
+  btn.onclick = async () => {
+    msg.textContent = '';
+    try {
+      if (file && navigator.canShare?.({ files: [file] })) { await navigator.share({ files: [file], text }); track('share', { tool: root.dataset.tool, kind: 'file' }); }
+      else if (navigator.share) { await navigator.share({ text, url: link }); track('share', { tool: root.dataset.tool, kind: 'link' }); }
+      else await copy();
+    } catch (e) { if (e?.name !== 'AbortError') await copy(); }
+  };
+  return {
+    show(blob, name) { file = new File([blob], name, { type: blob.type }); msg.textContent = ''; box.hidden = false; },
+    hide() { file = null; box.hidden = true; },
+  };
+}
+
 function mountFx(root, initial, onChange) {
   const box = $(root, '[data-fxbox]');
   const fx = { ...FX_DEFAULTS, ...initial };
@@ -420,6 +445,7 @@ function mountTool(root) {
         <div class="progress" data-progress><div class="bar"><i data-fill></i></div><small data-stage role="status" aria-live="polite"></small></div>
         <small class="go-note" data-gonote${engineReady ? ' hidden' : ''}>${T('The first time, the audio engine downloads once (~30 MB).')}</small>
       </div>
+      ${SHARE_HTML()}
       <div class="note" data-err role="alert"></div>
     </div>
     <div class="private">${I.lock}${T('Your file never leaves your device. Nothing is uploaded.')}</div>`;
@@ -437,6 +463,7 @@ function mountTool(root) {
   };
   const st = { file: null, duration: 0, buffer: null, peaks: null, sel: [0, 0], mode: 'keep',
     ctx: null, source: null, playStart: 0, playFrom: 0, raf: 0, outURL: null, busy: false };
+  const share = mountShare(root);
   const fx = mountFx(root, cfg.fx, () => { st.exact = null; stopPlay(); resetOutput(); drawAfter(); syncFx(); });
   // The extra "Play with effects" button only shows when some effect is on.
   function syncFx() { root.classList.toggle('has-fx', !isDefaultFx(fx.get())); }
@@ -957,6 +984,7 @@ function mountTool(root) {
   function resetOutput() {
     if (st.busy) { st.dirty = true; return; }
     if (st.outURL) { URL.revokeObjectURL(st.outURL); st.outURL = null; }
+    share.hide();
     els.go.textContent = goLabel;
     els.go.classList.remove('ok');
     els.go.onclick = convert;
@@ -1002,9 +1030,9 @@ function mountTool(root) {
       error('');
       els.go.innerHTML = label('download', T('Download {0}', fmtKey.toUpperCase()));
       els.go.classList.add('ok');
-      els.go.onclick = () => { downloadURL(st.outURL, fileName); track('download', { tool: root.dataset.tool, format: fmtKey }); };
+      els.go.onclick = () => { downloadURL(st.outURL, fileName); track('download', { tool: root.dataset.tool, format: fmtKey }); share.show(blob, fileName); };
       track('converted', { tool: root.dataset.tool, format: fmtKey, effects: isDefaultFx(snap.fx) ? 'none' : 'yes' });
-      if (fmtKey === 'm4r') notice(T('iPhone: open the file with GarageBand, or drag it into Finder/iTunes with your phone connected, then choose it in Settings → Sounds.'));
+      if (fmtKey === 'm4r') notice(T('iPhone (iOS 26 or newer): open the file in the Files app, tap Share → Use as Ringtone. Older iPhones: use GarageBand or a computer (see the guide below).'));
       else if (root.dataset.tool === 'ringtone') notice(T('Android: open Settings → Sound → Phone ringtone, tap + (or Add ringtone) and pick the file from Downloads.'));
       // The Download button can end up below the screen on phones: bring it into view.
       const r = els.go.getBoundingClientRect();
@@ -1048,6 +1076,7 @@ function mountJoiner(root) {
         <button class="btn ghost" type="button" data-cancel hidden>${T('Cancel')}</button>
         <div class="progress" data-progress><div class="bar"><i data-fill></i></div><small data-stage role="status" aria-live="polite"></small></div>
       </div>
+      ${SHARE_HTML()}
       <div class="note" data-err role="alert"></div>
       <div class="result" data-result hidden>
         <b>${I.phones}${T('Listen to the result')}</b>
@@ -1064,6 +1093,7 @@ function mountJoiner(root) {
     progress: $(root, '[data-progress]'), fill: $(root, '[data-fill]'), stage: $(root, '[data-stage]'), err: $(root, '[data-err]'),
     cancel: $(root, '[data-cancel]'),
   };
+  const share = mountShare(root);
   const st = { items: [], busy: false, outURL: null, playing: -1, ff: null, cancelled: false };
   // While joining, the list and options are frozen and Cancel is offered.
   function setBusy(on) {
@@ -1157,6 +1187,7 @@ function mountJoiner(root) {
   function reset() {
     if (st.busy) return;
     if (st.outURL) { URL.revokeObjectURL(st.outURL); st.outURL = null; }
+    share.hide();
     els.go.textContent = T('Join files'); els.go.classList.remove('ok'); els.go.onclick = join;
     els.progress.style.display = 'none';
     els.player.pause(); els.player.removeAttribute('src'); els.result.hidden = true;
@@ -1205,7 +1236,7 @@ function mountJoiner(root) {
       els.go.innerHTML = label('download', T('Download {0}', fmtKey.toUpperCase())); els.go.classList.add('ok');
       const r = els.go.getBoundingClientRect();
       if (r.bottom > innerHeight || r.top < 0) els.go.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      els.go.onclick = () => { downloadURL(st.outURL, `${baseName(st.items[0].file.name)} (joined).${fmtKey}`); track('download', { tool: 'joiner', format: fmtKey }); };
+      els.go.onclick = () => { const nm = `${baseName(st.items[0].file.name)} (joined).${fmtKey}`; downloadURL(st.outURL, nm); track('download', { tool: 'joiner', format: fmtKey }); share.show(blob, nm); };
       track('converted', { tool: 'joiner', format: fmtKey, count: n });
     } catch (e) {
       resetEngine(ff); ff = null;

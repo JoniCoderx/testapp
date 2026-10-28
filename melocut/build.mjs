@@ -94,12 +94,27 @@ const GUIDES = [
   { slug: 'contact-ringtone', icon: 'phone', title: 'Ringtone for one contact', blurb: 'Know who is calling before you look at the phone.' },
   { slug: 'make-slowed-reverb', icon: 'slow', title: 'Make slowed + reverb songs', blurb: 'The settings that sound right, step by step.' },
   { slug: 'remove-vocals', icon: 'mic', title: 'Remove vocals from a song', blurb: 'Make a karaoke or instrumental track for free.' },
+  { slug: 'extract-audio-from-video', icon: 'video', title: 'Get the audio from a video', blurb: 'From your gallery or computer, saved as MP3.' },
+  { slug: 'cut-song-iphone', icon: 'cut', title: 'Cut a song on iPhone', blurb: 'Trim any song in Safari, no app needed.' },
+  { slug: 'whatsapp-voice-to-mp3', icon: 'mic', title: 'WhatsApp voice message to MP3', blurb: 'Save a voice note and play it anywhere.' },
+  { slug: 'voice-memo-to-mp3', icon: 'mic', title: 'iPhone voice memo to MP3', blurb: 'Convert M4A memos so they play everywhere.' },
+  { slug: 'remove-background-noise', icon: 'sparkle', title: 'Remove background noise', blurb: 'Clean wind, traffic and hum from a voice.' },
+  { slug: 'make-8d-audio', icon: 'orbit', title: 'Make 8D audio', blurb: 'Music that moves around your head.' },
+  { slug: 'make-nightcore', icon: 'gauge', title: 'Make nightcore and sped up songs', blurb: 'The fast, high version of any song.' },
+  { slug: 'bass-boost-song', icon: 'bass', title: 'Boost the bass in a song', blurb: 'Deeper bass for your car or headphones.' },
+  { slug: 'make-audio-louder', icon: 'volume', title: 'Make a song or recording louder', blurb: 'Up to 300%, without distortion.' },
+  { slug: 'combine-songs', icon: 'merge', title: 'Combine two songs into one', blurb: 'Join songs and clips with a crossfade.' },
   { slug: 'install-app', icon: 'phone', title: 'Install MeloCut on your phone', blurb: 'Add it to your home screen in a few taps.' },
   { slug: 'find-downloads', icon: 'book', title: 'Where are my downloads?', blurb: 'Find your files on iPhone, Android, Windows and Mac.' },
   { slug: 'best-audio-format', icon: 'swap', title: 'Which audio format should you use?', blurb: 'MP3, M4A, WAV, FLAC and what kbps means.' },
   { slug: 'clean-up-voice-memo', icon: 'sparkle', title: 'Clean up a voice memo', blurb: 'Trim it, remove noise and make it louder.' },
   { slug: 'ringtone-from-video', icon: 'video', title: 'Make a ringtone from a video', blurb: 'Use a sound from your own videos as your ringtone.' },
 ];
+// Each tool page links to its step-by-step guide.
+const TOOL_GUIDE = { 'audio-cutter': 'cut-song-iphone', 'video-to-mp3': 'extract-audio-from-video', 'mp4-to-mp3': 'extract-audio-from-video', 'mov-to-mp3': 'extract-audio-from-video',
+  'whatsapp-audio-to-mp3': 'whatsapp-voice-to-mp3', 'ogg-to-mp3': 'whatsapp-voice-to-mp3', 'm4a-to-mp3': 'voice-memo-to-mp3', 'noise-remover': 'remove-background-noise',
+  '8d-audio': 'make-8d-audio', 'nightcore-maker': 'make-nightcore', 'speed-up-audio': 'make-nightcore', 'bass-booster': 'bass-boost-song', 'volume-booster': 'make-audio-louder',
+  'audio-joiner': 'combine-songs', 'slowed-reverb': 'make-slowed-reverb', 'vocal-remover': 'remove-vocals', 'ringtone-maker': 'iphone-ringtone' };
 const guideCard = (g) => `<a class="card" href="/guides/${g.slug}/"><div class="ico">${ICONS[g.icon]}</div><b>${g.title}</b><p>${g.blurb}</p></a>`;
 const CONVERSION_LINKS = `<div class="chips-links">${CONVERSIONS.map((c) => `<a class="chip" href="/${c.slug}/">${c.label}</a>`).join('')}</div>`;
 // ---------- languages ----------
@@ -1230,6 +1245,290 @@ const PAGES = [
     ],
   },
   {
+    path: 'guides/cut-song-iphone', crumb: 'Guides', plain: true,
+    title: `How to Cut a Song on iPhone, Free and Without an App | ${NAME}`,
+    description: 'Trim a song or audio file on your iPhone in Safari: keep the part you want, add a fade and save it as MP3 or M4A. Free, no app, nothing uploaded.',
+    h1: 'How to cut a song on iPhone',
+    lead: "iPhones have no built-in way to trim a song. Here's how to do it in Safari in about a minute, with no app to install.",
+    content: `
+    <div class="callout"><p>Ready to cut? The audio cutter opens right in Safari.</p><a class="btn sm" href="/audio-cutter/">Open Audio Cutter</a></div>
+    <h2>Step by step</h2>
+    <ol class="guide-steps">
+      <li>Open the <a href="/audio-cutter/">Audio Cutter</a> in Safari and tap <strong>Choose a file</strong>. Pick the song from <strong>Files</strong>, or a video from <strong>Photo Library</strong>.</li>
+      <li>Drag the two handles on the waveform to the part you want. Press <strong>Play</strong> to check where it starts and ends.</li>
+      <li>Want to cut a part <em>out</em> instead, like a long intro? Switch to <strong>Remove</strong>, and the selection is taken out of the song.</li>
+      <li>Leave <strong>Fade in</strong> and <strong>Fade out</strong> on so it doesn't start or stop abruptly.</li>
+      <li>Choose <strong>MP3</strong> (plays everywhere) or <strong>M4A</strong>, press the button, then <strong>Download</strong>. The file is saved in <strong>Files → Downloads</strong>.</li>
+    </ol>
+    <h2>Exact times</h2>
+    <p>For a precise cut, type the times in the <strong>Start</strong> and <strong>End</strong> boxes, for example <code>1:05.5</code>. That's easier than dragging with a finger on a small screen.</p>
+    <h2>What to do with the file</h2>
+    <ol class="guide-steps">
+      <li><strong>Ringtone:</strong> use the <a href="/ringtone-maker/">Ringtone Maker</a> instead, then follow <a href="/guides/iphone-ringtone/">set any song as your iPhone ringtone</a>.</li>
+      <li><strong>Send it:</strong> in Files, long-press the file → Share → WhatsApp, Messages or AirDrop.</li>
+      <li><strong>Edit it more:</strong> open it again in another tool, for example the <a href="/volume-booster/">volume booster</a>.</li>
+    </ol>`,
+    faq: [
+      ['Can I cut a song on iPhone without an app?', 'Yes. Open the MeloCut Audio Cutter in Safari, pick the song, drag to the part you want and download it.'],
+      ['Does cutting lower the quality?', 'Choose 320 kbps MP3 or M4A and it stays very close to the original.'],
+      ['Can I cut an Apple Music song?', 'No. Apple Music songs are copy-protected and cannot be opened by any editor. Use song files you own.'],
+    ],
+  },
+  {
+    path: 'guides/whatsapp-voice-to-mp3', crumb: 'Guides', plain: true,
+    title: `How to Save a WhatsApp Voice Message as MP3 | ${NAME}`,
+    description: 'Save a WhatsApp voice note from iPhone or Android and convert it to MP3 so it plays anywhere. Step by step, free, and your messages stay on your phone.',
+    h1: 'How to save a WhatsApp voice message as MP3',
+    lead: "WhatsApp voice notes are .opus files that most players can't open. Here's how to get one out of the chat and turn it into an MP3.",
+    content: `
+    <h2>1. Get the voice note out of WhatsApp</h2>
+    <h3>iPhone</h3>
+    <ol class="guide-steps">
+      <li>Open the chat and <strong>long-press</strong> the voice message → <strong>Forward</strong>.</li>
+      <li>Tap the <strong>Share</strong> button in the bottom right (not the arrow to forward to a chat).</li>
+      <li>Choose <strong>Save to Files</strong> and save it, for example in Downloads.</li>
+    </ol>
+    <h3>Android</h3>
+    <ol class="guide-steps">
+      <li>Long-press the voice message, then tap the <strong>Share</strong> icon at the top.</li>
+      <li>Choose <strong>Files</strong>, <strong>Drive</strong> or another place to save it.</li>
+      <li>Or find all your voice notes in the Files app under <em>Android → media → com.whatsapp → WhatsApp → Media → WhatsApp Voice Notes</em>.</li>
+    </ol>
+    <h2>2. Convert it to MP3</h2>
+    <ol class="guide-steps">
+      <li>Open <a href="/whatsapp-audio-to-mp3/">WhatsApp Audio to MP3</a> and choose the voice note.</li>
+      <li>Press <strong>Convert</strong>, then <strong>Download</strong>. 128 kbps is plenty for speech.</li>
+    </ol>
+    <h2>Make it clearer</h2>
+    <p>Voice notes recorded outside are often noisy. Open the MP3 in the <a href="/noise-remover/">AI Noise Remover</a> to take out wind and traffic and even out the volume. Telegram voice messages (.ogg) work the same way.</p>`,
+    faq: [
+      ['Why can\'t I play a WhatsApp voice note on my computer?', 'WhatsApp saves them as .opus files, which many players don\'t support. Converting to MP3 fixes that.'],
+      ['Is my voice message uploaded?', 'No. The conversion runs on your own phone or computer, so the message never leaves your device.'],
+      ['Can I convert several voice notes into one file?', 'Yes. Convert them, then put them together with the Audio Joiner.'],
+    ],
+  },
+  {
+    path: 'guides/extract-audio-from-video', crumb: 'Guides', plain: true,
+    title: `How to Get the Audio from a Video: iPhone, Android, PC | ${NAME}`,
+    description: 'Extract the sound from any video and save it as MP3: from your iPhone or Android gallery, or a video file on your computer. Free, fast, no upload.',
+    h1: 'How to get the audio from a video',
+    lead: 'Turn a video from your gallery or computer into an MP3: a song from a concert clip, a speech, a voice message or a sound you love.',
+    content: `
+    <div class="callout"><p>Works with MP4, MOV, WebM and MKV videos, up to 1 GB.</p><a class="btn sm" href="/video-to-mp3/">Open Video to MP3</a></div>
+    <h2>Step by step</h2>
+    <ol class="guide-steps">
+      <li>Open <a href="/video-to-mp3/">Video to MP3</a>. On a phone, tap <strong>Choose a file</strong> → <strong>Photo Library</strong> (iPhone) or <strong>Gallery</strong> (Android). On a computer, drop the video on the page.</li>
+      <li>Want only part of it? Drag on the waveform to select it. Otherwise the whole sound is used.</li>
+      <li>Choose <strong>MP3</strong> and a quality: <strong>320 kbps</strong> for music, <strong>128 kbps</strong> for speech.</li>
+      <li>Press <strong>Convert</strong>, then <strong>Download</strong>.</li>
+    </ol>
+    <h2>Where the file goes</h2>
+    <p>iPhone: <strong>Files → Downloads</strong>. Android: <strong>Files → Downloads</strong>. Computer: your <strong>Downloads</strong> folder. The <a href="/guides/find-downloads/">downloads guide</a> has more detail.</p>
+    <h2>Tips</h2>
+    <ol class="guide-steps">
+      <li><strong>Screen recordings and iPhone videos (.mov)</strong> work directly, there's also a dedicated <a href="/mov-to-mp3/">MOV to MP3</a> page.</li>
+      <li><strong>Too quiet?</strong> Phone videos often are. Turn on <strong>Auto loudness</strong> in Effects before converting.</li>
+      <li><strong>Want it as a ringtone?</strong> See <a href="/guides/ringtone-from-video/">make a ringtone from a video</a>.</li>
+    </ol>
+    <h2>Only use videos you're allowed to</h2>
+    <p>Extract audio from videos you made or have permission to use. Downloading other people's music from streaming sites isn't allowed by their terms.</p>`,
+    faq: [
+      ['How do I extract audio from a video on iPhone?', 'Open Video to MP3 in Safari, choose the video from your Photo Library, then convert and download the MP3. No app needed.'],
+      ['Is there a size limit?', 'Videos up to 1 GB open normally. Bigger videos depend on how much memory your device has.'],
+      ['Is the video uploaded?', 'No. The sound is extracted on your own device, which is also why it is fast.'],
+    ],
+  },
+  {
+    path: 'guides/make-8d-audio', crumb: 'Guides', plain: true,
+    title: `How to Make 8D Audio from Any Song, Free | ${NAME}`,
+    description: 'Make your own 8D audio: the effect where music moves around your head. Settings that sound good, step by step, on your phone or computer. Free.',
+    h1: 'How to make 8D audio',
+    lead: 'The music slowly circles around your head. It takes one minute to make from any song, and you need headphones to hear it.',
+    content: `
+    <h2>Step by step</h2>
+    <ol class="guide-steps">
+      <li>Open the <a href="/8d-audio/">8D Audio converter</a> and choose a song.</li>
+      <li>Put on <strong>headphones or earbuds</strong>. On a speaker the effect disappears.</li>
+      <li>Press <strong>Preview with effects</strong>. The sound should move slowly from one ear to the other.</li>
+      <li>Press <strong>Convert</strong> and <strong>Download</strong> your 8D version.</li>
+    </ol>
+    <h2>How it works</h2>
+    <p>8D audio isn't extra dimensions. It slowly pans the music from left to right and back, and adds some reverb so it sounds like a room around you. Your brain hears that as the music moving around your head.</p>
+    <h2>Make it sound better</h2>
+    <ol class="guide-steps">
+      <li><strong>Calm songs work best:</strong> slow songs, lo-fi and ballads. Very busy songs can get messy.</li>
+      <li><strong>Less reverb</strong> keeps the vocals clear, <strong>more</strong> makes it dreamier.</li>
+      <li><strong>Combine it:</strong> make a <a href="/guides/make-slowed-reverb/">slowed + reverb</a> version first, then turn that into 8D.</li>
+    </ol>`,
+    faq: [
+      ["Why can't I hear the 8D effect?", 'You need headphones or earbuds. On a single speaker both sides mix together and the movement disappears.'],
+      ['What is the difference between 8D and 3D audio?', 'They are mostly names for the same idea: panning and reverb that make sound seem to move around you.'],
+    ],
+  },
+  {
+    path: 'guides/make-nightcore', crumb: 'Guides', plain: true,
+    title: `How to Make Nightcore and Sped Up Songs, Free | ${NAME}`,
+    description: 'Make a nightcore or sped up version of any song: the speed and pitch settings that sound right, step by step, on your phone or computer. Free, no watermark.',
+    h1: 'How to make nightcore and sped up songs',
+    lead: 'The fast, high, energetic version of a song, the opposite of slowed + reverb. Here are the settings that sound right.',
+    content: `
+    <h2>Step by step</h2>
+    <ol class="guide-steps">
+      <li>Open the <a href="/nightcore-maker/">Nightcore maker</a> and choose a song.</li>
+      <li>The nightcore settings are already on. Press <strong>Preview with effects</strong> to listen.</li>
+      <li>Adjust it (see below), then <strong>Convert</strong> and <strong>Download</strong> the MP3.</li>
+    </ol>
+    <h2>Nightcore or sped up?</h2>
+    <ol class="guide-steps">
+      <li><strong>Nightcore:</strong> speed <strong>1.20 to 1.30×</strong> with the pitch going up too, so voices sound higher and brighter.</li>
+      <li><strong>Sped up:</strong> speed <strong>1.15 to 1.25×</strong> but the pitch kept closer to the original, so the singer still sounds like themselves.</li>
+    </ol>
+    <h2>Tips</h2>
+    <p>Songs with a clear beat and a catchy chorus work best. If it gets harsh, lower the <strong>Treble</strong> a little. Want the opposite? See <a href="/guides/make-slowed-reverb/">how to make slowed + reverb songs</a>.</p>`,
+    faq: [
+      ['What speed is nightcore?', 'Usually about 1.2 to 1.3 times the original speed, with the pitch raised as well.'],
+      ['Can I make a sped up song on my phone?', 'Yes. The Nightcore maker works in Safari and Chrome on iPhone and Android.'],
+    ],
+  },
+  {
+    path: 'guides/remove-background-noise', crumb: 'Guides', plain: true,
+    title: `How to Remove Background Noise from a Recording, Free | ${NAME}`,
+    description: 'Remove wind, traffic, fans and hum from a voice recording, voice note or video, free and on your own device. Step by step, with tips for better results.',
+    h1: 'How to remove background noise from a recording',
+    lead: 'Clean up a voice note, interview, lecture or video so the voice is easy to hear, with a small AI model that runs on your own device.',
+    content: `
+    <h2>Step by step</h2>
+    <ol class="guide-steps">
+      <li>Open the <a href="/noise-remover/">AI Noise Remover</a> and choose your recording, or a video with the sound you want to clean.</li>
+      <li><strong>AI noise removal</strong>, <strong>Auto loudness</strong> and <strong>Remove silences</strong> are already on. Press <strong>Preview with effects</strong>.</li>
+      <li>If long pauses should stay, switch off Remove silences. If the voice sounds thin, lower <strong>Treble</strong> a little.</li>
+      <li>Choose <strong>MP3</strong> at <strong>128 kbps</strong> (plenty for speech), then <strong>Convert</strong> and <strong>Download</strong>.</li>
+    </ol>
+    <h2>What it removes well</h2>
+    <p>Steady and outdoor noise: fans, air conditioning, traffic, wind, computer hum and crowd murmur. It's made for <strong>voices</strong>, so on music it can remove instruments too. For hiss on a song, use the gentler <em>Reduce hiss</em> instead.</p>
+    <h2>Better recordings next time</h2>
+    <ol class="guide-steps">
+      <li>Hold the phone a hand's width from your mouth, a little to the side.</li>
+      <li>Record in a room with soft things (curtains, a sofa). Bare rooms echo.</li>
+      <li>Turn off fans and close windows. Less noise to start with always sounds best.</li>
+    </ol>
+    <p>Recorded on an iPhone? The <a href="/guides/clean-up-voice-memo/">voice memo guide</a> shows how to get it out of the Voice Memos app.</p>`,
+    faq: [
+      ['Can I remove background noise for free?', `Yes. The ${NAME} AI Noise Remover is free, with no sign-up and no watermark.`],
+      ['Is my recording uploaded?', 'No. The AI model runs in your browser, on your own device.'],
+      ['Can it remove music from a video?', 'Not reliably. It is made to keep voices and remove noise, not to separate music.'],
+    ],
+  },
+  {
+    path: 'guides/make-audio-louder', crumb: 'Guides', plain: true,
+    title: `Make a Song or Recording Louder Without Distortion | ${NAME}`,
+    description: 'Make a quiet MP3, voice note or video louder, up to 300%, without distortion. Free, works on iPhone, Android and computers, nothing uploaded.',
+    h1: 'How to make a song or recording louder',
+    lead: "Too quiet even at full volume? Here's how to make the file itself louder, without the crackling you get from just turning it up.",
+    content: `
+    <h2>Step by step</h2>
+    <ol class="guide-steps">
+      <li>Open the <a href="/volume-booster/">Volume Booster</a> and choose your file (audio or video).</li>
+      <li>For recordings and voice notes, leave <strong>Auto loudness</strong> on. It brings the whole file to an even, loud level.</li>
+      <li>For more, raise <strong>Volume</strong>. A limiter keeps the loudest parts from distorting.</li>
+      <li>Press <strong>Preview with effects</strong>, then <strong>Convert</strong> and <strong>Download</strong>.</li>
+    </ol>
+    <h2>Which setting to use</h2>
+    <ol class="guide-steps">
+      <li><strong>Voice notes, lectures, interviews:</strong> Auto loudness. Quiet and loud parts end up closer together, so you hear everything.</li>
+      <li><strong>Songs:</strong> a little extra Volume, for example 120 to 150%. Songs are already mastered loud, so big boosts squash them.</li>
+      <li><strong>Phone videos:</strong> Auto loudness, then save the sound with <a href="/video-to-mp3/">Video to MP3</a> if you only need the audio.</li>
+    </ol>
+    <h2>Want more bass instead?</h2>
+    <p>If the song isn't quiet but feels thin, the <a href="/guides/bass-boost-song/">bass boost guide</a> is what you're looking for.</p>`,
+    faq: [
+      ['How do I make an MP3 louder?', 'Open it in the Volume Booster, raise Volume or turn on Auto loudness, then convert and download it.'],
+      ['Will it distort?', 'A limiter catches the loudest peaks, so moderate boosts stay clean. Very large boosts on loud songs can still sound squashed.'],
+    ],
+  },
+  {
+    path: 'guides/combine-songs', crumb: 'Guides', plain: true,
+    title: `How to Combine Two Songs into One, Free | ${NAME}`,
+    description: 'Join two or more songs, voice notes or clips into one MP3, in any order, with an optional crossfade. Free on iPhone, Android and computers.',
+    h1: 'How to combine two songs into one',
+    lead: 'Put songs, voice notes or clips together into one file: for a workout mix, a dance routine, a slideshow or a long voice message.',
+    content: `
+    <h2>Step by step</h2>
+    <ol class="guide-steps">
+      <li>Open the <a href="/audio-joiner/">Audio Joiner</a> and choose <strong>two or more files</strong>. You can add more later.</li>
+      <li>Drag them into the right order. Tap play on each one to check it.</li>
+      <li>Set a <strong>crossfade</strong> (2 to 4 seconds) so one song blends into the next, or 0 for a hard cut.</li>
+      <li>Turn on <strong>Even volume</strong> if the files are at different loudness.</li>
+      <li>Press <strong>Join files</strong>, listen to the result, then <strong>Download</strong>.</li>
+    </ol>
+    <h2>Only want part of each song?</h2>
+    <p>Cut each song first with the <a href="/audio-cutter/">Audio Cutter</a>, then join the pieces. That's how most dance and cheer mixes are made.</p>
+    <h2>Tips</h2>
+    <ol class="guide-steps">
+      <li><strong>Mixed formats are fine:</strong> an MP3, an M4A and a video can go into one file.</li>
+      <li><strong>Speech:</strong> use no crossfade and 128 kbps MP3.</li>
+      <li><strong>Music:</strong> a 3-second crossfade and 320 kbps MP3.</li>
+    </ol>`,
+    faq: [
+      ['Can I combine songs on my phone?', 'Yes. The Audio Joiner works in Safari and Chrome on iPhone and Android, no app needed.'],
+      ['Can I join a video and a song?', 'Yes. The sound of the video is used, and the result is one audio file.'],
+    ],
+  },
+  {
+    path: 'guides/voice-memo-to-mp3', crumb: 'Guides', plain: true,
+    title: `How to Convert an iPhone Voice Memo to MP3 | ${NAME}`,
+    description: 'Save an iPhone Voice Memo to Files and convert it from M4A to MP3 so it plays on any phone, computer or app. Free, step by step, nothing uploaded.',
+    h1: 'How to convert an iPhone voice memo to MP3',
+    lead: 'Voice Memos are saved as M4A files. Some Android phones, cars, websites and forms only accept MP3. Here is how to convert one.',
+    content: `
+    <h2>1. Save the memo to Files</h2>
+    <ol class="guide-steps">
+      <li>Open <strong>Voice Memos</strong> and tap the recording.</li>
+      <li>Tap <strong>⋯</strong> (or the Share button) → <strong>Save to Files</strong>, and save it in Downloads.</li>
+    </ol>
+    <h2>2. Convert it to MP3</h2>
+    <ol class="guide-steps">
+      <li>Open <a href="/m4a-to-mp3/">M4A to MP3</a> in Safari and choose the memo from <strong>Files</strong>.</li>
+      <li>Want only part of it? Drag on the waveform to select it.</li>
+      <li>Choose <strong>128 kbps</strong> for speech (small file) or <strong>192 kbps</strong> for music.</li>
+      <li>Press <strong>Convert</strong>, then <strong>Download</strong>. The MP3 is in Files → Downloads.</li>
+    </ol>
+    <h2>Make it sound better first</h2>
+    <p>Recorded in a noisy room or too quiet? Use the <a href="/noise-remover/">AI Noise Remover</a> instead. It cleans and evens out the voice and saves an MP3 in one go. The <a href="/guides/clean-up-voice-memo/">voice memo guide</a> walks through it.</p>`,
+    faq: [
+      ['What format are iPhone voice memos?', 'M4A, which uses AAC audio. It sounds good, but some devices and websites only accept MP3.'],
+      ['Does converting lower the quality?', 'For speech the difference is not audible at 128 kbps or more.'],
+    ],
+  },
+  {
+    path: 'guides/bass-boost-song', crumb: 'Guides', plain: true,
+    title: `How to Boost the Bass in a Song, Free and Online | ${NAME}`,
+    description: 'Add deeper, punchier bass to any song for headphones, car speakers or your phone, without distortion. Settings that sound good, free and on your device.',
+    h1: 'How to boost the bass in a song',
+    lead: 'Give a song deeper bass for your car, headphones or a party, and keep it from distorting.',
+    content: `
+    <h2>Step by step</h2>
+    <ol class="guide-steps">
+      <li>Open the <a href="/bass-booster/">Bass Booster</a> and choose a song.</li>
+      <li>Set the amount of <strong>Bass</strong>. Start around <strong>+6 dB</strong>.</li>
+      <li>Press <strong>Preview with effects</strong> on the speakers or headphones you'll use.</li>
+      <li>Happy with it? <strong>Convert</strong> and <strong>Download</strong> at 320 kbps.</li>
+    </ol>
+    <h2>How much bass?</h2>
+    <ol class="guide-steps">
+      <li><strong>+3 to +6 dB:</strong> fuller and warmer, good for phone speakers and earbuds.</li>
+      <li><strong>+8 to +12 dB:</strong> clearly boosted, good for car speakers and headphones.</li>
+      <li><strong>+15 dB:</strong> the "bass boosted" effect from TikTok and YouTube. Fun, but heavy.</li>
+    </ol>
+    <p>A limiter keeps the loudest parts from crackling, so even big boosts stay clean.</p>
+    <h2>Combine it</h2>
+    <p>Bass boost goes well with <a href="/guides/make-slowed-reverb/">slowed + reverb</a> and <a href="/guides/make-8d-audio/">8D audio</a>. Make one version, then open that file again and add the next effect.</p>`,
+    faq: [
+      ['How do I make a song bass boosted?', 'Open it in the Bass Booster, raise Bass to +8 dB or more, preview it and download the MP3.'],
+      ['Why does my bass boosted song sound quieter?', 'To leave room for the bass without distorting, the rest has to sit a little lower. Add a little Volume if needed.'],
+    ],
+  },
+  {
     path: 'terms', crumb: null, plain: true,
     title: `Terms of Use | ${NAME}`,
     description: `The terms for using ${NAME}, a set of free audio tools that run in your browser: your files, copyright, acceptable use, ads and liability.`,
@@ -1459,6 +1758,7 @@ ${p.tool ? `<link rel="modulepreload" href="${asset('assets/app.js')}">\n<script
   ${p.steps ? `<div class="section"><h2>${ui.howItWorks}</h2><div class="steps">${p.steps.map(([n, t]) => `<div class="card"><b>${n}</b><p>${t}</p></div>`).join('')}</div></div>` : ''}
   ${p.video ? `<figure class="howto-video"><video controls playsinline preload="none" width="${p.video.width}" height="${p.video.height}" poster="${p.video.poster}"><source src="${p.video.src}" type="video/mp4"></video><figcaption>${p.video.caption}</figcaption></figure>` : ''}
   ${p.content ? `<div class="section prose">${p.content}</div>` : ''}
+  ${isEn && TOOL_GUIDE[p.path] ? (() => { const g = GUIDES.find((x) => x.slug === TOOL_GUIDE[p.path]); return `<a class="callout guide-link" href="/guides/${g.slug}/">${ICONS.book}<span><b>Step-by-step guide</b>${g.title}</span></a>`; })() : ''}
   ${p.tool ? '<div class="ad" data-slot="middle"></div>' : ''}
   ${p.tool ? `<div class="section"><h2>${ui.moreTools}</h2><div class="cards rail">${others.map((t) => toolCardIn(t, lang)).join('')}</div></div>
   ${isEn ? `<div class="section"><h2>Popular conversions</h2>${CONVERSION_LINKS}</div>` : ''}${installHTML(ui)}` : ''}
