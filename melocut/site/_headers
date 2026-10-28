@@ -12,3 +12,6 @@
   Cache-Control: no-cache
 /media/*
   Cache-Control: public, max-age=604800
+/.well-known/assetlinks.json
+  Content-Type: application/json
+  Access-Control-Allow-Origin: *

@@ -1,0 +1,6 @@
+# Never commit the signing key
+*.keystore
+*.jks
+build/
+.gradle/
+local.properties

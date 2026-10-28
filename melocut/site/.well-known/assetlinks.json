@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.melocut.app",
+      "sha256_cert_fingerprints": [
+        "20:91:24:80:C4:75:5C:60:1D:91:3F:8B:2E:C5:DE:C9:75:5B:4E:1A:59:E9:4E:E4:86:E2:A4:90:3C:9F:11:BB"
+      ]
+    }
+  }
+]
