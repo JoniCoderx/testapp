@@ -2017,6 +2017,14 @@ const SOCIAL = [{ name: 'TikTok', url: 'https://www.tiktok.com/@melocutofficial'
   icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor" stroke="none"/></svg>' }];
 const GLOBE = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>';
 
+// The how-to video goes right after the short answer (or first, when a page has no short answer).
+const videoHTML = (v) => `<figure class="howto-video"><video controls playsinline preload="none" width="${v.width}" height="${v.height}" poster="${v.poster}"><source src="${v.src}" type="video/mp4"></video><figcaption>${v.caption}</figcaption></figure>`;
+function withVideo(p) {
+  if (!p.video) return p.content;
+  const m = p.content.match(/<div class="callout answer">[\s\S]*?<\/div>/);
+  return m ? p.content.replace(m[0], m[0] + videoHTML(p.video)) : videoHTML(p.video) + p.content;
+}
+
 function page(p) {
   const lang = p.lang || 'en', ui = LANGS[lang].ui, L = { WHY: whyHTML(ui), INSTALL: installHTML(ui) };
   const url = urlOf(p);
@@ -2098,8 +2106,7 @@ ${p.tool ? `<link rel="modulepreload" href="${asset('assets/app.js')}">\n<script
   <div class="ad" data-slot="top"></div>` : ''}
   ${body || ''}
   ${p.steps ? `<div class="section"><h2>${ui.howItWorks}</h2><div class="steps">${p.steps.map(([n, t]) => `<div class="card"><b>${n}</b><p>${t}</p></div>`).join('')}</div></div>` : ''}
-  ${p.video ? `<figure class="howto-video"><video controls playsinline preload="none" width="${p.video.width}" height="${p.video.height}" poster="${p.video.poster}"><source src="${p.video.src}" type="video/mp4"></video><figcaption>${p.video.caption}</figcaption></figure>` : ''}
-  ${p.content ? `<div class="section prose">${p.content}</div>` : ''}
+  ${p.content ? `<div class="section prose">${withVideo(p)}</div>` : ''}
   ${isEn && TOOL_GUIDE[p.path] ? (() => { const g = GUIDES.find((x) => x.slug === TOOL_GUIDE[p.path]); return `<a class="callout guide-link" href="/guides/${g.slug}/">${ICONS.book}<span><b>Step-by-step guide</b>${g.title}</span></a>`; })() : ''}
   ${p.tool ? '<div class="ad" data-slot="middle"></div>' : ''}
   ${p.tool ? `<div class="section"><h2>${ui.moreTools}</h2><div class="cards rail">${others.map((t) => toolCardIn(t, lang)).join('')}</div></div>
