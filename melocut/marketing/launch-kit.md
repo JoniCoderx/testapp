@@ -79,3 +79,36 @@ Post 1 a day for 2 weeks and keep the format of whichever gets the most views.
 ## 5. Quora
 
 Search: "best free mp3 cutter", "how to convert mp4 to mp3 on iphone", "how to remove vocals from a song". Write a real 3 to 5 sentence answer, then: "I use melocut.com for this, it's free and runs in the browser."
+
+## 6. Outreach email (for "best free audio tools" articles)
+
+Find articles: search Google for `best free online audio editor`, `free ringtone maker online`, `best mp3 cutter websites`. Write to the author (contact page or the email in their bio). One email per article, personal first line.
+
+**Subject:** A free, no-upload audio tool for your "{article title}" list
+
+> Hi {name},
+>
+> I read your article "{article title}". {One honest sentence about something in it you found useful.}
+>
+> I built MeloCut (https://melocut.com), a free audio toolbox that runs entirely in the browser: files are processed on the device and never uploaded. It cuts songs, makes iPhone (M4R) and Android ringtones, converts video to MP3 and has slowed + reverb, 8D and AI noise removal. No sign-up, no watermark, works on phones.
+>
+> If you update the article, it might be a useful addition for readers who care about privacy. Happy to answer any questions.
+>
+> Thanks for reading,
+> {your name}
+
+Don't send more than about 5 a day, and never send a second reminder more than once.
+
+## 7. YouTube Shorts titles
+
+Upload every TikTok to YouTube Shorts too (same file). Title = the exact search. Description: one sentence + the matching guide link.
+
+| Video | Title | Link in description |
+|---|---|---|
+| Set the ringtone | How to set any song as your iPhone ringtone (iOS 26, no computer) | https://melocut.com/guides/iphone-ringtone/ |
+| Ringtone maker | How to make a song your ringtone (iPhone + Android, free) | https://melocut.com/guides/make-ringtone/ |
+| Slowed + reverb | How to make slowed and reverb songs for free | https://melocut.com/guides/make-slowed-reverb/ |
+| Nightcore vs slowed | Nightcore vs slowed + reverb, same song | https://melocut.com/guides/make-nightcore/ |
+| Karaoke | How to remove vocals from a song for free | https://melocut.com/guides/remove-vocals/ |
+| 8D | How to make 8D audio from any song | https://melocut.com/guides/make-8d-audio/ |
+| Bass boost | How to bass boost any song for free | https://melocut.com/guides/bass-boost-song/ |
