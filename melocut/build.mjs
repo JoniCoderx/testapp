@@ -93,6 +93,11 @@ const RINGTONE_VIDEO = {
 // Guides, in the order they're listed on /guides/ and in "More guides".
 const GUIDES = [
   { slug: 'make-ringtone', icon: 'bell', title: 'Make a song your ringtone', blurb: 'Any song, any phone, in about two minutes.' },
+  { slug: 'ringtone-not-showing-iphone', icon: 'bell', title: 'Ringtone not showing on iPhone? 7 fixes', blurb: 'The usual causes and how to fix each one.' },
+  { slug: 'custom-alarm-sound', icon: 'bell', title: 'Set a song as your alarm', blurb: 'Wake up to your own song on iPhone or Android.' },
+  { slug: 'custom-text-tone', icon: 'bell', title: 'Custom text tone or notification sound', blurb: 'A short sound of your own for messages.' },
+  { slug: 'voice-ringtone', icon: 'mic', title: 'Make your own voice a ringtone', blurb: 'Your kid, your catchphrase, a funny line.' },
+  { slug: 'change-ringtone-back', icon: 'bell', title: 'Change your ringtone back to default', blurb: 'Go back to the original tone, and remove old ones.' },
   { slug: 'iphone-ringtone', icon: 'bell', title: 'Set any song as your iPhone ringtone', blurb: 'No computer needed. The new Files app way and GarageBand.' },
   { slug: 'set-ringtone', icon: 'bell', title: 'Set a custom ringtone', blurb: 'iPhone and Android, with or without a computer.' },
   { slug: 'samsung-ringtone', icon: 'phone', title: 'Custom ringtone on Samsung Galaxy', blurb: 'Set any song as your Samsung ringtone in a few taps.' },
@@ -1190,13 +1195,162 @@ const PAGES = [
       <li><strong>Too quiet?</strong> Turn up Volume in Effects before you download.</li>
     </ol>
     <h2>More ideas</h2>
-    <p>Give one person their own sound with a <a href="/guides/contact-ringtone/">contact ringtone</a>, use a sound from your own clips with <a href="/guides/ringtone-from-video/">a ringtone from a video</a>, or make a <a href="/guides/make-slowed-reverb/">slowed + reverb</a> version first for a softer ringtone.</p>`,
+    <p>Give one person their own sound with a <a href="/guides/contact-ringtone/">contact ringtone</a>, use <a href="/guides/voice-ringtone/">your own voice</a>, wake up to it with a <a href="/guides/custom-alarm-sound/">custom alarm</a>, use a sound from your own clips with <a href="/guides/ringtone-from-video/">a ringtone from a video</a>, or make a <a href="/guides/make-slowed-reverb/">slowed + reverb</a> version first for a softer ringtone.</p>`,
     faq: [
       ['How do I make a song my ringtone for free?', 'Use a free online ringtone maker like MeloCut: pick the song, select up to 30 seconds and download it, then set it in your phone\'s sound settings (Android) or with Files → Share → Use as Ringtone (iPhone).'],
       ['Can I make a ringtone without an app?', 'Yes. MeloCut works in Safari and Chrome, so there is nothing to install, and iOS 26 can set the ringtone straight from the Files app.'],
       ['How long can a ringtone be?', 'For the iPhone Files app method, under 30 seconds. With GarageBand or a computer, up to 40 seconds. Android has no strict limit.'],
       ['Can I use a song from Spotify or Apple Music?', 'No. Streaming songs are copy-protected and cannot be edited. Use song files you own, or a sound from your own videos.'],
       ['Which format do I need?', 'M4R for iPhone (MP3 also works with the Files app method) and MP3 for Android.'],
+    ],
+  },
+  {
+    path: 'guides/ringtone-not-showing-iphone', crumb: 'Guides', plain: true,
+    title: `Custom Ringtone Not Showing on iPhone? 7 Fixes | ${NAME}`,
+    description: 'Your custom ringtone is missing from the iPhone list, or Use as Ringtone does not appear? Here are the 7 usual causes and how to fix each one.',
+    h1: 'Custom ringtone not showing on iPhone? 7 fixes',
+    lead: 'Made a ringtone but it is not in the list, or the Use as Ringtone button is missing? It is almost always one of these.',
+    content: `
+    <div class="callout answer"><p><strong>Short answer:</strong> the ringtone is usually too long (it must be under 30 seconds for the Files app), from Apple Music (copy-protected), not fully downloaded, or your iPhone runs an iOS version older than 26. Fix the cause below and add it again.</p></div>
+    <h2>The 7 usual causes</h2>
+    <ol class="guide-steps">
+      <li><strong>It's 30 seconds or longer.</strong> The Files app only accepts sounds under 30 seconds. Open the song again in the <a href="/ringtone-maker/">Ringtone Maker</a>: it selects 29 seconds for you.</li>
+      <li><strong>Your iPhone is older than iOS 26.</strong> "Use as Ringtone" only exists on iOS 26 and newer. Check in Settings → General → About. On older versions use GarageBand (see <a href="/guides/iphone-ringtone/">the iPhone ringtone guide</a>).</li>
+      <li><strong>You looked in the wrong menu.</strong> In the Share sheet, scroll the list of actions to the bottom, or tap <strong>More</strong>. It can be below Save to Files and Add Tags.</li>
+      <li><strong>The song is from Apple Music or another streaming app.</strong> Those songs are copy-protected and can never become ringtones. Use a song file you own, or a sound from your own video.</li>
+      <li><strong>The download didn't finish.</strong> Open the file in Files and play it. If it doesn't play, download it again and wait for Safari's download arrow to finish.</li>
+      <li><strong>Wrong file type.</strong> Use M4R, M4A or MP3. Renaming a file's extension doesn't convert it: make a real M4R with <a href="/mp3-to-m4r/">MP3 to M4R</a>.</li>
+      <li><strong>Copied from a computer, but it's over 40 seconds or not M4R.</strong> Ringtones synced with Finder or iTunes must be M4R and at most 40 seconds.</li>
+    </ol>
+    <h2>Still missing?</h2>
+    <p>Close the Files app completely and open it again, or restart the iPhone. Then add the ringtone once more with <strong>Share → Use as Ringtone</strong> and look in <strong>Settings → Sounds &amp; Haptics → Ringtone</strong>, at the top of the list.</p>`,
+    faq: [
+      ['Why is Use as Ringtone not showing on my iPhone?', 'It needs iOS 26 or newer and a sound under 30 seconds. Also scroll to the bottom of the Share sheet or tap More.'],
+      ['Where do custom ringtones appear?', 'At the top of Settings → Sounds & Haptics → Ringtone, above the built-in tones.'],
+      ['Can I use a TikTok or Instagram sound?', 'Only sounds you are allowed to use. Save your own video, then open it in the Ringtone Maker.'],
+    ],
+  },
+  {
+    path: 'guides/custom-alarm-sound', crumb: 'Guides', plain: true,
+    title: `How to Set a Song as Your Alarm on iPhone and Android | ${NAME}`,
+    description: 'Wake up to your own song: set a custom alarm sound on iPhone (Clock → Sound) and Android (Clock → Alarm sound). Make the sound free, step by step.',
+    h1: 'How to set a song as your alarm',
+    lead: 'Wake up to a song you actually like. Make a short clip of it, then pick it as your alarm sound.',
+    content: `
+    <div class="callout answer"><p><strong>Short answer:</strong> make a clip of the song with the <a href="/ringtone-maker/">Ringtone Maker</a> and add it to your phone like a ringtone. Then iPhone: <strong>Clock → Alarms → the alarm → Sound</strong>. Android: <strong>Clock → the alarm → Alarm sound → add your file</strong>.</p></div>
+    <h2>Step 1: Make the alarm sound</h2>
+    <ol class="guide-steps">
+      <li>Open the <a href="/ringtone-maker/">Ringtone Maker</a> and pick the song.</li>
+      <li>Select a part that starts gently. Leave <strong>Fade in</strong> on so it doesn't jolt you awake.</li>
+      <li>Download it: M4R for iPhone, MP3 for Android.</li>
+    </ol>
+    <h2>iPhone</h2>
+    <ol class="guide-steps">
+      <li>Add the sound to your iPhone first: on iOS 26, open it in Files → <strong>Share → Use as Ringtone</strong> (see <a href="/guides/iphone-ringtone/">the iPhone guide</a> for older versions).</li>
+      <li>Open <strong>Clock → Alarms</strong> and tap the alarm (or + for a new one).</li>
+      <li>Tap <strong>Sound</strong>. Your custom sound is listed at the top of the ringtones. Pick it and tap Save.</li>
+    </ol>
+    <p>Want to change it back to your old ringtone afterwards? Setting the sound as your ringtone is not required: it only has to be in the list.</p>
+    <h2>Android</h2>
+    <ol class="guide-steps">
+      <li>Open the <strong>Clock</strong> app and tap the alarm.</li>
+      <li>Tap the alarm sound (a bell icon, or <strong>Alarm sound</strong> on Samsung).</li>
+      <li>Choose <strong>Your sounds → Add new</strong>, or tap <strong>+</strong> on Samsung, and pick the file from Downloads.</li>
+    </ol>
+    <h2>Tips for a better alarm</h2>
+    <p>Pick a calm part, maybe a <a href="/guides/make-slowed-reverb/">slowed + reverb</a> version, and keep it 20 to 30 seconds; it loops until you stop it. If you sleep deeply, raise Volume in Effects before downloading.</p>`,
+    faq: [
+      ['Can I use any song as an alarm on iPhone?', 'Yes, as long as you have the song as a file. Streaming songs are protected, so make the clip from a file you own.'],
+      ['Will the alarm sound change my ringtone?', 'No. Adding the sound puts it in the list; you choose separately what the ringtone and each alarm use.'],
+    ],
+  },
+  {
+    path: 'guides/custom-text-tone', crumb: 'Guides', plain: true,
+    title: `How to Set a Custom Text Tone or Notification Sound | ${NAME}`,
+    description: 'Use your own sound for texts and notifications on iPhone and Android. Make a short sound for free, then set it in Sounds settings. Step by step.',
+    h1: 'How to set a custom text tone or notification sound',
+    lead: 'A short, recognizable sound for messages, made from any song, voice clip or video.',
+    content: `
+    <div class="callout answer"><p><strong>Short answer:</strong> cut a 1 to 3 second sound with the <a href="/ringtone-maker/">Ringtone Maker</a> and add it to your phone like a ringtone. iPhone: <strong>Settings → Sounds &amp; Haptics → Text Tone</strong>. Android: <strong>Settings → Sound &amp; vibration → Default notification sound</strong>.</p></div>
+    <h2>Step 1: Make a short sound</h2>
+    <ol class="guide-steps">
+      <li>Open the <a href="/ringtone-maker/">Ringtone Maker</a> and pick your song, voice memo or video.</li>
+      <li>Select <strong>1 to 3 seconds</strong>: a word, a beat, a laugh. Long notification sounds get annoying fast.</li>
+      <li>Shorten the fades in Effects so the sound starts right away, then download it.</li>
+    </ol>
+    <h2>iPhone</h2>
+    <ol class="guide-steps">
+      <li>Add it to the iPhone: on iOS 26, Files → <strong>Share → Use as Ringtone</strong>, then switch your ringtone back if you only want it for texts.</li>
+      <li>Open <strong>Settings → Sounds &amp; Haptics → Text Tone</strong> and pick your sound at the top of the list.</li>
+      <li>For one person only: <strong>Contacts → the person → Edit → Text Tone</strong>.</li>
+    </ol>
+    <h2>Android</h2>
+    <ol class="guide-steps">
+      <li>Open <strong>Settings → Sound &amp; vibration → Default notification sound</strong> (Samsung: <em>Notification sound</em>).</li>
+      <li>Tap <strong>My sounds</strong> or <strong>+</strong> and pick the file.</li>
+      <li>Apps like WhatsApp have their own sound settings inside the app as well.</li>
+    </ol>`,
+    faq: [
+      ['How long should a text tone be?', '1 to 3 seconds. Anything longer is cut off or becomes annoying.'],
+      ['Can I have a different sound for one contact?', 'Yes. On iPhone set it in the contact under Text Tone. On many Android phones you can set it per conversation in the Messages app.'],
+    ],
+  },
+  {
+    path: 'guides/change-ringtone-back', crumb: 'Guides', plain: true,
+    title: `How to Change Your Ringtone Back to Default | ${NAME}`,
+    description: 'Switch back to the original ringtone on iPhone or Android, reset a contact ringtone, and remove custom ringtones you no longer use. Step by step.',
+    h1: 'How to change your ringtone back to default',
+    lead: 'Tired of your custom ringtone? Here is how to go back, on iPhone and Android.',
+    content: `
+    <div class="callout answer"><p><strong>Short answer:</strong> iPhone: <strong>Settings → Sounds &amp; Haptics → Ringtone</strong> and pick the tone marked <strong>(Default)</strong>. Android: <strong>Settings → Sound &amp; vibration → Phone ringtone</strong> and pick the default tone.</p></div>
+    <h2>iPhone</h2>
+    <ol class="guide-steps">
+      <li>Open <strong>Settings → Sounds &amp; Haptics → Ringtone</strong>.</li>
+      <li>Scroll to the built-in ringtones and tap the one marked <strong>(Default)</strong>, or any other you like.</li>
+      <li>A contact still plays the old sound? Open <strong>Contacts → the person → Edit → Ringtone</strong> and choose <strong>Default</strong>.</li>
+    </ol>
+    <h2>Android</h2>
+    <ol class="guide-steps">
+      <li>Open <strong>Settings → Sound &amp; vibration → Phone ringtone</strong> (Samsung: <em>Sounds and vibration → Ringtone</em>).</li>
+      <li>Pick the phone's original tone; it is usually at the top or marked as default.</li>
+      <li>For a contact: open the contact → <strong>⋮ → Set ringtone</strong> (or Edit → Ringtone on Samsung) → Default.</li>
+    </ol>
+    <h2>Removing old custom ringtones</h2>
+    <p>An unused custom ringtone does no harm in the list. Ringtones made with GarageBand can be removed in GarageBand: long-press any song → <strong>Share → Ringtone → Your Ringtones → Edit</strong>. On Android, delete the file from <strong>Files → Ringtones</strong> or Downloads.</p>
+    <p>Want a new one instead? <a href="/guides/make-ringtone/">Make a song your ringtone</a> in about two minutes.</p>`,
+    faq: [
+      ['What is the default iPhone ringtone called?', 'It is the tone marked (Default) in the Ringtone list. On recent iPhones that is Reflection.'],
+      ['Does changing my ringtone reset contact ringtones?', 'No. Contacts with their own ringtone keep it until you change it in the contact.'],
+    ],
+  },
+  {
+    path: 'guides/voice-ringtone', crumb: 'Guides', plain: true,
+    title: `How to Make Your Own Voice a Ringtone, Free | ${NAME}`,
+    description: 'Record your voice, your kids or a funny line and turn it into a ringtone for iPhone or Android. Clean up the noise, make it louder, set it. Free.',
+    h1: 'How to make your own voice a ringtone',
+    lead: "Your kid shouting \"Daddy, pick up!\", your own catchphrase or a funny line from a friend. Here's how to turn a recording into a ringtone.",
+    content: `
+    <div class="callout answer"><p><strong>Short answer:</strong> record it with Voice Memos (iPhone) or Recorder (Android), open the recording in the <a href="/ringtone-maker/">Ringtone Maker</a>, select the line, turn on Auto loudness and AI noise removal, download it and set it as your ringtone.</p></div>
+    <h2>Step 1: Record it</h2>
+    <ol class="guide-steps">
+      <li>Use <strong>Voice Memos</strong> on iPhone or the <strong>Recorder</strong> app on Android. Hold the phone a hand's width away and record in a quiet room.</li>
+      <li>Say it a few times, so you can pick the best take.</li>
+      <li>iPhone: tap the memo → <strong>⋯ → Save to Files</strong>.</li>
+    </ol>
+    <h2>Step 2: Make the ringtone</h2>
+    <ol class="guide-steps">
+      <li>Open the recording in the <a href="/ringtone-maker/">Ringtone Maker</a>.</li>
+      <li>Select only the best take. Start right on the first word: you often hear just the first two seconds.</li>
+      <li>Open <strong>Effects</strong> and turn on <strong>Auto loudness</strong> and <strong>AI noise removal</strong>. Phone recordings are quiet and a ringtone has to cut through.</li>
+      <li>Download it: M4R for iPhone, MP3 for Android.</li>
+    </ol>
+    <h2>Step 3: Set it</h2>
+    <p>iPhone (iOS 26): Files → <strong>Share → Use as Ringtone</strong>. Android: <strong>Settings → Sound → Phone ringtone → +</strong>. Full steps in <a href="/guides/make-ringtone/">make a song your ringtone</a>. Put it on one person only with a <a href="/guides/contact-ringtone/">contact ringtone</a>.</p>
+    <h2>Ideas</h2>
+    <p>A kid's voice for a parent, a partner's laugh, a pet, a voice note from a grandparent, or a friend's catchphrase for their contact. Record people only with their permission.</p>`,
+    faq: [
+      ['Can I make a ringtone from a WhatsApp voice note?', 'Yes. Save it from WhatsApp first (see the WhatsApp voice guide), then open it in the Ringtone Maker.'],
+      ['My voice ringtone is too quiet. What can I do?', 'Turn on Auto loudness, or raise Volume in Effects, before downloading.'],
     ],
   },
   {
@@ -1233,7 +1387,7 @@ const PAGES = [
       <li><strong>The file is too long.</strong> The Files app only accepts sounds under 30 seconds. Open it in the Ringtone Maker again and select a shorter part.</li>
       <li><strong>It's an Apple Music song.</strong> Songs from an Apple Music subscription are copy-protected and can't be used. Use a song file you own, or a sound from your own videos.</li>
       <li><strong>The file didn't finish downloading.</strong> Download it again and wait for the blue arrow in Safari's address bar to finish.</li>
-      <li><strong>Still nothing?</strong> Close the Files app completely and open it again, or use the GarageBand method above.</li>
+      <li><strong>Still nothing?</strong> Close the Files app completely and open it again, or use the GarageBand method above. More fixes: <a href="/guides/ringtone-not-showing-iphone/">ringtone not showing on iPhone</a>.</li>
     </ol>
     <h2>Set it for one person only</h2>
     <p>Open <strong>Contacts</strong>, pick the person, tap <strong>Edit</strong> → <strong>Ringtone</strong> and choose your new sound. The <a href="/guides/contact-ringtone/">contact ringtone guide</a> has the steps for Android too.</p>`,
@@ -1750,6 +1904,54 @@ const PAGES = [
     <p>Please read our <a href="/terms/">terms of use</a> and <a href="/privacy/">privacy policy</a>.</p>`,
   },
 ];
+
+// ---------- answer-first summaries and troubleshooting ----------
+// A one-paragraph answer at the top of each guide, for readers in a hurry and for search snippets.
+const ANSWERS = {
+  'guides/iphone-ringtone': 'Make a ringtone under 30 seconds with the free Ringtone Maker and download it. On iOS 26 or newer, open it in the Files app and tap <strong>Share → Use as Ringtone</strong>. On older iPhones, import it into GarageBand and use <strong>Share → Ringtone</strong>.',
+  'guides/set-ringtone': 'Make the ringtone first (M4R for iPhone, MP3 for Android). iPhone: Files → the file → <strong>Share → Use as Ringtone</strong> (iOS 26), or GarageBand on older versions. Android: <strong>Settings → Sound → Phone ringtone</strong>, tap + and pick the file.',
+  'guides/samsung-ringtone': 'Download your ringtone as MP3, then open <strong>Settings → Sounds and vibration → Ringtone</strong>, tap <strong>+</strong> in the top right, pick the file and tap Done.',
+  'guides/contact-ringtone': 'iPhone: <strong>Contacts → the person → Edit → Ringtone</strong>. Samsung: <strong>Contacts → Edit → View more → Ringtone</strong>. Pixel and most Android phones: <strong>Contacts → the person → ⋮ → Set ringtone</strong>.',
+  'guides/make-slowed-reverb': 'Open the song in the Slowed + Reverb maker, keep the speed around <strong>0.85×</strong> with the pitch 1 to 3 semitones lower and reverb at 35 to 55%, preview it, then download the MP3.',
+  'guides/remove-vocals': 'Open a stereo studio song in the Vocal Remover, preview it, raise Bass a little if the low end got quiet, then download. It cancels what is in the middle of the mix, so results depend on how the song was mixed.',
+  'guides/install-app': 'iPhone: open melocut.com in Safari → <strong>Share → Add to Home Screen</strong>. Android: open it in Chrome → <strong>⋮ → Install app</strong>. It then opens like an app and works offline.',
+  'guides/find-downloads': 'iPhone: <strong>Files → Downloads</strong>. Android: <strong>Files (or My Files) → Downloads</strong>. Windows and Mac: your <strong>Downloads</strong> folder.',
+  'guides/best-audio-format': 'Use <strong>MP3 at 320 kbps</strong> for music, <strong>MP3 at 128 kbps</strong> for speech, and <strong>WAV or FLAC</strong> only if you will edit the file again.',
+  'guides/clean-up-voice-memo': 'Save the memo to Files, open it in the AI Noise Remover (noise removal, auto loudness and silence removal are already on), trim the start and end, then download it as a 128 kbps MP3.',
+  'guides/ringtone-from-video': 'Open the video in the Ringtone Maker, select the moment you want (under 30 seconds for iPhone), turn on Auto loudness if it is quiet, and download it as M4R for iPhone or MP3 for Android.',
+  'guides/extract-audio-from-video': 'Open the video in Video to MP3 (from your Photo Library, Gallery or computer), choose MP3 at 320 kbps for music or 128 kbps for speech, then Convert and Download.',
+  'guides/cut-song-iphone': 'Open the Audio Cutter in Safari, pick the song from Files, drag the handles to the part you want, leave the fades on and download it as MP3 or M4A. No app needed.',
+  'guides/whatsapp-voice-to-mp3': 'Save the voice note out of WhatsApp (iPhone: long-press → Forward → Share → Save to Files; Android: long-press → Share), then open it in WhatsApp Audio to MP3 and download the MP3.',
+  'guides/voice-memo-to-mp3': 'In Voice Memos tap the recording → <strong>⋯ → Save to Files</strong>, then open it in M4A to MP3, choose 128 kbps and download.',
+  'guides/remove-background-noise': 'Open the recording in the AI Noise Remover, keep AI noise removal and Auto loudness on, preview it and download a 128 kbps MP3. It works best on voices, not music.',
+  'guides/make-8d-audio': 'Open the song in the 8D Audio converter, put on headphones, preview it and download. The effect pans the sound slowly between your ears with a little reverb.',
+  'guides/make-nightcore': 'Open the song in the Nightcore maker: speed <strong>1.20 to 1.30×</strong> with the pitch raised for nightcore, or 1.15 to 1.25× with the pitch closer to the original for sped up. Preview, then download.',
+  'guides/bass-boost-song': 'Open the song in the Bass Booster, start at <strong>+6 dB</strong> (up to +12 dB for cars and headphones), preview it on the speakers you will use and download at 320 kbps.',
+  'guides/make-audio-louder': 'Open the file in the Volume Booster and turn on <strong>Auto loudness</strong> for voices, or raise Volume to 120 to 150% for songs. A limiter keeps it from distorting.',
+  'guides/combine-songs': 'Open two or more files in the Audio Joiner, put them in order, set a 2 to 4 second crossfade (or 0 for speech), then Join files and download.',
+};
+
+// Extra troubleshooting questions so each converter page answers its own format's problems.
+const EXTRA_FAQ = {
+  'mp4-to-mp3': [['The MP4 has no sound after converting. Why?', 'Some MP4s, like screen recordings with sound off, have no audio track at all. Play the video first: if it is silent, there is nothing to extract.'], ['Can I convert only part of the video?', 'Yes. Drag on the waveform to select the part you want before converting.']],
+  'wav-to-mp3': [['My WAV file will not open. What can I do?', 'Very unusual WAV variants (some 32-bit float or broadcast files) can fail. Open it once in another app and export a standard 16-bit WAV, then try again.'], ['Which bitrate should I pick?', '320 kbps for music, 192 kbps for everyday listening and 128 kbps for speech.']],
+  'm4a-to-mp3': [['Can I convert songs bought on iTunes?', 'Songs bought on iTunes since 2009 are not copy-protected and convert normally. Apple Music streaming songs are protected and cannot be opened.'], ['Will the MP3 keep the original length?', 'Yes. The converter keeps the whole file unless you select a part.']],
+  'whatsapp-audio-to-mp3': [['The voice note shows 0:00 or will not play. Why?', 'The file did not finish saving. Save it again from WhatsApp and make sure the download completed before opening it here.'], ['Does this work with Telegram voice messages?', 'Yes. Telegram voice messages are OGG/OPUS files and convert the same way.']],
+  'mp3-to-wav': [['Is the WAV better quality than the MP3?', 'No. It is uncompressed, so nothing more is lost when you edit it, but it cannot restore what the MP3 already removed.'], ['Why is the WAV so big?', 'WAV stores every sample uncompressed: about 10 MB per minute of stereo audio.']],
+  'flac-to-mp3': [['Will my FLAC tags carry over?', 'MeloCut removes tags and metadata from the output for privacy, so add the song name in your music app afterwards if you need it.'], ['FLAC or MP3 for my phone?', 'MP3 at 320 kbps takes about a quarter of the space and sounds almost identical on phone speakers and earbuds.']],
+  'mov-to-mp3': [['Why is my iPhone video very quiet?', 'Phone microphones often record quietly. Turn on Auto loudness in Effects before converting.'], ['Can I use videos from my Photos app?', 'Yes. On iPhone choose Photo Library when picking the file.']],
+  'ogg-to-mp3': [['What is the difference between OGG and OPUS?', 'OGG is the container. Inside it there is usually Vorbis (music) or OPUS (voice messages). Both convert to MP3 here.'], ['Can I convert game or app sound files?', 'Yes, if they are standard OGG files and you are allowed to use them.']],
+  'aac-to-mp3': [['Why does my AAC file not open on Windows?', 'Plain .aac files without an MP4 container are not supported by some players. Converting to MP3 fixes that.'], ['Is AAC better than MP3?', 'At the same bitrate AAC usually sounds a bit better, but MP3 plays on more devices.']],
+  'mp3-to-m4r': [['The M4R does not show up in my ringtones. What now?', 'Check it is under 30 seconds for the Files app method, and that you used Share → Use as Ringtone. Older iPhones need GarageBand or a computer.'], ['Can I make a text tone too?', 'Yes. After adding it, choose it under Settings → Sounds & Haptics → Text Tone.']],
+  'mp3-to-m4a': [['Can I use the M4A as an iPhone ringtone?', 'Convert to M4R instead with MP3 to M4R. It is the same audio, prepared as a ringtone.'], ['Does the M4A keep album art?', 'No. Metadata and album art are removed from the output for privacy.']],
+  'webm-to-mp3': [['My WebM is a screen recording with two audio sources. What do I get?', 'The file\'s main audio track. Most screen recorders mix everything into one track anyway.'], ['Can I convert WebM audio from a video call?', 'Yes, if you recorded it and everyone agreed to the recording.']],
+  'opus-to-mp3': [['Why is my OPUS file so small?', 'OPUS is very efficient for voice: a minute of speech can be under 100 KB. The MP3 will be bigger at the same clarity.'], ['Can I join several OPUS voice notes into one file?', 'Yes. Open them all in the Audio Joiner, put them in order and save one MP3.']],
+};
+
+for (const p of PAGES) {
+  if (ANSWERS[p.path] && p.content) p.content = `\n    <div class="callout answer"><p><strong>Short answer:</strong> ${ANSWERS[p.path]}</p></div>${p.content}`;
+  if (EXTRA_FAQ[p.path]) p.faq = [...(p.faq || []), ...EXTRA_FAQ[p.path]];
+}
 
 // ---------- templates ----------
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
