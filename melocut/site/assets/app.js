@@ -343,7 +343,7 @@ function mountFx(root, initial, onChange) {
 const TOOLS = {
   'video-to-mp3': {
     formats: ['mp3', 'm4a', 'wav'], defaultFormat: 'mp3', suffix: '',
-    drop: T('MP4, MOV, WebM, MKV, AVI, 3GP… up to 1 GB'),
+    drop: T('MP4, MOV, WebM, MKV, AVI, 3GP…'),
     note: T('Tip: drag on the waveform to keep only part of the audio. Open Effects to add fades.'),
   },
   ringtone: {
@@ -381,7 +381,7 @@ const TOOLS = {
   },
   karaoke: {
     formats: ALL_FORMATS, defaultFormat: 'mp3', suffix: ' (karaoke)', fx: PRESETS.karaoke.fx, fxOpen: true,
-    drop: T('Stereo songs: MP3, M4A, WAV, FLAC, OGG… up to 1 GB'),
+    drop: T('Stereo songs: MP3, M4A, WAV, FLAC, OGG…'),
     note: T('Works best on studio songs where the singer is in the center. Bass and drums get a little quieter too. Press Preview to check.'),
   },
   reverse: {
@@ -419,7 +419,7 @@ function mountTool(root) {
     <div class="drop" data-drop tabindex="0" role="button">
       <div class="ico">${UPLOAD_ICON}</div>
       <strong>${T('Choose a file or drop it here')}</strong>
-      <span>${cfg.drop || T('MP3, M4A, WAV, OGG, OPUS, FLAC or a video… up to 1 GB')}</span>
+      <span>${cfg.drop || T('MP3, M4A, WAV, OGG, OPUS, FLAC or a video…')}</span>
     </div>
     <div class="editor" data-editor>
       <div class="filebar">
@@ -1060,7 +1060,7 @@ function mountJoiner(root) {
     <div class="drop" data-drop tabindex="0" role="button">
       <div class="ico">${UPLOAD_ICON}</div>
       <strong>${T('Choose 2 or more files, or drop them here')}</strong>
-      <span>${T('Songs, voice notes or videos, up to 1 GB each. You can reorder them next.')}</span>
+      <span>${T('Songs, voice notes or videos. You can reorder them next.')}</span>
     </div>
     <div class="editor" data-editor>
       <ol class="joinlist" data-list></ol>

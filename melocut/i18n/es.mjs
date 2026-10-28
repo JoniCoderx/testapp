@@ -17,7 +17,7 @@ export default (NAME) => ({
       ['lock', 'Tus archivos se quedan contigo', 'Todo pasa en tu navegador. No se sube nada, así que nadie más ve tus archivos.'],
       ['bolt', 'Sin esperas', 'No hay subida ni cola de descarga. Una canción suele tardar unos segundos. Los videos largos tardan un poco más.'],
       ['phone', 'Teléfono o computadora', 'Funciona en Safari, Chrome, Edge y Firefox. También puedes instalarla en tu pantalla de inicio.'],
-      ['sparkle', 'Gratis y sin marca de agua', 'Sin cuenta y sin nada añadido a tu audio. Úsala todas las veces que quieras, con archivos de hasta 1 GB.'],
+      ['sparkle', 'Gratis y sin marca de agua', 'Sin cuenta y sin nada añadido a tu audio. Úsala todas las veces que quieras.'],
     ],
   },
   tools: {
@@ -116,11 +116,11 @@ export default (NAME) => ({
     <h3>¿Qué calidad elijo?</h3>
     <p>Usa <strong>320 kbps</strong> para música. <strong>128 kbps</strong> basta para voz y genera archivos mucho más pequeños. Elige <strong>WAV</strong> si quieres editar el audio después.</p>
     <h3>Videos grandes</h3>
-    <p>En una computadora se abren archivos de hasta 1 GB. En un teléfono funcionan mejor los videos de menos de unos 300 MB. Para videos más largos, recórtalos primero o usa una computadora.</p>`,
+    <p>Los límites de tamaño dependen de tu dispositivo y navegador. Una computadora maneja archivos mucho más grandes que un teléfono, y MeloCut no acepta archivos de más de 1 GB. Para videos largos, recórtalos primero o usa una computadora.</p>`,
       faq: [
         ['¿Cómo convierto un MP4 a MP3?', 'Abre el MP4 arriba, elige MP3 y una calidad, pulsa Convertir y luego Descargar. Tarda unos segundos.'],
         ['¿Puedo convertir videos del iPhone?', 'Sí. Elige el video desde Fotos o Archivos y se convierte como cualquier otro.'],
-        ['¿Hay un límite de tamaño?', 'En una computadora se abren archivos de hasta 1 GB. En teléfonos funcionan mejor los de menos de unos 300 MB, porque el audio ocupa mucha más memoria al abrirse.'],
+        ['¿Hay un límite de tamaño?', 'Los límites de tamaño dependen de tu dispositivo y navegador. Una computadora maneja archivos mucho más grandes que un teléfono, y MeloCut no acepta archivos de más de 1 GB. Para videos largos, recórtalos primero o usa una computadora.'],
         ['¿Puedo convertir videos de YouTube?', 'MeloCut trabaja con archivos de tu dispositivo. No descarga videos de YouTube ni de otros sitios.'],
       ],
     },
