@@ -77,6 +77,10 @@ const CONVERSIONS = [
   { slug: 'mov-to-mp3', label: 'MOV to MP3' },
   { slug: 'ogg-to-mp3', label: 'OGG to MP3' },
   { slug: 'aac-to-mp3', label: 'AAC to MP3' },
+  { slug: 'mp3-to-m4r', label: 'MP3 to M4R (iPhone ringtone)' },
+  { slug: 'mp3-to-m4a', label: 'MP3 to M4A' },
+  { slug: 'webm-to-mp3', label: 'WebM to MP3' },
+  { slug: 'opus-to-mp3', label: 'OPUS to MP3' },
 ];
 const MAIN_NAV = ['video-to-mp3', 'ringtone-maker', 'audio-cutter', 'audio-converter'];
 // Short how-to video shown on the ringtone guides (made in-house, also posted on TikTok).
@@ -113,7 +117,7 @@ const GUIDES = [
 ];
 // Each tool page links to its step-by-step guide.
 const TOOL_GUIDE = { 'audio-cutter': 'cut-song-iphone', 'video-to-mp3': 'extract-audio-from-video', 'mp4-to-mp3': 'extract-audio-from-video', 'mov-to-mp3': 'extract-audio-from-video',
-  'whatsapp-audio-to-mp3': 'whatsapp-voice-to-mp3', 'ogg-to-mp3': 'whatsapp-voice-to-mp3', 'm4a-to-mp3': 'voice-memo-to-mp3', 'noise-remover': 'remove-background-noise',
+  'whatsapp-audio-to-mp3': 'whatsapp-voice-to-mp3', 'ogg-to-mp3': 'whatsapp-voice-to-mp3', 'opus-to-mp3': 'whatsapp-voice-to-mp3', 'webm-to-mp3': 'extract-audio-from-video', 'mp3-to-m4r': 'iphone-ringtone', 'm4a-to-mp3': 'voice-memo-to-mp3', 'noise-remover': 'remove-background-noise',
   '8d-audio': 'make-8d-audio', 'nightcore-maker': 'make-nightcore', 'speed-up-audio': 'make-nightcore', 'bass-booster': 'bass-boost-song', 'volume-booster': 'make-audio-louder',
   'audio-joiner': 'combine-songs', 'slowed-reverb': 'make-slowed-reverb', 'vocal-remover': 'remove-vocals', 'ringtone-maker': 'make-ringtone' };
 const guideCard = (g) => `<a class="card" href="/guides/${g.slug}/"><div class="ico">${ICONS[g.icon]}</div><b>${g.title}</b><p>${g.blurb}</p></a>`;
@@ -332,6 +336,95 @@ const PAGES = [
     faq: [
       ['Will the MP3 sound as good as the video?', 'At 320 kbps the difference is very hard to hear.'],
       ['How big will the MP3 be?', 'About 2.4 MB per minute at 320 kbps, or about 1 MB per minute at 128 kbps.'],
+    ],
+  },
+  {
+    path: 'mp3-to-m4r', tool: 'ringtone', format: 'm4r', crumb: 'Converters',
+    title: `MP3 to M4R Converter for iPhone Ringtones, Free | ${NAME}`,
+    description: 'Convert MP3 to M4R, the iPhone ringtone format. Pick the best part (under 30 seconds for iOS 26), add a fade and download. Free, no app, no upload.',
+    h1: '<em>MP3 to M4R</em> converter for iPhone ringtones',
+    lead: 'Turn any MP3 into an M4R ringtone for your iPhone. Pick the part you want, then download it.',
+    badges: ['iPhone ringtone format', 'Fade in and out', 'No upload'],
+    steps: [
+      ['Open the MP3', 'Choose a song from your device. M4A, WAV and videos work too.'],
+      ['Pick the part', 'The first 29 seconds are selected. Drag on the waveform to choose another part.'],
+      ['Download the M4R', 'Press Make ringtone, then Download.'],
+    ],
+    content: `
+    <h2>What is M4R?</h2>
+    <p>M4R is the file type iPhones use for ringtones. Inside it's a normal AAC audio file, like M4A, just with a different name so the iPhone knows it's a ringtone. That's why a ringtone has to be short: under 30 seconds to set it from the Files app on iOS 26, or up to 40 seconds with a computer or GarageBand.</p>
+    <h2>After converting</h2>
+    <p>On iOS 26 or newer, open the M4R in the <strong>Files</strong> app and tap <strong>Share → Use as Ringtone</strong>. On older iPhones, use GarageBand or a computer. The <a href="/guides/iphone-ringtone/">iPhone ringtone guide</a> has every step.</p>`,
+    faq: [
+      ['How do I convert MP3 to M4R?', 'Open the MP3 here, pick up to 40 seconds (under 30 for the Files app), press Make ringtone and download the M4R.'],
+      ['Why is my M4R only 40 seconds?', 'iPhone ringtones are limited to 40 seconds, and the Files app method needs under 30, so the converter keeps your selection within that.'],
+      ['Can I just rename an MP3 to .m4r?', 'No. The audio has to be AAC inside an MP4 container. Renaming an MP3 does not convert it, and the iPhone will not accept it.'],
+    ],
+  },
+  {
+    path: 'mp3-to-m4a', tool: 'converter', format: 'm4a', crumb: 'Converters',
+    title: `MP3 to M4A Converter, Free and Online | ${NAME}`,
+    description: 'Convert MP3 to M4A (AAC) for iPhone, iTunes and Apple apps. Choose the quality, trim it if you like and download. Free, private, no upload.',
+    h1: '<em>MP3 to M4A</em> converter',
+    lead: "Convert MP3 files to M4A (AAC), Apple's standard audio format.",
+    badges: ['AAC audio', '128 to 320 kbps', 'No upload'],
+    steps: [
+      ['Open the MP3', 'Choose an MP3 from your device.'],
+      ['Pick a quality', '256 kbps is a good choice for music.'],
+      ['Download the M4A', 'Press Convert, then Download.'],
+    ],
+    content: `
+    <h2>When M4A is useful</h2>
+    <p>Some Apple apps and workflows expect M4A: GarageBand and iMovie projects, Apple's own podcast and audiobook tools, and older iPhone ringtone guides that start from an M4A file. For everything else, MP3 plays on more devices.</p>
+    <h2>About quality</h2>
+    <p>Converting an MP3 to M4A can't add back what the MP3 left out, so use the same or a slightly higher bitrate than the original. If you need an iPhone ringtone, convert straight to <a href="/mp3-to-m4r/">M4R</a> instead.</p>`,
+    faq: [
+      ['Is M4A better than MP3?', 'At the same bitrate AAC usually sounds a little better, but converting an existing MP3 does not improve it.'],
+      ['Will M4A play on Android and Windows?', 'Yes, on most modern phones and computers. Some older car stereos and players only support MP3.'],
+    ],
+  },
+  {
+    path: 'webm-to-mp3', tool: 'video-to-mp3', format: 'mp3', crumb: 'Converters',
+    title: `WebM to MP3 Converter, Free and Online | ${NAME}`,
+    description: 'Get the audio from a WebM video and save it as MP3. Pick the part you want, choose the quality and download. Free, fast, nothing uploaded.',
+    h1: '<em>WebM to MP3</em> converter',
+    lead: 'Extract the sound from a WebM video, the format many browsers and screen recorders save in, and keep it as an MP3.',
+    badges: ['WebM video or audio', 'Up to 320 kbps', 'No upload'],
+    steps: [
+      ['Open the WebM', 'Choose a .webm file from your device.'],
+      ['Pick a part if you like', 'Drag on the waveform, or keep the whole file.'],
+      ['Download the MP3', 'Press Convert, then Download.'],
+    ],
+    content: `
+    <h2>Where WebM files come from</h2>
+    <p>WebM is an open video format. Browser screen recorders, video calls saved from the browser and many online tools save as WebM, but lots of phones and music players can't open it. Converting the sound to MP3 makes it playable everywhere.</p>
+    <h2>Tips</h2>
+    <p>For speech, 128 kbps is plenty. If the recording is quiet or noisy, open the MP3 in the <a href="/noise-remover/">AI Noise Remover</a> afterwards. Only convert recordings you made or are allowed to use.</p>`,
+    faq: [
+      ['Can I convert WebM audio-only files?', 'Yes. WebM files with only sound work the same way.'],
+      ['Is the WebM uploaded?', 'No. The sound is extracted on your own device.'],
+    ],
+  },
+  {
+    path: 'opus-to-mp3', tool: 'converter', format: 'mp3', crumb: 'Converters',
+    title: `OPUS to MP3 Converter, Free and Online | ${NAME}`,
+    description: 'Convert OPUS files to MP3 so they play on any phone, computer or car. Works with Telegram, WhatsApp and Discord audio. Free, private, no upload.',
+    h1: '<em>OPUS to MP3</em> converter',
+    lead: 'OPUS is great for voice and streaming but many players can\'t open it. Convert it to MP3 here.',
+    badges: ['OPUS and OGG', '128 to 320 kbps', 'No upload'],
+    steps: [
+      ['Open the OPUS file', 'Choose a .opus or .ogg file from your device.'],
+      ['Pick a quality', '128 kbps for speech, 192 kbps or more for music.'],
+      ['Download the MP3', 'Press Convert, then Download.'],
+    ],
+    content: `
+    <h2>Where OPUS files come from</h2>
+    <p>WhatsApp and Telegram voice messages, Discord recordings and many browser recordings use the OPUS codec, sometimes with a .ogg name. It sounds clear at a small size, but older phones, cars, editing apps and upload forms often reject it.</p>
+    <h2>Saving voice messages</h2>
+    <p>For a voice note still inside WhatsApp, the <a href="/guides/whatsapp-voice-to-mp3/">WhatsApp voice message guide</a> shows how to get the file out first.</p>`,
+    faq: [
+      ['Does converting OPUS to MP3 lower the quality?', 'Slightly, since both are compressed. At 128 kbps or more, speech sounds the same.'],
+      ['Can I convert several OPUS files into one MP3?', 'Yes. Use the Audio Joiner to put them together.'],
     ],
   },
   {
