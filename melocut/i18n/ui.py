@@ -4,6 +4,15 @@
 import json, os, re, sys
 
 ES = {
+ 'this app': 'una app',
+ 'You opened MeloCut inside {0}. Downloads often do not work in app browsers.': 'Abriste MeloCut dentro de {0}. Las descargas a menudo no funcionan en los navegadores de las apps.',
+ 'Tap ⋯ or ⋮ at the top and choose Open in browser, or copy the link and paste it into {0}.': 'Toca ⋯ o ⋮ arriba y elige Abrir en el navegador, o copia el enlace y pégalo en {0}.',
+ 'Open in Chrome': 'Abrir en Chrome',
+ 'Copy link': 'Copiar enlace',
+ 'Link copied. Paste it into {0}.': 'Enlace copiado. Pégalo en {0}.',
+ 'Downloading. iPhone: Files → Downloads. Android: the notification bar or Files → Downloads.': 'Descargando. iPhone: Archivos → Descargas. Android: la barra de notificaciones o Archivos → Descargas.',
+ 'Still no file? App browsers often block downloads. Open this page in {0} and try again.': '¿Sigues sin el archivo? Los navegadores de las apps suelen bloquear las descargas. Abre esta página en {0} e inténtalo de nuevo.',
+ 'Still no file? Look in Downloads. On iPhone, tap the download arrow in the address bar.': '¿Sigues sin el archivo? Busca en Descargas. En iPhone, toca la flecha de descarga en la barra de direcciones.',
  'Could not load the AI noise model. Check your connection.': 'No se pudo cargar el modelo de IA para el ruido. Revisa tu conexión.',
  'M4R (iPhone ringtone)': 'M4R (tono de iPhone)',
  'WAV (16-bit)': 'WAV (16 bits)',
@@ -167,6 +176,15 @@ ES = {
 }
 
 PT = {
+ 'this app': 'um app',
+ 'You opened MeloCut inside {0}. Downloads often do not work in app browsers.': 'Você abriu o MeloCut dentro de {0}. Downloads muitas vezes não funcionam nos navegadores dos apps.',
+ 'Tap ⋯ or ⋮ at the top and choose Open in browser, or copy the link and paste it into {0}.': 'Toque em ⋯ ou ⋮ no topo e escolha Abrir no navegador, ou copie o link e cole no {0}.',
+ 'Open in Chrome': 'Abrir no Chrome',
+ 'Copy link': 'Copiar link',
+ 'Link copied. Paste it into {0}.': 'Link copiado. Cole no {0}.',
+ 'Downloading. iPhone: Files → Downloads. Android: the notification bar or Files → Downloads.': 'Baixando. iPhone: Arquivos → Downloads. Android: a barra de notificações ou Arquivos → Downloads.',
+ 'Still no file? App browsers often block downloads. Open this page in {0} and try again.': 'Ainda sem o arquivo? Os navegadores dos apps costumam bloquear downloads. Abra esta página no {0} e tente de novo.',
+ 'Still no file? Look in Downloads. On iPhone, tap the download arrow in the address bar.': 'Ainda sem o arquivo? Procure em Downloads. No iPhone, toque na seta de download na barra de endereço.',
  'Could not load the AI noise model. Check your connection.': 'Não foi possível carregar o modelo de IA para ruído. Verifique sua conexão.',
  'M4R (iPhone ringtone)': 'M4R (toque de iPhone)',
  'WAV (16-bit)': 'WAV (16 bits)',

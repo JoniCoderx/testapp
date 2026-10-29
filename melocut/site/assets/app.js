@@ -286,10 +286,41 @@ const fmtFx = (key, v) => {
 const fillRange = (el) => el.style.setProperty('--p', `${((el.value - el.min) / (el.max - el.min)) * 100}%`);
 
 // Wires an effects panel inside `root`. Returns { get(), set(fx), onChange }.
-// After a download: let people send the file (or the tool's link) to friends.
-const SHARE_HTML = () => `<div class="share-row" data-share hidden><button class="btn ghost sm" type="button" data-sharebtn>${I.share}${T('Send to a friend')}</button><small data-sharemsg role="status" aria-live="polite"></small></div>`;
+// Browsers built into apps (TikTok, Instagram, Facebook…) often cannot save downloaded files.
+// Visitors from our videos land there, so say so up front and offer the way out.
+const UA = navigator.userAgent;
+const IS_ANDROID = /Android/i.test(UA);
+const BROWSER = IS_ANDROID ? 'Chrome' : 'Safari';
+const IN_APP = (() => {
+  if (window.matchMedia?.('(display-mode: standalone)').matches || navigator.standalone) return '';
+  if (/TikTok|musical_ly|Bytedance/i.test(UA)) return 'TikTok';
+  if (/Instagram/i.test(UA)) return 'Instagram';
+  if (/FBAN|FBAV|FB_IAB/i.test(UA)) return 'Facebook';
+  if (/Snapchat|Pinterest|\bLine\//i.test(UA) || /; wv\)/.test(UA)) return T('this app');
+  if (/iPhone|iPad|iPod/.test(UA) && !/Safari\//.test(UA)) return T('this app');
+  return '';
+})();
+const INAPP_HTML = () => (IN_APP ? `<div class="inapp" role="note"><p><strong>${T('You opened MeloCut inside {0}. Downloads often do not work in app browsers.', IN_APP)}</strong>
+  ${T('Tap ⋯ or ⋮ at the top and choose Open in browser, or copy the link and paste it into {0}.', BROWSER)}</p>
+  <div class="inapp-btns">${IS_ANDROID ? `<a class="btn sm" href="intent://${location.host}${location.pathname}#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=${encodeURIComponent(location.href)};end" data-inapp-open>${T('Open in Chrome')}</a>` : ''}
+  <button class="btn ghost sm" type="button" data-inapp-copy>${T('Copy link')}</button></div><small data-inapp-msg role="status" aria-live="polite"></small></div>` : '');
+function wireInApp(root) {
+  const copy = $(root, '[data-inapp-copy]');
+  if (!copy) return;
+  track('inapp_seen', { app: IN_APP });
+  $(root, '[data-inapp-open]')?.addEventListener('click', () => track('inapp_open', { app: IN_APP }));
+  copy.onclick = async () => {
+    const msg = $(root, '[data-inapp-msg]');
+    try { await navigator.clipboard.writeText(location.href); msg.textContent = T('Link copied. Paste it into {0}.', BROWSER); } catch { msg.textContent = location.href; }
+    track('inapp_copy', { app: IN_APP });
+  };
+}
+
+// After a download: say where the file went, and let people send it (or the tool's link) to friends.
+const SHARE_HTML = () => `<div class="share-row" data-share hidden><small class="dl-note" data-dlnote role="status" aria-live="polite"></small><button class="btn ghost sm" type="button" data-sharebtn>${I.share}${T('Send to a friend')}</button><small data-sharemsg role="status" aria-live="polite"></small></div>`;
 function mountShare(root) {
-  const box = $(root, '[data-share]'), btn = $(root, '[data-sharebtn]'), msg = $(root, '[data-sharemsg]');
+  const box = $(root, '[data-share]'), btn = $(root, '[data-sharebtn]'), msg = $(root, '[data-sharemsg]'), note = $(root, '[data-dlnote]');
+  let taps = 0;
   const link = location.origin + location.pathname;
   const text = T('Made for free with MeloCut: {0}', link);
   let file = null;
@@ -305,8 +336,16 @@ function mountShare(root) {
     } catch (e) { if (e?.name !== 'AbortError') await copy(); }
   };
   return {
-    show(blob, name) { file = new File([blob], name, { type: blob.type }); msg.textContent = ''; box.hidden = false; },
-    hide() { file = null; box.hidden = true; },
+    // Called on every Download tap; returns how many times this result was downloaded.
+    show(blob, name) {
+      taps += 1;
+      file = new File([blob], name, { type: blob.type }); msg.textContent = ''; box.hidden = false;
+      note.textContent = taps === 1 ? T('Downloading. iPhone: Files → Downloads. Android: the notification bar or Files → Downloads.')
+        : IN_APP ? T('Still no file? App browsers often block downloads. Open this page in {0} and try again.', BROWSER)
+          : T('Still no file? Look in Downloads. On iPhone, tap the download arrow in the address bar.');
+      return taps;
+    },
+    hide() { file = null; taps = 0; box.hidden = true; },
   };
 }
 
@@ -414,7 +453,7 @@ function mountTool(root) {
   // The main button says what the tool does ("Cut and save"); effect pages built on a tool keep "Convert".
   const goLabel = (!root.dataset.fx && cfg.go) || T('Convert');
 
-  root.innerHTML = `
+  root.innerHTML = `${INAPP_HTML()}
     <input type="file" class="sr" accept="${ACCEPT}" data-file aria-label="${T('Choose an audio or video file')}" tabindex="-1">
     <div class="drop" data-drop tabindex="0" role="button">
       <div class="ico">${UPLOAD_ICON}</div>
@@ -464,6 +503,7 @@ function mountTool(root) {
   const st = { file: null, duration: 0, buffer: null, peaks: null, sel: [0, 0], mode: 'keep',
     ctx: null, source: null, playStart: 0, playFrom: 0, raf: 0, outURL: null, busy: false };
   const share = mountShare(root);
+  wireInApp(root);
   const fx = mountFx(root, cfg.fx, () => { st.exact = null; stopPlay(); resetOutput(); drawAfter(); syncFx(); });
   // The extra "Play with effects" button only shows when some effect is on.
   function syncFx() { root.classList.toggle('has-fx', !isDefaultFx(fx.get())); }
@@ -1030,7 +1070,7 @@ function mountTool(root) {
       error('');
       els.go.innerHTML = label('download', T('Download {0}', fmtKey.toUpperCase()));
       els.go.classList.add('ok');
-      els.go.onclick = () => { downloadURL(st.outURL, fileName); track('download', { tool: root.dataset.tool, format: fmtKey }); share.show(blob, fileName); };
+      els.go.onclick = () => { downloadURL(st.outURL, fileName); const n = share.show(blob, fileName); track('download', { tool: root.dataset.tool, format: fmtKey, repeat: n > 1 ? 'yes' : 'no', inapp: IN_APP || 'no' }); };
       track('converted', { tool: root.dataset.tool, format: fmtKey, effects: isDefaultFx(snap.fx) ? 'none' : 'yes' });
       if (fmtKey === 'm4r') notice(T('iPhone (iOS 26 or newer): open the file in the Files app, tap Share → Use as Ringtone. Older iPhones: use GarageBand or a computer (see the guide below).'));
       else if (root.dataset.tool === 'ringtone') notice(T('Android: open Settings → Sound → Phone ringtone, tap + (or Add ringtone) and pick the file from Downloads.'));
@@ -1055,7 +1095,7 @@ function mountTool(root) {
 
 // ---------- audio joiner (several files -> one) ----------
 function mountJoiner(root) {
-  root.innerHTML = `
+  root.innerHTML = `${INAPP_HTML()}
     <input type="file" class="sr" accept="${ACCEPT}" multiple data-file aria-label="${T('Choose audio or video files')}" tabindex="-1">
     <div class="drop" data-drop tabindex="0" role="button">
       <div class="ico">${UPLOAD_ICON}</div>
@@ -1094,6 +1134,7 @@ function mountJoiner(root) {
     cancel: $(root, '[data-cancel]'),
   };
   const share = mountShare(root);
+  wireInApp(root);
   const st = { items: [], busy: false, outURL: null, playing: -1, ff: null, cancelled: false };
   // While joining, the list and options are frozen and Cancel is offered.
   function setBusy(on) {
@@ -1236,7 +1277,7 @@ function mountJoiner(root) {
       els.go.innerHTML = label('download', T('Download {0}', fmtKey.toUpperCase())); els.go.classList.add('ok');
       const r = els.go.getBoundingClientRect();
       if (r.bottom > innerHeight || r.top < 0) els.go.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      els.go.onclick = () => { const nm = `${baseName(st.items[0].file.name)} (joined).${fmtKey}`; downloadURL(st.outURL, nm); track('download', { tool: 'joiner', format: fmtKey }); share.show(blob, nm); };
+      els.go.onclick = () => { const nm = `${baseName(st.items[0].file.name)} (joined).${fmtKey}`; downloadURL(st.outURL, nm); const n = share.show(blob, nm); track('download', { tool: 'joiner', format: fmtKey, repeat: n > 1 ? 'yes' : 'no', inapp: IN_APP || 'no' }); };
       track('converted', { tool: 'joiner', format: fmtKey, count: n });
     } catch (e) {
       resetEngine(ff); ff = null;
