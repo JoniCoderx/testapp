@@ -36,6 +36,7 @@ const ICONS = {
   bass: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><circle cx="12" cy="14" r="4"/><path d="M12 6h.01"/></svg>',
   volume: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/></svg>',
   sparkle: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></svg>',
+  voice: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="6" height="11" rx="3"/><path d="M3 10a7 7 0 0 0 14 0M10 17v5"/><path d="M19.5 7.5a5 5 0 0 1 0 5M22 5a9 9 0 0 1 0 10"/></svg>',
   mic: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v5M3 3l18 18"/></svg>',
   reverse: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>',
   gauge: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 14l4-4"/><path d="M3.3 19a10 10 0 1 1 17.4 0"/></svg>',
@@ -55,7 +56,7 @@ const TOOLS = [
   { slug: 'noise-remover', icon: 'sparkle', title: 'AI Noise Remover', ai: true, blurb: 'Clean up background noise in voice recordings.' },
   { slug: 'slowed-reverb', icon: 'slow', title: 'Slowed + Reverb', blurb: 'Make a slowed version of a song with reverb.' },
   { slug: 'vocal-remover', icon: 'mic', title: 'Vocal Remover', blurb: 'Take the singer out for a karaoke track.' },
-  { slug: 'voice-changer', icon: 'mic', title: 'Voice Changer', blurb: 'Chipmunk, deep, robot, monster and more voices.' },
+  { slug: 'voice-changer', icon: 'voice', isNew: true, title: 'Voice Changer', blurb: 'Chipmunk, deep, robot, monster and more voices.' },
   { slug: '8d-audio', icon: 'orbit', title: '8D Audio', blurb: 'Sound that moves from ear to ear. Use headphones.' },
   { slug: 'bass-booster', icon: 'bass', title: 'Bass Booster', blurb: 'Add more low end to any song.' },
   { slug: 'volume-booster', icon: 'volume', title: 'Volume Booster', blurb: 'Make quiet recordings louder.' },
@@ -97,7 +98,7 @@ const GUIDES = [
   { slug: 'ringtone-not-showing-iphone', icon: 'bell', title: 'Ringtone not showing on iPhone? 7 fixes', blurb: 'The usual causes and how to fix each one.' },
   { slug: 'custom-alarm-sound', icon: 'bell', title: 'Set a song as your alarm', blurb: 'Wake up to your own song on iPhone or Android.' },
   { slug: 'custom-text-tone', icon: 'bell', title: 'Custom text tone or notification sound', blurb: 'A short sound of your own for messages.' },
-  { slug: 'voice-ringtone', icon: 'mic', title: 'Make your own voice a ringtone', blurb: 'Your kid, your catchphrase, a funny line.' },
+  { slug: 'voice-ringtone', icon: 'voice', title: 'Make your own voice a ringtone', blurb: 'Your kid, your catchphrase, a funny line.' },
   { slug: 'change-ringtone-back', icon: 'bell', title: 'Change your ringtone back to default', blurb: 'Go back to the original tone, and remove old ones.' },
   { slug: 'iphone-ringtone', icon: 'bell', title: 'Set any song as your iPhone ringtone', blurb: 'No computer needed. The new Files app way and GarageBand.' },
   { slug: 'set-ringtone', icon: 'bell', title: 'Set a custom ringtone', blurb: 'iPhone and Android, with or without a computer.' },
@@ -107,8 +108,8 @@ const GUIDES = [
   { slug: 'remove-vocals', icon: 'mic', title: 'Remove vocals from a song', blurb: 'Make a karaoke or instrumental track for free.' },
   { slug: 'extract-audio-from-video', icon: 'video', title: 'Get the audio from a video', blurb: 'From your gallery or computer, saved as MP3.' },
   { slug: 'cut-song-iphone', icon: 'cut', title: 'Cut a song on iPhone', blurb: 'Trim any song in Safari, no app needed.' },
-  { slug: 'whatsapp-voice-to-mp3', icon: 'mic', title: 'WhatsApp voice message to MP3', blurb: 'Save a voice note and play it anywhere.' },
-  { slug: 'voice-memo-to-mp3', icon: 'mic', title: 'iPhone voice memo to MP3', blurb: 'Convert M4A memos so they play everywhere.' },
+  { slug: 'whatsapp-voice-to-mp3', icon: 'voice', title: 'WhatsApp voice message to MP3', blurb: 'Save a voice note and play it anywhere.' },
+  { slug: 'voice-memo-to-mp3', icon: 'voice', title: 'iPhone voice memo to MP3', blurb: 'Convert M4A memos so they play everywhere.' },
   { slug: 'remove-background-noise', icon: 'sparkle', title: 'Remove background noise', blurb: 'Clean wind, traffic and hum from a voice.' },
   { slug: 'make-8d-audio', icon: 'orbit', title: 'Make 8D audio', blurb: 'Music that moves around your head.' },
   { slug: 'make-nightcore', icon: 'gauge', title: 'Make nightcore and sped up songs', blurb: 'The fast, high version of any song.' },
@@ -126,6 +127,13 @@ const TOOL_GUIDE = { 'audio-cutter': 'cut-song-iphone', 'video-to-mp3': 'extract
   'whatsapp-audio-to-mp3': 'whatsapp-voice-to-mp3', 'ogg-to-mp3': 'whatsapp-voice-to-mp3', 'opus-to-mp3': 'whatsapp-voice-to-mp3', 'webm-to-mp3': 'extract-audio-from-video', 'mp3-to-m4r': 'iphone-ringtone', 'm4a-to-mp3': 'voice-memo-to-mp3', 'noise-remover': 'remove-background-noise',
   '8d-audio': 'make-8d-audio', 'nightcore-maker': 'make-nightcore', 'speed-up-audio': 'make-nightcore', 'bass-booster': 'bass-boost-song', 'volume-booster': 'make-audio-louder',
   'audio-joiner': 'combine-songs', 'slowed-reverb': 'make-slowed-reverb', 'vocal-remover': 'remove-vocals', 'ringtone-maker': 'make-ringtone' };
+const GUIDE_GROUPS = [
+  ['Ringtones and sounds', ['make-ringtone', 'iphone-ringtone', 'ringtone-not-showing-iphone', 'set-ringtone', 'samsung-ringtone', 'contact-ringtone', 'custom-alarm-sound', 'custom-text-tone', 'voice-ringtone', 'ringtone-from-video', 'change-ringtone-back']],
+  ['Convert and save audio', ['extract-audio-from-video', 'cut-song-iphone', 'whatsapp-voice-to-mp3', 'voice-memo-to-mp3', 'combine-songs', 'best-audio-format']],
+  ['Effects', ['make-slowed-reverb', 'make-nightcore', 'make-8d-audio', 'bass-boost-song', 'remove-vocals']],
+  ['Voice and recordings', ['remove-background-noise', 'make-audio-louder', 'clean-up-voice-memo']],
+  ['Using MeloCut', ['install-app', 'find-downloads']],
+];
 const guideCard = (g) => `<a class="card" href="/guides/${g.slug}/"><div class="ico">${ICONS[g.icon]}</div><b>${g.title}</b><p>${g.blurb}</p></a>`;
 const CONVERSION_LINKS = `<div class="chips-links">${CONVERSIONS.map((c) => `<a class="chip" href="/${c.slug}/">${c.label}</a>`).join('')}</div>`;
 // ---------- languages ----------
@@ -177,7 +185,7 @@ const toolGrid = (lang) => {
 };
 const toolCardIn = (t, lang) => {
   const x = toolIn(t, lang);
-  return `<a class="card" href="${x.href}"${x.english ? ' hreflang="en"' : ''}><div class="ico">${ICONS[t.icon]}</div><b>${x.title}${t.ai ? '<span class="ai">AI</span>' : ''}${x.english ? `<span class="en-tag" title="${LANGS[lang].ui.inEnglish}">EN</span>` : ''}</b><p>${x.blurb}</p></a>`;
+  return `<a class="card" href="${x.href}"${x.english ? ' hreflang="en"' : ''}><div class="ico">${ICONS[t.icon]}</div><b>${x.title}${t.ai ? '<span class="ai">AI</span>' : ''}${t.isNew ? `<span class="ai new">${LANGS[lang].ui.newTag || 'New'}</span>` : ''}${x.english ? `<span class="en-tag" title="${LANGS[lang].ui.inEnglish}">EN</span>` : ''}</b><p>${x.blurb}</p></a>`;
 };
 
 // ---------- pages ----------
@@ -960,7 +968,7 @@ const PAGES = [
     h1: 'Guides',
     lead: 'Short, step-by-step guides for the things people ask us most: ringtones, downloads, formats and cleaning up recordings.',
     body: `<div class="section prose" style="margin-top:0"><p>Every guide works with the free ${NAME} tools, on iPhone, Android and computers. The steps use the real menu names, and they're kept up to date when phones change them.</p></div>
-    <div class="cards">${GUIDES.map(guideCard).join('')}</div>
+    ${GUIDE_GROUPS.map(([name, list]) => `<div class="section"><h2>${name}</h2><div class="cards">${list.map((s) => guideCard(GUIDES.find((g) => g.slug === s))).join('')}</div></div>`).join('')}
     <div class="section"><h2>Popular tools</h2><div class="cards">${TOOLS.filter((t) => ['ringtone-maker', 'video-to-mp3', 'audio-cutter', 'noise-remover'].includes(t.slug)).map((t) => toolCardIn(t, 'en')).join('')}</div></div>
     <div class="section"><h2>Popular conversions</h2>${CONVERSION_LINKS}</div>`,
   },
