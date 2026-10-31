@@ -1,0 +1,76 @@
+# MeloCut
+
+> MeloCut is a set of free audio tools that run entirely in the browser, on phones and computers. Files are processed on the user's device with FFmpeg (WebAssembly) and are never uploaded. No sign-up, no watermark. It makes iPhone (M4R) and Android ringtones, cuts and joins audio, converts video to MP3, converts between audio formats and adds effects such as slowed + reverb, nightcore, 8D audio, bass boost and AI noise removal.
+
+## Tools
+- [Video to MP3](https://melocut.com/video-to-mp3/): Get the sound out of an MP4, MOV or WebM video.
+- [Ringtone Maker](https://melocut.com/ringtone-maker/): Turn part of a song into an iPhone or Android ringtone.
+- [Audio Cutter](https://melocut.com/audio-cutter/): Trim a song or cut a piece out of the middle.
+- [Audio Converter](https://melocut.com/audio-converter/): Switch between MP3, WAV, M4A, OGG and FLAC.
+- [Audio Joiner](https://melocut.com/audio-joiner/): Put several songs or clips together into one file.
+- [AI Noise Remover](https://melocut.com/noise-remover/): Clean up background noise in voice recordings.
+- [Slowed + Reverb](https://melocut.com/slowed-reverb/): Make a slowed version of a song with reverb.
+- [Vocal Remover](https://melocut.com/vocal-remover/): Take the singer out for a karaoke track.
+- [8D Audio](https://melocut.com/8d-audio/): Sound that moves from ear to ear. Use headphones.
+- [Bass Booster](https://melocut.com/bass-booster/): Add more low end to any song.
+- [Volume Booster](https://melocut.com/volume-booster/): Make quiet recordings louder.
+- [Reverse Audio](https://melocut.com/reverse-audio/): Play any sound backwards.
+- [Speed Up Audio](https://melocut.com/speed-up-audio/): Make a song or voice note faster, same pitch.
+- [Slow Down Audio](https://melocut.com/slow-down-audio/): Play anything slower without a deep voice.
+- [Pitch Changer](https://melocut.com/pitch-changer/): Change the key of a song, same speed.
+- [Nightcore Maker](https://melocut.com/nightcore-maker/): Faster and higher, the classic nightcore sound.
+- [Remove Silence](https://melocut.com/remove-silence/): Cut the long pauses out of a recording.
+- [Fade In and Fade Out](https://melocut.com/fade-in-fade-out/): Add a smooth start and ending to any song.
+
+## Converters
+- [MP4 to MP3](https://melocut.com/mp4-to-mp3/)
+- [WAV to MP3](https://melocut.com/wav-to-mp3/)
+- [M4A to MP3](https://melocut.com/m4a-to-mp3/)
+- [WhatsApp audio to MP3](https://melocut.com/whatsapp-audio-to-mp3/)
+- [MP3 to WAV](https://melocut.com/mp3-to-wav/)
+- [FLAC to MP3](https://melocut.com/flac-to-mp3/)
+- [MOV to MP3](https://melocut.com/mov-to-mp3/)
+- [OGG to MP3](https://melocut.com/ogg-to-mp3/)
+- [AAC to MP3](https://melocut.com/aac-to-mp3/)
+- [MP3 to M4R (iPhone ringtone)](https://melocut.com/mp3-to-m4r/)
+- [MP3 to M4A](https://melocut.com/mp3-to-m4a/)
+- [WebM to MP3](https://melocut.com/webm-to-mp3/)
+- [OPUS to MP3](https://melocut.com/opus-to-mp3/)
+
+## Guides
+- [Make a song your ringtone](https://melocut.com/guides/make-ringtone/): Any song, any phone, in about two minutes.
+- [Ringtone not showing on iPhone? 7 fixes](https://melocut.com/guides/ringtone-not-showing-iphone/): The usual causes and how to fix each one.
+- [Set a song as your alarm](https://melocut.com/guides/custom-alarm-sound/): Wake up to your own song on iPhone or Android.
+- [Custom text tone or notification sound](https://melocut.com/guides/custom-text-tone/): A short sound of your own for messages.
+- [Make your own voice a ringtone](https://melocut.com/guides/voice-ringtone/): Your kid, your catchphrase, a funny line.
+- [Change your ringtone back to default](https://melocut.com/guides/change-ringtone-back/): Go back to the original tone, and remove old ones.
+- [Set any song as your iPhone ringtone](https://melocut.com/guides/iphone-ringtone/): No computer needed. The new Files app way and GarageBand.
+- [Set a custom ringtone](https://melocut.com/guides/set-ringtone/): iPhone and Android, with or without a computer.
+- [Custom ringtone on Samsung Galaxy](https://melocut.com/guides/samsung-ringtone/): Set any song as your Samsung ringtone in a few taps.
+- [Ringtone for one contact](https://melocut.com/guides/contact-ringtone/): Know who is calling before you look at the phone.
+- [Make slowed + reverb songs](https://melocut.com/guides/make-slowed-reverb/): The settings that sound right, step by step.
+- [Remove vocals from a song](https://melocut.com/guides/remove-vocals/): Make a karaoke or instrumental track for free.
+- [Get the audio from a video](https://melocut.com/guides/extract-audio-from-video/): From your gallery or computer, saved as MP3.
+- [Cut a song on iPhone](https://melocut.com/guides/cut-song-iphone/): Trim any song in Safari, no app needed.
+- [WhatsApp voice message to MP3](https://melocut.com/guides/whatsapp-voice-to-mp3/): Save a voice note and play it anywhere.
+- [iPhone voice memo to MP3](https://melocut.com/guides/voice-memo-to-mp3/): Convert M4A memos so they play everywhere.
+- [Remove background noise](https://melocut.com/guides/remove-background-noise/): Clean wind, traffic and hum from a voice.
+- [Make 8D audio](https://melocut.com/guides/make-8d-audio/): Music that moves around your head.
+- [Make nightcore and sped up songs](https://melocut.com/guides/make-nightcore/): The fast, high version of any song.
+- [Boost the bass in a song](https://melocut.com/guides/bass-boost-song/): Deeper bass for your car or headphones.
+- [Make a song or recording louder](https://melocut.com/guides/make-audio-louder/): Up to 300%, without distortion.
+- [Combine two songs into one](https://melocut.com/guides/combine-songs/): Join songs and clips with a crossfade.
+- [Install MeloCut on your phone](https://melocut.com/guides/install-app/): Add it to your home screen in a few taps.
+- [Where are my downloads?](https://melocut.com/guides/find-downloads/): Find your files on iPhone, Android, Windows and Mac.
+- [Which audio format should you use?](https://melocut.com/guides/best-audio-format/): MP3, M4A, WAV, FLAC and what kbps means.
+- [Clean up a voice memo](https://melocut.com/guides/clean-up-voice-memo/): Trim it, remove noise and make it louder.
+- [Make a ringtone from a video](https://melocut.com/guides/ringtone-from-video/): Use a sound from your own videos as your ringtone.
+
+## Other languages
+- [Español](https://melocut.com/es/)
+- [Português](https://melocut.com/pt-br/)
+
+## About
+- [About and contact](https://melocut.com/about/)
+- [Privacy policy](https://melocut.com/privacy/)
+- [Terms of use](https://melocut.com/terms/)

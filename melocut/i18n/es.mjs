@@ -154,7 +154,7 @@ export default (NAME) => ({
     {
       key: 'converter', path: 'es/convertidor-de-audio', tool: 'converter', crumb: 'Tools',
       title: `Convertidor de audio: MP3, WAV, M4A, OGG y FLAC | ${NAME}`,
-      description: 'Convierte audio online gratis: MP3, WAV, M4A, OGG, FLAC y OPUS. También cambia la velocidad y el volumen. Funciona con notas de voz de WhatsApp. Sin subir archivos.',
+      description: 'Convierte audio online gratis: MP3, WAV, M4A, OGG, FLAC y OPUS. También cambia velocidad y volumen. Sirve para notas de voz de WhatsApp. Sin subir archivos.',
       h1: '<em>Convertidor de audio</em> para MP3, WAV, M4A, OGG y FLAC',
       lead: 'Convierte entre MP3, WAV, M4A, OGG y FLAC. También abre las notas de voz de WhatsApp y Telegram (OPUS).',
       badges: ['MP3, WAV, M4A, OGG, FLAC', 'Velocidad y volumen', 'Notas de voz'],

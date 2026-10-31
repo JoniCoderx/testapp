@@ -1402,7 +1402,7 @@ const PAGES = [
   {
     path: 'guides/samsung-ringtone', crumb: 'Guides', plain: true,
     title: `How to Set a Custom Ringtone on Samsung Galaxy | ${NAME}`,
-    description: 'Set any song as your ringtone on a Samsung Galaxy phone: make the ringtone, then Settings → Sounds and vibration → Ringtone → +. Also for one contact and dual SIM.',
+    description: 'Set any song as your ringtone on a Samsung Galaxy: make the ringtone, then Settings → Sounds and vibration → Ringtone → +. Also per contact and dual SIM.',
     h1: 'How to set a custom ringtone on Samsung',
     lead: 'Any Samsung Galaxy phone can use your own song as a ringtone. Make the ringtone first, then it takes a few taps in Settings.',
     content: `
@@ -1880,7 +1880,7 @@ const PAGES = [
   },
   {
     path: 'about', crumb: null, plain: true,
-    title: `About and Contact | ${NAME}`,
+    title: `About MeloCut: Free Private Audio Tools and Contact | ${NAME}`,
     description: `What ${NAME} is, how its free audio tools work in your browser without uploading your files, how the site stays free, and how to get in touch.`,
     h1: 'About MeloCut',
     content: `
@@ -1967,6 +1967,21 @@ const ALL = [
   ...PAGES.map((p) => ({ lang: 'en', key: KEY_OF[p.path], ...p })),
   ...L10N.flatMap((lang) => LANGS[lang].pages.map((p) => ({ lang, ...p }))),
 ];
+// Per-page dates. A page's dateModified/lastmod moves only when its own content changes,
+// so search engines can trust it; lastmod.json keeps each page's hash and dates between builds.
+const DATES_FILE = path.join(path.dirname(ROOT), 'lastmod.json');
+const DATES = fs.existsSync(DATES_FILE) ? JSON.parse(fs.readFileSync(DATES_FILE, 'utf8')) : {};
+const contentHash = (p) => crypto.createHash('sha1').update(JSON.stringify([p.title, p.description, p.h1, p.lead, p.content,
+  typeof p.body === 'function' ? String(p.body) : p.body, p.faq, p.steps, p.video])).digest('hex').slice(0, 12);
+for (const p of ALL) {
+  const k = `${p.lang}:${p.path}`, h = contentHash(p), d = DATES[k];
+  if (!d) DATES[k] = { hash: h, published: UPDATED, modified: UPDATED };
+  else if (!d.hash) d.hash = h; // seeded entry: keep its dates
+  else if (d.hash !== h) Object.assign(d, { hash: h, modified: UPDATED });
+}
+fs.writeFileSync(DATES_FILE, JSON.stringify(DATES, null, 1) + '\n');
+const datesOf = (p) => DATES[`${p.lang}:${p.path}`] || { published: UPDATED, modified: UPDATED };
+
 // The same page in every language that has it, for hreflang and the language switcher.
 const versions = (p) => (p.key ? Object.keys(LANGS).map((lang) => ALL.find((q) => q.lang === lang && q.key === p.key)).filter(Boolean) : [p]);
 const homeOf = (lang) => ALL.find((q) => q.lang === lang && q.key === 'home');
@@ -1989,7 +2004,7 @@ function jsonLd(p) {
     { '@type': 'WebSite', '@id': `${SITE_URL}/#site`, name: NAME, url: `${SITE_URL}/`, inLanguage: ['en', 'es', 'pt-BR'], publisher: { '@id': `${SITE_URL}/#org` } },
     { '@type': 'Organization', '@id': `${SITE_URL}/#org`, name: NAME, url: `${SITE_URL}/`, logo: `${SITE_URL}/icon-512.png`, email: EMAIL, sameAs: SOCIAL.map((s) => s.url) },
     { '@type': 'WebPage', '@id': `${url}#page`, url, name: p.title, description: p.description, inLanguage: lang, isPartOf: { '@id': `${SITE_URL}/#site` },
-      primaryImageOfPage: ogImage(p), dateModified: UPDATED },
+      primaryImageOfPage: ogImage(p), dateModified: datesOf(p).modified },
   ];
   if (!p.plain && p.tool) {
     graph.push({
@@ -2003,7 +2018,7 @@ function jsonLd(p) {
   if (trail) graph.push({ '@type': 'BreadcrumbList', itemListElement: trail.map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: c.name, item: c.url })) });
   if (p.faq) graph.push({ '@type': 'FAQPage', inLanguage: lang, mainEntity: p.faq.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) });
   if (p.crumb === 'Guides') graph.push({ '@type': 'Article', '@id': `${url}#article`, headline: plainH1(p), description: p.description, inLanguage: lang, image: ogImage(p),
-    dateModified: UPDATED, author: { '@id': `${SITE_URL}/#org` }, publisher: { '@id': `${SITE_URL}/#org` }, mainEntityOfPage: { '@id': `${url}#page` } });
+    datePublished: datesOf(p).published, dateModified: datesOf(p).modified, author: { '@id': `${SITE_URL}/#org` }, publisher: { '@id': `${SITE_URL}/#org` }, mainEntityOfPage: { '@id': `${url}#page` } });
   if (p.video) graph.push({ '@type': 'VideoObject', name: p.video.name, description: p.video.description, thumbnailUrl: `${SITE_URL}${p.video.poster}`,
     contentUrl: `${SITE_URL}${p.video.src}`, uploadDate: p.video.uploaded, duration: p.video.duration, inLanguage: lang });
   if (p.steps) graph.push({ '@type': 'HowTo', inLanguage: lang, name: plainH1(p), step: p.steps.map(([n, t], i) => ({ '@type': 'HowToStep', position: i + 1, name: n, text: t })) });
@@ -2055,6 +2070,7 @@ function page(p) {
 <link rel="canonical" href="${url}">
 ${alternates}
 <meta name="theme-color" content="#6d4aff">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -2152,8 +2168,30 @@ const altLinks = (p) => (p.key ? versions(p).map((q) => `<xhtml:link rel="altern
   + `<xhtml:link rel="alternate" hreflang="x-default" href="${urlOf(versions(p).find((q) => q.lang === 'en'))}"/>` : '');
 fs.writeFileSync(path.join(ROOT, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1" xmlns:xhtml="http://www.w3.org/1999/xhtml">
-${ALL.map((p) => `  <url><loc>${urlOf(p)}</loc><lastmod>${UPDATED}</lastmod><priority>${priority(p)}</priority>${altLinks(p)}<image:image><image:loc>${ogImage(p)}</image:loc></image:image>${videoEntry(p)}</url>`).join('\n')}
+${ALL.map((p) => `  <url><loc>${urlOf(p)}</loc><lastmod>${datesOf(p).modified}</lastmod><priority>${priority(p)}</priority>${altLinks(p)}<image:image><image:loc>${ogImage(p)}</image:loc></image:image>${videoEntry(p)}</url>`).join('\n')}
 </urlset>
+`);
+// llms.txt: a plain map of the site for AI assistants (llmstxt.org).
+fs.writeFileSync(path.join(ROOT, 'llms.txt'), `# ${NAME}
+
+> ${NAME} is a set of free audio tools that run entirely in the browser, on phones and computers. Files are processed on the user's device with FFmpeg (WebAssembly) and are never uploaded. No sign-up, no watermark. It makes iPhone (M4R) and Android ringtones, cuts and joins audio, converts video to MP3, converts between audio formats and adds effects such as slowed + reverb, nightcore, 8D audio, bass boost and AI noise removal.
+
+## Tools
+${TOOLS.map((t) => `- [${t.title}](${SITE_URL}/${t.slug}/): ${t.blurb}`).join('\n')}
+
+## Converters
+${CONVERSIONS.map((c) => `- [${c.label}](${SITE_URL}/${c.slug}/)`).join('\n')}
+
+## Guides
+${GUIDES.map((g) => `- [${g.title}](${SITE_URL}/guides/${g.slug}/): ${g.blurb}`).join('\n')}
+
+## Other languages
+${Object.keys(LANGS).filter((l) => l !== 'en').map((l) => `- [${LANGS[l].ui.name}](${urlOf(homeOf(l))})`).join('\n')}
+
+## About
+- [About and contact](${SITE_URL}/about/)
+- [Privacy policy](${SITE_URL}/privacy/)
+- [Terms of use](${SITE_URL}/terms/)
 `);
 // Page list for the social-image generator (og.mjs).
 fs.writeFileSync(path.join(path.dirname(ROOT), 'pages.json'), JSON.stringify(ALL.map((p) => ({ slug: slugOf(p), h1: plainH1(p), lead: strip(p.lead || ''), tag: LANGS[p.lang].ui.tag })), null, 1));
