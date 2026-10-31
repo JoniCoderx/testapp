@@ -437,3 +437,5 @@ footer .en-tag { margin-left: 5px; font-size: 9.5px; padding: 0 4px; }
 .share-row { flex-direction: column; }
 .dl-note { text-align: center; color: var(--text) !important; font-size: 14px !important; line-height: 1.45; max-width: 520px; }
 .dl-note:empty { display: none; }
+/* On the voice changer the voices are the main control: show them all instead of a scrolling row. */
+.tool[data-tool="voice-changer"] .presets { flex-wrap: wrap; overflow: visible; }

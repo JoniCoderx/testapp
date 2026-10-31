@@ -11,6 +11,7 @@
 - [AI Noise Remover](https://melocut.com/noise-remover/): Clean up background noise in voice recordings.
 - [Slowed + Reverb](https://melocut.com/slowed-reverb/): Make a slowed version of a song with reverb.
 - [Vocal Remover](https://melocut.com/vocal-remover/): Take the singer out for a karaoke track.
+- [Voice Changer](https://melocut.com/voice-changer/): Chipmunk, deep, robot, monster and more voices.
 - [8D Audio](https://melocut.com/8d-audio/): Sound that moves from ear to ear. Use headphones.
 - [Bass Booster](https://melocut.com/bass-booster/): Add more low end to any song.
 - [Volume Booster](https://melocut.com/volume-booster/): Make quiet recordings louder.

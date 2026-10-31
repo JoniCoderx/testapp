@@ -4,6 +4,17 @@
 import json, os, re, sys
 
 ES = {
+ 'Chipmunk': 'Ardilla',
+ 'Deep voice': 'Voz grave',
+ 'Monster': 'Monstruo',
+ 'Robot': 'Robot',
+ 'Alien': 'Alienígena',
+ 'Telephone': 'Teléfono',
+ 'Echo': 'Eco',
+ 'Voice effect': 'Efecto de voz',
+ ' (voice changer)': ' (cambiador de voz)',
+ 'Change voice': 'Cambiar voz',
+ 'Chipmunk is set. Pick another voice under Effects, press Preview, then save it. Works with recordings, voice notes and videos.': 'Ardilla está activado. Elige otra voz en Efectos, pulsa Escuchar con efectos y guárdalo. Funciona con grabaciones, notas de voz y videos.',
  'this app': 'una app',
  'You opened MeloCut inside {0}. Downloads often do not work in app browsers.': 'Abriste MeloCut dentro de {0}. Las descargas a menudo no funcionan en los navegadores de las apps.',
  'Tap ⋯ or ⋮ at the top and choose Open in browser, or copy the link and paste it into {0}.': 'Toca ⋯ o ⋮ arriba y elige Abrir en el navegador, o copia el enlace y pégalo en {0}.',
@@ -176,6 +187,17 @@ ES = {
 }
 
 PT = {
+ 'Chipmunk': 'Esquilo',
+ 'Deep voice': 'Voz grave',
+ 'Monster': 'Monstro',
+ 'Robot': 'Robô',
+ 'Alien': 'Alienígena',
+ 'Telephone': 'Telefone',
+ 'Echo': 'Eco',
+ 'Voice effect': 'Efeito de voz',
+ ' (voice changer)': ' (modificador de voz)',
+ 'Change voice': 'Mudar voz',
+ 'Chipmunk is set. Pick another voice under Effects, press Preview, then save it. Works with recordings, voice notes and videos.': 'Esquilo está ativado. Escolha outra voz em Efeitos, toque em Ouvir com efeitos e salve. Funciona com gravações, áudios e vídeos.',
  'this app': 'um app',
  'You opened MeloCut inside {0}. Downloads often do not work in app browsers.': 'Você abriu o MeloCut dentro de {0}. Downloads muitas vezes não funcionam nos navegadores dos apps.',
  'Tap ⋯ or ⋮ at the top and choose Open in browser, or copy the link and paste it into {0}.': 'Toque em ⋯ ou ⋮ no topo e escolha Abrir no navegador, ou copie o link e cole no {0}.',
