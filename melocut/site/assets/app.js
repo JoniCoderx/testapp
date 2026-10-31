@@ -174,6 +174,7 @@ function atempoChain(t) {
 const FX_DEFAULTS = {
   fadeIn: 0, fadeOut: 0, volume: 100, normalize: false, speed: 1, pitch: 0, bass: 0, treble: 0,
   reverb: 0, eightD: false, aiDenoise: false, denoise: false, karaoke: false, silence: false, reverse: false, mono: false,
+  voice: '', // voice changer character that needs its own filters: robot, alien or telephone
 };
 const PRESETS = {
   slowed: { label: T('Slowed + Reverb'), fx: { speed: 0.85, pitch: -2, reverb: 45, fadeIn: 1, fadeOut: 3 } },
@@ -183,7 +184,17 @@ const PRESETS = {
   loud: { label: T('Louder'), fx: { volume: 180, normalize: true } },
   voice: { label: T('AI Clean Voice'), ai: true, fx: { aiDenoise: true, normalize: true, silence: true, treble: 2 } },
   karaoke: { label: T('Karaoke'), fx: { karaoke: true } },
+  // Voice changer characters, shown only on the voice changer.
+  chipmunk: { voice: true, label: T('Chipmunk'), fx: { pitch: 8 } },
+  deep: { voice: true, label: T('Deep voice'), fx: { pitch: -5, bass: 4 } },
+  monster: { voice: true, label: T('Monster'), fx: { pitch: -9, bass: 6, reverb: 35 } },
+  robot: { voice: true, label: T('Robot'), fx: { voice: 'robot' } },
+  alien: { voice: true, label: T('Alien'), fx: { pitch: 4, voice: 'alien' } },
+  telephone: { voice: true, label: T('Telephone'), fx: { voice: 'telephone' } },
+  echo: { voice: true, label: T('Echo'), fx: { reverb: 75 } },
 };
+const VOICE_PRESETS = Object.keys(PRESETS).filter((k) => PRESETS[k].voice);
+const MUSIC_PRESETS = Object.keys(PRESETS).filter((k) => !PRESETS[k].voice);
 
 // Filter chain for the given effects; len = input length in seconds. Returns { filters, outLen, extraArgs }.
 function effectFilters(fx, len) {
@@ -202,6 +213,11 @@ function effectFilters(fx, len) {
   const { fi, fo } = fadeLens(fx, outLen);
   if (fi > 0) f.push(`afade=t=in:st=0:d=${fi.toFixed(2)}`);
   if (fo > 0) f.push(`afade=t=out:st=${Math.max(0, outLen - fo).toFixed(2)}:d=${fo.toFixed(2)}`);
+  // Voice changer characters (phase-flattened FFT for robot, wobble for alien, narrow band for telephone).
+  // Robot and telephone lose a lot of level, so they get make-up gain (and a limiter) to match the other voices.
+  if (fx.voice === 'robot') f.push("afftfilt=real='hypot(re,im)*sin(0)':imag='hypot(re,im)*cos(0)':win_size=512:overlap=0.75", 'volume=3.5', 'alimiter=limit=0.97');
+  if (fx.voice === 'alien') f.push('vibrato=f=7:d=0.5', 'flanger=delay=3:depth=4:speed=1');
+  if (fx.voice === 'telephone') f.push('highpass=f=300', 'lowpass=f=3400', 'acompressor=threshold=0.1:ratio=4', 'volume=2.2', 'alimiter=limit=0.97');
   if (fx.bass) f.push(`bass=g=${fx.bass}:f=110`);
   if (fx.treble) f.push(`treble=g=${fx.treble}:f=3000`);
   if (fx.reverb > 0) {
@@ -227,7 +243,7 @@ function fadeLens(fx, len) {
 const isDefaultFx = (fx) => Object.keys(FX_DEFAULTS).every((k) => fx[k] === FX_DEFAULTS[k]);
 const FX_NAMES = { fadeIn: T('Fade in'), fadeOut: T('Fade out'), volume: T('Volume'), normalize: T('Auto loudness'), speed: T('Speed'), pitch: T('Pitch'),
   bass: T('Bass'), treble: T('Treble'), reverb: T('Reverb'), eightD: '8D', aiDenoise: T('AI noise removal'), denoise: T('Reduce hiss'),
-  karaoke: T('Vocal remover'), silence: T('Remove silences'), reverse: T('Reverse'), mono: T('Mono') };
+  karaoke: T('Vocal remover'), silence: T('Remove silences'), reverse: T('Reverse'), mono: T('Mono'), voice: T('Voice effect') };
 // Short list of the effects that are switched on, e.g. "Fade in 1s, Fade out 2s".
 function fxNames(fx) {
   const on = Object.keys(FX_DEFAULTS).filter((k) => fx[k] !== FX_DEFAULTS[k])
@@ -242,10 +258,10 @@ function slider(key, label, min, max, step, unit) {
 function toggle(key, label, tip) {
   return `<label class="fx-t" title="${tip}"><input type="checkbox" data-fx="${key}"> ${label}</label>`;
 }
-function fxHTML(open) {
+function fxHTML(open, presets = MUSIC_PRESETS) {
   return `<details class="fx" data-fxbox ${open ? 'open' : ''}>
     <summary>${I.sliders}<span>${T('Effects &amp; filters')}</span> <small data-fxcount></small></summary>
-    <div class="presets">${Object.entries(PRESETS).map(([k, p]) => `<button type="button" class="chip" data-preset="${k}">${p.ai ? I.spark : ''}${p.label}</button>`).join('')}
+    <div class="presets">${presets.map((k) => [k, PRESETS[k]]).map(([k, p]) => `<button type="button" class="chip" data-preset="${k}">${p.ai ? I.spark : ''}${p.label}</button>`).join('')}
       <button type="button" class="chip ghost" data-preset="reset">${T('Reset')}</button></div>
     <div class="fx-grid">
       ${slider('fadeIn', T('Fade in'), 0, 10, 0.5, 's')}
@@ -374,6 +390,9 @@ function mountFx(root, initial, onChange) {
     render(); onChange();
     if (p !== 'reset') track('preset', { preset: p });
   }));
+  // Light up the preset a page starts with (e.g. Chipmunk on the voice changer).
+  const start = Object.keys(PRESETS).find((k) => JSON.stringify({ ...FX_DEFAULTS, ...PRESETS[k].fx }) === JSON.stringify(fx));
+  if (start) box.querySelector(`[data-preset="${start}"]`)?.classList.add('on');
   render();
   return { get: () => ({ ...fx }) };
 }
@@ -397,6 +416,11 @@ const TOOLS = {
   converter: {
     formats: ALL_FORMATS, defaultFormat: 'mp3', suffix: '',
     note: T('Converts the whole file. Drag on the waveform if you only want part of it.'),
+  },
+  'voice-changer': {
+    formats: ALL_FORMATS, defaultFormat: 'mp3', suffix: T(' (voice changer)'), fx: PRESETS.chipmunk.fx, fxOpen: true, presets: VOICE_PRESETS,
+    go: T('Change voice'),
+    note: T('Chipmunk is set. Pick another voice under Effects, press Preview, then save it. Works with recordings, voice notes and videos.'),
   },
   'slowed-reverb': {
     formats: ALL_FORMATS, defaultFormat: 'mp3', suffix: T(' (slowed + reverb)'), fx: PRESETS.slowed.fx, fxOpen: true,
@@ -476,7 +500,7 @@ function mountTool(root) {
         <span class="sel-len" data-len></span>
       </div>
       <div class="opts">${optionsHTML(cfg)}</div>
-      ${fxHTML(cfg.fxOpen)}
+      ${fxHTML(cfg.fxOpen, cfg.presets)}
       <div class="note tip" data-hint>${cfg.note}</div>
       <div class="go">
         <button class="btn" type="button" data-go>${goLabel}</button>

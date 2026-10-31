@@ -55,6 +55,7 @@ const TOOLS = [
   { slug: 'noise-remover', icon: 'sparkle', title: 'AI Noise Remover', ai: true, blurb: 'Clean up background noise in voice recordings.' },
   { slug: 'slowed-reverb', icon: 'slow', title: 'Slowed + Reverb', blurb: 'Make a slowed version of a song with reverb.' },
   { slug: 'vocal-remover', icon: 'mic', title: 'Vocal Remover', blurb: 'Take the singer out for a karaoke track.' },
+  { slug: 'voice-changer', icon: 'mic', title: 'Voice Changer', blurb: 'Chipmunk, deep, robot, monster and more voices.' },
   { slug: '8d-audio', icon: 'orbit', title: '8D Audio', blurb: 'Sound that moves from ear to ear. Use headphones.' },
   { slug: 'bass-booster', icon: 'bass', title: 'Bass Booster', blurb: 'Add more low end to any song.' },
   { slug: 'volume-booster', icon: 'volume', title: 'Volume Booster', blurb: 'Make quiet recordings louder.' },
@@ -585,6 +586,39 @@ const PAGES = [
       ['Is this real AI?', 'Yes. It uses RNNoise, a neural network for cleaning up speech. The model downloads the first time you use it and then runs on your device.'],
       ['Does it work on music?', 'It is designed for voices. On songs it may remove instruments, so use Reduce hiss for music.'],
       ['Is my recording uploaded?', 'No. Everything runs in your browser.'],
+    ],
+  },
+  {
+    path: 'voice-changer', tool: 'voice-changer', crumb: 'Tools',
+    title: `Voice Changer: Chipmunk, Robot, Deep Voice, Free | ${NAME}`,
+    description: 'Change your voice online for free: chipmunk, deep voice, monster, robot, alien, telephone and echo. Works with recordings, voice notes and videos. No upload.',
+    h1: '<em>Voice changer</em>: chipmunk, robot, deep voice',
+    lead: 'Turn any recording, voice note or video into a chipmunk, a monster, a robot and more. Listen first, then save it.',
+    badges: ['7 voices', 'Preview first', 'No upload'],
+    steps: [
+      ['Open a recording', 'Choose a voice memo, voice note or video. Or record one on your phone first.'],
+      ['Pick a voice', 'Chipmunk is set. Tap Deep voice, Monster, Robot, Alien, Telephone or Echo and press Preview.'],
+      ['Save it', 'Press Change voice, then Download. Share it or use it as a ringtone.'],
+    ],
+    content: `
+    <h2>The voices</h2>
+    <ol class="guide-steps">
+      <li><strong>Chipmunk:</strong> high and squeaky, without speeding the clip up.</li>
+      <li><strong>Deep voice:</strong> lower and fuller, like a movie trailer.</li>
+      <li><strong>Monster:</strong> very low with a dark echo.</li>
+      <li><strong>Robot:</strong> a flat, metallic voice.</li>
+      <li><strong>Alien:</strong> a little higher with a strange wobble.</li>
+      <li><strong>Telephone:</strong> thin and narrow, like an old phone line or a walkie-talkie.</li>
+      <li><strong>Echo:</strong> as if you were in a big hall or a cave.</li>
+    </ol>
+    <p>Under Effects you can fine-tune each one: move Pitch for a higher or lower voice, add Reverb for more space, or turn on AI noise removal first if the recording is noisy.</p>
+    <h2>Ideas</h2>
+    <p>Prank voice notes, funny ringtones (open the result in the <a href="/ringtone-maker/">Ringtone Maker</a>), TikTok voiceovers, or hiding your real voice in a video. Only change recordings you are allowed to use, and don't use it to impersonate someone.</p>`,
+    faq: [
+      ['Is the voice changer free?', 'Yes. Free, no sign-up, no watermark, and your recording is never uploaded.'],
+      ['Can I change the voice in a video?', 'Yes. Open the video and MeloCut uses its sound. The result is an audio file (MP3, M4A, WAV, OGG or FLAC).'],
+      ['Can I record directly on the site?', 'Not yet. Record with your phone\'s voice recorder, then open the file here.'],
+      ['How do I make a chipmunk voice?', 'Open your recording here: Chipmunk is already selected. Press Preview, then Change voice and Download.'],
     ],
   },
   {
