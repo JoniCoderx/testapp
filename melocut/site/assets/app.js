@@ -213,10 +213,11 @@ function effectFilters(fx, len) {
   const { fi, fo } = fadeLens(fx, outLen);
   if (fi > 0) f.push(`afade=t=in:st=0:d=${fi.toFixed(2)}`);
   if (fo > 0) f.push(`afade=t=out:st=${Math.max(0, outLen - fo).toFixed(2)}:d=${fo.toFixed(2)}`);
-  // Voice changer characters (phase-flattened FFT for robot, wobble for alien, narrow band for telephone).
+  // Voice changer characters (phase-flattened FFT for robot, fast tremolo + slapback for alien, narrow band for telephone).
   // Robot and telephone lose a lot of level, so they get make-up gain (and a limiter) to match the other voices.
   if (fx.voice === 'robot') f.push("afftfilt=real='hypot(re,im)*sin(0)':imag='hypot(re,im)*cos(0)':win_size=512:overlap=0.75", 'volume=3.5', 'alimiter=limit=0.97');
-  if (fx.voice === 'alien') f.push('vibrato=f=7:d=0.5', 'flanger=delay=3:depth=4:speed=1');
+  // (vibrato/flanger were dropped: in ffmpeg.wasm they intermittently emit invalid samples that crash the MP3 encoder)
+  if (fx.voice === 'alien') f.push('tremolo=f=28:d=0.55', 'aecho=0.8:0.6:18:0.35', 'volume=2', 'alimiter=limit=0.97');
   if (fx.voice === 'telephone') f.push('highpass=f=300', 'lowpass=f=3400', 'acompressor=threshold=0.1:ratio=4', 'volume=2.2', 'alimiter=limit=0.97');
   if (fx.bass) f.push(`bass=g=${fx.bass}:f=110`);
   if (fx.treble) f.push(`treble=g=${fx.treble}:f=3000`);
