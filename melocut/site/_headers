@@ -15,3 +15,6 @@
 /.well-known/assetlinks.json
   Content-Type: application/json
   Access-Control-Allow-Origin: *
+# The production copy on pages.dev duplicates melocut.com: keep it out of search results.
+https://melocut.pages.dev/*
+  X-Robots-Tag: noindex

@@ -2,7 +2,8 @@
   const cfg = window.MELOCUT_CONFIG || {};
 
   // One address only: send www visitors to melocut.com (the server-side redirect rule does this too).
-  if (location.hostname === 'www.melocut.com') { location.replace(`https://melocut.com${location.pathname}${location.search}${location.hash}`); return; }
+  // www and the production pages.dev copy go to the real domain (preview builds on <hash>.melocut.pages.dev stay).
+  if (location.hostname === 'www.melocut.com' || location.hostname === 'melocut.pages.dev') { location.replace(`https://melocut.com${location.pathname}${location.search}${location.hash}`); return; }
 
   // Language: close the switcher when tapping elsewhere, and offer (never force) the visitor's language.
   const langBox = document.querySelector('.lang');
