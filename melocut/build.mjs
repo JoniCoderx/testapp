@@ -1451,7 +1451,7 @@ const PAGES = [
       <li>Press <strong>Preview with effects</strong> to hear it before saving.</li>
     </ol>
     <h2>Step 3: Save and share it</h2>
-    <p>Press <strong>Change voice</strong>, then <strong>Download</strong>, and send it with <strong>Send to a friend</strong>. Want it as a ringtone? Open the file in the <a href="/ringtone-maker/">Ringtone Maker</a> (see <a href="/guides/voice-ringtone/">your voice as a ringtone</a>).</p>
+    <p>Press <strong>Change voice</strong>, then <strong>Download</strong>, and send it with <strong>Send to a friend</strong>. To post it on TikTok or Reels as a video, open the result in <a href="/audio-to-video/">Song to Video</a>. Want it as a ringtone? Open the file in the <a href="/ringtone-maker/">Ringtone Maker</a> (see <a href="/guides/voice-ringtone/">your voice as a ringtone</a>).</p>
     <h2>Make it sound better</h2>
     <ol class="guide-steps">
       <li><strong>Higher or lower:</strong> move the <strong>Pitch</strong> slider. +8 is a classic chipmunk, -5 a deep voice, -9 a monster.</li>
@@ -1614,7 +1614,7 @@ const PAGES = [
       <li><strong>Slowed ringtone:</strong> make your slowed version, then open it in the <a href="/ringtone-maker/">Ringtone Maker</a>.</li>
     </ol>
     <h2>Posting it</h2>
-    <p>TikTok, Instagram and YouTube can mute or block songs you don't have the rights to, even slowed down. For your own listening it's fine; for posting, use music you made or are allowed to use, or add the original song from the app's own music library.</p>`,
+    <p>TikTok, Instagram and YouTube can mute or block songs you don't have the rights to, even slowed down. For your own listening it's fine; for posting, use music you made or are allowed to use, or add the original song from the app's own music library. Need a video file rather than audio? <a href="/audio-to-video/">Song to Video</a> turns your slowed version into an MP4 with a moving sound wave.</p>`,
     faq: [
       ['What speed is slowed + reverb?', 'Usually 0.80 to 0.90 times the original speed, with the pitch 1 to 3 semitones lower.'],
       ['Can I make it on my phone?', 'Yes. The Slowed + Reverb maker works in Safari and Chrome on iPhone and Android, with nothing to install.'],
@@ -1930,7 +1930,7 @@ const PAGES = [
     </ol>
     <p>A limiter keeps the loudest parts from crackling, so even big boosts stay clean.</p>
     <h2>Combine it</h2>
-    <p>Bass boost goes well with <a href="/guides/make-slowed-reverb/">slowed + reverb</a> and <a href="/guides/make-8d-audio/">8D audio</a>. Make one version, then open that file again and add the next effect.</p>`,
+    <p>Bass boost goes well with <a href="/guides/make-slowed-reverb/">slowed + reverb</a> and <a href="/guides/make-8d-audio/">8D audio</a>. Make one version, then open that file again and add the next effect. For TikTok or Reels, turn the result into a video with <a href="/audio-to-video/">Song to Video</a>.</p>`,
     faq: [
       ['How do I make a song bass boosted?', 'Open it in the Bass Booster, raise Bass to +8 dB or more, preview it and download the MP3.'],
       ['Why does my bass boosted song sound quieter?', 'To leave room for the bass without distorting, the rest has to sit a little lower. Add a little Volume if needed.'],

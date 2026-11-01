@@ -490,16 +490,24 @@ async function videoBackground({ title, style, cover }) {
   g.fillStyle = grad; g.fillRect(0, 0, VIDEO_W, VIDEO_H);
   const img = cover ? await loadImage(cover) : null;
   const fit = (w, h, W, H) => { const k = Math.max(W / w, H / h); return [w * k, h * k]; };
-  if (img) { // blurred, darkened full-bleed copy behind
+  if (img) { // blurred, darkened full-bleed copy behind. Blur by shrinking and stretching back,
+    // because ctx.filter is missing in Safari before 18.
     const [w, h] = fit(img.width, img.height, VIDEO_W, VIDEO_H);
-    g.save(); g.filter = 'blur(40px) brightness(0.5)'; g.drawImage(img, (VIDEO_W - w) / 2, (VIDEO_H - h) / 2, w, h); g.restore();
+    const TW = 9, TH = 16, t = document.createElement('canvas'); t.width = TW; t.height = TH;
+    t.getContext('2d').drawImage(img, (TW - w * TW / VIDEO_W) / 2, (TH - h * TH / VIDEO_H) / 2, w * TW / VIDEO_W, h * TH / VIDEO_H);
+    g.imageSmoothingEnabled = true; g.imageSmoothingQuality = 'high';
+    g.drawImage(t, -40, -70, VIDEO_W + 80, VIDEO_H + 140); // a little oversized so the soft edges fall outside
+    g.fillStyle = 'rgba(0,0,0,.45)'; g.fillRect(0, 0, VIDEO_W, VIDEO_H);
   } else if (s.glow) {
     const r = g.createRadialGradient(VIDEO_W / 2, 420, 10, VIDEO_W / 2, 420, 520);
     r.addColorStop(0, s.glow + 'aa'); r.addColorStop(1, s.glow + '00'); g.fillStyle = r; g.fillRect(0, 0, VIDEO_W, VIDEO_H);
   }
   // cover art (or a sound-wave emblem)
   const S = 420, X = (VIDEO_W - S) / 2, Y = 170;
-  const round = (x, y, w, h, rad) => { g.beginPath(); g.roundRect(x, y, w, h, rad); };
+  const round = (x, y, w, h, r) => { // like ctx.roundRect, which iOS 15 and older lack
+    r = Math.min(r, w / 2, h / 2); g.beginPath(); g.moveTo(x + r, y);
+    g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r); g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath();
+  };
   g.save(); g.shadowColor = 'rgba(0,0,0,.35)'; g.shadowBlur = 50; g.shadowOffsetY = 18;
   round(X, Y, S, S, 36); g.fillStyle = 'rgba(255,255,255,.14)'; g.fill(); g.restore();
   g.save(); round(X, Y, S, S, 36); g.clip();
