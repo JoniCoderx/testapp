@@ -50,9 +50,9 @@
   "modified": "2026-10-29"
  },
  "en:wav-to-mp3": {
-  "hash": "10bfc1d7ae0b",
+  "hash": "e58cdfc57f91",
   "published": "2026-10-25",
-  "modified": "2026-10-29"
+  "modified": "2026-11-01"
  },
  "en:m4a-to-mp3": {
   "hash": "902f3e15b32c",
@@ -70,14 +70,14 @@
   "modified": "2026-10-29"
  },
  "en:flac-to-mp3": {
-  "hash": "349b058670a6",
+  "hash": "d61458789d15",
   "published": "2026-10-25",
-  "modified": "2026-10-29"
+  "modified": "2026-11-01"
  },
  "en:audio-joiner": {
-  "hash": "a1d3aa395d25",
+  "hash": "c9f74496f7a1",
   "published": "2026-10-25",
-  "modified": "2026-10-29"
+  "modified": "2026-11-01"
  },
  "en:noise-remover": {
   "hash": "c4090d29ae53",
@@ -95,9 +95,9 @@
   "modified": "2026-10-29"
  },
  "en:8d-audio": {
-  "hash": "ec1abffc4e9d",
+  "hash": "e9f76939a8b7",
   "published": "2026-10-25",
-  "modified": "2026-10-29"
+  "modified": "2026-11-01"
  },
  "en:bass-booster": {
   "hash": "d89afbf925b7",
@@ -120,9 +120,9 @@
   "modified": "2026-10-29"
  },
  "en:ogg-to-mp3": {
-  "hash": "b00c0db34b10",
+  "hash": "b1fdc4b96114",
   "published": "2026-10-26",
-  "modified": "2026-10-29"
+  "modified": "2026-11-01"
  },
  "en:aac-to-mp3": {
   "hash": "199e42f9671a",
@@ -145,9 +145,9 @@
   "modified": "2026-10-29"
  },
  "en:nightcore-maker": {
-  "hash": "57513e617bbe",
+  "hash": "0c168cbf6afd",
   "published": "2026-10-26",
-  "modified": "2026-10-29"
+  "modified": "2026-11-01"
  },
  "en:remove-silence": {
   "hash": "eb838165bebd",
@@ -320,9 +320,9 @@
   "modified": "2026-10-29"
  },
  "es:es/cortar-audio": {
-  "hash": "836a42db879d",
+  "hash": "232fed09e025",
   "published": "2026-10-26",
-  "modified": "2026-10-29"
+  "modified": "2026-11-01"
  },
  "es:es/video-a-mp3": {
   "hash": "5ab9b5a9c245",

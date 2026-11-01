@@ -447,7 +447,7 @@ const PAGES = [
   },
   {
     path: 'wav-to-mp3', tool: 'converter', format: 'mp3', crumb: 'Converters',
-    title: `WAV to MP3 Converter, Free and Online | ${NAME}`,
+    title: `WAV to MP3 Converter Online: Free, No Upload | ${NAME}`,
     description: 'Convert WAV to MP3 online and make your files up to 10 times smaller. Choose 128 to 320 kbps. Free, private, no upload.',
     h1: '<em>WAV to MP3</em> converter',
     lead: 'Turn large WAV files into MP3s that are easy to share and play anywhere.',
@@ -460,10 +460,23 @@ const PAGES = [
     content: `
     <h2>WAV or MP3?</h2>
     <p>WAV files are uncompressed, so a three-minute song takes around 30 MB. As an MP3 at 320 kbps it's about 7 MB and sounds almost the same. That makes it much easier to email, upload or keep on your phone.</p>
-    <p>Keep the WAV as well if you plan to edit the recording later.</p>`,
+    <p>Keep the WAV as well if you plan to edit the recording later.</p>
+    <h3>How big will the MP3 be?</h3>
+    <p>A CD-quality WAV uses about 10 MB per minute. The MP3 depends on the quality you pick:</p>
+    <ul>
+      <li><strong>320 kbps</strong>: about 2.4 MB per minute. Best for music.</li>
+      <li><strong>192 kbps</strong>: about 1.4 MB per minute. A good middle ground.</li>
+      <li><strong>128 kbps</strong>: about 1 MB per minute. Fine for speech and voice recordings.</li>
+    </ul>
+    <h3>Where WAV files come from</h3>
+    <p>Recorders, music software, sample packs, Windows sound recordings and exports from editing apps are usually WAV. Converting them to MP3 makes them easy to send in a chat, add to a phone or upload to a site with a size limit.</p>
+    <h3>Trim it while you convert</h3>
+    <p>Only need part of the file? Drag the handles on the waveform to keep just that part, and add a fade in or out. You can also boost a quiet recording with <strong>Auto loudness</strong> before you download.</p>`,
     faq: [
       ['Does converting WAV to MP3 lose quality?', 'A little, because MP3 is compressed. At 320 kbps most people cannot hear it.'],
       ['Can I convert several WAV files at once?', 'Convert them one after another, or join them into one MP3 with the Audio Joiner.'],
+      ['Is this WAV to MP3 converter really free?', 'Yes. There is no sign-up and no watermark, and the file is converted in your browser, so it is never uploaded.'],
+      ['Which bitrate should I choose?', '320 kbps for music you care about, 192 kbps for everyday listening, and 128 kbps for voice recordings.'],
     ],
   },
   {
@@ -535,7 +548,7 @@ const PAGES = [
   },
   {
     path: 'flac-to-mp3', tool: 'converter', format: 'mp3', crumb: 'Converters',
-    title: `FLAC to MP3 Converter, Free and Online | ${NAME}`,
+    title: `FLAC to MP3 Converter Online: Free, No Upload | ${NAME}`,
     description: 'Convert FLAC to MP3 online so your music plays on any phone, car or player. Choose up to 320 kbps. Free and private.',
     h1: '<em>FLAC to MP3</em> converter',
     lead: 'Convert lossless FLAC music to MP3 for your phone, car or any player.',
@@ -547,16 +560,25 @@ const PAGES = [
     ],
     content: `
     <h2>FLAC or MP3?</h2>
-    <p>FLAC keeps every detail of the original recording, but the files are large and not every device plays them. A 320 kbps MP3 is around a third of the size and sounds very close, which is ideal for phones and cars.</p>`,
+    <p>FLAC keeps every detail of the original recording, but the files are large and not every device plays them. A 320 kbps MP3 is around a third of the size and sounds very close, which is ideal for phones and cars.</p>
+    <h3>Why convert FLAC?</h3>
+    <p>iPhones don't play FLAC in the Music app, many car stereos and older players skip it, and a large lossless library quickly fills a phone. An MP3 copy plays everywhere and takes much less space.</p>
+    <h3>Tips for the best result</h3>
+    <ul>
+      <li>Choose <strong>320 kbps</strong>. FLAC is high quality to begin with, so keep as much as MP3 allows.</li>
+      <li>Leave the effects off if you want an exact copy of the song.</li>
+      <li>Need Apple's format instead? Pick <strong>M4A</strong> in the <a href="/audio-converter/">Audio Converter</a>.</li>
+    </ul>`,
     faq: [
+      ['Will the MP3 sound worse than the FLAC?', 'Technically a little, because MP3 removes detail to save space. At 320 kbps most people cannot tell them apart on phones, earbuds or in the car.'],
       ['Should I delete my FLAC files after converting?', 'Keep them if you have the space. You can always make new MP3s from them, but not the other way round.'],
     ],
   },
   // ---------- effect tools ----------
   {
     path: 'audio-joiner', tool: 'joiner', crumb: 'Tools',
-    title: `Audio Joiner: Merge MP3 Songs Online, Free | ${NAME}`,
-    description: 'Join MP3, M4A, WAV and other audio files into one. Reorder them, listen, add a crossfade and even out the volume. Free and private.',
+    title: `MP3 Joiner: Merge Audio Files Online, Free | ${NAME}`,
+    description: 'Free audio and MP3 joiner: merge MP3, M4A, WAV and other files into one. Reorder them, listen, add a crossfade and even out the volume. Free and private.',
     h1: '<em>Audio joiner</em>: merge songs into one file',
     lead: 'Put several songs, voice notes or clips together into one file. Listen to each one, change the order and add a crossfade.',
     badges: ['2 or more files', 'Crossfade', 'Even volume'],
@@ -709,7 +731,7 @@ const PAGES = [
   },
   {
     path: '8d-audio', tool: '8d', crumb: 'Tools',
-    title: `8D Audio Converter: Make 8D Songs, Free | ${NAME}`,
+    title: `8D Audio Converter Online: Make 8D Songs Free | ${NAME}`,
     description: 'Turn any song into 8D audio that moves around your head. Listen with headphones, then download an MP3. Free, no upload.',
     h1: '<em>8D audio</em> converter',
     lead: 'Make the music move around your head. Put on headphones, listen, then download.',
@@ -803,7 +825,7 @@ const PAGES = [
   },
   {
     path: 'ogg-to-mp3', tool: 'converter', format: 'mp3', crumb: 'Converters',
-    title: `OGG to MP3 Converter, Free and Online | ${NAME}`,
+    title: `OGG to MP3 Converter Online: Free, No Upload | ${NAME}`,
     description: 'Convert OGG and OGA audio files to MP3 so they play on iPhone, in cars and in every music app. Free, quick, and nothing is uploaded.',
     h1: '<em>OGG to MP3</em> converter',
     lead: 'Turn OGG files from games, Telegram, Discord or Linux apps into MP3s that play everywhere.',
@@ -818,9 +840,16 @@ const PAGES = [
     <p>OGG is an open audio format. Most OGG files hold <strong>Vorbis</strong> music, and voice messages from apps like Telegram and WhatsApp often hold <strong>Opus</strong> speech. Both sound good, but iPhones, many car stereos and older players won't open them.</p>
     <p>${NAME} reads both kinds and saves a standard MP3. If the file is a voice message, the <a href="/whatsapp-audio-to-mp3/">voice note converter</a> page has tips for getting it out of the app first.</p>
     <h3>Converting the other way</h3>
-    <p>Need OGG instead? Open any file in the <a href="/audio-converter/">Audio Converter</a> and choose OGG as the format.</p>`,
+    <p>Need OGG instead? Open any file in the <a href="/audio-converter/">Audio Converter</a> and choose OGG as the format.</p>
+    <h3>If the OGG won't open</h3>
+    <ul>
+      <li>Check the file finished downloading. A half-saved OGG can't be read.</li>
+      <li>Files from chat apps sometimes end in <strong>.opus</strong> or <strong>.oga</strong>. They work too, and the <a href="/opus-to-mp3/">OPUS to MP3</a> page covers them.</li>
+      <li>On iPhone, save the file to the Files app first, then choose it from there.</li>
+    </ul>`,
     faq: [
       ['Why won\'t my iPhone play OGG files?', 'Apple supports only some OGG files in a few apps. Converting to MP3 or M4A makes them play everywhere.'],
+      ['Can I convert OGG to MP3 on my phone?', 'Yes. The converter works in the browser on Android and iPhone, with no app to install.'],
       ['Does converting OGG to MP3 lose quality?', 'Both are compressed formats, so a little. At 256 or 320 kbps it is very hard to hear.'],
     ],
   },
@@ -926,7 +955,7 @@ const PAGES = [
   {
     path: 'nightcore-maker', tool: 'converter', crumb: 'Tools', fx: { speed: 1.2, pitch: 3 }, suffix: ' (nightcore)',
     note: 'Nightcore is set up: 1.20× speed and 3 semitones higher. Press Play with effects to hear it.',
-    title: `Nightcore Maker: Make Sped Up Songs Online, Free | ${NAME}`,
+    title: `Nightcore Maker Online: Make Sped Up Songs Free | ${NAME}`,
     description: 'Turn any song into a nightcore or sped up version: faster and higher pitched. Adjust speed and pitch, listen first and download an MP3. Free.',
     h1: '<em>Nightcore</em> and sped up song maker',
     lead: 'Make the fast, high, energetic version of any song. The settings are ready, and you can fine-tune them.',
@@ -940,7 +969,14 @@ const PAGES = [
     <h2>The nightcore sound</h2>
     <p>Nightcore edits play a song about <strong>15 to 30% faster</strong> and raise the pitch by <strong>2 to 4 semitones</strong>, which gives the bright, energetic sound. The sped up versions on TikTok and Instagram use the same idea, usually a bit less extreme.</p>
     <h3>Ideas</h3>
-    <p>Add a little <strong>Bass</strong> so it doesn't sound thin, switch on <strong>Auto loudness</strong> to keep it punchy, or go the other way with the <a href="/slowed-reverb/">Slowed + Reverb</a> maker.</p>`,
+    <p>Add a little <strong>Bass</strong> so it doesn't sound thin, switch on <strong>Auto loudness</strong> to keep it punchy, or go the other way with the <a href="/slowed-reverb/">Slowed + Reverb</a> maker.</p>
+    <h3>Good starting settings</h3>
+    <ul>
+      <li><strong>Classic nightcore</strong>: 1.25× speed, +4 semitones.</li>
+      <li><strong>Sped up (TikTok style)</strong>: 1.15× speed, +2 semitones.</li>
+      <li><strong>Light</strong>: 1.10× speed, +1 semitone, for slow ballads.</li>
+    </ul>
+    <p>Then cut the best 30 to 60 seconds with the handles on the waveform, ready for a Reel, a TikTok or a <a href="/guides/make-ringtone/">ringtone</a>. Step-by-step help is in the <a href="/guides/make-nightcore/">nightcore guide</a>.</p>`,
     faq: [
       ['What is the difference between nightcore and sped up?', 'Both are faster and higher. Nightcore is usually more extreme. Lower the speed to about 1.1× for a softer sped up version.'],
       ['Can I keep the original pitch?', 'Yes. Set Pitch back to 0, or use the Speed Up Audio tool, which keeps the pitch.'],
