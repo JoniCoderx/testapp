@@ -2120,6 +2120,9 @@ function withVideo(p) {
   return m ? p.content.replace(m[0], m[0] + videoHTML(p.video)) : videoHTML(p.video) + p.content;
 }
 
+// Reading time for guides: about 200 words a minute, at least one.
+const readMinutes = (p) => Math.max(1, Math.round(strip(p.content || '').split(/\s+/).filter(Boolean).length / 200));
+
 function page(p) {
   const lang = p.lang || 'en', ui = LANGS[lang].ui, L = { WHY: whyHTML(ui), INSTALL: installHTML(ui) };
   const url = urlOf(p);
@@ -2146,7 +2149,7 @@ function page(p) {
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>${esc(p.title)}</title>
 <meta name="description" content="${esc(p.description)}">
-<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
 <link rel="canonical" href="${url}">
 ${alternates}
 <meta name="theme-color" content="#6d4aff">
@@ -2195,6 +2198,7 @@ ${p.tool ? `<link rel="modulepreload" href="${asset('assets/app.js')}">\n<script
   <div class="hero"${p.plain ? ' style="text-align:left;padding-bottom:0"' : ''}>
     <h1>${p.h1}</h1>
     ${p.lead ? `<p>${p.lead}</p>` : ''}
+    ${p.crumb === 'Guides' ? `<p class="updated">${LANGS[p.lang].ui.updated || 'Updated'} <time datetime="${datesOf(p).modified}">${new Date(datesOf(p).modified + 'T12:00:00Z').toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' })}</time> · ${readMinutes(p)} ${LANGS[p.lang].ui.minRead || 'min read'}</p>` : ''}
     ${p.badges ? `<div class="badges">${p.badges.map((b) => `<span class="badge">${b}</span>`).join('')}</div>` : ''}
   </div>
   ${p.home ? `${toolGrid(lang)}\n  <div class="ad" data-slot="top"></div>` : ''}
@@ -2236,7 +2240,7 @@ fs.writeFileSync(path.join(ROOT, '404.html'), page({
   lang: 'en', path: '404', title: `Page not found | ${NAME}`, description: 'Page not found.', h1: 'Page not found',
   lead: "That page doesn't exist, or it moved. Pick a tool below, or go back to the <a href=\"/\">home page</a> or the <a href=\"/guides/\">guides</a>.", plain: false,
   body: `<div class="cards">${TOOLS.map((t) => toolCardIn(t, 'en')).join('')}</div><div class="section"><h2>Popular conversions</h2>${CONVERSION_LINKS}</div>`,
-}).replace('<meta name="robots" content="index, follow, max-image-preview:large">', '<meta name="robots" content="noindex">'));
+}).replace('<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">', '<meta name="robots" content="noindex">'));
 fs.writeFileSync(path.join(ROOT, 'robots.txt'), `User-agent: *\nAllow: /\n\nSitemap: ${SITE_URL}/sitemap.xml\n`);
 const priority = (p) => (p.key === 'home' ? '1.0' : p.tool ? '0.9' : p.path.startsWith('guides') ? '0.7' : '0.4');
 // Video sitemap entry for pages that embed the how-to video.
