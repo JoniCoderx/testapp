@@ -11,6 +11,7 @@
 - [AI Noise Remover](https://melocut.com/noise-remover/): Clean up background noise in voice recordings.
 - [Slowed + Reverb](https://melocut.com/slowed-reverb/): Make a slowed version of a song with reverb.
 - [Vocal Remover](https://melocut.com/vocal-remover/): Take the singer out for a karaoke track.
+- [Song to Video](https://melocut.com/audio-to-video/): Turn a song into an MP4 for TikTok and Reels.
 - [Voice Changer](https://melocut.com/voice-changer/): Chipmunk, deep, robot, monster and more voices.
 - [8D Audio](https://melocut.com/8d-audio/): Sound that moves from ear to ear. Use headphones.
 - [Bass Booster](https://melocut.com/bass-booster/): Add more low end to any song.
@@ -37,6 +38,7 @@
 - [MP3 to M4A](https://melocut.com/mp3-to-m4a/)
 - [WebM to MP3](https://melocut.com/webm-to-mp3/)
 - [OPUS to MP3](https://melocut.com/opus-to-mp3/)
+- [MP3 to MP4 (video)](https://melocut.com/audio-to-video/)
 
 ## Guides
 - [Make a song your ringtone](https://melocut.com/guides/make-ringtone/): Any song, any phone, in about two minutes.

@@ -34,6 +34,7 @@ const FORMATS = {
   // Vorbis rejects fixed bitrates it can't hit (e.g. 320k mono), so use quality mode.
   ogg: { label: 'OGG (Vorbis)', mime: 'audio/ogg', args: (q) => ['-c:a', 'libvorbis', '-q:a', { 128: '4', 192: '6', 256: '8', 320: '9' }[q] || '6'] },
   flac: { label: T('FLAC (lossless)'), mime: 'audio/flac', args: () => ['-c:a', 'flac'] },
+  mp4: { label: T('MP4 video'), mime: 'video/mp4', args: () => [] }, // built separately, see videoArgs()
 };
 const LOSSY = ['mp3', 'm4a', 'ogg'];
 const ALL_FORMATS = ['mp3', 'm4a', 'wav', 'ogg', 'flac'];
@@ -418,6 +419,13 @@ const TOOLS = {
     formats: ALL_FORMATS, defaultFormat: 'mp3', suffix: '',
     note: T('Converts the whole file. Drag on the waveform if you only want part of it.'),
   },
+  'audio-to-video': {
+    formats: ['mp4'], defaultFormat: 'mp4', suffix: T(' (video)'), video: true, maxLen: 60, defaultSel: (d) => [0, Math.min(30, d)],
+    limitNote: T('Videos can be at most {0} seconds, so the selection was shortened.'),
+    limitSpeed: T('With speed {0}× the video would be {1} s long, but the limit is {2} s. Select a shorter part or raise the speed.'),
+    go: T('Make video'),
+    note: T('The first 30 seconds are selected (up to 60). Add a title, pick a style or a cover image, then press Make video. The video is made on your device.'),
+  },
   'voice-changer': {
     formats: ALL_FORMATS, defaultFormat: 'mp3', suffix: T(' (voice changer)'), fx: PRESETS.chipmunk.fx, fxOpen: true, presets: VOICE_PRESETS,
     go: T('Change voice'),
@@ -455,7 +463,87 @@ const TOOLS = {
   },
 };
 
+// ---------- audio to video ----------
+const VIDEO_W = 720, VIDEO_H = 1280, VIDEO_FPS = 25;
+const VIDEO_STYLES = {
+  purple: { label: T('Purple'), stops: ['#6d4aff', '#ff4f8b'] },
+  night: { label: T('Night'), stops: ['#1a1433', '#07060d'], glow: '#7b5cff' },
+  sunset: { label: T('Sunset'), stops: ['#ff7e5f', '#ffb347'] },
+  ocean: { label: T('Ocean'), stops: ['#00c6ff', '#0052d4'] },
+  mono: { label: T('Black'), stops: ['#111111', '#000000'] },
+};
+const loadImage = (file) => new Promise((resolve, reject) => {
+  const url = URL.createObjectURL(file), img = new Image();
+  img.onload = () => { URL.revokeObjectURL(url); resolve(img); };
+  img.onerror = () => { URL.revokeObjectURL(url); reject(new Error(T('That image could not be opened. Try a JPG or PNG.'))); };
+  img.src = url;
+});
+// The still background of the video (title, cover, progress track, melocut.com). The moving sound wave
+// and progress bar are drawn on top of it by ffmpeg (see videoArgs).
+async function videoBackground({ title, style, cover }) {
+  const s = VIDEO_STYLES[style] || VIDEO_STYLES.purple;
+  const c = document.createElement('canvas'); c.width = VIDEO_W; c.height = VIDEO_H;
+  const g = c.getContext('2d');
+  try { await document.fonts.load('800 52px Inter'); } catch {}
+  const grad = g.createLinearGradient(0, 0, VIDEO_W * 0.4, VIDEO_H);
+  grad.addColorStop(0, s.stops[0]); grad.addColorStop(1, s.stops[1]);
+  g.fillStyle = grad; g.fillRect(0, 0, VIDEO_W, VIDEO_H);
+  const img = cover ? await loadImage(cover) : null;
+  const fit = (w, h, W, H) => { const k = Math.max(W / w, H / h); return [w * k, h * k]; };
+  if (img) { // blurred, darkened full-bleed copy behind
+    const [w, h] = fit(img.width, img.height, VIDEO_W, VIDEO_H);
+    g.save(); g.filter = 'blur(40px) brightness(0.5)'; g.drawImage(img, (VIDEO_W - w) / 2, (VIDEO_H - h) / 2, w, h); g.restore();
+  } else if (s.glow) {
+    const r = g.createRadialGradient(VIDEO_W / 2, 420, 10, VIDEO_W / 2, 420, 520);
+    r.addColorStop(0, s.glow + 'aa'); r.addColorStop(1, s.glow + '00'); g.fillStyle = r; g.fillRect(0, 0, VIDEO_W, VIDEO_H);
+  }
+  // cover art (or a sound-wave emblem)
+  const S = 420, X = (VIDEO_W - S) / 2, Y = 170;
+  const round = (x, y, w, h, rad) => { g.beginPath(); g.roundRect(x, y, w, h, rad); };
+  g.save(); g.shadowColor = 'rgba(0,0,0,.35)'; g.shadowBlur = 50; g.shadowOffsetY = 18;
+  round(X, Y, S, S, 36); g.fillStyle = 'rgba(255,255,255,.14)'; g.fill(); g.restore();
+  g.save(); round(X, Y, S, S, 36); g.clip();
+  if (img) { const [w, h] = fit(img.width, img.height, S, S); g.drawImage(img, X + (S - w) / 2, Y + (S - h) / 2, w, h); }
+  else {
+    g.fillStyle = 'rgba(255,255,255,.12)'; g.fillRect(X, Y, S, S);
+    g.fillStyle = '#fff'; const bars = [0.35, 0.7, 1, 0.55, 0.85, 0.45, 0.25];
+    bars.forEach((v, i) => { const bw = 26, gap = 18, tot = bars.length * bw + (bars.length - 1) * gap, h = v * 200;
+      round(X + (S - tot) / 2 + i * (bw + gap), Y + S / 2 - h / 2, bw, h, 13); g.fill(); });
+  }
+  g.restore();
+  // title, up to two lines
+  g.fillStyle = '#fff'; g.textAlign = 'center'; g.textBaseline = 'alphabetic'; g.font = '800 52px Inter, system-ui, sans-serif';
+  const words = (title || '').trim().split(/\s+/).filter(Boolean), lines = [];
+  for (const w of words) { const l = lines.length ? `${lines[lines.length - 1]} ${w}` : w;
+    if (lines.length && g.measureText(l).width <= 620) lines[lines.length - 1] = l; else lines.push(w); }
+  lines.slice(0, 2).forEach((l, i, arr) => { let t = l; if (i === 1 && lines.length > 2) t = `${l}…`;
+    while (g.measureText(t).width > 640 && t.length > 4) t = t.slice(0, -2) + '…'; g.fillText(t, VIDEO_W / 2, 690 + i * 62 - (arr.length - 1) * 31); });
+  // progress track (the moving bar is added by ffmpeg) and the melocut.com mark
+  g.fillStyle = 'rgba(255,255,255,.25)'; g.fillRect(0, 1088, VIDEO_W, 6);
+  g.font = '700 26px Inter, system-ui, sans-serif'; const mark = 'melocut.com', mw = g.measureText(mark).width + 56;
+  round((VIDEO_W - mw) / 2, 1170, mw, 52, 26); g.fillStyle = 'rgba(0,0,0,.28)'; g.fill();
+  g.fillStyle = '#fff'; g.fillText(mark, VIDEO_W / 2, 1205);
+  const blob = await new Promise((r) => c.toBlob(r, 'image/png'));
+  return new Uint8Array(await blob.arrayBuffer());
+}
+// ffmpeg arguments for the video: the still background, a white sound wave and a progress bar over it.
+function videoArgs(pre, inName, filters, len, outName) {
+  const L = Math.max(0.5, len).toFixed(3);
+  const graph = `[1:a]${filters.length ? filters.join(',') : 'anull'}[ax];[ax]asplit[a1][a2];`
+    + `[a2]showwaves=s=600x260:mode=cline:rate=${VIDEO_FPS}:draw=full:scale=sqrt:colors=0xFFFFFF,format=rgba[w];`
+    + `[0:v][w]overlay=60:790:shortest=1[v0];color=c=white:s=${VIDEO_W}x6:r=${VIDEO_FPS}:d=${L}[pb];`
+    + `[v0][pb]overlay=x='-${VIDEO_W}+${VIDEO_W}*t/${L}':y=1088:shortest=1,format=yuv420p[v]`;
+  return ['-loop', '1', '-framerate', String(VIDEO_FPS), '-t', L, '-i', 'bg.png', ...pre, '-i', inName,
+    '-filter_complex', graph, '-map', '[v]', '-map', '[a1]', '-c:v', 'libx264', '-preset', 'ultrafast', '-crf', '26',
+    '-r', String(VIDEO_FPS), '-c:a', 'aac', '-b:a', '192k', '-ar', '44100', '-ac', '2', '-movflags', '+faststart', '-t', L, outName];
+}
+
 function optionsHTML(cfg) {
+  if (cfg.video) return `
+    <label class="vid-title">${T('Title')} <input type="text" data-v="title" maxlength="60" placeholder="${T('Song name')}"></label>
+    <label>${T('Style')} <select data-v="style">${Object.entries(VIDEO_STYLES).map(([k, s]) => `<option value="${k}">${s.label}</option>`).join('')}</select></label>
+    <label class="vid-cover">${T('Cover image (optional)')} <input type="file" accept="image/*" data-v="cover"></label>
+    <select data-o="format" hidden><option value="mp4">MP4</option></select><span data-q hidden><select data-o="quality"><option value="192" selected>192</option></select></span>`;
   const fmtOpts = cfg.formats.map((f) => `<option value="${f}">${FORMATS[f].label}</option>`).join('');
   return `
     <label>${T('Format')} <select data-o="format">${fmtOpts}</select></label>
@@ -564,6 +652,7 @@ function mountTool(root) {
     els.drop.style.display = 'none';
     els.editor.style.display = 'block';
     els.name.textContent = file.name;
+    if (cfg.video) $(root, '[data-v=title]').value = baseName(file.name).replace(/[_-]+/g, ' ').slice(0, 60);
     els.meta.textContent = `${(file.size / 1048576).toFixed(1)} MB`;
     els.busy.style.display = 'grid';
     els.busy.textContent = T('Reading audio…');
@@ -645,7 +734,7 @@ function mountTool(root) {
     if (b - a < 0.1) b = Math.min(d, a + 0.1);
     if (cfg.maxLen && b - a > cfg.maxLen) {
       b = a + cfg.maxLen;
-      notice(T('Ringtones can be at most {0} seconds, so the selection was shortened.', cfg.maxLen));
+      notice((cfg.limitNote || T('Ringtones can be at most {0} seconds, so the selection was shortened.')).replace('{0}', cfg.maxLen));
     }
     st.sel = [a, b];
     if (!fromInput) { els.start.value = fmt(a); els.end.value = fmt(b); }
@@ -915,14 +1004,16 @@ function mountTool(root) {
     const len = cfg.modes && st.mode === 'remove' ? st.duration - (b - a) : b - a;
     if (fxv.reverse && len > 20 * 60) return T('Reverse works on up to 20 minutes at a time. Select a shorter part.');
     if (cfg.maxLen && len / fxv.speed > cfg.maxLen + 0.05)
-      return T('With speed {0}× the ringtone would be {1} s long, but phones allow {2} s. Select a shorter part or raise the speed.', fxv.speed, Math.round(len / fxv.speed), cfg.maxLen);
+      return cfg.limitSpeed ? cfg.limitSpeed.replace('{0}', fxv.speed).replace('{1}', Math.round(len / fxv.speed)).replace('{2}', cfg.maxLen)
+        : T('With speed {0}× the ringtone would be {1} s long, but phones allow {2} s. Select a shorter part or raise the speed.', fxv.speed, Math.round(len / fxv.speed), cfg.maxLen);
     if (fxv.karaoke && st.mono) return T('This file is mono (no left/right difference), so the vocal remover would make it silent. It needs a stereo song.');
     return null;
   }
 
   // ----- build the ffmpeg command -----
   // Everything a job depends on, captured when Convert or Preview is pressed.
-  const snapshot = () => ({ fx: fx.get(), sel: [...st.sel], mode: st.mode, quality: els.quality.value });
+  const snapshot = () => ({ fx: fx.get(), sel: [...st.sel], mode: st.mode, quality: els.quality.value,
+    video: cfg.video ? { title: $(root, '[data-v=title]').value, style: $(root, '[data-v=style]').value, cover: $(root, '[data-v=cover]').files[0] || null } : null });
   function buildArgs(inName, outName, fmtKey, previewSeconds, snap = snapshot()) {
     const [a, b] = snap.sel, d = st.duration;
     const removing = cfg.modes && snap.mode === 'remove';
@@ -941,6 +1032,7 @@ function mountTool(root) {
       len = d;
     }
     const { filters, outLen, extraArgs } = effectFilters(snap.fx, len);
+    if (cfg.video && !previewSeconds) return { args: videoArgs(pre, inName, filters, outLen, outName), outLen };
     const args = [...pre, '-i', inName, '-vn', '-map_metadata', '-1'];
     if (complex) {
       const chain = filters.length ? `${complex};[c]${filters.join(',')}[o]` : complex.replace('[c]', '[o]');
@@ -1056,6 +1148,8 @@ function mountTool(root) {
     els.progress.style.display = 'none';
   }
   els.go.onclick = convert;
+  // The video's title, style and cover are part of the result: changing them asks for a new video.
+  root.querySelectorAll('[data-v]').forEach((el) => el.addEventListener(el.type === 'file' ? 'change' : 'input', () => resetOutput()));
 
   async function convert() {
     if (st.busy) return error(T('Please wait a moment: the preview is still being prepared.'));
@@ -1078,11 +1172,13 @@ function mountTool(root) {
     try {
       const data = await withInput(async (ff, inName) => {
         setP(0.3, T('Processing…'));
+        if (snap.video) await ff.writeFile('bg.png', await videoBackground(snap.video));
         const job = buildArgs(inName, outName, fmtKey, 0, snap);
         // Show the length that was really written (Remove silences, for one, can't be known in advance).
         outLen = (await runFFmpeg(ff, job.args, job.outLen, (r) => setP(0.3 + r * 0.7, T('Processing… {0}%', Math.round(r * 100))))) ?? job.outLen;
         const out = await ff.readFile(outName);
         await ff.deleteFile(outName).catch(() => {});
+        if (snap.video) await ff.deleteFile('bg.png').catch(() => {});
         return out;
       }, snap);
       if (st.dirty) throw new Error(T('Your settings changed while converting, so that file was not kept. Press {0} again.', goLabel));

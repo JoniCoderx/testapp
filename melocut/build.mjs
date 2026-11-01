@@ -36,6 +36,7 @@ const ICONS = {
   bass: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><circle cx="12" cy="14" r="4"/><path d="M12 6h.01"/></svg>',
   volume: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/></svg>',
   sparkle: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></svg>',
+  film: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M10 9.5v5l4.5-2.5z" fill="currentColor"/><path d="M3 8h18M3 16h18" opacity=".45"/></svg>',
   voice: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="6" height="11" rx="3"/><path d="M3 10a7 7 0 0 0 14 0M10 17v5"/><path d="M19.5 7.5a5 5 0 0 1 0 5M22 5a9 9 0 0 1 0 10"/></svg>',
   mic: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v5M3 3l18 18"/></svg>',
   reverse: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>',
@@ -56,6 +57,7 @@ const TOOLS = [
   { slug: 'noise-remover', icon: 'sparkle', title: 'AI Noise Remover', ai: true, blurb: 'Clean up background noise in voice recordings.' },
   { slug: 'slowed-reverb', icon: 'slow', title: 'Slowed + Reverb', blurb: 'Make a slowed version of a song with reverb.' },
   { slug: 'vocal-remover', icon: 'mic', title: 'Vocal Remover', blurb: 'Take the singer out for a karaoke track.' },
+  { slug: 'audio-to-video', icon: 'film', isNew: true, title: 'Song to Video', blurb: 'Turn a song into an MP4 for TikTok and Reels.' },
   { slug: 'voice-changer', icon: 'voice', isNew: true, title: 'Voice Changer', blurb: 'Chipmunk, deep, robot, monster and more voices.' },
   { slug: '8d-audio', icon: 'orbit', title: '8D Audio', blurb: 'Sound that moves from ear to ear. Use headphones.' },
   { slug: 'bass-booster', icon: 'bass', title: 'Bass Booster', blurb: 'Add more low end to any song.' },
@@ -83,6 +85,7 @@ const CONVERSIONS = [
   { slug: 'mp3-to-m4a', label: 'MP3 to M4A' },
   { slug: 'webm-to-mp3', label: 'WebM to MP3' },
   { slug: 'opus-to-mp3', label: 'OPUS to MP3' },
+  { slug: 'audio-to-video', label: 'MP3 to MP4 (video)' },
 ];
 const MAIN_NAV = ['video-to-mp3', 'ringtone-maker', 'audio-cutter', 'audio-converter'];
 // Short how-to video shown on the ringtone guides (made in-house, also posted on TikTok).
@@ -595,6 +598,38 @@ const PAGES = [
       ['Is this real AI?', 'Yes. It uses RNNoise, a neural network for cleaning up speech. The model downloads the first time you use it and then runs on your device.'],
       ['Does it work on music?', 'It is designed for voices. On songs it may remove instruments, so use Reduce hiss for music.'],
       ['Is my recording uploaded?', 'No. Everything runs in your browser.'],
+    ],
+  },
+  {
+    path: 'audio-to-video', tool: 'audio-to-video', crumb: 'Tools',
+    title: `MP3 to MP4: Turn a Song into a Video for TikTok, Free | ${NAME}`,
+    description: 'Turn a song, voice note or recording into a vertical MP4 video with a moving sound wave, a title and your cover image. Made on your phone, free, no upload.',
+    h1: '<em>Song to video</em>: MP3 to MP4 for TikTok and Reels',
+    lead: 'Turn any song or recording into a vertical video with a moving sound wave, a title and a cover. Ready for TikTok, Reels, Shorts and WhatsApp Status.',
+    badges: ['Vertical 9:16', 'Moving sound wave', 'No upload'],
+    steps: [
+      ['Open a song', 'Choose an MP3, a voice note or any audio. The first 30 seconds are selected; drag to pick another part, up to 60 seconds.'],
+      ['Add a title and style', 'The title comes from the file name; change it if you like. Pick a background style or add a cover image.'],
+      ['Make the video', 'Press Make video, then Download. Upload the MP4 anywhere.'],
+    ],
+    content: `
+    <h2>What the video looks like</h2>
+    <p>A 720×1280 vertical MP4 (9:16), with your cover image or a sound-wave emblem, the title, a white sound wave that moves with the audio and a progress bar. A small melocut.com mark sits at the bottom.</p>
+    <h2>Ideas</h2>
+    <ol class="guide-steps">
+      <li><strong>Share a song on Instagram or TikTok</strong> when the app won't let you post audio on its own.</li>
+      <li><strong>A slowed + reverb video:</strong> open Effects, tap Slowed + Reverb, and the video gets the slowed version. Nightcore and 8D work too.</li>
+      <li><strong>Podcast or voice note clips:</strong> turn on AI noise removal for a clean voice, then post the best 60 seconds.</li>
+      <li><strong>WhatsApp Status:</strong> a song with your own photo as the cover.</li>
+    </ol>
+    <h2>Why only up to 60 seconds?</h2>
+    <p>The video is made on your own device, so nothing is uploaded. Making video takes much more work than audio, so we keep clips to 60 seconds, which is what short-video apps want anyway. Phones take a little longer than computers.</p>
+    <p>Only use music you have the rights to share. Apps like TikTok and Instagram can mute videos with copyrighted songs.</p>`,
+    faq: [
+      ['How do I convert MP3 to MP4?', 'Open the MP3 here, add a title and a style or cover image, and press Make video. You get an MP4 with a moving sound wave.'],
+      ['Can I add my own picture?', 'Yes. Choose a cover image: it is shown in the middle and, blurred, as the background.'],
+      ['Is there a watermark?', 'There is a small melocut.com mark at the bottom of the video. It is how the tool stays free.'],
+      ['Does it work on iPhone?', 'Yes, in Safari. Making video takes a while because it happens on your device: on a computer about as long as the clip itself, longer on phones. Keep the page open until it is done.'],
     ],
   },
   {
