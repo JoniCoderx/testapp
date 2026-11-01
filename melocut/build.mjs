@@ -100,6 +100,7 @@ const GUIDES = [
   { slug: 'custom-text-tone', icon: 'bell', title: 'Custom text tone or notification sound', blurb: 'A short sound of your own for messages.' },
   { slug: 'voice-ringtone', icon: 'voice', title: 'Make your own voice a ringtone', blurb: 'Your kid, your catchphrase, a funny line.' },
   { slug: 'change-ringtone-back', icon: 'bell', title: 'Change your ringtone back to default', blurb: 'Go back to the original tone, and remove old ones.' },
+  { slug: 'change-your-voice', icon: 'voice', title: 'Change your voice in a recording', blurb: 'Chipmunk, robot, monster or a deep voice.' },
   { slug: 'iphone-ringtone', icon: 'bell', title: 'Set any song as your iPhone ringtone', blurb: 'No computer needed. The new Files app way and GarageBand.' },
   { slug: 'set-ringtone', icon: 'bell', title: 'Set a custom ringtone', blurb: 'iPhone and Android, with or without a computer.' },
   { slug: 'samsung-ringtone', icon: 'phone', title: 'Custom ringtone on Samsung Galaxy', blurb: 'Set any song as your Samsung ringtone in a few taps.' },
@@ -126,12 +127,12 @@ const GUIDES = [
 const TOOL_GUIDE = { 'audio-cutter': 'cut-song-iphone', 'video-to-mp3': 'extract-audio-from-video', 'mp4-to-mp3': 'extract-audio-from-video', 'mov-to-mp3': 'extract-audio-from-video',
   'whatsapp-audio-to-mp3': 'whatsapp-voice-to-mp3', 'ogg-to-mp3': 'whatsapp-voice-to-mp3', 'opus-to-mp3': 'whatsapp-voice-to-mp3', 'webm-to-mp3': 'extract-audio-from-video', 'mp3-to-m4r': 'iphone-ringtone', 'm4a-to-mp3': 'voice-memo-to-mp3', 'noise-remover': 'remove-background-noise',
   '8d-audio': 'make-8d-audio', 'nightcore-maker': 'make-nightcore', 'speed-up-audio': 'make-nightcore', 'bass-booster': 'bass-boost-song', 'volume-booster': 'make-audio-louder',
-  'audio-joiner': 'combine-songs', 'slowed-reverb': 'make-slowed-reverb', 'vocal-remover': 'remove-vocals', 'ringtone-maker': 'make-ringtone' };
+  'audio-joiner': 'combine-songs', 'slowed-reverb': 'make-slowed-reverb', 'vocal-remover': 'remove-vocals', 'ringtone-maker': 'make-ringtone', 'voice-changer': 'change-your-voice' };
 const GUIDE_GROUPS = [
   ['Ringtones and sounds', ['make-ringtone', 'iphone-ringtone', 'ringtone-not-showing-iphone', 'set-ringtone', 'samsung-ringtone', 'contact-ringtone', 'custom-alarm-sound', 'custom-text-tone', 'voice-ringtone', 'ringtone-from-video', 'change-ringtone-back']],
   ['Convert and save audio', ['extract-audio-from-video', 'cut-song-iphone', 'whatsapp-voice-to-mp3', 'voice-memo-to-mp3', 'combine-songs', 'best-audio-format']],
   ['Effects', ['make-slowed-reverb', 'make-nightcore', 'make-8d-audio', 'bass-boost-song', 'remove-vocals']],
-  ['Voice and recordings', ['remove-background-noise', 'make-audio-louder', 'clean-up-voice-memo']],
+  ['Voice and recordings', ['change-your-voice', 'remove-background-noise', 'make-audio-louder', 'clean-up-voice-memo']],
   ['Using MeloCut', ['install-app', 'find-downloads']],
 ];
 const guideCard = (g) => `<a class="card" href="/guides/${g.slug}/"><div class="ico">${ICONS[g.icon]}</div><b>${g.title}</b><p>${g.blurb}</p></a>`;
@@ -238,7 +239,7 @@ const PAGES = [
     <h2>Get the audio from a video</h2>
     <p>Filmed a concert, a lecture or something funny and only need the sound? Open the video here and save the audio as an MP3 you can play in your car, in a music app or anywhere else.</p>
     <h3>Which videos work?</h3>
-    <p>MP4, MOV (the format iPhones record in), WebM, MKV, AVI and 3GP. If your browser can open the file, it will almost always work.</p>
+    <p>MP4, MOV (the format iPhones record in), WebM, MKV, AVI and 3GP. If your browser can open the file, it will almost always work. The most common ones have their own page: <a href="/mp4-to-mp3/">MP4 to MP3</a>, <a href="/mov-to-mp3/">MOV to MP3</a> and <a href="/webm-to-mp3/">WebM to MP3</a>.</p>
     <h3>Which quality should I pick?</h3>
     <p>Use <strong>320 kbps</strong> for music. <strong>128 kbps</strong> is plenty for speech and makes much smaller files. Pick <strong>WAV</strong> if you want to edit the audio afterwards.</p>`,
     faq: [
@@ -316,7 +317,7 @@ const PAGES = [
     ],
     content: `
     <h2>Convert almost any audio file</h2>
-    <p>${NAME} opens MP3, WAV, M4A, AAC, OGG, OPUS, FLAC, AMR and WMA, and saves to the format your phone, car or app needs.</p>
+    <p>${NAME} opens MP3, WAV, M4A, AAC, OGG, OPUS, FLAC, AMR and WMA, and saves to the format your phone, car or app needs. Popular ones have their own page: <a href="/wav-to-mp3/">WAV to MP3</a>, <a href="/flac-to-mp3/">FLAC to MP3</a>, <a href="/m4a-to-mp3/">M4A to MP3</a>, <a href="/mp3-to-wav/">MP3 to WAV</a>, <a href="/mp3-to-m4a/">MP3 to M4A</a> and <a href="/mp3-to-m4r/">MP3 to M4R</a> for iPhone ringtones. Which one to pick? See <a href="/guides/best-audio-format/">which audio format to use</a>.</p>
     <p>Open <strong>Effects &amp; filters</strong> if you also want to add fades, change the speed or pitch, boost the bass or volume, clean up noise or add reverb.</p>
     <h3>Popular conversions</h3>
     ${CONVERSION_LINKS}
@@ -1115,13 +1116,13 @@ const PAGES = [
     <h3>MP3</h3>
     <p>Plays on every phone, computer, car and speaker made in the last 25 years. It throws away sound most people can't hear to keep files small. At 320 kbps it's very hard to tell apart from the original.</p>
     <h3>M4A (AAC)</h3>
-    <p>Apple's default. It sounds slightly better than MP3 at the same size, and it's what iPhone voice memos and ringtones (M4R) use. Some older players and cars don't support it.</p>
+    <p>Apple's default. It sounds slightly better than MP3 at the same size, and it's what iPhone voice memos and ringtones (M4R) use. Some older players and cars don't support it. Convert with <a href="/m4a-to-mp3/">M4A to MP3</a>, <a href="/aac-to-mp3/">AAC to MP3</a> or the other way, <a href="/mp3-to-m4a/">MP3 to M4A</a>.</p>
     <h3>WAV</h3>
-    <p>Uncompressed, so no compression loss and editing programs love it. The downside is size: about 10 MB per minute. ${NAME} saves WAV as 16-bit, the same as CD audio.</p>
+    <p>Uncompressed, so no compression loss and editing programs love it. The downside is size: about 10 MB per minute. ${NAME} saves WAV as 16-bit, the same as CD audio. Shrink one with <a href="/wav-to-mp3/">WAV to MP3</a>, or make an editable copy with <a href="/mp3-to-wav/">MP3 to WAV</a>.</p>
     <h3>FLAC</h3>
-    <p>Also lossless, but compressed to roughly half the size of WAV. Good for keeping a music collection at full quality. Not every device plays it.</p>
+    <p>Also lossless, but compressed to roughly half the size of WAV. Good for keeping a music collection at full quality. Not every device plays it, so <a href="/flac-to-mp3/">FLAC to MP3</a> is handy for phones and cars.</p>
     <h3>OGG and OPUS</h3>
-    <p>Open formats used by apps like WhatsApp and Telegram. They're efficient, especially for voice, but many players can't open them, which is why people convert them to MP3.</p>
+    <p>Open formats used by apps like WhatsApp and Telegram. They're efficient, especially for voice, but many players can't open them, which is why people convert them: <a href="/opus-to-mp3/">OPUS to MP3</a>, <a href="/ogg-to-mp3/">OGG to MP3</a> or <a href="/whatsapp-audio-to-mp3/">WhatsApp audio to MP3</a>.</p>
     <h2>What kbps means</h2>
     <p>Kbps (kilobits per second) is how much data is used for each second of sound. More data means better sound and bigger files.</p>
     <ol class="guide-steps">
@@ -1389,10 +1390,45 @@ const PAGES = [
     <h2>Step 3: Set it</h2>
     <p>iPhone (iOS 26): Files → <strong>Share → Use as Ringtone</strong>. Android: <strong>Settings → Sound → Phone ringtone → +</strong>. Full steps in <a href="/guides/make-ringtone/">make a song your ringtone</a>. Put it on one person only with a <a href="/guides/contact-ringtone/">contact ringtone</a>.</p>
     <h2>Ideas</h2>
-    <p>A kid's voice for a parent, a partner's laugh, a pet, a voice note from a grandparent, or a friend's catchphrase for their contact. Record people only with their permission.</p>`,
+    <p>A kid's voice for a parent, a partner's laugh, a pet, a voice note from a grandparent, or a friend's catchphrase for their contact. For a funny one, run it through the <a href="/voice-changer/">voice changer</a> first: a chipmunk or robot version of your own voice. Record people only with their permission.</p>`,
     faq: [
       ['Can I make a ringtone from a WhatsApp voice note?', 'Yes. Save it from WhatsApp first (see the WhatsApp voice guide), then open it in the Ringtone Maker.'],
       ['My voice ringtone is too quiet. What can I do?', 'Turn on Auto loudness, or raise Volume in Effects, before downloading.'],
+    ],
+  },
+  {
+    path: 'guides/change-your-voice', crumb: 'Guides', plain: true,
+    title: `How to Change Your Voice in a Recording or Video, Free | ${NAME}`,
+    description: 'Make your voice sound like a chipmunk, a robot, a monster or a deep movie voice in a voice memo, voice note or video. Free, on your phone, step by step.',
+    h1: 'How to change your voice in a recording',
+    lead: 'Chipmunk, robot, monster or a deep movie-trailer voice, from any voice memo, voice note or video, in about a minute.',
+    content: `
+    <h2>Step 1: Record or find the clip</h2>
+    <ol class="guide-steps">
+      <li><strong>iPhone:</strong> record in <strong>Voice Memos</strong>, then tap the memo → <strong>⋯ → Save to Files</strong>.</li>
+      <li><strong>Android:</strong> record with the <strong>Recorder</strong> app; recordings are in Files → Recordings.</li>
+      <li><strong>A video works too:</strong> pick it straight from your gallery. <strong>A WhatsApp voice note?</strong> Save it first (see <a href="/guides/whatsapp-voice-to-mp3/">WhatsApp voice to MP3</a>).</li>
+    </ol>
+    <h2>Step 2: Pick a voice</h2>
+    <ol class="guide-steps">
+      <li>Open the <a href="/voice-changer/">Voice Changer</a> and choose your file. <strong>Chipmunk</strong> is already on.</li>
+      <li>Tap another voice under Effects: <strong>Deep voice</strong>, <strong>Monster</strong>, <strong>Robot</strong>, <strong>Alien</strong>, <strong>Telephone</strong> or <strong>Echo</strong>.</li>
+      <li>Press <strong>Preview with effects</strong> to hear it before saving.</li>
+    </ol>
+    <h2>Step 3: Save and share it</h2>
+    <p>Press <strong>Change voice</strong>, then <strong>Download</strong>, and send it with <strong>Send to a friend</strong>. Want it as a ringtone? Open the file in the <a href="/ringtone-maker/">Ringtone Maker</a> (see <a href="/guides/voice-ringtone/">your voice as a ringtone</a>).</p>
+    <h2>Make it sound better</h2>
+    <ol class="guide-steps">
+      <li><strong>Higher or lower:</strong> move the <strong>Pitch</strong> slider. +8 is a classic chipmunk, -5 a deep voice, -9 a monster.</li>
+      <li><strong>Noisy recording:</strong> turn on <strong>AI noise removal</strong> as well, so the effect sounds clean.</li>
+      <li><strong>Too quiet:</strong> turn on <strong>Auto loudness</strong>.</li>
+    </ol>
+    <h2>Use it kindly</h2>
+    <p>Voice effects are for fun, privacy and creativity. Don't use them to impersonate a real person or to trick someone.</p>`,
+    faq: [
+      ['How do I make a chipmunk voice for free?', 'Open your recording in the MeloCut Voice Changer: Chipmunk is already selected. Press Preview, then Change voice and Download.'],
+      ['Can I change my voice in a video?', 'Yes. Open the video and MeloCut changes its sound. You get an audio file back, not a new video.'],
+      ['Does it work on iPhone?', 'Yes, in Safari, with recordings from Voice Memos, Files or your photo library. No app needed.'],
     ],
   },
   {
@@ -1636,6 +1672,7 @@ const PAGES = [
       <li>Press <strong>Convert</strong>, then <strong>Download</strong>. 128 kbps is plenty for speech.</li>
     </ol>
     <h2>Make it clearer</h2>
+    <p>Have an .opus or .ogg file from another app? <a href="/opus-to-mp3/">OPUS to MP3</a> and <a href="/ogg-to-mp3/">OGG to MP3</a> work the same way.</p>
     <p>Voice notes recorded outside are often noisy. Open the MP3 in the <a href="/noise-remover/">AI Noise Remover</a> to take out wind and traffic and even out the volume. Telegram voice messages (.ogg) work the same way.</p>`,
     faq: [
       ['Why can\'t I play a WhatsApp voice note on my computer?', 'WhatsApp saves them as .opus files, which many players don\'t support. Converting to MP3 fixes that.'],
@@ -1662,7 +1699,7 @@ const PAGES = [
     <p>iPhone: <strong>Files → Downloads</strong>. Android: <strong>Files → Downloads</strong>. Computer: your <strong>Downloads</strong> folder. The <a href="/guides/find-downloads/">downloads guide</a> has more detail.</p>
     <h2>Tips</h2>
     <ol class="guide-steps">
-      <li><strong>Screen recordings and iPhone videos (.mov)</strong> work directly, there's also a dedicated <a href="/mov-to-mp3/">MOV to MP3</a> page.</li>
+      <li><strong>By file type:</strong> <a href="/mp4-to-mp3/">MP4 to MP3</a>, <a href="/mov-to-mp3/">MOV to MP3</a> for iPhone videos and screen recordings, and <a href="/webm-to-mp3/">WebM to MP3</a> for browser recordings.</li>
       <li><strong>Too quiet?</strong> Phone videos often are. Turn on <strong>Auto loudness</strong> in Effects before converting.</li>
       <li><strong>Want it as a ringtone?</strong> See <a href="/guides/ringtone-from-video/">make a ringtone from a video</a>.</li>
     </ol>
@@ -1950,6 +1987,7 @@ const PAGES = [
 // ---------- answer-first summaries and troubleshooting ----------
 // A one-paragraph answer at the top of each guide, for readers in a hurry and for search snippets.
 const ANSWERS = {
+  'guides/change-your-voice': 'Open your voice memo, voice note or video in the free <a href="/voice-changer/">Voice Changer</a>, pick Chipmunk, Deep voice, Monster, Robot, Alien, Telephone or Echo, preview it and download the result. No app or upload needed.',
   'guides/iphone-ringtone': 'Make a ringtone under 30 seconds with the free Ringtone Maker and download it. On iOS 26 or newer, open it in the Files app and tap <strong>Share → Use as Ringtone</strong>. On older iPhones, import it into GarageBand and use <strong>Share → Ringtone</strong>.',
   'guides/set-ringtone': 'Make the ringtone first (M4R for iPhone, MP3 for Android). iPhone: Files → the file → <strong>Share → Use as Ringtone</strong> (iOS 26), or GarageBand on older versions. Android: <strong>Settings → Sound → Phone ringtone</strong>, tap + and pick the file.',
   'guides/samsung-ringtone': 'Download your ringtone as MP3, then open <strong>Settings → Sounds and vibration → Ringtone</strong>, tap <strong>+</strong> in the top right, pick the file and tap Done.',
