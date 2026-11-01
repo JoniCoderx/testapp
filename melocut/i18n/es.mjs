@@ -48,7 +48,7 @@ export default (NAME) => ({
       description: 'Corta canciones, crea tonos para iPhone y Android, añade efectos y convierte videos a MP3. Gratis, y tus archivos nunca salen de tu dispositivo.',
       h1: 'Corta canciones, crea tonos y añade efectos, <em>en tu navegador</em>',
       lead: 'Herramientas de audio gratis para tu teléfono o computadora. Tus archivos nunca se suben. Elige una herramienta para empezar.',
-      badges: ['18 herramientas gratis', 'Quita ruido con IA', 'Sin subir archivos', 'Sin registro'],
+      badges: ['20 herramientas gratis', 'Quita ruido con IA', 'Sin subir archivos', 'Sin registro'],
       home: true,
       body: (L) => `
   <div class="section prose">
