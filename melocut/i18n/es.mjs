@@ -7,6 +7,7 @@ export default (NAME) => ({
     howItWorks: 'Cómo funciona', faq: 'Preguntas frecuentes', moreTools: 'Más herramientas gratis',
     noscript: 'Activa JavaScript para usar esta herramienta.', language: 'Idioma', homeAria: `Inicio de ${NAME}`,
     footerTagline: 'Herramientas de audio gratis que funcionan en tu navegador',
+    support: 'Apoya MeloCut',
     fTools: 'Herramientas', fHelp: 'Ayuda e información', fGuides: 'Guías (en inglés)', fInstall: 'Instalar la app',
     fAbout: 'Acerca de y contacto', fPrivacy: 'Privacidad', fTerms: 'Términos', inEnglish: 'en inglés', newTag: 'Nuevo',
     ogAlt: (h1) => `${h1} en ${NAME}`, tag: 'Gratis · Privado · Sin subir archivos',
