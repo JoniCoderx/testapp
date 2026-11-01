@@ -29,8 +29,14 @@
   } catch {}
 
   // Mobile menu
-  const top = document.querySelector('.top');
-  document.querySelector('.menu-btn')?.addEventListener('click', () => top.classList.toggle('open'));
+  // Only one of the menu and the language picker is open at a time; Escape or a tap outside closes them.
+  const top = document.querySelector('.top'), menuBtn = document.querySelector('.menu-btn'), lang = document.querySelector('details.lang');
+  const setMenu = (open) => { top?.classList.toggle('open', open); menuBtn?.setAttribute('aria-expanded', String(open)); };
+  menuBtn?.setAttribute('aria-expanded', 'false');
+  menuBtn?.addEventListener('click', () => { const open = !top.classList.contains('open'); setMenu(open); if (open && lang) lang.open = false; });
+  lang?.addEventListener('toggle', () => { if (lang.open) setMenu(false); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { setMenu(false); if (lang) lang.open = false; } });
+  document.addEventListener('click', (e) => { if (lang?.open && !lang.contains(e.target)) lang.open = false; });
   document.querySelectorAll('[data-year]').forEach((el) => (el.textContent = new Date().getFullYear()));
 
   // Ads and analytics load just after the page is ready (or on the first tap or scroll, if sooner),
