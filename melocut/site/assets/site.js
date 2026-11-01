@@ -47,7 +47,8 @@
 
   // The fixed ad boxes only switch on for ad units that have an id in config.js,
   // so the page never shows empty "Advertisement" boxes.
-  if (cfg.adsenseClient) later(() => {
+  // Pages marked data-noads (the 404 page) never load AdSense: no ads on error pages.
+  if (cfg.adsenseClient && !document.documentElement.hasAttribute('data-noads')) later(() => {
     if (!document.querySelector('script[src*="adsbygoogle.js"]')) {
       const s = document.createElement('script');
       s.async = true;

@@ -2275,8 +2275,10 @@ fs.writeFileSync(path.join(ROOT, '404.html'), page({
   lang: 'en', path: '404', title: `Page not found | ${NAME}`, description: 'Page not found.', h1: 'Page not found',
   lead: "That page doesn't exist, or it moved. Pick a tool below, or go back to the <a href=\"/\">home page</a> or the <a href=\"/guides/\">guides</a>.", plain: false,
   body: `<div class="cards">${TOOLS.map((t) => toolCardIn(t, 'en')).join('')}</div><div class="section"><h2>Popular conversions</h2>${CONVERSION_LINKS}</div>`,
-}).replace('<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">', '<meta name="robots" content="noindex">'));
-fs.writeFileSync(path.join(ROOT, 'robots.txt'), `User-agent: *\nAllow: /\n\nSitemap: ${SITE_URL}/sitemap.xml\n`);
+}).replace('<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">', '<meta name="robots" content="noindex">')
+  // AdSense: no ads on error pages.
+  .replace('<div class="ad" data-slot="bottom"></div>', '').replace(/<html lang="([^"]+)">/, '<html lang="$1" data-noads>'));
+fs.writeFileSync(path.join(ROOT, 'robots.txt'), `User-agent: *\nAllow: /\nDisallow: /admin/\n\nSitemap: ${SITE_URL}/sitemap.xml\n`);
 const priority = (p) => (p.key === 'home' ? '1.0' : p.tool ? '0.9' : p.path.startsWith('guides') ? '0.7' : '0.4');
 // Video sitemap entry for pages that embed the how-to video.
 const xmlEsc = (s) => esc(s).replace(/'/g, '&apos;');
