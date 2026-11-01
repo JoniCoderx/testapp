@@ -148,6 +148,7 @@ const EN = {
   howItWorks: 'How it works', faq: 'Questions and answers', moreTools: 'More free tools',
   noscript: 'Please turn on JavaScript to use this tool.', language: 'Language', homeAria: `${NAME} home`,
   footerTagline: 'Free audio tools that run in your browser',
+  support: 'Support MeloCut',
   fTools: 'Tools', fHelp: 'Help and info', fGuides: 'Guides', fInstall: 'Install the app',
   fAbout: 'About and contact', fPrivacy: 'Privacy', fTerms: 'Terms', inEnglish: 'in English',
   ogAlt: (h1) => `${h1} on ${NAME}`, tag: 'Free · Private · No upload',
@@ -2288,7 +2289,7 @@ ${p.tool ? `<link rel="modulepreload" href="${asset('assets/app.js')}">\n<script
 </main>
 <footer>
   <div class="wrap">
-    <div class="fbar"><span>© <span data-year></span> ${NAME} · ${ui.footerTagline}</span><span class="social">${SOCIAL.map((s) => `<a href="${s.url}" target="_blank" rel="noopener me" aria-label="${NAME} on ${s.name}">${s.icon}<span>${s.name}</span></a>`).join('')}</span></div>
+    <div class="fbar"><span>© <span data-year></span> ${NAME} · ${ui.footerTagline}</span><span class="social"><a href="https://ko-fi.com/melocut" target="_blank" rel="noopener" class="kofi">☕ <span>${ui.support}</span></a>${SOCIAL.map((s) => `<a href="${s.url}" target="_blank" rel="noopener me" aria-label="${NAME} on ${s.name}">${s.icon}<span>${s.name}</span></a>`).join('')}</span></div>
     <div class="fcols">
       <nav aria-label="${ui.fTools}"><b>${ui.fTools}</b>${TOOLS.map((t) => { const x = toolIn(t, lang); return `<a href="${x.href}"${x.english ? ' hreflang="en"' : ''}>${x.title}${x.english ? `<span class="en-tag" title="${ui.inEnglish}">EN</span>` : ''}</a>`; }).join('')}</nav>
       ${isEn ? `<nav aria-label="Conversions"><b>Conversions</b>${CONVERSIONS.map((c) => `<a href="/${c.slug}/">${c.label}</a>`).join('')}</nav>` : ''}

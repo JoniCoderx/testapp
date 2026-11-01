@@ -334,8 +334,9 @@ function wireInApp(root) {
   };
 }
 
+const KOFI = 'https://ko-fi.com/melocut';
 // After a download: say where the file went, and let people send it (or the tool's link) to friends.
-const SHARE_HTML = () => `<div class="share-row" data-share hidden><small class="dl-note" data-dlnote role="status" aria-live="polite"></small><button class="btn ghost sm" type="button" data-sharebtn>${I.share}${T('Send to a friend')}</button><small data-sharemsg role="status" aria-live="polite"></small></div>`;
+const SHARE_HTML = () => `<div class="share-row" data-share hidden><small class="dl-note" data-dlnote role="status" aria-live="polite"></small><button class="btn ghost sm" type="button" data-sharebtn>${I.share}${T('Send to a friend')}</button><a class="btn ghost sm" href="${KOFI}" target="_blank" rel="noopener" data-kofi>☕ ${T('Buy us a coffee')}</a><small data-sharemsg role="status" aria-live="polite"></small></div>`;
 function mountShare(root) {
   const box = $(root, '[data-share]'), btn = $(root, '[data-sharebtn]'), msg = $(root, '[data-sharemsg]'), note = $(root, '[data-dlnote]');
   let taps = 0;
@@ -345,6 +346,7 @@ function mountShare(root) {
   const copy = async () => {
     try { await navigator.clipboard.writeText(link); msg.textContent = T('Link copied. Paste it in any chat.'); track('share', { tool: root.dataset.tool, kind: 'copy' }); } catch { msg.textContent = link; }
   };
+  $(root, '[data-kofi]').onclick = () => track('kofi', { tool: root.dataset.tool });
   btn.onclick = async () => {
     msg.textContent = '';
     try {
