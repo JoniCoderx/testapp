@@ -45,6 +45,7 @@
 - [Custom text tone or notification sound](https://melocut.com/guides/custom-text-tone/): A short sound of your own for messages.
 - [Make your own voice a ringtone](https://melocut.com/guides/voice-ringtone/): Your kid, your catchphrase, a funny line.
 - [Change your ringtone back to default](https://melocut.com/guides/change-ringtone-back/): Go back to the original tone, and remove old ones.
+- [Change your voice in a recording](https://melocut.com/guides/change-your-voice/): Chipmunk, robot, monster or a deep voice.
 - [Set any song as your iPhone ringtone](https://melocut.com/guides/iphone-ringtone/): No computer needed. The new Files app way and GarageBand.
 - [Set a custom ringtone](https://melocut.com/guides/set-ringtone/): iPhone and Android, with or without a computer.
 - [Custom ringtone on Samsung Galaxy](https://melocut.com/guides/samsung-ringtone/): Set any song as your Samsung ringtone in a few taps.
