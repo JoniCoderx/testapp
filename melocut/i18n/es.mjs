@@ -88,11 +88,22 @@ export default (NAME) => ({
     <h3>Quitar algo del medio</h3>
     <p>Cambia a <strong>Quitar selección</strong> para eliminar una intro, una pausa larga, un error o un anuncio. Las dos partes que quedan se unen automáticamente.</p>
     <h3>Evita perder más calidad</h3>
-    <p>Elige <strong>WAV</strong> o <strong>FLAC</strong> si vas a editar el archivo otra vez: ninguno añade pérdida por compresión. El WAV se guarda en 16 bits, la misma calidad que un CD.</p>`,
+    <p>Elige <strong>WAV</strong> o <strong>FLAC</strong> si vas a editar el archivo otra vez: ninguno añade pérdida por compresión. El WAV se guarda en 16 bits, la misma calidad que un CD.</p>
+    <h3>Ideas para usar tus recortes</h3>
+    <ul>
+      <li><strong>Tono de llamada</strong>: corta unos 30 segundos del estribillo, o usa el <a href="/es/creador-de-tonos/">creador de tonos</a>, que lo deja listo para iPhone o Android.</li>
+      <li><strong>Estados, Reels y TikTok</strong>: conserva solo la mejor parte de la canción y añade un fundido al final.</li>
+      <li><strong>Notas de voz y clases</strong>: quita el silencio del principio o un trozo que no sirve.</li>
+      <li><strong>Audio de un video</strong>: abre el video directamente, o sácale el sonido con <a href="/es/video-a-mp3/">video a MP3</a>.</li>
+    </ul>
+    <h3>En el celular, sin instalar nada</h3>
+    <p>Funciona en el navegador de Android y iPhone. Tu archivo se procesa en tu dispositivo y nunca se sube a ningún servidor, así que también sirve para grabaciones privadas.</p>`,
       faq: [
         ['¿Cómo recorto un MP3?', 'Abre el MP3, arrastra los controles hasta la parte que quieres, elige Conservar selección y pulsa Cortar y guardar, y luego Descargar.'],
         ['¿Puedo quitar una parte del medio?', 'Sí. Selecciona la parte que no quieres y elige Quitar selección.'],
         ['¿Cortar baja la calidad?', 'Elige MP3 a 320 kbps para que quede muy parecido al original, o WAV o FLAC para no añadir pérdida por compresión.'],
+        ['¿Es gratis cortar audio aquí?', 'Sí. No necesitas registrarte, no hay marca de agua y no hay límite de recortes.'],
+        ['¿Puedo cortar audio en el celular?', 'Sí. Funciona en el navegador de Android y iPhone, sin instalar ninguna app.'],
         ['¿Funciona sin conexión?', 'Sí, después de usar una herramienta una vez con conexión. El motor de audio queda guardado en tu dispositivo.'],
       ],
     },
