@@ -336,7 +336,30 @@ function wireInApp(root) {
 
 const KOFI = 'https://ko-fi.com/melocut';
 // After a download: say where the file went, and let people send it (or the tool's link) to friends.
-const SHARE_HTML = () => `<div class="share-row" data-share hidden><small class="dl-note" data-dlnote role="status" aria-live="polite"></small><button class="btn ghost sm" type="button" data-sharebtn>${I.share}${T('Send to a friend')}</button><a class="btn ghost sm" href="${KOFI}" target="_blank" rel="noopener" data-kofi>☕ ${T('Buy us a coffee')}</a><small data-sharemsg role="status" aria-live="polite"></small></div>`;
+const SHARE_HTML = () => `<div class="share-row" data-share hidden><small class="dl-note" data-dlnote role="status" aria-live="polite"></small><span class="next-row" data-nextrow hidden></span><button class="btn ghost sm" type="button" data-sharebtn>${I.share}${T('Send to a friend')}</button><a class="btn ghost sm" href="${KOFI}" target="_blank" rel="noopener" data-kofi>☕ ${T('Buy us a coffee')}</a><small data-sharemsg role="status" aria-live="polite"></small></div>`;
+// Hand a result to the next tool: the file waits in IndexedDB for a few minutes and the next page opens it.
+// Private windows or blocked storage just open the next page without the file.
+const idbKV = (mode, fn) => new Promise((resolve, reject) => {
+  const req = indexedDB.open('melocut', 1);
+  req.onupgradeneeded = () => req.result.createObjectStore('kv');
+  req.onerror = () => reject(req.error);
+  req.onsuccess = () => {
+    const db = req.result, tx = db.transaction('kv', mode), out = fn(tx.objectStore('kv'));
+    tx.oncomplete = () => { db.close(); resolve(out?.result); };
+    tx.onerror = () => { db.close(); reject(tx.error); };
+  };
+});
+async function giveHandoff(file) {
+  try { await idbKV('readwrite', (s) => s.put({ blob: file, name: file.name, type: file.type, ts: Date.now() }, 'handoff')); return true; } catch { return false; }
+}
+async function takeHandoff() {
+  try {
+    const rec = await idbKV('readonly', (s) => s.get('handoff'));
+    await idbKV('readwrite', (s) => s.delete('handoff'));
+    if (!rec || Date.now() - rec.ts > 10 * 60 * 1000) return null;
+    return new File([rec.blob], rec.name, { type: rec.type });
+  } catch { return null; }
+}
 function mountShare(root) {
   const box = $(root, '[data-share]'), btn = $(root, '[data-sharebtn]'), msg = $(root, '[data-sharemsg]'), note = $(root, '[data-dlnote]');
   let taps = 0;
@@ -347,6 +370,18 @@ function mountShare(root) {
     try { await navigator.clipboard.writeText(link); msg.textContent = T('Link copied. Paste it in any chat.'); track('share', { tool: root.dataset.tool, kind: 'copy' }); } catch { msg.textContent = link; }
   };
   $(root, '[data-kofi]').onclick = () => track('kofi', { tool: root.dataset.tool });
+  const nextRow = $(root, '[data-nextrow]');
+  let next = [];
+  try { next = JSON.parse(root.dataset.next || '[]'); } catch {}
+  nextRow.innerHTML = next.map((n, i) => `<a class="btn ghost sm next" href="${n.href}#handoff" data-nx="${i}">${n.label} →</a>`).join('');
+  nextRow.hidden = !next.length;
+  nextRow.querySelectorAll('[data-nx]').forEach((a) => a.addEventListener('click', async (e) => {
+    if (!file) return;
+    e.preventDefault();
+    const ok = await giveHandoff(file);
+    track('next', { tool: root.dataset.tool, to: next[a.dataset.nx].href });
+    location.href = ok ? a.href : next[a.dataset.nx].href;
+  }));
   btn.onclick = async () => {
     msg.textContent = '';
     try {
@@ -675,6 +710,11 @@ function mountTool(root) {
   els.drop.addEventListener('keydown', (e) => (e.key === 'Enter' || e.key === ' ') && (e.preventDefault(), els.file.click()));
   $(root, '[data-new]').addEventListener('click', () => els.file.click());
   els.file.addEventListener('change', () => els.file.files[0] && openFile(els.file.files[0]));
+  // Arrived from another tool's "next" button: open the file it handed over.
+  if (location.hash === '#handoff') {
+    history.replaceState(null, '', location.pathname + location.search);
+    takeHandoff().then((f) => { if (f) { openFile(f); track('handoff', { tool: root.dataset.tool }); } });
+  }
   ['dragenter', 'dragover'].forEach((t) => els.drop.addEventListener(t, (e) => { e.preventDefault(); els.drop.classList.add('over'); }));
   ['dragleave', 'drop'].forEach((t) => els.drop.addEventListener(t, (e) => { e.preventDefault(); els.drop.classList.remove('over'); }));
   els.drop.addEventListener('drop', (e) => e.dataTransfer.files[0] && openFile(e.dataTransfer.files[0]));

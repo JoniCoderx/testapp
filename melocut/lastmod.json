@@ -518,5 +518,65 @@
   "hash": "729c3656f151",
   "published": "2026-11-02",
   "modified": "2026-11-02"
+ },
+ "es:es/mp4-a-mp3": {
+  "hash": "d914005c5846",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "es:es/wav-a-mp3": {
+  "hash": "b34ecaf833ec",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "es:es/m4a-a-mp3": {
+  "hash": "9f5dd5699206",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "es:es/audio-whatsapp-a-mp3": {
+  "hash": "68ea1a2e8e89",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "es:es/mp3-a-wav": {
+  "hash": "9ff5204fc2c8",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "es:es/ogg-a-mp3": {
+  "hash": "39307ec8b26a",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "pt-br:pt-br/mp4-para-mp3": {
+  "hash": "86eb97aacde3",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "pt-br:pt-br/wav-para-mp3": {
+  "hash": "3527547076b0",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "pt-br:pt-br/m4a-para-mp3": {
+  "hash": "a69b8f2a77ea",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "pt-br:pt-br/audio-whatsapp-para-mp3": {
+  "hash": "8fcbc90b39d6",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "pt-br:pt-br/mp3-para-wav": {
+  "hash": "8435cede79c4",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "pt-br:pt-br/ogg-para-mp3": {
+  "hash": "efb2ed78110f",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
  }
 }
