@@ -1,3 +1,4 @@
+import conv from './pt-br-conv.mjs';
 import guides from './pt-br-guides.mjs';
 import more from './pt-br-more.mjs';
 // Brazilian Portuguese ("você") pages and site text. Pages with the same `key` as an English page
@@ -10,6 +11,8 @@ export default (NAME) => ({
     noscript: 'Ative o JavaScript para usar esta ferramenta.', language: 'Idioma', homeAria: `Início do ${NAME}`,
     footerTagline: 'Ferramentas de áudio grátis que funcionam no seu navegador',
     updated: 'Atualizado', minRead: 'min de leitura', moreGuides: 'Mais guias', stepGuide: 'Guia passo a passo',
+    popularConv: 'Conversões populares', conversions: 'Conversões',
+    next: { 'audio-to-video': 'Transformar em vídeo', 'ringtone-maker': 'Usar como toque', 'audio-cutter': 'Cortar' },
     support: 'Apoie o MeloCut',
     fTools: 'Ferramentas', fHelp: 'Ajuda e informações', fGuides: 'Guias (em inglês)', fInstall: 'Instalar o app',
     fAbout: 'Sobre e contato', fPrivacy: 'Privacidade', fTerms: 'Termos', inEnglish: 'em inglês', newTag: 'Novo',
@@ -186,5 +189,6 @@ export default (NAME) => ({
     },
     ...more(NAME),
     ...guides(NAME),
+    ...conv(NAME),
   ],
 });

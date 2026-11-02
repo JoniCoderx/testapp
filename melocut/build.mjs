@@ -148,6 +148,7 @@ const EN = {
   howItWorks: 'How it works', faq: 'Questions and answers', moreTools: 'More free tools',
   noscript: 'Please turn on JavaScript to use this tool.', language: 'Language', homeAria: `${NAME} home`,
   footerTagline: 'Free audio tools that run in your browser',
+  next: { 'audio-to-video': 'Make it a video', 'ringtone-maker': 'Make it a ringtone', 'audio-cutter': 'Cut it' },
   support: 'Support MeloCut',
   fTools: 'Tools', fHelp: 'Help and info', fGuides: 'Guides', fInstall: 'Install the app',
   fAbout: 'About and contact', fPrivacy: 'Privacy', fTerms: 'Terms', inEnglish: 'in English',
@@ -2117,6 +2118,7 @@ const ogImage = (p) => (fs.existsSync(path.join(ROOT, 'og', `${slugOf(p)}.jpg`))
 
 // Every page with its language. The five English pages that have translations get a `key`.
 const KEY_OF = { '': 'home',
+  'mp4-to-mp3': 'c-mp4', 'wav-to-mp3': 'c-wav', 'm4a-to-mp3': 'c-m4a', 'whatsapp-audio-to-mp3': 'c-wa', 'mp3-to-wav': 'c-mp3wav', 'ogg-to-mp3': 'c-ogg',
   'guides/iphone-ringtone': 'g-iphone', 'guides/samsung-ringtone': 'g-samsung', 'guides/whatsapp-voice-to-mp3': 'g-whatsapp', 'guides/make-slowed-reverb': 'g-slowed', 'audio-cutter': 'cutter', 'video-to-mp3': 'video', 'ringtone-maker': 'ringtone', 'audio-converter': 'converter',
   'voice-changer': 'voice', 'audio-to-video': 'a2v', 'slowed-reverb': 'slowed', 'vocal-remover': 'karaoke', '8d-audio': '8d', 'bass-booster': 'bass',
   'nightcore-maker': 'nightcore', 'noise-remover': 'denoise', 'audio-joiner': 'joiner', 'volume-booster': 'volume' };
@@ -2143,6 +2145,19 @@ const datesOf = (p) => DATES[`${p.lang}:${p.path}`] || { published: UPDATED, mod
 const versions = (p) => (p.key ? Object.keys(LANGS).map((lang) => ALL.find((q) => q.lang === lang && q.key === p.key)).filter(Boolean) : [p]);
 const homeOf = (lang) => ALL.find((q) => q.lang === lang && q.key === 'home');
 // Guides written in other languages: listed under each other, and linked from the tool page they explain (`forTool`).
+// After a download, offer the next tool and carry the file over (see takeHandoff in app.js).
+const NEXT_TOOLS = { 'video-to-mp3': ['audio-cutter', 'ringtone-maker'], cutter: ['ringtone-maker', 'audio-to-video'], ringtone: ['audio-to-video'],
+  joiner: ['audio-to-video', 'audio-cutter'], 'audio-to-video': [] };
+function nextOf(p) {
+  const ui = LANGS[p.lang].ui;
+  const list = (NEXT_TOOLS[p.tool] || ['audio-to-video', 'ringtone-maker'])
+    .map((slug) => toolIn(TOOLS.find((t) => t.slug === slug), p.lang)).filter((t) => `/${p.path}/` !== t.href)
+    .map((t) => ({ href: t.href, label: ui.next[t.slug] }));
+  return list.length ? JSON.stringify(list) : '';
+}
+// Conversion pages written in other languages, shown as chips and in the footer of that language.
+const localConversions = (lang) => ALL.filter((q) => q.lang === lang && q.crumb === 'Converters');
+const localConvChips = (lang) => `<div class="chips-links">${localConversions(lang).map((q) => `<a class="chip" href="${urlOf(q).replace(SITE_URL, '')}">${q.convLabel}</a>`).join('')}</div>`;
 const sameLangGuides = (p) => ALL.filter((q) => q.lang === p.lang && q.crumb === 'Guides' && q !== p);
 const localGuideFor = (p) => ALL.find((q) => q.lang === p.lang && q.crumb === 'Guides' && q.forTool === p.key);
 const localGuideCard = (q) => `<a class="card" href="${urlOf(q).replace(SITE_URL, '')}"><div class="ico">${ICONS[q.icon] || ICONS.book}</div><b>${plainH1(q)}</b><p>${strip(q.lead || '')}</p></a>`;
@@ -2153,7 +2168,7 @@ function crumbs(p) {
   const ui = LANGS[p.lang].ui, home = urlOf(homeOf(p.lang));
   const trail = [{ name: ui.home, url: home }];
   if (p.crumb === 'Tools') trail.push({ name: ui.tools, url: `${home}#tools` });
-  if (p.crumb === 'Converters') trail.push({ name: 'Audio Converter', url: `${SITE_URL}/audio-converter/` });
+  if (p.crumb === 'Converters') { const c = toolIn(TOOLS.find((t) => t.slug === 'audio-converter'), p.lang); trail.push({ name: p.lang === 'en' ? 'Audio Converter' : c.title, url: `${SITE_URL}${c.href}` }); }
   if (p.crumb === 'Guides' && p.lang === 'en') trail.push({ name: 'Guides', url: `${SITE_URL}/guides/` });
   trail.push({ name: plainH1(p), url: urlOf(p) });
   return trail;
@@ -2284,7 +2299,7 @@ ${p.tool ? `<link rel="modulepreload" href="${asset('assets/app.js')}">\n<script
     ${p.badges ? `<div class="badges">${p.badges.map((b) => `<span class="badge">${b}</span>`).join('')}</div>` : ''}
   </div>
   ${p.home ? `${toolGrid(lang)}\n  <div class="ad" data-slot="top"></div>` : ''}
-  ${p.tool ? `<div class="tool" data-tool="${p.tool}"${p.format ? ` data-format="${p.format}"` : ''}${p.fx ? ` data-fx='${JSON.stringify(p.fx)}'` : ''}${p.note ? ` data-note="${esc(p.note)}"` : ''}${p.suffix ? ` data-suffix="${esc(p.suffix)}"` : ''}><noscript>${ui.noscript}</noscript></div>
+  ${p.tool ? `<div class="tool" data-tool="${p.tool}"${p.format ? ` data-format="${p.format}"` : ''}${p.fx ? ` data-fx='${JSON.stringify(p.fx)}'` : ''}${p.note ? ` data-note="${esc(p.note)}"` : ''}${p.suffix ? ` data-suffix="${esc(p.suffix)}"` : ''}${nextOf(p) ? ` data-next="${esc(nextOf(p))}"` : ''}><noscript>${ui.noscript}</noscript></div>
   <div class="ad" data-slot="top"></div>` : ''}
   ${body || ''}
   ${p.steps ? `<div class="section"><h2>${ui.howItWorks}</h2><div class="steps">${p.steps.map(([n, t]) => `<div class="card"><b>${n}</b><p>${t}</p></div>`).join('')}</div></div>` : ''}
@@ -2293,7 +2308,7 @@ ${p.tool ? `<link rel="modulepreload" href="${asset('assets/app.js')}">\n<script
   ${isEn && TOOL_GUIDE[p.path] ? (() => { const g = GUIDES.find((x) => x.slug === TOOL_GUIDE[p.path]); return `<a class="callout guide-link" href="/guides/${g.slug}/">${ICONS.book}<span><b>Step-by-step guide</b>${g.title}</span></a>`; })() : ''}
   ${p.tool ? '<div class="ad" data-slot="middle"></div>' : ''}
   ${p.tool ? `<div class="section"><h2>${ui.moreTools}</h2><div class="cards rail">${others.map((t) => toolCardIn(t, lang)).join('')}</div></div>
-  ${isEn ? `<div class="section"><h2>Popular conversions</h2>${CONVERSION_LINKS}</div>` : ''}${installHTML(ui)}` : ''}
+  ${isEn ? `<div class="section"><h2>Popular conversions</h2>${CONVERSION_LINKS}</div>` : localConversions(lang).length ? `<div class="section"><h2>${ui.popularConv}</h2>${localConvChips(lang)}</div>` : ''}${installHTML(ui)}` : ''}
   ${p.faq ? `<div class="section"><h2>${ui.faq}</h2>${p.faq.map(([q, a]) => `<details><summary>${q}</summary><p>${a}</p></details>`).join('')}</div>` : ''}
   ${p.crumb === 'Guides' && isEn ? `<div class="section"><h2>More guides</h2><div class="cards">${GUIDES.filter((g) => `guides/${g.slug}` !== p.path).slice(0, 6).map(guideCard).join('')}</div></div>` : ''}
   ${p.crumb === 'Guides' && !isEn && sameLangGuides(p).length ? `<div class="section"><h2>${ui.moreGuides}</h2><div class="cards">${sameLangGuides(p).map(localGuideCard).join('')}</div></div>` : ''}
@@ -2304,7 +2319,7 @@ ${p.tool ? `<link rel="modulepreload" href="${asset('assets/app.js')}">\n<script
     <div class="fbar"><span>© <span data-year></span> ${NAME} · ${ui.footerTagline}</span><span class="social"><a href="https://ko-fi.com/melocut" target="_blank" rel="noopener" class="kofi">☕ <span>${ui.support}</span></a>${SOCIAL.map((s) => `<a href="${s.url}" target="_blank" rel="noopener me" aria-label="${NAME} on ${s.name}">${s.icon}<span>${s.name}</span></a>`).join('')}</span></div>
     <div class="fcols">
       <nav aria-label="${ui.fTools}"><b>${ui.fTools}</b>${TOOLS.map((t) => { const x = toolIn(t, lang); return `<a href="${x.href}"${x.english ? ' hreflang="en"' : ''}>${x.title}${x.english ? `<span class="en-tag" title="${ui.inEnglish}">EN</span>` : ''}</a>`; }).join('')}</nav>
-      ${isEn ? `<nav aria-label="Conversions"><b>Conversions</b>${CONVERSIONS.map((c) => `<a href="/${c.slug}/">${c.label}</a>`).join('')}</nav>` : ''}
+      ${isEn ? `<nav aria-label="Conversions"><b>Conversions</b>${CONVERSIONS.map((c) => `<a href="/${c.slug}/">${c.label}</a>`).join('')}</nav>` : localConversions(lang).length ? `<nav aria-label="${ui.conversions}"><b>${ui.conversions}</b>${localConversions(lang).map((q) => `<a href="${urlOf(q).replace(SITE_URL, '')}">${q.convLabel}</a>`).join('')}</nav>` : ''}
       <nav aria-label="${ui.fHelp}"><b>${ui.fHelp}</b><a href="/guides/">${ui.fGuides}</a><a href="/guides/install-app/">${ui.fInstall}</a><a href="/about/">${ui.fAbout}</a><a href="/privacy/">${ui.fPrivacy}</a><a href="/terms/">${ui.fTerms}</a></nav>
       <nav aria-label="${ui.language}"><b>${ui.language}</b>${Object.keys(LANGS).map((l) => { const target = vers.find((q) => q.lang === l) || homeOf(l); return `<a href="${urlOf(target).replace(SITE_URL, '')}" hreflang="${LANGS[l].ui.hreflang}" lang="${LANGS[l].ui.code}">${LANGS[l].ui.name}</a>`; }).join('')}</nav>
     </div>
