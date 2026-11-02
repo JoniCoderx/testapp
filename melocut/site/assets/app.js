@@ -1408,7 +1408,7 @@ function mountJoiner(root) {
       els.go.innerHTML = label('download', T('Download {0}', fmtKey.toUpperCase())); els.go.classList.add('ok');
       const r = els.go.getBoundingClientRect();
       if (r.bottom > innerHeight || r.top < 0) els.go.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      els.go.onclick = () => { const nm = `${baseName(st.items[0].file.name)} (joined).${fmtKey}`; downloadURL(st.outURL, nm); const n = share.show(blob, nm); track('download', { tool: 'joiner', format: fmtKey, repeat: n > 1 ? 'yes' : 'no', inapp: IN_APP || 'no' }); };
+      els.go.onclick = () => { const nm = `${baseName(st.items[0].file.name)}${T(' (joined)')}.${fmtKey}`; downloadURL(st.outURL, nm); const n = share.show(blob, nm); track('download', { tool: 'joiner', format: fmtKey, repeat: n > 1 ? 'yes' : 'no', inapp: IN_APP || 'no' }); };
       track('converted', { tool: 'joiner', format: fmtKey, count: n });
     } catch (e) {
       resetEngine(ff); ff = null;

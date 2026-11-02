@@ -173,6 +173,7 @@ window.MELOCUT_I18N = {
 "iPhone (iOS 26 or newer): open the file in the Files app, tap Share → Use as Ringtone. Older iPhones: use GarageBand or a computer (see the guide below).": "iPhone (iOS 26 o posterior): abre el archivo en la app Archivos y toca Compartir → Usar como tono. En iPhone más antiguos: usa GarageBand o un ordenador (mira la guía de abajo).",
 "Send to a friend": "Enviar a un amigo",
 "Buy us a coffee": "Invítanos un café",
+" (joined)": " (unidos)",
 "Made for free with MeloCut: {0}": "Hecho gratis con MeloCut: {0}",
 "Link copied. Paste it in any chat.": "Enlace copiado. Pégalo en cualquier chat.",
 "Android: open Settings → Sound → Phone ringtone, tap + (or Add ringtone) and pick the file from Downloads.": "Android: abre Ajustes → Sonido → Tono del teléfono, toca + (o Añadir tono) y elige el archivo en Descargas.",

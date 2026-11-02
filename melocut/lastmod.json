@@ -378,5 +378,105 @@
   "hash": "41d760384df1",
   "published": "2026-11-01",
   "modified": "2026-11-01"
+ },
+ "es:es/cambiador-de-voz": {
+  "hash": "0364fd810813",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "es:es/cancion-a-video": {
+  "hash": "7f7dbe6de658",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "es:es/slowed-reverb": {
+  "hash": "bc5be01c452e",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "es:es/quitar-voz": {
+  "hash": "d847c4e1d1e3",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "es:es/audio-8d": {
+  "hash": "99facdc74400",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "es:es/potenciador-de-graves": {
+  "hash": "dd342584673a",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "es:es/nightcore": {
+  "hash": "443e2cb44398",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "es:es/quitar-ruido": {
+  "hash": "539609127a45",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "es:es/unir-audio": {
+  "hash": "3af95718b616",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "es:es/subir-volumen": {
+  "hash": "d0f9a72204b4",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "pt-br:pt-br/mudar-voz": {
+  "hash": "d3059a131ea1",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "pt-br:pt-br/musica-para-video": {
+  "hash": "55d1d0ad7595",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "pt-br:pt-br/slowed-reverb": {
+  "hash": "625acc0f114c",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "pt-br:pt-br/remover-voz": {
+  "hash": "12af1622f481",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "pt-br:pt-br/audio-8d": {
+  "hash": "ab72f5dbf5b9",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "pt-br:pt-br/aumentar-grave": {
+  "hash": "0724310e853d",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "pt-br:pt-br/nightcore": {
+  "hash": "840557ef4366",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "pt-br:pt-br/remover-ruido": {
+  "hash": "0b9a3561e13c",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "pt-br:pt-br/juntar-audio": {
+  "hash": "1d634585b28b",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "pt-br:pt-br/aumentar-volume": {
+  "hash": "9e84b69ecf41",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
  }
 }
