@@ -2116,7 +2116,8 @@ const slugOf = (p) => (p.path ? p.path.replace(/\//g, '-') : 'home');
 const ogImage = (p) => (fs.existsSync(path.join(ROOT, 'og', `${slugOf(p)}.jpg`)) ? `${SITE_URL}/og/${slugOf(p)}.jpg` : `${SITE_URL}/og.jpg`);
 
 // Every page with its language. The five English pages that have translations get a `key`.
-const KEY_OF = { '': 'home', 'audio-cutter': 'cutter', 'video-to-mp3': 'video', 'ringtone-maker': 'ringtone', 'audio-converter': 'converter',
+const KEY_OF = { '': 'home',
+  'guides/iphone-ringtone': 'g-iphone', 'guides/samsung-ringtone': 'g-samsung', 'guides/whatsapp-voice-to-mp3': 'g-whatsapp', 'guides/make-slowed-reverb': 'g-slowed', 'audio-cutter': 'cutter', 'video-to-mp3': 'video', 'ringtone-maker': 'ringtone', 'audio-converter': 'converter',
   'voice-changer': 'voice', 'audio-to-video': 'a2v', 'slowed-reverb': 'slowed', 'vocal-remover': 'karaoke', '8d-audio': '8d', 'bass-booster': 'bass',
   'nightcore-maker': 'nightcore', 'noise-remover': 'denoise', 'audio-joiner': 'joiner', 'volume-booster': 'volume' };
 const ALL = [
@@ -2141,6 +2142,10 @@ const datesOf = (p) => DATES[`${p.lang}:${p.path}`] || { published: UPDATED, mod
 // The same page in every language that has it, for hreflang and the language switcher.
 const versions = (p) => (p.key ? Object.keys(LANGS).map((lang) => ALL.find((q) => q.lang === lang && q.key === p.key)).filter(Boolean) : [p]);
 const homeOf = (lang) => ALL.find((q) => q.lang === lang && q.key === 'home');
+// Guides written in other languages: listed under each other, and linked from the tool page they explain (`forTool`).
+const sameLangGuides = (p) => ALL.filter((q) => q.lang === p.lang && q.crumb === 'Guides' && q !== p);
+const localGuideFor = (p) => ALL.find((q) => q.lang === p.lang && q.crumb === 'Guides' && q.forTool === p.key);
+const localGuideCard = (q) => `<a class="card" href="${urlOf(q).replace(SITE_URL, '')}"><div class="ico">${ICONS[q.icon] || ICONS.book}</div><b>${plainH1(q)}</b><p>${strip(q.lead || '')}</p></a>`;
 
 // Breadcrumb trail: Home › (Tools | Converters | Guides) › page
 function crumbs(p) {
@@ -2149,7 +2154,7 @@ function crumbs(p) {
   const trail = [{ name: ui.home, url: home }];
   if (p.crumb === 'Tools') trail.push({ name: ui.tools, url: `${home}#tools` });
   if (p.crumb === 'Converters') trail.push({ name: 'Audio Converter', url: `${SITE_URL}/audio-converter/` });
-  if (p.crumb === 'Guides') trail.push({ name: 'Guides', url: `${SITE_URL}/guides/` });
+  if (p.crumb === 'Guides' && p.lang === 'en') trail.push({ name: 'Guides', url: `${SITE_URL}/guides/` });
   trail.push({ name: plainH1(p), url: urlOf(p) });
   return trail;
 }
@@ -2275,7 +2280,7 @@ ${p.tool ? `<link rel="modulepreload" href="${asset('assets/app.js')}">\n<script
   <div class="hero"${p.plain ? ' style="text-align:left;padding-bottom:0"' : ''}>
     <h1>${p.h1}</h1>
     ${p.lead ? `<p>${p.lead}</p>` : ''}
-    ${p.crumb === 'Guides' ? `<p class="updated">${LANGS[p.lang].ui.updated || 'Updated'} <time datetime="${datesOf(p).modified}">${new Date(datesOf(p).modified + 'T12:00:00Z').toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' })}</time> · ${readMinutes(p)} ${LANGS[p.lang].ui.minRead || 'min read'}</p>` : ''}
+    ${p.crumb === 'Guides' ? `<p class="updated">${LANGS[p.lang].ui.updated || 'Updated'} <time datetime="${datesOf(p).modified}">${new Date(datesOf(p).modified + 'T12:00:00Z').toLocaleDateString(lang === 'en' ? 'en-US' : LANGS[lang].ui.hreflang, { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' })}</time> · ${readMinutes(p)} ${LANGS[p.lang].ui.minRead || 'min read'}</p>` : ''}
     ${p.badges ? `<div class="badges">${p.badges.map((b) => `<span class="badge">${b}</span>`).join('')}</div>` : ''}
   </div>
   ${p.home ? `${toolGrid(lang)}\n  <div class="ad" data-slot="top"></div>` : ''}
@@ -2284,12 +2289,14 @@ ${p.tool ? `<link rel="modulepreload" href="${asset('assets/app.js')}">\n<script
   ${body || ''}
   ${p.steps ? `<div class="section"><h2>${ui.howItWorks}</h2><div class="steps">${p.steps.map(([n, t]) => `<div class="card"><b>${n}</b><p>${t}</p></div>`).join('')}</div></div>` : ''}
   ${p.content ? `<div class="section prose">${withVideo(p)}</div>` : ''}
+  ${!isEn && p.tool && localGuideFor(p) ? (() => { const g = localGuideFor(p); return `<a class="callout guide-link" href="${urlOf(g).replace(SITE_URL, '')}">${ICONS.book}<span><b>${ui.stepGuide}</b>${plainH1(g)}</span></a>`; })() : ''}
   ${isEn && TOOL_GUIDE[p.path] ? (() => { const g = GUIDES.find((x) => x.slug === TOOL_GUIDE[p.path]); return `<a class="callout guide-link" href="/guides/${g.slug}/">${ICONS.book}<span><b>Step-by-step guide</b>${g.title}</span></a>`; })() : ''}
   ${p.tool ? '<div class="ad" data-slot="middle"></div>' : ''}
   ${p.tool ? `<div class="section"><h2>${ui.moreTools}</h2><div class="cards rail">${others.map((t) => toolCardIn(t, lang)).join('')}</div></div>
   ${isEn ? `<div class="section"><h2>Popular conversions</h2>${CONVERSION_LINKS}</div>` : ''}${installHTML(ui)}` : ''}
   ${p.faq ? `<div class="section"><h2>${ui.faq}</h2>${p.faq.map(([q, a]) => `<details><summary>${q}</summary><p>${a}</p></details>`).join('')}</div>` : ''}
-  ${p.crumb === 'Guides' ? `<div class="section"><h2>More guides</h2><div class="cards">${GUIDES.filter((g) => `guides/${g.slug}` !== p.path).slice(0, 6).map(guideCard).join('')}</div></div>` : ''}
+  ${p.crumb === 'Guides' && isEn ? `<div class="section"><h2>More guides</h2><div class="cards">${GUIDES.filter((g) => `guides/${g.slug}` !== p.path).slice(0, 6).map(guideCard).join('')}</div></div>` : ''}
+  ${p.crumb === 'Guides' && !isEn && sameLangGuides(p).length ? `<div class="section"><h2>${ui.moreGuides}</h2><div class="cards">${sameLangGuides(p).map(localGuideCard).join('')}</div></div>` : ''}
   ${p.plain ? '' : '<div class="ad" data-slot="bottom"></div>'}
 </main>
 <footer>
@@ -2321,7 +2328,7 @@ fs.writeFileSync(path.join(ROOT, '404.html'), page({
   // AdSense: no ads on error pages.
   .replace('<div class="ad" data-slot="bottom"></div>', '').replace(/<html lang="([^"]+)">/, '<html lang="$1" data-noads>'));
 fs.writeFileSync(path.join(ROOT, 'robots.txt'), `User-agent: *\nAllow: /\nDisallow: /admin/\n\nSitemap: ${SITE_URL}/sitemap.xml\n`);
-const priority = (p) => (p.key === 'home' ? '1.0' : p.tool ? '0.9' : p.path.startsWith('guides') ? '0.7' : '0.4');
+const priority = (p) => (p.key === 'home' ? '1.0' : p.tool ? '0.9' : p.crumb === 'Guides' ? '0.7' : '0.4');
 // Video sitemap entry for pages that embed the how-to video.
 const xmlEsc = (s) => esc(s).replace(/'/g, '&apos;');
 const videoEntry = (p) => (p.video ? `<video:video><video:thumbnail_loc>${SITE_URL}${p.video.poster}</video:thumbnail_loc><video:title>${xmlEsc(p.video.name)}</video:title>`

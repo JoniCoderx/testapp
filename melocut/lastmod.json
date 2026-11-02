@@ -478,5 +478,45 @@
   "hash": "9e84b69ecf41",
   "published": "2026-11-02",
   "modified": "2026-11-02"
+ },
+ "es:es/guias/tono-iphone": {
+  "hash": "98a388ef3994",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "es:es/guias/tono-samsung": {
+  "hash": "cc0aa386b580",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "es:es/guias/audio-whatsapp-a-mp3": {
+  "hash": "ef92beee7ab3",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "es:es/guias/slowed-reverb": {
+  "hash": "3ba60b79f8cc",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "pt-br:pt-br/guias/toque-iphone": {
+  "hash": "2df3c04cd413",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "pt-br:pt-br/guias/toque-samsung": {
+  "hash": "b162be27c167",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "pt-br:pt-br/guias/audio-whatsapp-mp3": {
+  "hash": "25bbac6e8799",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "pt-br:pt-br/guias/slowed-reverb": {
+  "hash": "729c3656f151",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
  }
 }
