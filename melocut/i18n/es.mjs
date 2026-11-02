@@ -1,3 +1,4 @@
+import tools2 from './es-tools2.mjs';
 import conv from './es-conv.mjs';
 import guides from './es-guides.mjs';
 import more from './es-more.mjs';
@@ -39,13 +40,13 @@ export default (NAME) => ({
     '8d-audio': { title: 'Audio 8D', path: 'es/audio-8d', blurb: 'Sonido que pasa de un oído al otro. Usa auriculares.' },
     'bass-booster': { title: 'Potenciador de graves', path: 'es/potenciador-de-graves', blurb: 'Añade más graves a cualquier canción.' },
     'volume-booster': { title: 'Subir volumen', path: 'es/subir-volumen', blurb: 'Haz que las grabaciones bajas suenen más fuerte.' },
-    'reverse-audio': { title: 'Audio al revés', blurb: 'Reproduce cualquier sonido al revés.' },
-    'speed-up-audio': { title: 'Acelerar audio', blurb: 'Haz una canción o nota de voz más rápida, con el mismo tono.' },
-    'slow-down-audio': { title: 'Ralentizar audio', blurb: 'Reproduce todo más lento sin voz grave.' },
-    'pitch-changer': { title: 'Cambiar tono', blurb: 'Cambia la tonalidad de una canción sin cambiar la velocidad.' },
+    'reverse-audio': { title: 'Audio al revés', path: 'es/audio-al-reves', blurb: 'Reproduce cualquier sonido al revés.' },
+    'speed-up-audio': { title: 'Acelerar audio', path: 'es/acelerar-audio', blurb: 'Haz una canción o nota de voz más rápida, con el mismo tono.' },
+    'slow-down-audio': { title: 'Ralentizar audio', path: 'es/ralentizar-audio', blurb: 'Reproduce todo más lento sin voz grave.' },
+    'pitch-changer': { title: 'Cambiar tono', path: 'es/cambiar-tono', blurb: 'Cambia la tonalidad de una canción sin cambiar la velocidad.' },
     'nightcore-maker': { title: 'Creador de nightcore', path: 'es/nightcore', blurb: 'Más rápido y más agudo, el sonido nightcore clásico.' },
-    'remove-silence': { title: 'Quitar silencios', blurb: 'Corta las pausas largas de una grabación.' },
-    'fade-in-fade-out': { title: 'Fundido de entrada y salida', blurb: 'Añade un inicio y un final suaves a cualquier canción.' },
+    'remove-silence': { title: 'Quitar silencios', path: 'es/quitar-silencios', blurb: 'Corta las pausas largas de una grabación.' },
+    'fade-in-fade-out': { title: 'Fundido de entrada y salida', path: 'es/fundido-entrada-salida', blurb: 'Añade un inicio y un final suaves a cualquier canción.' },
     'voice-changer': { title: 'Cambiador de voz', path: 'es/cambiador-de-voz', blurb: 'Ardilla, voz grave, robot, monstruo y más voces.' },
     'audio-to-video': { title: 'Canción a video', path: 'es/cancion-a-video', blurb: 'Convierte una canción en un MP4 para TikTok y Reels.' },
   },
@@ -192,6 +193,7 @@ export default (NAME) => ({
     <h3>¿Qué formato elijo?</h3>
     <p>El MP3 funciona en todas partes. El M4A suena un poco mejor con el mismo tamaño. FLAC y WAV no añaden pérdida por compresión, pero ocupan más.</p>`,
       faq: [
+        ['¿Puedo convertir varios archivos a la vez?', 'Sí. Elige o suelta varios archivos juntos, elige el formato y pulsa Convertir todos. Puedes descargar cada uno o todos juntos en un ZIP.'],
         ['¿Cómo convierto un WAV a MP3?', 'Abre el WAV, elige MP3 y una calidad, y pulsa Convertir y luego Descargar.'],
         ['¿Cómo convierto una nota de voz de WhatsApp a MP3?', 'Guarda la nota de voz (.opus) en tu dispositivo, ábrela aquí, elige MP3 y pulsa Convertir.'],
         ['¿Cuál es el mejor formato de audio?', 'MP3 se reproduce en todas partes. M4A suena un poco mejor con el mismo tamaño. FLAC y WAV mantienen la calidad pero son más grandes.'],
@@ -201,5 +203,6 @@ export default (NAME) => ({
     ...more(NAME),
     ...guides(NAME),
     ...conv(NAME),
+    ...tools2(NAME),
   ],
 });

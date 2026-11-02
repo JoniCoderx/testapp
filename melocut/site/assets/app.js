@@ -125,6 +125,7 @@ async function runFFmpeg(ff, args, outLen, onProgress) {
 
 // ---------- helpers ----------
 const $ = (root, sel) => root.querySelector(sel);
+const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 const fmt = (t) => {
   t = Math.round(Math.max(0, t || 0) * 10) / 10; // round first, so 59.96 s shows as 1:00.0, not 0:60.0
   const m = Math.floor(t / 60), s = t - m * 60;
@@ -637,6 +638,126 @@ function mountVideoPreview(root) {
     showVideo(src) { vid.src = src; vid.hidden = false; img.hidden = true; box.classList.add('done'); cap.textContent = T('Your video'); },
   };
 }
+// ---------- several files at once (plain converter pages) ----------
+// A tiny ZIP writer (stored, no compression: audio is already compressed), so "Download all" is one file.
+const CRC_TABLE = (() => { const t = new Uint32Array(256); for (let n = 0; n < 256; n++) { let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1; t[n] = c >>> 0; } return t; })();
+const crc32 = (u8) => { let c = 0xffffffff; for (let i = 0; i < u8.length; i++) c = CRC_TABLE[(c ^ u8[i]) & 0xff] ^ (c >>> 8); return (c ^ 0xffffffff) >>> 0; };
+function makeZip(files) { // files: [{ name, data: Uint8Array }]
+  const enc = new TextEncoder(), parts = [], central = []; let offset = 0;
+  for (const f of files) {
+    const name = enc.encode(f.name), crc = crc32(f.data), size = f.data.length;
+    const h = new DataView(new ArrayBuffer(30));
+    [[0, 0x04034b50, 4], [4, 20, 2], [6, 0x0800, 2], [8, 0, 2], [10, 0, 2], [12, 0x21, 2], [14, crc, 4], [18, size, 4], [22, size, 4], [26, name.length, 2], [28, 0, 2]]
+      .forEach(([o, v, n]) => (n === 4 ? h.setUint32(o, v, true) : h.setUint16(o, v, true)));
+    parts.push(new Uint8Array(h.buffer), name, f.data);
+    const c = new DataView(new ArrayBuffer(46));
+    [[0, 0x02014b50, 4], [4, 20, 2], [6, 20, 2], [8, 0x0800, 2], [10, 0, 2], [12, 0, 2], [14, 0x21, 2], [16, crc, 4], [20, size, 4], [24, size, 4], [28, name.length, 2], [30, 0, 2], [32, 0, 2], [34, 0, 2], [36, 0, 2], [38, 0, 4], [42, offset, 4]]
+      .forEach(([o, v, n]) => (n === 4 ? c.setUint32(o, v, true) : c.setUint16(o, v, true)));
+    central.push(new Uint8Array(c.buffer), name);
+    offset += 30 + name.length + size;
+  }
+  const cdSize = central.reduce((s, p) => s + p.length, 0), e = new DataView(new ArrayBuffer(22));
+  [[0, 0x06054b50, 4], [4, 0, 2], [6, 0, 2], [8, files.length, 2], [10, files.length, 2], [12, cdSize, 4], [16, offset, 4], [20, 0, 2]]
+    .forEach(([o, v, n]) => (n === 4 ? e.setUint32(o, v, true) : e.setUint16(o, v, true)));
+  return new Blob([...parts, ...central, new Uint8Array(e.buffer)], { type: 'application/zip' });
+}
+const BATCH_MAX = 50;
+const BATCH_HTML = () => `<div class="batch" data-batch hidden>
+    <div class="batch-head"><b data-bcount></b><button class="btn ghost sm" type="button" data-bnew>${T('Choose other files')}</button></div>
+    <div class="opts"><label>${T('Format')} <select data-bfmt>${ALL_FORMATS.map((f) => `<option value="${f}">${FORMATS[f].label}</option>`).join('')}</select></label>
+    <label data-bqwrap>${T('Quality')} <select data-bq>${[128, 192, 256, 320].map((q) => `<option value="${q}"${q === 192 ? ' selected' : ''}>${q} kbps</option>`).join('')}</select></label></div>
+    <ol class="batch-list" data-blist></ol>
+    <div class="batch-actions"><button class="btn" type="button" data-bgo>${T('Convert all')}</button><button class="btn ok" type="button" data-bzip hidden>${I.download || ''}${T('Download all (ZIP)')}</button></div>
+    <p class="batch-err" data-berr role="alert"></p>
+  </div>`;
+function mountBatch(root, onDone) {
+  const box = $(root, '[data-batch]'), list = $(root, '[data-blist]'), fmtSel = $(root, '[data-bfmt]'), qSel = $(root, '[data-bq]'),
+    go = $(root, '[data-bgo]'), zipBtn = $(root, '[data-bzip]'), err = $(root, '[data-berr]'), count = $(root, '[data-bcount]');
+  let items = [], busy = false;
+  if (FORMATS[root.dataset.format] && ALL_FORMATS.includes(root.dataset.format)) fmtSel.value = root.dataset.format;
+  const syncQ = () => { $(root, '[data-bqwrap]').hidden = !LOSSY.includes(fmtSel.value); };
+  syncQ(); fmtSel.onchange = () => { syncQ(); reset(); };
+  qSel.onchange = () => reset();
+  const kb = (n) => (n / 1048576).toFixed(2) + ' MB';
+  function render() {
+    list.innerHTML = items.map((it, i) => `<li><span class="bn">${esc(it.file.name)}</span><span class="bs">${it.state === 'done' ? `${kb(it.out.size)} · <a href="#" data-bdl="${i}">${T('Download')}</a>` : it.state === 'work' ? T('Converting…') : it.state === 'fail' ? T('Failed') : T('Waiting')}</span></li>`).join('');
+    list.querySelectorAll('[data-bdl]').forEach((a) => (a.onclick = (e) => { e.preventDefault(); const it = items[a.dataset.bdl]; downloadURL(URL.createObjectURL(it.out), it.outName); track('download', { tool: 'batch', format: fmtSel.value }); }));
+  }
+  function reset() { if (busy) return; items.forEach((it) => { it.state = 'wait'; it.out = null; }); zipBtn.hidden = true; go.hidden = false; render(); }
+  async function run() {
+    busy = true; go.disabled = true; err.textContent = ''; root.classList.add('locked');
+    const fmtKey = fmtSel.value, q = qSel.value;
+    for (const it of items) {
+      it.state = 'work'; render();
+      try {
+        it.out = await exclusive(async () => {
+          const ff = await loadEngine(), inName = `in.${extOf(it.file.name)}`, outName = `out.${fmtKey}`;
+          try {
+            await ff.writeFile(inName, new Uint8Array(await it.file.arrayBuffer()));
+            await runFFmpeg(ff, ['-i', inName, '-vn', '-map_metadata', '0', ...FORMATS[fmtKey].args(q), outName], 1);
+            const data = await ff.readFile(outName);
+            return new Blob([data.buffer], { type: FORMATS[fmtKey].mime });
+          } finally { await ff.deleteFile(inName).catch(() => {}); await ff.deleteFile(outName).catch(() => {}); }
+        });
+        it.outName = `${baseName(it.file.name)}.${fmtKey}`; it.state = 'done';
+      } catch { it.state = 'fail'; }
+      render();
+    }
+    const ok = items.filter((it) => it.state === 'done');
+    busy = false; go.disabled = false; root.classList.remove('locked');
+    track('converted', { tool: 'batch', format: fmtKey, files: String(items.length) });
+    if (ok.length) { go.hidden = true; zipBtn.hidden = false; }
+    if (ok.length < items.length) err.textContent = T('Some files could not be converted. They may be damaged or not audio.');
+  }
+  go.onclick = run;
+  zipBtn.onclick = async () => {
+    const used = new Set(), files = [];
+    for (const it of items.filter((x) => x.state === 'done')) {
+      let n = it.outName, k = 2; while (used.has(n)) n = `${baseName(it.outName)} (${k++}).${extOf(it.outName)}`; used.add(n);
+      files.push({ name: n, data: new Uint8Array(await it.out.arrayBuffer()) });
+    }
+    downloadURL(URL.createObjectURL(makeZip(files)), 'MeloCut.zip');
+    track('download', { tool: 'batch', format: fmtSel.value, zip: 'yes' });
+  };
+  $(root, '[data-bnew]').onclick = () => onDone();
+  return {
+    open(files) {
+      items = files.slice(0, BATCH_MAX).filter((f) => f.size <= MAX_BYTES).map((file) => ({ file, state: 'wait', out: null }));
+      count.textContent = T('{0} files', items.length);
+      err.textContent = files.length > BATCH_MAX ? T('Up to {0} files at a time. The first {0} were added.', BATCH_MAX) : '';
+      zipBtn.hidden = true; go.hidden = false; box.hidden = false; render();
+    },
+    close() { box.hidden = true; items = []; },
+  };
+}
+// Record straight from the microphone. The recording stays on the device and opens like any chosen file.
+function mountRecorder(root, onFile) {
+  const box = $(root, '[data-rec]'), btn = $(root, '[data-recbtn]'), label = $(root, '[data-reclabel]');
+  if (!box || !navigator.mediaDevices?.getUserMedia || !window.MediaRecorder) return { hide() {}, show() {} };
+  box.hidden = false;
+  const MAX = 10 * 60; // seconds
+  let rec = null, stream = null, chunks = [], t0 = 0, tick = 0;
+  const mime = ['audio/webm;codecs=opus', 'audio/mp4', 'audio/ogg;codecs=opus', ''].find((m) => !m || MediaRecorder.isTypeSupported(m));
+  const stopAll = () => { clearInterval(tick); stream?.getTracks().forEach((t) => t.stop()); stream = null; box.classList.remove('on'); label.textContent = T('Record with the microphone'); };
+  btn.addEventListener('click', async (e) => {
+    e.stopPropagation();
+    if (rec && rec.state === 'recording') { rec.stop(); return; }
+    try { stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: true } }); }
+    catch { label.textContent = T('Microphone blocked. Allow it in your browser settings and try again.'); return; }
+    chunks = []; rec = new MediaRecorder(stream, mime ? { mimeType: mime } : undefined);
+    rec.ondataavailable = (ev) => ev.data.size && chunks.push(ev.data);
+    rec.onstop = () => {
+      const type = rec.mimeType || mime || 'audio/webm', ext = /mp4/.test(type) ? 'm4a' : /ogg/.test(type) ? 'ogg' : 'webm';
+      stopAll();
+      const blob = new Blob(chunks, { type });
+      if (blob.size) { track('record', { tool: root.dataset.tool, secs: Math.round((Date.now() - t0) / 1000) }); onFile(new File([blob], `${T('recording')}.${ext}`, { type })); }
+    };
+    rec.start(250); t0 = Date.now(); box.classList.add('on');
+    const show = () => { const s = Math.floor((Date.now() - t0) / 1000); label.textContent = `${T('Stop')} · ${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`; if (s >= MAX) rec.stop(); };
+    show(); tick = setInterval(show, 500);
+  });
+  return { hide() { box.hidden = true; }, show() { box.hidden = false; } };
+}
 function mountTool(root) {
   let cfg = TOOLS[root.dataset.tool];
   if (!cfg) return;
@@ -646,14 +767,18 @@ function mountTool(root) {
   if (root.dataset.suffix) cfg = { ...cfg, suffix: root.dataset.suffix };
   // The main button says what the tool does ("Cut and save"); effect pages built on a tool keep "Convert".
   const goLabel = (!root.dataset.fx && cfg.go) || T('Convert');
+  // Plain converter pages also take several files at once (no effects or trimming in that mode).
+  const batchOK = root.dataset.tool === 'converter' && !root.dataset.fx;
 
   root.innerHTML = `${INAPP_HTML()}
-    <input type="file" class="sr" accept="${ACCEPT}" data-file aria-label="${T('Choose an audio or video file')}" tabindex="-1">
+    <input type="file" class="sr" accept="${ACCEPT}" data-file aria-label="${T('Choose an audio or video file')}" tabindex="-1"${batchOK ? ' multiple' : ''}>
     <div class="drop" data-drop tabindex="0" role="button">
       <div class="ico">${UPLOAD_ICON}</div>
-      <strong>${T('Choose a file or drop it here')}</strong>
+      <strong>${batchOK ? T('Choose files or drop them here') : T('Choose a file or drop it here')}</strong>
       <span>${cfg.drop || T('MP3, M4A, WAV, OGG, OPUS, FLAC or a video…')}</span>
     </div>
+    <div class="rec" data-rec hidden><span>${T('or')}</span><button class="btn ghost sm" type="button" data-recbtn><span class="rec-dot"></span><span data-reclabel>${T('Record with the microphone')}</span></button></div>
+    ${batchOK ? BATCH_HTML() : ''}
     <div class="editor" data-editor>
       <div class="filebar">
         <div style="min-width:0;flex:1"><b data-name></b><small data-meta></small></div>
@@ -709,7 +834,14 @@ function mountTool(root) {
   els.drop.addEventListener('click', () => els.file.click());
   els.drop.addEventListener('keydown', (e) => (e.key === 'Enter' || e.key === ' ') && (e.preventDefault(), els.file.click()));
   $(root, '[data-new]').addEventListener('click', () => els.file.click());
-  els.file.addEventListener('change', () => els.file.files[0] && openFile(els.file.files[0]));
+  const batch = batchOK ? mountBatch(root, () => { batch.close(); els.drop.style.display = ''; recorder.show(); els.file.value = ''; els.file.click(); }) : null;
+  const pick = (files) => {
+    if (!files.length) return;
+    if (batch && files.length > 1) { els.drop.style.display = 'none'; recorder.hide(); els.editor.style.display = 'none'; batch.open(files); return; }
+    batch?.close(); openFile(files[0]);
+  };
+  els.file.addEventListener('change', () => pick([...els.file.files]));
+  const recorder = mountRecorder(root, (f) => openFile(f));
   // Arrived from another tool's "next" button: open the file it handed over.
   if (location.hash === '#handoff') {
     history.replaceState(null, '', location.pathname + location.search);
@@ -717,7 +849,7 @@ function mountTool(root) {
   }
   ['dragenter', 'dragover'].forEach((t) => els.drop.addEventListener(t, (e) => { e.preventDefault(); els.drop.classList.add('over'); }));
   ['dragleave', 'drop'].forEach((t) => els.drop.addEventListener(t, (e) => { e.preventDefault(); els.drop.classList.remove('over'); }));
-  els.drop.addEventListener('drop', (e) => e.dataTransfer.files[0] && openFile(e.dataTransfer.files[0]));
+  els.drop.addEventListener('drop', (e) => pick([...e.dataTransfer.files]));
   // Space toggles playback (when not typing in a field).
   document.addEventListener('keydown', (e) => {
     if (e.code !== 'Space' || !st.buffer || /^(INPUT|SELECT|TEXTAREA|BUTTON|SUMMARY|A)$/.test(document.activeElement?.tagName)) return;
@@ -737,6 +869,7 @@ function mountTool(root) {
     const token = (st.openToken = (st.openToken || 0) + 1); // a newer open wins over a slower older one
     st.file = file; st.buffer = null; st.peaks = null; st.duration = 0; st.exact = null;
     els.drop.style.display = 'none';
+    recorder.hide();
     els.editor.style.display = 'block';
     els.name.textContent = file.name;
     if (cfg.video) { $(root, '[data-v=title]').value = baseName(file.name).replace(/[_-]+/g, ' ').slice(0, 60); vprev.refresh(0); }

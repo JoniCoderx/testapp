@@ -79,6 +79,30 @@ img, svg, canvas { display: block; max-width: 100%; }
 .drop:hover, .drop.over { border-color: var(--brand); background: var(--brand-soft); }
 .drop strong { display: block; font-size: 19px; margin: 10px 0 4px; }
 .drop span { color: var(--muted); font-size: 14.5px; }
+.batch { margin-top: 4px; }
+.batch[hidden] { display: none; }
+.batch-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.batch-head b { font-size: 17px; }
+.batch-list { list-style: none; margin: 14px 0; padding: 0; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+.batch-list li { display: flex; justify-content: space-between; gap: 12px; padding: 10px 14px; font-size: 14px; border-top: 1px solid var(--line); }
+.batch-list li:first-child { border-top: 0; }
+.batch-list .bn { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; font-weight: 600; }
+.batch-list .bs { flex: none; color: var(--muted); }
+.batch-list a { color: var(--brand); font-weight: 700; }
+.batch-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.batch-actions .btn { display: inline-flex; align-items: center; gap: 8px; }
+.batch-actions [hidden] { display: none; }
+.batch-err { margin-top: 12px; padding: 10px 14px; border-radius: 10px; font-size: 14.5px; font-weight: 600; background: #fdecec; color: #b42318; }
+.batch-err:empty { display: none; }
+@media (prefers-color-scheme: dark) { .batch-err { background: #3b1518; color: #ffb4ab; } }
+.rec { display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 12px; color: var(--muted); font-size: 14px; }
+.rec[hidden] { display: none; }
+.rec .btn { display: inline-flex; align-items: center; gap: 8px; min-height: 40px; font-weight: 700; }
+.rec-dot { width: 10px; height: 10px; border-radius: 50%; background: #ff3b5c; }
+.rec.on .btn.ghost, .rec.on .btn.ghost:hover, .rec.on .btn.ghost:focus-visible { border-color: #ff3b5c; color: #e11d48; background: #fff1f3; }
+.rec.on .rec-dot { animation: recpulse 1s infinite; }
+@keyframes recpulse { 50% { opacity: .25; } }
+@media (prefers-reduced-motion: reduce) { .rec.on .rec-dot { animation: none; } }
 .drop .ico { width: 54px; height: 54px; margin: 0 auto; border-radius: 16px; background: var(--grad); display: grid; place-items: center; color: #fff; }
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 48px; padding: 0 24px; border: 0; border-radius: 12px;
 background: var(--grad); color: #fff; font: inherit; font-weight: 700; cursor: pointer; text-decoration: none; white-space: nowrap; }
@@ -443,8 +467,8 @@ footer .en-tag { margin-left: 5px; font-size: 9.5px; padding: 0 4px; }
 <script src="/assets/config.js?v=303fd877" defer></script>
 <script src="/assets/site.js?v=7b8cd31d" defer></script>
 
-<link rel="modulepreload" href="/assets/app.js?v=e5842741">
-<script type="module" src="/assets/app.js?v=e5842741"></script>
+<link rel="modulepreload" href="/assets/app.js?v=91e81e72">
+<script type="module" src="/assets/app.js?v=91e81e72"></script>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://melocut.com/#site","name":"MeloCut","url":"https://melocut.com/","inLanguage":["en","es","pt-BR"],"publisher":{"@id":"https://melocut.com/#org"}},{"@type":"Organization","@id":"https://melocut.com/#org","name":"MeloCut","url":"https://melocut.com/","logo":"https://melocut.com/icon-512.png","email":"hello@melocut.com","sameAs":["https://www.tiktok.com/@melocutofficial","https://www.instagram.com/melocutt/"]},{"@type":"WebPage","@id":"https://melocut.com/audio-to-video/#page","url":"https://melocut.com/audio-to-video/","name":"MP3 to MP4: Turn a Song into a Video for TikTok, Free | MeloCut","description":"Turn a song, voice note or recording into a vertical MP4 video with a moving sound wave, a title and your cover image. Made on your phone, free, no upload.","inLanguage":"en","isPartOf":{"@id":"https://melocut.com/#site"},"primaryImageOfPage":"https://melocut.com/og/audio-to-video.jpg","dateModified":"2026-11-01"},{"@type":"WebApplication","name":"MeloCut Song to video: MP3 to MP4 for TikTok and Reels","url":"https://melocut.com/audio-to-video/","applicationCategory":"MultimediaApplication","inLanguage":"en","operatingSystem":"Any (web browser)","browserRequirements":"Requires JavaScript and a modern browser","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Turn a song, voice note or recording into a vertical MP4 video with a moving sound wave, a title and your cover image. Made on your phone, free, no upload.","featureList":["Vertical 9:16","Moving sound wave","No upload"],"isAccessibleForFree":true},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://melocut.com/"},{"@type":"ListItem","position":2,"name":"Tools","item":"https://melocut.com/#tools"},{"@type":"ListItem","position":3,"name":"Song to video: MP3 to MP4 for TikTok and Reels","item":"https://melocut.com/audio-to-video/"}]},{"@type":"FAQPage","inLanguage":"en","mainEntity":[{"@type":"Question","name":"How do I convert MP3 to MP4?","acceptedAnswer":{"@type":"Answer","text":"Open the MP3 here, add a title and a style or cover image, and press Make video. You get an MP4 with a moving sound wave."}},{"@type":"Question","name":"Can I add my own picture?","acceptedAnswer":{"@type":"Answer","text":"Yes. Choose a cover image: it is shown in the middle and, blurred, as the background."}},{"@type":"Question","name":"Is there a watermark?","acceptedAnswer":{"@type":"Answer","text":"There is a small melocut.com mark at the bottom of the video. It is how the tool stays free."}},{"@type":"Question","name":"Does it work on iPhone?","acceptedAnswer":{"@type":"Answer","text":"Yes, in Safari. Making video takes a while because it happens on your device: on a computer about as long as the clip itself, longer on phones. Keep the page open until it is done."}}]},{"@type":"HowTo","inLanguage":"en","name":"Song to video: MP3 to MP4 for TikTok and Reels","step":[{"@type":"HowToStep","position":1,"name":"Open a song","text":"Choose an MP3, a voice note or any audio. The first 30 seconds are selected; drag to pick another part, up to 60 seconds."},{"@type":"HowToStep","position":2,"name":"Add a title and style","text":"The title comes from the file name; change it if you like. Pick a background style or add a cover image."},{"@type":"HowToStep","position":3,"name":"Make the video","text":"Press Make video, then Download. Upload the MP4 anywhere."}]}]}</script>
 </head>
