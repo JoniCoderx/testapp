@@ -79,6 +79,30 @@ img, svg, canvas { display: block; max-width: 100%; }
 .drop:hover, .drop.over { border-color: var(--brand); background: var(--brand-soft); }
 .drop strong { display: block; font-size: 19px; margin: 10px 0 4px; }
 .drop span { color: var(--muted); font-size: 14.5px; }
+.batch { margin-top: 4px; }
+.batch[hidden] { display: none; }
+.batch-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.batch-head b { font-size: 17px; }
+.batch-list { list-style: none; margin: 14px 0; padding: 0; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+.batch-list li { display: flex; justify-content: space-between; gap: 12px; padding: 10px 14px; font-size: 14px; border-top: 1px solid var(--line); }
+.batch-list li:first-child { border-top: 0; }
+.batch-list .bn { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; font-weight: 600; }
+.batch-list .bs { flex: none; color: var(--muted); }
+.batch-list a { color: var(--brand); font-weight: 700; }
+.batch-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.batch-actions .btn { display: inline-flex; align-items: center; gap: 8px; }
+.batch-actions [hidden] { display: none; }
+.batch-err { margin-top: 12px; padding: 10px 14px; border-radius: 10px; font-size: 14.5px; font-weight: 600; background: #fdecec; color: #b42318; }
+.batch-err:empty { display: none; }
+@media (prefers-color-scheme: dark) { .batch-err { background: #3b1518; color: #ffb4ab; } }
+.rec { display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 12px; color: var(--muted); font-size: 14px; }
+.rec[hidden] { display: none; }
+.rec .btn { display: inline-flex; align-items: center; gap: 8px; min-height: 40px; font-weight: 700; }
+.rec-dot { width: 10px; height: 10px; border-radius: 50%; background: #ff3b5c; }
+.rec.on .btn.ghost, .rec.on .btn.ghost:hover, .rec.on .btn.ghost:focus-visible { border-color: #ff3b5c; color: #e11d48; background: #fff1f3; }
+.rec.on .rec-dot { animation: recpulse 1s infinite; }
+@keyframes recpulse { 50% { opacity: .25; } }
+@media (prefers-reduced-motion: reduce) { .rec.on .rec-dot { animation: none; } }
 .drop .ico { width: 54px; height: 54px; margin: 0 auto; border-radius: 16px; background: var(--grad); display: grid; place-items: center; color: #fff; }
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 48px; padding: 0 24px; border: 0; border-radius: 12px;
 background: var(--grad); color: #fff; font: inherit; font-weight: 700; cursor: pointer; text-decoration: none; white-space: nowrap; }
@@ -502,7 +526,7 @@ footer .en-tag { margin-left: 5px; font-size: 9.5px; padding: 0 4px; }
   <div class="wrap">
     <div class="fbar"><span>© <span data-year></span> MeloCut · Ferramentas de áudio grátis que funcionam no seu navegador</span><span class="social"><a href="https://ko-fi.com/melocut" target="_blank" rel="noopener" class="kofi">☕ <span>Apoie o MeloCut</span></a><a href="https://www.tiktok.com/@melocutofficial" target="_blank" rel="noopener me" aria-label="MeloCut on TikTok"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.6 5.82A4.28 4.28 0 0 1 15.54 3h-3.09v12.4a2.59 2.59 0 0 1-2.59 2.5 2.6 2.6 0 0 1-2.6-2.6 2.6 2.6 0 0 1 3.37-2.48V9.66a5.69 5.69 0 0 0-.77-.05A5.68 5.68 0 0 0 4.18 15.3 5.68 5.68 0 0 0 9.86 21a5.68 5.68 0 0 0 5.68-5.68V9.01a7.33 7.33 0 0 0 4.28 1.38V7.32a4.28 4.28 0 0 1-3.22-1.5z"/></svg><span>TikTok</span></a><a href="https://www.instagram.com/melocutt/" target="_blank" rel="noopener me" aria-label="MeloCut on Instagram"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor" stroke="none"/></svg><span>Instagram</span></a></span></div>
     <div class="fcols">
-      <nav aria-label="Ferramentas"><b>Ferramentas</b><a href="/pt-br/video-para-mp3/">Vídeo para MP3</a><a href="/pt-br/criar-toque/">Criar toque</a><a href="/pt-br/cortar-audio/">Cortar áudio</a><a href="/pt-br/conversor-de-audio/">Conversor de áudio</a><a href="/pt-br/juntar-audio/">Juntar áudios</a><a href="/pt-br/remover-ruido/">Remover ruído com IA</a><a href="/pt-br/slowed-reverb/">Slowed + Reverb</a><a href="/pt-br/remover-voz/">Remover voz</a><a href="/pt-br/musica-para-video/">Música para vídeo</a><a href="/pt-br/mudar-voz/">Modificador de voz</a><a href="/pt-br/audio-8d/">Áudio 8D</a><a href="/pt-br/aumentar-grave/">Aumentar grave</a><a href="/pt-br/aumentar-volume/">Aumentar volume</a><a href="/reverse-audio/" hreflang="en">Áudio ao contrário<span class="en-tag" title="em inglês">EN</span></a><a href="/speed-up-audio/" hreflang="en">Acelerar áudio<span class="en-tag" title="em inglês">EN</span></a><a href="/slow-down-audio/" hreflang="en">Desacelerar áudio<span class="en-tag" title="em inglês">EN</span></a><a href="/pitch-changer/" hreflang="en">Mudar o tom<span class="en-tag" title="em inglês">EN</span></a><a href="/pt-br/nightcore/">Criar nightcore</a><a href="/remove-silence/" hreflang="en">Remover silêncios<span class="en-tag" title="em inglês">EN</span></a><a href="/fade-in-fade-out/" hreflang="en">Fade in e fade out<span class="en-tag" title="em inglês">EN</span></a></nav>
+      <nav aria-label="Ferramentas"><b>Ferramentas</b><a href="/pt-br/video-para-mp3/">Vídeo para MP3</a><a href="/pt-br/criar-toque/">Criar toque</a><a href="/pt-br/cortar-audio/">Cortar áudio</a><a href="/pt-br/conversor-de-audio/">Conversor de áudio</a><a href="/pt-br/juntar-audio/">Juntar áudios</a><a href="/pt-br/remover-ruido/">Remover ruído com IA</a><a href="/pt-br/slowed-reverb/">Slowed + Reverb</a><a href="/pt-br/remover-voz/">Remover voz</a><a href="/pt-br/musica-para-video/">Música para vídeo</a><a href="/pt-br/mudar-voz/">Modificador de voz</a><a href="/pt-br/audio-8d/">Áudio 8D</a><a href="/pt-br/aumentar-grave/">Aumentar grave</a><a href="/pt-br/aumentar-volume/">Aumentar volume</a><a href="/pt-br/audio-ao-contrario/">Áudio ao contrário</a><a href="/pt-br/acelerar-audio/">Acelerar áudio</a><a href="/pt-br/desacelerar-audio/">Desacelerar áudio</a><a href="/pt-br/mudar-tom/">Mudar o tom</a><a href="/pt-br/nightcore/">Criar nightcore</a><a href="/pt-br/remover-silencios/">Remover silêncios</a><a href="/pt-br/fade-in-fade-out/">Fade in e fade out</a></nav>
       <nav aria-label="Conversões"><b>Conversões</b><a href="/pt-br/mp4-para-mp3/">MP4 para MP3</a><a href="/pt-br/wav-para-mp3/">WAV para MP3</a><a href="/pt-br/m4a-para-mp3/">M4A para MP3</a><a href="/pt-br/audio-whatsapp-para-mp3/">Áudio do WhatsApp para MP3</a><a href="/pt-br/mp3-para-wav/">MP3 para WAV</a><a href="/pt-br/ogg-para-mp3/">OGG para MP3</a></nav>
       <nav aria-label="Ajuda e informações"><b>Ajuda e informações</b><a href="/guides/">Guias (em inglês)</a><a href="/guides/install-app/">Instalar o app</a><a href="/about/">Sobre e contato</a><a href="/privacy/">Privacidade</a><a href="/terms/">Termos</a></nav>
       <nav aria-label="Idioma"><b>Idioma</b><a href="/guides/whatsapp-voice-to-mp3/" hreflang="en" lang="en">English</a><a href="/es/guias/audio-whatsapp-a-mp3/" hreflang="es" lang="es">Español</a><a href="/pt-br/guias/audio-whatsapp-mp3/" hreflang="pt-BR" lang="pt-BR">Português</a></nav>

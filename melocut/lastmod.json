@@ -20,9 +20,9 @@
   "modified": "2026-10-29"
  },
  "en:audio-converter": {
-  "hash": "90dc848f766b",
+  "hash": "95a5faa8939c",
   "published": "2026-10-25",
-  "modified": "2026-11-01"
+  "modified": "2026-11-02"
  },
  "en:mp4-to-mp3": {
   "hash": "d442acb654d3",
@@ -50,9 +50,9 @@
   "modified": "2026-10-29"
  },
  "en:wav-to-mp3": {
-  "hash": "e58cdfc57f91",
+  "hash": "72a8453fea69",
   "published": "2026-10-25",
-  "modified": "2026-11-01"
+  "modified": "2026-11-02"
  },
  "en:m4a-to-mp3": {
   "hash": "902f3e15b32c",
@@ -157,7 +157,7 @@
  "en:fade-in-fade-out": {
   "hash": "fe17c31c174c",
   "published": "2026-10-26",
-  "modified": "2026-10-29"
+  "modified": "2026-11-02"
  },
  "en:guides": {
   "hash": "3019cf6a9cef",
@@ -335,9 +335,9 @@
   "modified": "2026-10-29"
  },
  "es:es/convertidor-de-audio": {
-  "hash": "7421aec0f8ca",
+  "hash": "a86cc925e2cc",
   "published": "2026-10-26",
-  "modified": "2026-10-31"
+  "modified": "2026-11-02"
  },
  "pt-br:pt-br": {
   "hash": "7d1ecc2f8b61",
@@ -360,9 +360,9 @@
   "modified": "2026-10-29"
  },
  "pt-br:pt-br/conversor-de-audio": {
-  "hash": "25f524adf79f",
+  "hash": "22f0f4d5ef9e",
   "published": "2026-10-26",
-  "modified": "2026-10-29"
+  "modified": "2026-11-02"
  },
  "en:voice-changer": {
   "hash": "a46383e611bc",
@@ -576,6 +576,66 @@
  },
  "pt-br:pt-br/ogg-para-mp3": {
   "hash": "efb2ed78110f",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "es:es/audio-al-reves": {
+  "hash": "29cb16292b4e",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "es:es/acelerar-audio": {
+  "hash": "8b9af2c4c4f7",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "es:es/ralentizar-audio": {
+  "hash": "a21945ffb3ac",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "es:es/cambiar-tono": {
+  "hash": "315c2bb89c99",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "es:es/quitar-silencios": {
+  "hash": "eb0ff8a87edd",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "es:es/fundido-entrada-salida": {
+  "hash": "29e84dbcfe1e",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "pt-br:pt-br/audio-ao-contrario": {
+  "hash": "9bd2f663bc46",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "pt-br:pt-br/acelerar-audio": {
+  "hash": "1237076a10ae",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "pt-br:pt-br/desacelerar-audio": {
+  "hash": "85f862e74e4f",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "pt-br:pt-br/mudar-tom": {
+  "hash": "732555c5ca5c",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "pt-br:pt-br/remover-silencios": {
+  "hash": "dbc06dcce785",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "pt-br:pt-br/fade-in-fade-out": {
+  "hash": "7fa84b8b5490",
   "published": "2026-11-02",
   "modified": "2026-11-02"
  }

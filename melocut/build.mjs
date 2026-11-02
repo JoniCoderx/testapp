@@ -329,6 +329,7 @@ const PAGES = [
     <h3>WhatsApp and Telegram voice notes</h3>
     <p>Voice messages are saved as <code>.opus</code> or <code>.ogg</code> files that a lot of players won't open. Convert them to MP3 and they play anywhere.</p>`,
     faq: [
+      ['Can I convert several files at once?', 'Yes. Choose or drop several files together, pick the format, and press Convert all. You can download each file or all of them as one ZIP.'],
       ['How do I convert WAV to MP3?', 'Open the WAV, choose MP3 and a quality, then press Convert and Download.'],
       ['How do I convert a WhatsApp voice note to MP3?', 'Save the voice note (.opus) to your device, open it here, choose MP3 and press Convert.'],
       ['Which audio format is best?', 'MP3 plays everywhere. M4A sounds a little better at the same size. FLAC and WAV keep full quality but are bigger.'],
@@ -476,7 +477,7 @@ const PAGES = [
     <p>Only need part of the file? Drag the handles on the waveform to keep just that part, and add a fade in or out. You can also boost a quiet recording with <strong>Auto loudness</strong> before you download.</p>`,
     faq: [
       ['Does converting WAV to MP3 lose quality?', 'A little, because MP3 is compressed. At 320 kbps most people cannot hear it.'],
-      ['Can I convert several WAV files at once?', 'Convert them one after another, or join them into one MP3 with the Audio Joiner.'],
+      ['Can I convert several WAV files at once?', 'Yes. Choose several files at once: they are all converted and you can download them together as one ZIP. To make one long MP3 instead, use the Audio Joiner.'],
       ['Is this WAV to MP3 converter really free?', 'Yes. There is no sign-up and no watermark, and the file is converted in your browser, so it is never uploaded.'],
       ['Which bitrate should I choose?', '320 kbps for music you care about, 192 kbps for everyday listening, and 128 kbps for voice recordings.'],
     ],
@@ -2118,6 +2119,7 @@ const ogImage = (p) => (fs.existsSync(path.join(ROOT, 'og', `${slugOf(p)}.jpg`))
 
 // Every page with its language. The five English pages that have translations get a `key`.
 const KEY_OF = { '': 'home',
+  'reverse-audio': 'reverse', 'speed-up-audio': 'speedup', 'slow-down-audio': 'slowdown', 'pitch-changer': 'pitch', 'remove-silence': 'silence', 'fade-in-fade-out': 'fade',
   'mp4-to-mp3': 'c-mp4', 'wav-to-mp3': 'c-wav', 'm4a-to-mp3': 'c-m4a', 'whatsapp-audio-to-mp3': 'c-wa', 'mp3-to-wav': 'c-mp3wav', 'ogg-to-mp3': 'c-ogg',
   'guides/iphone-ringtone': 'g-iphone', 'guides/samsung-ringtone': 'g-samsung', 'guides/whatsapp-voice-to-mp3': 'g-whatsapp', 'guides/make-slowed-reverb': 'g-slowed', 'audio-cutter': 'cutter', 'video-to-mp3': 'video', 'ringtone-maker': 'ringtone', 'audio-converter': 'converter',
   'voice-changer': 'voice', 'audio-to-video': 'a2v', 'slowed-reverb': 'slowed', 'vocal-remover': 'karaoke', '8d-audio': '8d', 'bass-booster': 'bass',
