@@ -1,7 +1,8 @@
+import more, { toolPaths } from './fr-more.mjs';
 // French ("tu") pages and site text. Self-contained: no guides, conversion or extra tool pages yet.
 // Pages with the same `key` as an English page are linked to it with hreflang and the language switcher.
 // Button names in steps and FAQs match the French interface strings in i18n/ui_fr.py.
-export default (NAME) => ({
+const base = (NAME) => ({
   ui: {
     code: 'fr', hreflang: 'fr', ogLocale: 'fr_FR', prefix: '/fr', name: 'Français', short: 'FR',
     home: "Accueil", tools: "Outils", allTools: "Tous les outils", navAll: "Tous", popular: "Les plus utilisés", installApp: "Installer l'app", menu: "Menu",
@@ -205,7 +206,7 @@ export default (NAME) => ({
       lead: "Transforme n'importe quel enregistrement, message vocal ou vidéo en écureuil, monstre, robot et plus encore. Écoute d'abord, puis enregistre.",
       badges: ["7 voix", "Écoute avant d'enregistrer", "Aucun envoi de fichier"],
       steps: [
-        ["Ouvre un enregistrement", "Choisis un message vocal, un enregistrement ou une vidéo. Tu peux aussi d'abord t'enregistrer avec ton téléphone."],
+        ["Ouvre un enregistrement", "Choisis un message vocal, un enregistrement ou une vidéo, ou touche Enregistrer avec le micro et dis quelque chose."],
         ["Choisis une voix", "Écureuil est déjà sélectionné. Touche Voix grave, Monstre, Robot, Extraterrestre, Téléphone ou Écho et appuie sur Écouter avec effets."],
         ["Enregistre-la", "Appuie sur Changer la voix, puis sur Télécharger. Partage-la ou utilise-la comme sonnerie."],
       ],
@@ -226,7 +227,7 @@ export default (NAME) => ({
       faq: [
         ["Le modificateur de voix est-il gratuit ?", "Oui. Gratuit, sans inscription, sans filigrane, et ton enregistrement n'est jamais envoyé."],
         ["Puis-je changer la voix d'une vidéo ?", "Oui. Ouvre la vidéo et MeloCut utilise son son. Le résultat est un fichier audio (MP3, M4A, WAV, OGG ou FLAC)."],
-        ["Puis-je m'enregistrer directement sur la page ?", "Pas encore. Enregistre-toi avec le dictaphone de ton téléphone, puis ouvre le fichier ici."],
+        ["Puis-je m'enregistrer directement sur la page ?", "Oui. Touche Enregistrer avec le micro, parle, puis touche Arrêter. L'enregistrement s'ouvre tout de suite et reste sur ton appareil."],
         ["Comment faire une voix d'écureuil ?", "Ouvre ton enregistrement ici : Écureuil est déjà sélectionné. Appuie sur Écouter avec effets, puis sur Changer la voix et Télécharger."],
       ],
     },
@@ -264,3 +265,10 @@ export default (NAME) => ({
     },
   ],
 });
+// The rest of the tools, conversions and guides live in fr-more.mjs.
+export default (NAME) => {
+  const d = base(NAME);
+  for (const [slug, path] of Object.entries(toolPaths)) d.tools[slug] = { ...d.tools[slug], path };
+  d.pages.push(...more(NAME));
+  return d;
+};

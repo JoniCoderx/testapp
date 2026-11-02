@@ -1,7 +1,8 @@
+import more, { toolPaths } from './de-more.mjs';
 // German ("du") pages and site text. Self-contained: no imports.
 // Pages with the same `key` as an English page are linked to it with hreflang and the language switcher.
 // Button names match the German interface strings in i18n/ui_de.py.
-export default (NAME) => ({
+const base = (NAME) => ({
   ui: {
     code: 'de', hreflang: 'de', ogLocale: 'de_DE', prefix: '/de', name: 'Deutsch', short: 'DE',
     home: 'Startseite', tools: 'Tools', allTools: 'Alle Tools', navAll: 'Alle', popular: 'Am beliebtesten', installApp: 'App installieren', menu: 'Menü',
@@ -205,7 +206,7 @@ export default (NAME) => ({
       lead: 'Mach aus jeder Aufnahme, Sprachnachricht oder jedem Video einen Chipmunk, ein Monster, einen Roboter und mehr. Erst anhören, dann speichern.',
       badges: ['7 Stimmen', 'Vor dem Speichern anhören', 'Ohne Upload'],
       steps: [
-        ['Öffne eine Aufnahme', 'Wähle eine Sprachnachricht, eine Aufnahme oder ein Video. Du kannst auch erst mit deinem Handy aufnehmen.'],
+        ['Öffne eine Aufnahme', 'Wähle eine Sprachnachricht, eine Aufnahme oder ein Video, oder tippe auf Mit dem Mikrofon aufnehmen und sprich etwas.'],
         ['Wähle eine Stimme', 'Chipmunk ist schon ausgewählt. Tippe auf Tiefe Stimme, Monster, Roboter, Alien, Telefon oder Echo und dann auf Mit Effekten anhören.'],
         ['Speichere sie', 'Tippe auf Stimme ändern und dann auf Herunterladen. Teile sie oder nutze sie als Klingelton.'],
       ],
@@ -226,7 +227,7 @@ export default (NAME) => ({
       faq: [
         ['Ist der Stimmenverzerrer kostenlos?', 'Ja. Kostenlos, ohne Anmeldung, ohne Wasserzeichen, und deine Aufnahme wird nie hochgeladen.'],
         ['Kann ich die Stimme in einem Video ändern?', 'Ja. Öffne das Video, und MeloCut nutzt dessen Ton. Das Ergebnis ist eine Audiodatei (MP3, M4A, WAV, OGG oder FLAC).'],
-        ['Kann ich direkt auf der Seite aufnehmen?', 'Noch nicht. Nimm mit der Sprachmemo-App deines Handys auf und öffne die Datei dann hier.'],
+        ['Kann ich direkt auf der Seite aufnehmen?', 'Ja. Tippe auf Mit dem Mikrofon aufnehmen, sprich und tippe dann auf Stopp. Die Aufnahme öffnet sich sofort und bleibt auf deinem Gerät.'],
         ['Wie mache ich eine Chipmunk-Stimme?', 'Öffne deine Aufnahme hier: Chipmunk ist schon ausgewählt. Tippe auf Mit Effekten anhören, dann auf Stimme ändern und Herunterladen.'],
       ],
     },
@@ -264,3 +265,10 @@ export default (NAME) => ({
     },
   ],
 });
+// The rest of the tools, conversions and guides live in de-more.mjs.
+export default (NAME) => {
+  const d = base(NAME);
+  for (const [slug, path] of Object.entries(toolPaths)) d.tools[slug] = { ...d.tools[slug], path };
+  d.pages.push(...more(NAME));
+  return d;
+};

@@ -9,7 +9,7 @@ export default (NAME) => [
     lead: 'Convierte cualquier grabación, nota de voz o video en una ardilla, un monstruo, un robot y más. Escúchalo primero y luego guárdalo.',
     badges: ['7 voces', 'Escucha antes de guardar', 'Sin subir archivos'],
     steps: [
-      ['Abre una grabación', 'Elige una nota de voz, una grabación o un video. También puedes grabar primero con tu celular.'],
+      ['Abre una grabación', 'Elige una nota de voz, una grabación o un video, o toca Grabar con el micrófono y di algo.'],
       ['Elige una voz', 'Ardilla ya está seleccionada. Toca Voz grave, Monstruo, Robot, Alienígena, Teléfono o Eco y pulsa Escuchar con efectos.'],
       ['Guárdala', 'Pulsa Cambiar voz y luego Descargar. Compártela o úsala como tono.'],
     ],
@@ -30,7 +30,7 @@ export default (NAME) => [
     faq: [
       ['¿El cambiador de voz es gratis?', 'Sí. Gratis, sin registro, sin marca de agua y tu grabación nunca se sube.'],
       ['¿Puedo cambiar la voz de un video?', 'Sí. Abre el video y MeloCut usa su sonido. El resultado es un archivo de audio (MP3, M4A, WAV, OGG o FLAC).'],
-      ['¿Puedo grabar directamente en la página?', 'Todavía no. Graba con la grabadora de voz de tu celular y luego abre el archivo aquí.'],
+      ['¿Puedo grabar directamente en la página?', 'Sí. Toca Grabar con el micrófono, habla y luego toca Detener. La grabación se abre al instante y se queda en tu dispositivo.'],
       ['¿Cómo hago voz de ardilla?', 'Abre tu grabación aquí: Ardilla ya está seleccionada. Pulsa Escuchar con efectos, luego Cambiar voz y Descargar.'],
     ],
   },
