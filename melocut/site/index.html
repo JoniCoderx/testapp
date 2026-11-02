@@ -467,6 +467,13 @@ footer .en-tag { margin-left: 5px; font-size: 9.5px; padding: 0 4px; }
 .vid-prev.done .vid-wave { display: none; }
 .vid-prev figcaption { font-size: 12.5px; font-weight: 600; color: var(--muted); }
 @media (max-width: 520px) { .vid-frame { width: 104px; } .vid-prev.done .vid-frame { width: 128px; } .opts.vid-opts { gap: 14px 14px; } }
+.whatsnew { position: fixed; left: 16px; bottom: 16px; z-index: 50; max-width: 320px; padding: 14px 40px 14px 16px; border-radius: 16px; background: var(--card); color: var(--text); box-shadow: 0 12px 40px rgba(30, 20, 70, .25); border: 1px solid var(--line); font-size: 14px; opacity: 0; transform: translateY(12px); transition: .25s; }
+.whatsnew.in { opacity: 1; transform: none; }
+.whatsnew b { display: block; font-size: 15px; margin-bottom: 6px; background: var(--grad); -webkit-background-clip: text; color: transparent; }
+.whatsnew ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 4px; font-weight: 600; }
+.whatsnew button { position: absolute; top: 6px; right: 8px; width: 30px; height: 30px; border: 0; background: none; color: var(--muted); font-size: 22px; cursor: pointer; }
+@media (max-width: 520px) { .whatsnew { left: 12px; right: 12px; max-width: none; bottom: 12px; } }
+@media (prefers-reduced-motion: reduce) { .whatsnew { transition: none; } }
 </style>
 <script src="/assets/config.js?v=303fd877" defer></script>
 <script src="/assets/site.js?v=6317e819" defer></script>

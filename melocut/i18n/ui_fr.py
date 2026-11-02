@@ -215,4 +215,9 @@ FR = {
  'Reading files…': "Lecture des fichiers…",
  'Joining… {0}%': "Fusion… {0} %",
  'listen below, then download': "écoute ci-dessous, puis télécharge",
+ 'New on MeloCut': 'Nouveau sur MeloCut',
+ 'Record with your microphone': 'Enregistre avec ton micro',
+ 'Convert many files at once': 'Convertis plusieurs fichiers à la fois',
+ 'Send a result straight to the next tool': 'Envoie le résultat directement à un autre outil',
+ 'Close': 'Fermer',
 }

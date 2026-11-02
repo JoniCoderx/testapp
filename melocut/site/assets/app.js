@@ -832,6 +832,8 @@ function mountTool(root) {
 
   // ----- file selection -----
   els.drop.addEventListener('click', () => els.file.click());
+  // Start fetching the audio engine the moment someone reaches for a file, so it is ready (or close) when the file arrives.
+  els.drop.addEventListener('pointerdown', () => preloadEngine(), { once: true });
   els.drop.addEventListener('keydown', (e) => (e.key === 'Enter' || e.key === ' ') && (e.preventDefault(), els.file.click()));
   $(root, '[data-new]').addEventListener('click', () => els.file.click());
   const batch = batchOK ? mountBatch(root, () => { batch.close(); els.drop.style.display = ''; recorder.show(); els.file.value = ''; els.file.click(); }) : null;
@@ -850,6 +852,13 @@ function mountTool(root) {
   ['dragenter', 'dragover'].forEach((t) => els.drop.addEventListener(t, (e) => { e.preventDefault(); els.drop.classList.add('over'); }));
   ['dragleave', 'drop'].forEach((t) => els.drop.addEventListener(t, (e) => { e.preventDefault(); els.drop.classList.remove('over'); }));
   els.drop.addEventListener('drop', (e) => pick([...e.dataTransfer.files]));
+  // A file dropped anywhere on the page opens here, instead of the browser leaving the site to show it.
+  window.addEventListener('dragover', (e) => { if (e.dataTransfer?.types?.includes('Files')) e.preventDefault(); });
+  window.addEventListener('drop', (e) => {
+    if (!e.dataTransfer?.files?.length || e.target.closest?.('[data-drop]')) return;
+    e.preventDefault();
+    if (!st.busy) pick([...e.dataTransfer.files]);
+  });
   // Space toggles playback (when not typing in a field).
   document.addEventListener('keydown', (e) => {
     if (e.code !== 'Space' || !st.buffer || /^(INPUT|SELECT|TEXTAREA|BUTTON|SUMMARY|A)$/.test(document.activeElement?.tagName)) return;
@@ -1501,12 +1510,16 @@ function mountJoiner(root) {
   }
 
   els.drop.addEventListener('click', () => els.file.click());
+  // Start fetching the audio engine the moment someone reaches for a file, so it is ready (or close) when the file arrives.
+  els.drop.addEventListener('pointerdown', () => preloadEngine(), { once: true });
   els.drop.addEventListener('keydown', (e) => (e.key === 'Enter' || e.key === ' ') && (e.preventDefault(), els.file.click()));
   $(root, '[data-add]').addEventListener('click', () => els.file.click());
   els.file.addEventListener('change', () => { addFiles([...els.file.files]); els.file.value = ''; });
   ['dragenter', 'dragover'].forEach((t) => els.drop.addEventListener(t, (e) => { e.preventDefault(); els.drop.classList.add('over'); }));
   ['dragleave', 'drop'].forEach((t) => els.drop.addEventListener(t, (e) => { e.preventDefault(); els.drop.classList.remove('over'); }));
   els.drop.addEventListener('drop', (e) => addFiles([...e.dataTransfer.files]));
+  window.addEventListener('dragover', (e) => { if (e.dataTransfer?.types?.includes('Files')) e.preventDefault(); });
+  window.addEventListener('drop', (e) => { if (!e.dataTransfer?.files?.length || e.target.closest?.('[data-drop]')) return; e.preventDefault(); addFiles([...e.dataTransfer.files]); });
   els.format.addEventListener('change', () => { els.qWrap.style.display = LOSSY.includes(els.format.value) ? '' : 'none'; reset(); });
   fillRange(els.xf);
   els.xf.addEventListener('input', () => {
@@ -1635,3 +1648,21 @@ function mountJoiner(root) {
 }
 
 document.querySelectorAll('[data-tool]').forEach((el) => (el.dataset.tool === 'joiner' ? mountJoiner(el) : mountTool(el)));
+
+// "What's new": shown once, a few seconds after a tool page opens, and never while a file is being worked on.
+(function whatsNew() {
+  const KEY = 'whatsnew-2026-11';
+  try { if (localStorage.getItem(KEY) || IN_APP) return; } catch { return; }
+  setTimeout(() => {
+    if (document.querySelector('.tool .editor[style*="block"], .tool .batch:not([hidden])')) return;
+    const box = document.createElement('div');
+    box.className = 'whatsnew'; box.setAttribute('role', 'status');
+    box.innerHTML = `<b>${T('New on MeloCut')}</b><ul><li>🎤 ${T('Record with your microphone')}</li><li>📦 ${T('Convert many files at once')}</li><li>🔗 ${T('Send a result straight to the next tool')}</li></ul><button type="button" aria-label="${T('Close')}">×</button>`;
+    const close = () => { box.classList.remove('in'); setTimeout(() => box.remove(), 250); try { localStorage.setItem(KEY, '1'); } catch {} };
+    box.querySelector('button').onclick = close;
+    document.body.appendChild(box);
+    requestAnimationFrame(() => box.classList.add('in'));
+    track('whatsnew', {});
+    setTimeout(close, 12000);
+  }, 5000);
+})();

@@ -215,4 +215,9 @@ DE = {
  'Reading files…': 'Dateien werden gelesen…',
  'Joining… {0}%': 'Wird zusammengefügt… {0}%',
  'listen below, then download': 'unten anhören, dann herunterladen',
+ 'New on MeloCut': 'Neu bei MeloCut',
+ 'Record with your microphone': 'Mit dem Mikrofon aufnehmen',
+ 'Convert many files at once': 'Viele Dateien auf einmal umwandeln',
+ 'Send a result straight to the next tool': 'Ergebnis direkt ans nächste Tool schicken',
+ 'Close': 'Schließen',
 }
