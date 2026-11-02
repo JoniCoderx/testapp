@@ -7,6 +7,8 @@ import { fileURLToPath } from 'node:url';
 import crypto from 'node:crypto';
 import es from './i18n/es.mjs';
 import ptBR from './i18n/pt-br.mjs';
+import de from './i18n/de.mjs';
+import fr from './i18n/fr.mjs';
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), 'site');
 const SITE_URL = (process.env.SITE_URL || 'https://melocut.com').replace(/\/$/, '');
@@ -163,7 +165,7 @@ const EN = {
     ['sparkle', 'Free, no watermark', 'No account and nothing added to your audio. Use it as often as you like.'],
   ],
 };
-const LANGS = { en: { ui: EN, tools: {}, pages: [] }, es: es(NAME), 'pt-br': ptBR(NAME) };
+const LANGS = { en: { ui: EN, tools: {}, pages: [] }, es: es(NAME), 'pt-br': ptBR(NAME), de: de(NAME), fr: fr(NAME) };
 const L10N = Object.keys(LANGS).filter((l) => l !== 'en');
 const installHTML = (ui) => `
   <div class="section"><div class="callout"><p>${ui.install}</p>
