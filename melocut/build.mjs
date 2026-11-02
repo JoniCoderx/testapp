@@ -2023,8 +2023,10 @@ const PAGES = [
     <p>${NAME} itself sets no cookies. The site saves its own files (the pages and the audio engine) in your browser's cache so the tools load faster and work offline. You can remove them by clearing your browser's site data.</p>
     <h2>Analytics</h2>
     <p>We use <strong>Cloudflare Web Analytics</strong> and <strong>Umami</strong> to count visits, see which pages are popular and how often each tool is used (for example "a file was converted to MP3"). Neither sets cookies, follows you across sites or builds a profile of you, and neither ever sees your files or their names. See <a href="https://www.cloudflare.com/web-analytics/" rel="nofollow">Cloudflare Web Analytics</a> and the <a href="https://umami.is/privacy" rel="nofollow">Umami privacy policy</a>.</p>
+    <h2>Donations</h2>
+    <p>The <strong>Support ${NAME}</strong> and <strong>Buy us a coffee</strong> buttons open our page on <a href="https://ko-fi.com/melocut" target="_blank" rel="noopener">Ko-fi</a>. Nothing is sent to Ko-fi unless you click one. If you choose to support us, Ko-fi and its payment partners (PayPal or Stripe) handle the payment under their own privacy policies, and we only see what Ko-fi shows us, such as the name and message you choose to leave.</p>
     <h2>Your rights</h2>
-    <p>Since we don't collect personal data ourselves, there is usually nothing for us to show, change or delete. For data held by Google or Cloudflare, use the links above. You can still email us with any question or request.</p>
+    <p>Since we don't collect personal data ourselves, there is usually nothing for us to show, change or delete. For data held by Google, Cloudflare or Ko-fi, use the links above. You can still email us with any question or request.</p>
     <h2>Changes</h2>
     <p>If this policy changes, we update it here and change the date at the top.</p>
     <p>Questions? Email <a href="mailto:${EMAIL}">${EMAIL}</a>.</p>`,
