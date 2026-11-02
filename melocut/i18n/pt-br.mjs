@@ -1,3 +1,4 @@
+import more from './pt-br-more.mjs';
 // Brazilian Portuguese ("você") pages and site text. Pages with the same `key` as an English page
 // are linked to it with hreflang and the language switcher.
 export default (NAME) => ({
@@ -26,20 +27,22 @@ export default (NAME) => ({
     'ringtone-maker': { title: 'Criar toque', path: 'pt-br/criar-toque', blurb: 'Transforme um trecho de música em toque para iPhone ou Android.' },
     'audio-cutter': { title: 'Cortar áudio', path: 'pt-br/cortar-audio', blurb: 'Corte uma música ou tire um trecho do meio.' },
     'audio-converter': { title: 'Conversor de áudio', path: 'pt-br/conversor-de-audio', blurb: 'Converta entre MP3, WAV, M4A, OGG e FLAC.' },
-    'audio-joiner': { title: 'Juntar áudios', blurb: 'Junte várias músicas ou áudios em um só arquivo.' },
-    'noise-remover': { title: 'Remover ruído com IA', blurb: 'Limpe o ruído de fundo de gravações de voz.' },
-    'slowed-reverb': { title: 'Slowed + Reverb', blurb: 'Faça uma versão lenta de uma música com reverb.' },
-    'vocal-remover': { title: 'Remover voz', blurb: 'Tire o cantor para ter uma faixa de karaokê.' },
-    '8d-audio': { title: 'Áudio 8D', blurb: 'Som que passa de um ouvido para o outro. Use fones.' },
-    'bass-booster': { title: 'Aumentar grave', blurb: 'Coloque mais grave em qualquer música.' },
-    'volume-booster': { title: 'Aumentar volume', blurb: 'Deixe gravações baixas mais altas.' },
+    'audio-joiner': { title: 'Juntar áudios', path: 'pt-br/juntar-audio', blurb: 'Junte várias músicas ou áudios em um só arquivo.' },
+    'noise-remover': { title: 'Remover ruído com IA', path: 'pt-br/remover-ruido', blurb: 'Limpe o ruído de fundo de gravações de voz.' },
+    'slowed-reverb': { title: 'Slowed + Reverb', path: 'pt-br/slowed-reverb', blurb: 'Faça uma versão lenta de uma música com reverb.' },
+    'vocal-remover': { title: 'Remover voz', path: 'pt-br/remover-voz', blurb: 'Tire o cantor para ter uma faixa de karaokê.' },
+    '8d-audio': { title: 'Áudio 8D', path: 'pt-br/audio-8d', blurb: 'Som que passa de um ouvido para o outro. Use fones.' },
+    'bass-booster': { title: 'Aumentar grave', path: 'pt-br/aumentar-grave', blurb: 'Coloque mais grave em qualquer música.' },
+    'volume-booster': { title: 'Aumentar volume', path: 'pt-br/aumentar-volume', blurb: 'Deixe gravações baixas mais altas.' },
     'reverse-audio': { title: 'Áudio ao contrário', blurb: 'Toque qualquer som ao contrário.' },
     'speed-up-audio': { title: 'Acelerar áudio', blurb: 'Deixe uma música ou áudio mais rápido, com o mesmo tom.' },
     'slow-down-audio': { title: 'Desacelerar áudio', blurb: 'Toque tudo mais devagar sem voz grossa.' },
     'pitch-changer': { title: 'Mudar o tom', blurb: 'Mude o tom de uma música sem mudar a velocidade.' },
-    'nightcore-maker': { title: 'Criar nightcore', blurb: 'Mais rápido e mais agudo, o som nightcore clássico.' },
+    'nightcore-maker': { title: 'Criar nightcore', path: 'pt-br/nightcore', blurb: 'Mais rápido e mais agudo, o som nightcore clássico.' },
     'remove-silence': { title: 'Remover silêncios', blurb: 'Corte as pausas longas de uma gravação.' },
     'fade-in-fade-out': { title: 'Fade in e fade out', blurb: 'Coloque um começo e um fim suaves em qualquer música.' },
+    'voice-changer': { title: 'Modificador de voz', path: 'pt-br/mudar-voz', blurb: 'Esquilo, voz grave, robô, monstro e mais vozes.' },
+    'audio-to-video': { title: 'Música para vídeo', path: 'pt-br/musica-para-video', blurb: 'Transforme uma música em MP4 para TikTok e Reels.' },
   },
   pages: [
     {
@@ -179,5 +182,6 @@ export default (NAME) => ({
         ['Posso fazer uma versão slowed + reverb?', 'Sim. Toque no ajuste Slowed + Reverb em Efeitos.'],
       ],
     },
+    ...more(NAME),
   ],
 });

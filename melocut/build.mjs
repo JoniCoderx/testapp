@@ -2116,7 +2116,9 @@ const slugOf = (p) => (p.path ? p.path.replace(/\//g, '-') : 'home');
 const ogImage = (p) => (fs.existsSync(path.join(ROOT, 'og', `${slugOf(p)}.jpg`)) ? `${SITE_URL}/og/${slugOf(p)}.jpg` : `${SITE_URL}/og.jpg`);
 
 // Every page with its language. The five English pages that have translations get a `key`.
-const KEY_OF = { '': 'home', 'audio-cutter': 'cutter', 'video-to-mp3': 'video', 'ringtone-maker': 'ringtone', 'audio-converter': 'converter' };
+const KEY_OF = { '': 'home', 'audio-cutter': 'cutter', 'video-to-mp3': 'video', 'ringtone-maker': 'ringtone', 'audio-converter': 'converter',
+  'voice-changer': 'voice', 'audio-to-video': 'a2v', 'slowed-reverb': 'slowed', 'vocal-remover': 'karaoke', '8d-audio': '8d', 'bass-booster': 'bass',
+  'nightcore-maker': 'nightcore', 'noise-remover': 'denoise', 'audio-joiner': 'joiner', 'volume-booster': 'volume' };
 const ALL = [
   ...PAGES.map((p) => ({ lang: 'en', key: KEY_OF[p.path], ...p })),
   ...L10N.flatMap((lang) => LANGS[lang].pages.map((p) => ({ lang, ...p }))),
