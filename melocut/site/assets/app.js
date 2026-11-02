@@ -553,6 +553,7 @@ function optionsHTML(cfg) {
     <label class="vid-title">${T('Title')} <input type="text" data-v="title" maxlength="60" placeholder="${T('Song name')}"></label>
     <label>${T('Style')} <select data-v="style">${Object.entries(VIDEO_STYLES).map(([k, s]) => `<option value="${k}">${s.label}</option>`).join('')}</select></label>
     <label class="vid-cover">${T('Cover image (optional)')} <input type="file" accept="image/*" data-v="cover"></label>
+    <figure class="vid-prev" data-vprev hidden><div class="vid-frame"><img data-vthumb alt=""><span class="vid-wave" aria-hidden="true"></span><video data-vplay controls playsinline preload="metadata" hidden></video></div><figcaption data-vcap>${T('Preview')}</figcaption></figure>
     <select data-o="format" hidden><option value="mp4">MP4</option></select><span data-q hidden><select data-o="quality"><option value="192" selected>192</option></select></span>`;
   const fmtOpts = cfg.formats.map((f) => `<option value="${f}">${FORMATS[f].label}</option>`).join('');
   return `
@@ -566,6 +567,30 @@ function optionsHTML(cfg) {
 }
 
 // ---------- the single-file tool widget ----------
+// A small live preview of the video: the still frame while you pick a title, style and cover,
+// then the finished MP4 itself. The frame is made by the same videoBackground() the video uses.
+function mountVideoPreview(root) {
+  const box = $(root, '[data-vprev]'), img = $(root, '[data-vthumb]'), vid = $(root, '[data-vplay]'), cap = $(root, '[data-vcap]');
+  let url = null, timer = 0, seq = 0;
+  // A browser that can't play the MP4 keeps showing the still frame instead of an empty player.
+  vid.addEventListener('error', () => { if (vid.getAttribute('src')) { vid.hidden = true; img.hidden = false; } });
+  const opts = () => ({ title: $(root, '[data-v=title]').value, style: $(root, '[data-v=style]').value, cover: $(root, '[data-v=cover]').files[0] || null });
+  const draw = async () => {
+    const n = ++seq;
+    try {
+      const png = await videoBackground(opts());
+      if (n !== seq) return;
+      if (url) URL.revokeObjectURL(url);
+      url = URL.createObjectURL(new Blob([png], { type: 'image/png' }));
+      img.src = url; box.hidden = false;
+    } catch {}
+  };
+  return {
+    refresh(delay = 250) { clearTimeout(timer); timer = setTimeout(draw, delay); },
+    showFrame() { vid.pause(); vid.removeAttribute('src'); vid.load(); vid.hidden = true; img.hidden = false; box.classList.remove('done'); cap.textContent = T('Preview'); },
+    showVideo(src) { vid.src = src; vid.hidden = false; img.hidden = true; box.classList.add('done'); cap.textContent = T('Your video'); },
+  };
+}
 function mountTool(root) {
   let cfg = TOOLS[root.dataset.tool];
   if (!cfg) return;
@@ -626,6 +651,7 @@ function mountTool(root) {
   const st = { file: null, duration: 0, buffer: null, peaks: null, sel: [0, 0], mode: 'keep',
     ctx: null, source: null, playStart: 0, playFrom: 0, raf: 0, outURL: null, busy: false };
   const share = mountShare(root);
+  const vprev = cfg.video ? mountVideoPreview(root) : null;
   wireInApp(root);
   const fx = mountFx(root, cfg.fx, () => { st.exact = null; stopPlay(); resetOutput(); drawAfter(); syncFx(); });
   // The extra "Play with effects" button only shows when some effect is on.
@@ -662,7 +688,7 @@ function mountTool(root) {
     els.drop.style.display = 'none';
     els.editor.style.display = 'block';
     els.name.textContent = file.name;
-    if (cfg.video) $(root, '[data-v=title]').value = baseName(file.name).replace(/[_-]+/g, ' ').slice(0, 60);
+    if (cfg.video) { $(root, '[data-v=title]').value = baseName(file.name).replace(/[_-]+/g, ' ').slice(0, 60); vprev.refresh(0); }
     els.meta.textContent = `${(file.size / 1048576).toFixed(1)} MB`;
     els.busy.style.display = 'grid';
     els.busy.textContent = T('Reading audio…');
@@ -1156,10 +1182,11 @@ function mountTool(root) {
     els.go.classList.remove('ok');
     els.go.onclick = convert;
     els.progress.style.display = 'none';
+    vprev?.showFrame();
   }
   els.go.onclick = convert;
   // The video's title, style and cover are part of the result: changing them asks for a new video.
-  root.querySelectorAll('[data-v]').forEach((el) => el.addEventListener(el.type === 'file' ? 'change' : 'input', () => resetOutput()));
+  root.querySelectorAll('[data-v]').forEach((el) => el.addEventListener(el.type === 'file' ? 'change' : 'input', () => { resetOutput(); vprev?.refresh(); }));
 
   async function convert() {
     if (st.busy) return error(T('Please wait a moment: the preview is still being prepared.'));
@@ -1194,6 +1221,7 @@ function mountTool(root) {
       if (st.dirty) throw new Error(T('Your settings changed while converting, so that file was not kept. Press {0} again.', goLabel));
       const blob = new Blob([data.buffer], { type: FORMATS[fmtKey].mime });
       st.outURL = URL.createObjectURL(blob);
+      vprev?.showVideo(st.outURL);
       const fileName = `${baseName(st.file.name)}${cfg.suffix}.${fmtKey}`;
       const fades = fadeLens(snap.fx, outLen);
       const fxOn = fades.shortened ? fxNames(snap.fx) + T(' (fades shortened to {0}s and {1}s to fit)', fades.fi.toFixed(1), fades.fo.toFixed(1)) : fxNames(snap.fx);
