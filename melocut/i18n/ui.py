@@ -442,6 +442,9 @@ PT = {
 }
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+# German and French live in their own files.
+exec(open(os.path.join(HERE, 'ui_de.py'), encoding='utf8').read())
+exec(open(os.path.join(HERE, 'ui_fr.py'), encoding='utf8').read())
 SITE = os.path.join(HERE, '..', 'site')
 src = open(os.path.join(SITE, 'assets', 'app.js'), encoding='utf8').read()
 keys = []
@@ -449,7 +452,7 @@ for m in re.finditer(r"T\('((?:[^'\\]|\\.)*)'", src):
     k = m.group(1).replace("\\'", "'")
     if k not in keys: keys.append(k)
 ok = True
-for name, d in (('es', ES), ('pt-br', PT)):
+for name, d in (('es', ES), ('pt-br', PT), ('de', DE), ('fr', FR)):
     missing = [k for k in keys if k not in d]
     extra = [k for k in d if k not in keys]
     for k in d:  # every {n} slot must survive translation

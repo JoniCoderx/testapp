@@ -638,5 +638,75 @@
   "hash": "7fa84b8b5490",
   "published": "2026-11-02",
   "modified": "2026-11-02"
+ },
+ "de:de": {
+  "hash": "abe8dbe59cc7",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "de:de/audio-schneiden": {
+  "hash": "65d9cbf07554",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "de:de/video-zu-mp3": {
+  "hash": "738a4772cec0",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "de:de/klingelton-erstellen": {
+  "hash": "1459f5ff9fbe",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "de:de/audio-konverter": {
+  "hash": "425e9c327344",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "de:de/stimmenverzerrer": {
+  "hash": "1b27d94de46d",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "de:de/mp3-zu-mp4": {
+  "hash": "0fcdaeaee9dc",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "fr:fr": {
+  "hash": "5f696496af63",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "fr:fr/couper-audio": {
+  "hash": "630f63bef4ee",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "fr:fr/video-en-mp3": {
+  "hash": "1d28e27596cc",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "fr:fr/creer-sonnerie": {
+  "hash": "11535b086906",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "fr:fr/convertisseur-audio": {
+  "hash": "ddb1d8fbbec3",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "fr:fr/modificateur-de-voix": {
+  "hash": "8c7d69724357",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "fr:fr/mp3-en-mp4": {
+  "hash": "a4004ec96ceb",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
  }
 }

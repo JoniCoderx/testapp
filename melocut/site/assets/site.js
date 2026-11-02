@@ -9,6 +9,7 @@
   const langBox = document.querySelector('.lang');
   document.addEventListener('click', (e) => { if (langBox?.open && !langBox.contains(e.target)) langBox.open = false; });
   const OFFER = { es: ['Esta página también está en español.', 'Ver en español'], 'pt-BR': ['Esta página também está em português.', 'Ver em português'],
+    de: ['Diese Seite gibt es auch auf Deutsch.', 'Auf Deutsch ansehen'], fr: ['Cette page existe aussi en français.', 'Voir en français'],
     en: ['This page is also available in English.', 'View in English'] };
   // A language picked on purpose (switcher, footer or the bar itself) is remembered, and the bar stops offering.
   document.addEventListener('click', (e) => {
