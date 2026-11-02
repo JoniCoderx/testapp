@@ -1,3 +1,4 @@
+import guides from './es-guides.mjs';
 import more from './es-more.mjs';
 // Spanish (neutral, "tú") pages and site text. Pages with the same `key` as an English page
 // are linked to it with hreflang and the language switcher.
@@ -8,6 +9,7 @@ export default (NAME) => ({
     howItWorks: 'Cómo funciona', faq: 'Preguntas frecuentes', moreTools: 'Más herramientas gratis',
     noscript: 'Activa JavaScript para usar esta herramienta.', language: 'Idioma', homeAria: `Inicio de ${NAME}`,
     footerTagline: 'Herramientas de audio gratis que funcionan en tu navegador',
+    updated: 'Actualizado', minRead: 'min de lectura', moreGuides: 'Más guías', stepGuide: 'Guía paso a paso',
     support: 'Apoya MeloCut',
     fTools: 'Herramientas', fHelp: 'Ayuda e información', fGuides: 'Guías (en inglés)', fInstall: 'Instalar la app',
     fAbout: 'Acerca de y contacto', fPrivacy: 'Privacidad', fTerms: 'Términos', inEnglish: 'en inglés', newTag: 'Nuevo',
@@ -194,5 +196,6 @@ export default (NAME) => ({
       ],
     },
     ...more(NAME),
+    ...guides(NAME),
   ],
 });
