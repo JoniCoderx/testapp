@@ -667,7 +667,7 @@ const PAGES = [
     lead: 'Turn any recording, voice note or video into a chipmunk, a monster, a robot and more. Listen first, then save it.',
     badges: ['7 voices', 'Preview first', 'No upload'],
     steps: [
-      ['Open a recording', 'Choose a voice memo, voice note or video. Or record one on your phone first.'],
+      ['Open a recording', 'Choose a voice memo, voice note or video, or tap Record with the microphone and say something.'],
       ['Pick a voice', 'Chipmunk is set. Tap Deep voice, Monster, Robot, Alien, Telephone or Echo and press Preview.'],
       ['Save it', 'Press Change voice, then Download. Share it or use it as a ringtone.'],
     ],
@@ -688,7 +688,7 @@ const PAGES = [
     faq: [
       ['Is the voice changer free?', 'Yes. Free, no sign-up, no watermark, and your recording is never uploaded.'],
       ['Can I change the voice in a video?', 'Yes. Open the video and MeloCut uses its sound. The result is an audio file (MP3, M4A, WAV, OGG or FLAC).'],
-      ['Can I record directly on the site?', 'Not yet. Record with your phone\'s voice recorder, then open the file here.'],
+      ['Can I record directly on the site?', 'Yes. Tap Record with the microphone, speak, then tap Stop. The recording opens right away and stays on your device.'],
       ['How do I make a chipmunk voice?', 'Open your recording here: Chipmunk is already selected. Press Preview, then Change voice and Download.'],
     ],
   },

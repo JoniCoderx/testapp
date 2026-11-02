@@ -9,7 +9,7 @@ export default (NAME) => [
     lead: 'Transforme qualquer gravação, áudio ou vídeo em um esquilo, um monstro, um robô e mais. Ouça primeiro e depois salve.',
     badges: ['7 vozes', 'Ouça antes de salvar', 'Sem upload'],
     steps: [
-      ['Abra uma gravação', 'Escolha um áudio, uma gravação ou um vídeo. Ou grave primeiro no seu celular.'],
+      ['Abra uma gravação', 'Escolha um áudio, uma gravação ou um vídeo, ou toque em Gravar com o microfone e fale alguma coisa.'],
       ['Escolha uma voz', 'Esquilo já vem selecionado. Toque em Voz grave, Monstro, Robô, Alienígena, Telefone ou Eco e aperte Ouvir com efeitos.'],
       ['Salve', 'Aperte Mudar voz e depois Baixar. Compartilhe ou use como toque.'],
     ],
@@ -30,7 +30,7 @@ export default (NAME) => [
     faq: [
       ['O modificador de voz é grátis?', 'Sim. Grátis, sem cadastro, sem marca d\'água, e sua gravação nunca é enviada para nenhum servidor.'],
       ['Posso mudar a voz de um vídeo?', 'Sim. Abra o vídeo e o MeloCut usa o som dele. O resultado é um arquivo de áudio (MP3, M4A, WAV, OGG ou FLAC).'],
-      ['Dá para gravar direto no site?', 'Ainda não. Grave com o gravador de voz do celular e depois abra o arquivo aqui.'],
+      ['Dá para gravar direto no site?', 'Sim. Toque em Gravar com o microfone, fale e depois toque em Parar. A gravação abre na hora e fica no seu aparelho.'],
       ['Como faço voz de esquilo?', 'Abra sua gravação aqui: Esquilo já vem selecionado. Aperte Ouvir com efeitos, depois Mudar voz e Baixar.'],
     ],
   },

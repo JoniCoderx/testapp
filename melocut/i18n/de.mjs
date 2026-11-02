@@ -205,7 +205,7 @@ export default (NAME) => ({
       lead: 'Mach aus jeder Aufnahme, Sprachnachricht oder jedem Video einen Chipmunk, ein Monster, einen Roboter und mehr. Erst anhören, dann speichern.',
       badges: ['7 Stimmen', 'Vor dem Speichern anhören', 'Ohne Upload'],
       steps: [
-        ['Öffne eine Aufnahme', 'Wähle eine Sprachnachricht, eine Aufnahme oder ein Video. Du kannst auch erst mit deinem Handy aufnehmen.'],
+        ['Öffne eine Aufnahme', 'Wähle eine Sprachnachricht, eine Aufnahme oder ein Video, oder tippe auf Mit dem Mikrofon aufnehmen und sprich etwas.'],
         ['Wähle eine Stimme', 'Chipmunk ist schon ausgewählt. Tippe auf Tiefe Stimme, Monster, Roboter, Alien, Telefon oder Echo und dann auf Mit Effekten anhören.'],
         ['Speichere sie', 'Tippe auf Stimme ändern und dann auf Herunterladen. Teile sie oder nutze sie als Klingelton.'],
       ],
@@ -226,7 +226,7 @@ export default (NAME) => ({
       faq: [
         ['Ist der Stimmenverzerrer kostenlos?', 'Ja. Kostenlos, ohne Anmeldung, ohne Wasserzeichen, und deine Aufnahme wird nie hochgeladen.'],
         ['Kann ich die Stimme in einem Video ändern?', 'Ja. Öffne das Video, und MeloCut nutzt dessen Ton. Das Ergebnis ist eine Audiodatei (MP3, M4A, WAV, OGG oder FLAC).'],
-        ['Kann ich direkt auf der Seite aufnehmen?', 'Noch nicht. Nimm mit der Sprachmemo-App deines Handys auf und öffne die Datei dann hier.'],
+        ['Kann ich direkt auf der Seite aufnehmen?', 'Ja. Tippe auf Mit dem Mikrofon aufnehmen, sprich und tippe dann auf Stopp. Die Aufnahme öffnet sich sofort und bleibt auf deinem Gerät.'],
         ['Wie mache ich eine Chipmunk-Stimme?', 'Öffne deine Aufnahme hier: Chipmunk ist schon ausgewählt. Tippe auf Mit Effekten anhören, dann auf Stimme ändern und Herunterladen.'],
       ],
     },

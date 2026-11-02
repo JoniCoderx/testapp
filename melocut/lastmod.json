@@ -365,9 +365,9 @@
   "modified": "2026-11-02"
  },
  "en:voice-changer": {
-  "hash": "a46383e611bc",
+  "hash": "76ab7aca7ee5",
   "published": "2026-10-31",
-  "modified": "2026-10-31"
+  "modified": "2026-11-02"
  },
  "en:guides/change-your-voice": {
   "hash": "05f775f4362c",
@@ -380,7 +380,7 @@
   "modified": "2026-11-01"
  },
  "es:es/cambiador-de-voz": {
-  "hash": "0364fd810813",
+  "hash": "a705b5c1a294",
   "published": "2026-11-02",
   "modified": "2026-11-02"
  },
@@ -430,7 +430,7 @@
   "modified": "2026-11-02"
  },
  "pt-br:pt-br/mudar-voz": {
-  "hash": "d3059a131ea1",
+  "hash": "651419d8dbb1",
   "published": "2026-11-02",
   "modified": "2026-11-02"
  },
@@ -665,7 +665,7 @@
   "modified": "2026-11-02"
  },
  "de:de/stimmenverzerrer": {
-  "hash": "1b27d94de46d",
+  "hash": "746b7aec5ede",
   "published": "2026-11-02",
   "modified": "2026-11-02"
  },
@@ -700,7 +700,7 @@
   "modified": "2026-11-02"
  },
  "fr:fr/modificateur-de-voix": {
-  "hash": "8c7d69724357",
+  "hash": "19663dedb817",
   "published": "2026-11-02",
   "modified": "2026-11-02"
  },
