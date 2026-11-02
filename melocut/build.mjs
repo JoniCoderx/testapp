@@ -2181,7 +2181,7 @@ function crumbs(p) {
 function jsonLd(p) {
   const url = urlOf(p), lang = LANGS[p.lang].ui.code;
   const graph = [
-    { '@type': 'WebSite', '@id': `${SITE_URL}/#site`, name: NAME, url: `${SITE_URL}/`, inLanguage: ['en', 'es', 'pt-BR'], publisher: { '@id': `${SITE_URL}/#org` } },
+    { '@type': 'WebSite', '@id': `${SITE_URL}/#site`, name: NAME, url: `${SITE_URL}/`, inLanguage: Object.values(LANGS).map((l) => l.ui?.hreflang || 'en'), publisher: { '@id': `${SITE_URL}/#org` } },
     { '@type': 'Organization', '@id': `${SITE_URL}/#org`, name: NAME, url: `${SITE_URL}/`, logo: `${SITE_URL}/icon-512.png`, email: EMAIL, sameAs: SOCIAL.map((s) => s.url) },
     { '@type': 'WebPage', '@id': `${url}#page`, url, name: p.title, description: p.description, inLanguage: lang, isPartOf: { '@id': `${SITE_URL}/#site` },
       primaryImageOfPage: ogImage(p), dateModified: datesOf(p).modified },

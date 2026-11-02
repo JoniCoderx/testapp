@@ -73,6 +73,8 @@
 ## Other languages
 - [Español](https://melocut.com/es/)
 - [Português](https://melocut.com/pt-br/)
+- [Deutsch](https://melocut.com/de/)
+- [Français](https://melocut.com/fr/)
 
 ## About
 - [About and contact](https://melocut.com/about/)
