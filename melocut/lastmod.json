@@ -708,5 +708,245 @@
   "hash": "a4004ec96ceb",
   "published": "2026-11-02",
   "modified": "2026-11-02"
+ },
+ "de:de/slowed-reverb": {
+  "hash": "dc00d020798b",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "de:de/gesang-entfernen": {
+  "hash": "96ad166276e1",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "de:de/8d-audio": {
+  "hash": "dda537545a8f",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "de:de/bass-booster": {
+  "hash": "be183ccff641",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "de:de/nightcore": {
+  "hash": "afb2d6fe0aee",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "de:de/rauschen-entfernen": {
+  "hash": "99ae6534c192",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "de:de/audio-zusammenfuegen": {
+  "hash": "0fae42917d56",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "de:de/lautstaerke-erhoehen": {
+  "hash": "7351654b2a6d",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "de:de/audio-rueckwaerts": {
+  "hash": "18be6100e4c0",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "de:de/audio-beschleunigen": {
+  "hash": "7f27b09b8c97",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "de:de/audio-verlangsamen": {
+  "hash": "8eb4aea3b2cb",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "de:de/tonhoehe-aendern": {
+  "hash": "49a2bf8cca61",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "de:de/stille-entfernen": {
+  "hash": "2e138f76b323",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "de:de/ein-ausblenden": {
+  "hash": "fc6857928111",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "de:de/mp4-zu-mp3": {
+  "hash": "9734ffc1314c",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "de:de/wav-zu-mp3": {
+  "hash": "fe12d297aa99",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "de:de/m4a-zu-mp3": {
+  "hash": "47393e6e14f6",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "de:de/whatsapp-audio-zu-mp3": {
+  "hash": "8e625914c5c1",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "de:de/mp3-zu-wav": {
+  "hash": "8be69083195a",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "de:de/ogg-zu-mp3": {
+  "hash": "216d5cd51b33",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "de:de/anleitung/klingelton-iphone": {
+  "hash": "80d11428a38e",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "de:de/anleitung/klingelton-samsung": {
+  "hash": "5fb6b9d06367",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "de:de/anleitung/whatsapp-audio-zu-mp3": {
+  "hash": "e87f2688248b",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "de:de/anleitung/slowed-reverb": {
+  "hash": "17e35fe723e2",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "fr:fr/slowed-reverb": {
+  "hash": "658900cc8899",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "fr:fr/supprimer-la-voix": {
+  "hash": "1d059a3a902d",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "fr:fr/audio-8d": {
+  "hash": "0e34d1178e94",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "fr:fr/booster-les-basses": {
+  "hash": "564d73414688",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "fr:fr/nightcore": {
+  "hash": "dccc54046b38",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "fr:fr/supprimer-le-bruit": {
+  "hash": "b2c9c34030b4",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "fr:fr/fusionner-audio": {
+  "hash": "ef8a7f0dfb6e",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "fr:fr/augmenter-le-volume": {
+  "hash": "f4f5ff7cc242",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "fr:fr/audio-a-l-envers": {
+  "hash": "e04be46dc3d1",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "fr:fr/accelerer-audio": {
+  "hash": "f710bcb0d512",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "fr:fr/ralentir-audio": {
+  "hash": "2bfe54e15048",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "fr:fr/changer-la-tonalite": {
+  "hash": "0471d258aa5e",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "fr:fr/supprimer-les-silences": {
+  "hash": "b2168c5ce68d",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "fr:fr/fondu-entree-sortie": {
+  "hash": "c08f655b2e8a",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "fr:fr/mp4-en-mp3": {
+  "hash": "eba64e34598f",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "fr:fr/wav-en-mp3": {
+  "hash": "629f06d50faa",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "fr:fr/m4a-en-mp3": {
+  "hash": "ad23308f00e2",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "fr:fr/audio-whatsapp-en-mp3": {
+  "hash": "e02763bf9229",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "fr:fr/mp3-en-wav": {
+  "hash": "19f217c2ca01",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "fr:fr/ogg-en-mp3": {
+  "hash": "7d298a51a497",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "fr:fr/guide/sonnerie-iphone": {
+  "hash": "543dd971d02f",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "fr:fr/guide/sonnerie-samsung": {
+  "hash": "32b9d626534c",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "fr:fr/guide/audio-whatsapp-en-mp3": {
+  "hash": "95a1b475c952",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
+ },
+ "fr:fr/guide/slowed-reverb": {
+  "hash": "121ef244c894",
+  "published": "2026-11-02",
+  "modified": "2026-11-02"
  }
 }

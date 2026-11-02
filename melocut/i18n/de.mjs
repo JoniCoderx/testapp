@@ -1,7 +1,8 @@
+import more, { toolPaths } from './de-more.mjs';
 // German ("du") pages and site text. Self-contained: no imports.
 // Pages with the same `key` as an English page are linked to it with hreflang and the language switcher.
 // Button names match the German interface strings in i18n/ui_de.py.
-export default (NAME) => ({
+const base = (NAME) => ({
   ui: {
     code: 'de', hreflang: 'de', ogLocale: 'de_DE', prefix: '/de', name: 'Deutsch', short: 'DE',
     home: 'Startseite', tools: 'Tools', allTools: 'Alle Tools', navAll: 'Alle', popular: 'Am beliebtesten', installApp: 'App installieren', menu: 'Menü',
@@ -264,3 +265,10 @@ export default (NAME) => ({
     },
   ],
 });
+// The rest of the tools, conversions and guides live in de-more.mjs.
+export default (NAME) => {
+  const d = base(NAME);
+  for (const [slug, path] of Object.entries(toolPaths)) d.tools[slug] = { ...d.tools[slug], path };
+  d.pages.push(...more(NAME));
+  return d;
+};

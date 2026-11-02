@@ -1,7 +1,8 @@
+import more, { toolPaths } from './fr-more.mjs';
 // French ("tu") pages and site text. Self-contained: no guides, conversion or extra tool pages yet.
 // Pages with the same `key` as an English page are linked to it with hreflang and the language switcher.
 // Button names in steps and FAQs match the French interface strings in i18n/ui_fr.py.
-export default (NAME) => ({
+const base = (NAME) => ({
   ui: {
     code: 'fr', hreflang: 'fr', ogLocale: 'fr_FR', prefix: '/fr', name: 'Français', short: 'FR',
     home: "Accueil", tools: "Outils", allTools: "Tous les outils", navAll: "Tous", popular: "Les plus utilisés", installApp: "Installer l'app", menu: "Menu",
@@ -264,3 +265,10 @@ export default (NAME) => ({
     },
   ],
 });
+// The rest of the tools, conversions and guides live in fr-more.mjs.
+export default (NAME) => {
+  const d = base(NAME);
+  for (const [slug, path] of Object.entries(toolPaths)) d.tools[slug] = { ...d.tools[slug], path };
+  d.pages.push(...more(NAME));
+  return d;
+};
