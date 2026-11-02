@@ -174,6 +174,7 @@ window.MELOCUT_I18N = {
 "Send to a friend": "Enviar a un amigo",
 "Buy us a coffee": "Invítanos un café",
 "Preview": "Vista previa",
+"Choose image": "Elegir imagen",
 "Your video": "Tu video",
 " (joined)": " (unidos)",
 "Made for free with MeloCut: {0}": "Hecho gratis con MeloCut: {0}",

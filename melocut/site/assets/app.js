@@ -482,7 +482,13 @@ const loadImage = (file) => new Promise((resolve, reject) => {
 });
 // The still background of the video (title, cover, progress track, melocut.com). The moving sound wave
 // and progress bar are drawn on top of it by ffmpeg (see videoArgs).
-async function videoBackground({ title, style, cover }) {
+// The cover is decoded once and reused, so the live preview redraws instantly.
+let coverCache = { file: null, img: null };
+async function cachedImage(file) {
+  if (coverCache.file !== file) coverCache = { file, img: await loadImage(file) };
+  return coverCache.img;
+}
+async function drawVideoFrame({ title, style, cover }) {
   const s = VIDEO_STYLES[style] || VIDEO_STYLES.purple;
   const c = document.createElement('canvas'); c.width = VIDEO_W; c.height = VIDEO_H;
   const g = c.getContext('2d');
@@ -490,7 +496,7 @@ async function videoBackground({ title, style, cover }) {
   const grad = g.createLinearGradient(0, 0, VIDEO_W * 0.4, VIDEO_H);
   grad.addColorStop(0, s.stops[0]); grad.addColorStop(1, s.stops[1]);
   g.fillStyle = grad; g.fillRect(0, 0, VIDEO_W, VIDEO_H);
-  const img = cover ? await loadImage(cover) : null;
+  const img = cover ? await cachedImage(cover) : null;
   const fit = (w, h, W, H) => { const k = Math.max(W / w, H / h); return [w * k, h * k]; };
   if (img) { // blurred, darkened full-bleed copy behind. Blur by shrinking and stretching back,
     // because ctx.filter is missing in Safari before 18.
@@ -533,6 +539,10 @@ async function videoBackground({ title, style, cover }) {
   g.font = '700 26px Inter, system-ui, sans-serif'; const mark = 'melocut.com', mw = g.measureText(mark).width + 56;
   round((VIDEO_W - mw) / 2, 1170, mw, 52, 26); g.fillStyle = 'rgba(0,0,0,.28)'; g.fill();
   g.fillStyle = '#fff'; g.fillText(mark, VIDEO_W / 2, 1205);
+  return c;
+}
+async function videoBackground(opts) {
+  const c = await drawVideoFrame(opts);
   const blob = await new Promise((r) => c.toBlob(r, 'image/png'));
   return new Uint8Array(await blob.arrayBuffer());
 }
@@ -550,10 +560,12 @@ function videoArgs(pre, inName, filters, len, outName) {
 
 function optionsHTML(cfg) {
   if (cfg.video) return `
-    <label class="vid-title">${T('Title')} <input type="text" data-v="title" maxlength="60" placeholder="${T('Song name')}"></label>
-    <label>${T('Style')} <select data-v="style">${Object.entries(VIDEO_STYLES).map(([k, s]) => `<option value="${k}">${s.label}</option>`).join('')}</select></label>
-    <label class="vid-cover">${T('Cover image (optional)')} <input type="file" accept="image/*" data-v="cover"></label>
-    <figure class="vid-prev" data-vprev hidden><div class="vid-frame"><img data-vthumb alt=""><span class="vid-wave" aria-hidden="true"></span><video data-vplay controls playsinline preload="metadata" hidden></video></div><figcaption data-vcap>${T('Preview')}</figcaption></figure>
+    <div class="vid-fields">
+      <label class="vid-title">${T('Title')} <input type="text" data-v="title" maxlength="60" placeholder="${T('Song name')}"></label>
+      <label>${T('Style')} <select data-v="style">${Object.entries(VIDEO_STYLES).map(([k, s]) => `<option value="${k}">${s.label}</option>`).join('')}</select></label>
+      <div class="vid-cover"><span>${T('Cover image (optional)')}</span><label class="btn ghost sm">${I.upload || ''}${T('Choose image')}<input type="file" class="sr" accept="image/*" data-v="cover"></label><small data-vcovername></small></div>
+    </div>
+    <figure class="vid-prev" data-vprev><div class="vid-frame"><canvas data-vthumb width="270" height="480" aria-hidden="true"></canvas><span class="vid-wave" aria-hidden="true"></span><video data-vplay controls playsinline preload="metadata" hidden></video></div><figcaption data-vcap>${T('Preview')}</figcaption></figure>
     <select data-o="format" hidden><option value="mp4">MP4</option></select><span data-q hidden><select data-o="quality"><option value="192" selected>192</option></select></span>`;
   const fmtOpts = cfg.formats.map((f) => `<option value="${f}">${FORMATS[f].label}</option>`).join('');
   return `
@@ -571,22 +583,21 @@ function optionsHTML(cfg) {
 // then the finished MP4 itself. The frame is made by the same videoBackground() the video uses.
 function mountVideoPreview(root) {
   const box = $(root, '[data-vprev]'), img = $(root, '[data-vthumb]'), vid = $(root, '[data-vplay]'), cap = $(root, '[data-vcap]');
-  let url = null, timer = 0, seq = 0;
+  let timer = 0, seq = 0;
+  const ctx = img.getContext('2d'), coverName = $(root, '[data-vcovername]');
   // A browser that can't play the MP4 keeps showing the still frame instead of an empty player.
   vid.addEventListener('error', () => { if (vid.getAttribute('src')) { vid.hidden = true; img.hidden = false; } });
   const opts = () => ({ title: $(root, '[data-v=title]').value, style: $(root, '[data-v=style]').value, cover: $(root, '[data-v=cover]').files[0] || null });
   const draw = async () => {
     const n = ++seq;
     try {
-      const png = await videoBackground(opts());
+      const c = await drawVideoFrame(opts());
       if (n !== seq) return;
-      if (url) URL.revokeObjectURL(url);
-      url = URL.createObjectURL(new Blob([png], { type: 'image/png' }));
-      img.src = url; box.hidden = false;
+      ctx.drawImage(c, 0, 0, img.width, img.height);
     } catch {}
   };
   return {
-    refresh(delay = 250) { clearTimeout(timer); timer = setTimeout(draw, delay); },
+    refresh(delay = 60) { clearTimeout(timer); timer = setTimeout(draw, delay); const f = $(root, '[data-v=cover]').files[0]; coverName.textContent = f ? f.name : ''; },
     showFrame() { vid.pause(); vid.removeAttribute('src'); vid.load(); vid.hidden = true; img.hidden = false; box.classList.remove('done'); cap.textContent = T('Preview'); },
     showVideo(src) { vid.src = src; vid.hidden = false; img.hidden = true; box.classList.add('done'); cap.textContent = T('Your video'); },
   };
@@ -623,7 +634,7 @@ function mountTool(root) {
         <label class="time">${T('End')} <input data-end inputmode="decimal" aria-label="${T('End time')}"></label>
         <span class="sel-len" data-len></span>
       </div>
-      <div class="opts">${optionsHTML(cfg)}</div>
+      <div class="opts${cfg.video ? ' vid-opts' : ''}">${optionsHTML(cfg)}</div>
       ${fxHTML(cfg.fxOpen, cfg.presets)}
       <div class="note tip" data-hint>${cfg.note}</div>
       <div class="go">
