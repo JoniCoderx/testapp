@@ -1997,7 +1997,7 @@ const PAGES = [
     <h2>Changes</h2>
     <p>We may update these terms. The date at the top shows when they last changed.</p>
     <h2>Contact</h2>
-    <p>Questions about these terms: <a href="mailto:${EMAIL}">${EMAIL}</a>.</p>`,
+    <p>Questions about these terms: <!--email_off--><a href="mailto:${EMAIL}">${EMAIL}</a><!--/email_off-->.</p>`,
   },
   {
     path: 'privacy', crumb: null, plain: true,
@@ -2007,7 +2007,7 @@ const PAGES = [
     content: `
     <p><em>Last updated: ${LEGAL_UPDATED}</em></p>
     <h2>Who we are</h2>
-    <p>${NAME} (melocut.com) is run by an independent developer. For anything about your data, email <a href="mailto:${EMAIL}">${EMAIL}</a>.</p>
+    <p>${NAME} (melocut.com) is run by an independent developer. For anything about your data, email <!--email_off--><a href="mailto:${EMAIL}">${EMAIL}</a><!--/email_off-->.</p>
     <h2>Your files</h2>
     <p>${NAME} processes audio and video files entirely inside your web browser. Your files are <strong>never uploaded</strong> to our servers or anyone else's. We can't see, store or share them, so there is nothing for us to keep or delete.</p>
     <h2>Services the site uses</h2>
@@ -2029,7 +2029,7 @@ const PAGES = [
     <p>Since we don't collect personal data ourselves, there is usually nothing for us to show, change or delete. For data held by Google, Cloudflare or Ko-fi, use the links above. You can still email us with any question or request.</p>
     <h2>Changes</h2>
     <p>If this policy changes, we update it here and change the date at the top.</p>
-    <p>Questions? Email <a href="mailto:${EMAIL}">${EMAIL}</a>.</p>`,
+    <p>Questions? Email <!--email_off--><a href="mailto:${EMAIL}">${EMAIL}</a><!--/email_off-->.</p>`,
   },
   {
     path: 'about', crumb: null, plain: true,
@@ -2053,7 +2053,7 @@ const PAGES = [
       <li><strong>Plain answers.</strong> Each tool says what it can and can't do, like the vocal remover, which is not AI stem separation.</li>
     </ol>
     <h2>Contact</h2>
-    <p>Ideas for new tools, bug reports or business questions: <a href="mailto:${EMAIL}">${EMAIL}</a>. If something doesn't work, tell us the file type and your phone or browser, and we'll look into it.</p>
+    <p>Ideas for new tools, bug reports or business questions: <!--email_off--><a href="mailto:${EMAIL}">${EMAIL}</a><!--/email_off-->. If something doesn't work, tell us the file type and your phone or browser, and we'll look into it.</p>
     <p>Please read our <a href="/terms/">terms of use</a> and <a href="/privacy/">privacy policy</a>.</p>`,
   },
 ];
@@ -2201,7 +2201,8 @@ function page(p) {
   const lang = p.lang || 'en', ui = LANGS[lang].ui, L = { WHY: whyHTML(ui), INSTALL: installHTML(ui) };
   const url = urlOf(p);
   const img = ogImage(p);
-  const vers = versions(p);
+  // The 404 page is served at any URL, so its language links point to each home page, never to /404/.
+  const vers = p.path === '404' ? [] : versions(p);
   const isEn = lang === 'en';
   const body = typeof p.body === 'function' ? p.body(L) : p.body;
   const toolPath = (t) => toolIn(t, lang).href.slice(1, -1);
