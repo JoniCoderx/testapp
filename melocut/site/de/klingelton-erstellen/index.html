@@ -481,6 +481,13 @@ footer .en-tag { margin-left: 5px; font-size: 9.5px; padding: 0 4px; }
 .rec-primary .rec.on .btn.ghost { background: #e11d48; color: #fff; border: 0; }
 .why .card b { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .why .cards { align-items: stretch; }
+@supports (grid-template-rows: subgrid) {
+.cards:not(.rail) { grid-auto-rows: auto; }
+.cards:not(.rail) > .card { display: grid; grid-row: span 3; grid-template-rows: subgrid; row-gap: 0; align-content: start; }
+.cards:not(.rail) > .card > .ico { align-self: start; }
+.cards:not(.rail) > .card > b { align-self: start; }
+}
+.card b { text-wrap: balance; }
 </style>
 <script src="/assets/config.js?v=303fd877" defer></script>
 <script src="/assets/site.js?v=6317e819" defer></script>
