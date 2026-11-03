@@ -20,10 +20,10 @@ const base = (NAME) => ({
     installHow: "Comment l'installer (en anglais)",
     whyTitle: `Pourquoi utiliser ${NAME}`,
     why: [
-      ['lock', "Tes fichiers restent chez toi", "Tout se passe dans ton navigateur. Rien n'est envoyé, donc personne d'autre ne voit tes fichiers."],
+      ['lock', "Totalement privé", "Tout se passe dans ton navigateur. Rien n'est envoyé, donc personne d'autre ne voit tes fichiers."],
       ['bolt', "Pas d'attente", "Pas d'envoi ni de file d'attente pour le téléchargement. Une chanson prend en général quelques secondes. Les longues vidéos prennent un peu plus de temps."],
-      ['phone', "Téléphone ou ordinateur", "Fonctionne sur Safari, Chrome, Edge et Firefox. Tu peux aussi l'installer sur ton écran d'accueil."],
-      ['sparkle', "Gratuit et sans filigrane", "Sans compte et sans rien ajouté à ton audio. Utilise-le autant de fois que tu veux."],
+      ['phone', "Mobile ou PC", "Fonctionne sur Safari, Chrome, Edge et Firefox. Tu peux aussi l'installer sur ton écran d'accueil."],
+      ['sparkle', "Gratuit", "Sans compte et sans rien ajouté à ton audio. Utilise-le autant de fois que tu veux."],
     ],
   },
   tools: {

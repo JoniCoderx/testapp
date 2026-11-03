@@ -22,10 +22,10 @@ export default (NAME) => ({
     installHow: 'Cómo instalarla (en inglés)',
     whyTitle: `Por qué usar ${NAME}`,
     why: [
-      ['lock', 'Tus archivos se quedan contigo', 'Todo pasa en tu navegador. No se sube nada, así que nadie más ve tus archivos.'],
+      ['lock', 'Totalmente privado', 'Todo pasa en tu navegador. No se sube nada, así que nadie más ve tus archivos.'],
       ['bolt', 'Sin esperas', 'No hay subida ni cola de descarga. Una canción suele tardar unos segundos. Los videos largos tardan un poco más.'],
-      ['phone', 'Teléfono o computadora', 'Funciona en Safari, Chrome, Edge y Firefox. También puedes instalarla en tu pantalla de inicio.'],
-      ['sparkle', 'Gratis y sin marca de agua', 'Sin cuenta y sin nada añadido a tu audio. Úsala todas las veces que quieras.'],
+      ['phone', 'Celular o PC', 'Funciona en Safari, Chrome, Edge y Firefox. También puedes instalarla en tu pantalla de inicio.'],
+      ['sparkle', 'Gratis, sin marca', 'Sin cuenta y sin nada añadido a tu audio. Úsala todas las veces que quieras.'],
     ],
   },
   tools: {
