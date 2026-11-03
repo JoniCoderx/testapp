@@ -46,6 +46,7 @@ const base = (NAME) => ({
     'remove-silence': { title: "Supprimer les silences", blurb: "Coupe les longues pauses d'un enregistrement." },
     'fade-in-fade-out': { title: "Fondu d'entrée et de sortie", blurb: "Ajoute un début et une fin en douceur à n'importe quelle chanson." },
     'voice-changer': { title: "Modificateur de voix", path: 'fr/modificateur-de-voix', blurb: "Écureuil, voix grave, robot, monstre et d'autres voix." },
+    'voice-recorder': { title: 'Dictaphone en ligne', blurb: 'Enregistre ta voix et sauvegarde-la en MP3.' },
     'audio-to-video': { title: "MP3 en MP4", path: 'fr/mp3-en-mp4', blurb: "Transforme une chanson en MP4 pour TikTok et Reels." },
   },
   pages: [
@@ -55,7 +56,7 @@ const base = (NAME) => ({
       description: "Coupe des chansons, crée des sonneries pour iPhone et Android, ajoute des effets et convertis des vidéos en MP3. Gratuit, tes fichiers restent sur ton appareil.",
       h1: "Coupe des chansons, crée des sonneries et ajoute des effets, <em>dans ton navigateur</em>",
       lead: "Des outils audio gratuits pour ton téléphone ou ton ordinateur. Tes fichiers ne sont jamais envoyés. Choisis un outil pour commencer.",
-      badges: ["20 outils gratuits", "Suppression du bruit par IA", "Aucun envoi de fichier", "Sans inscription"],
+      badges: ["21 outils gratuits", "Suppression du bruit par IA", "Aucun envoi de fichier", "Sans inscription"],
       home: true,
       body: (L) => `
   <div class="section prose">

@@ -13,6 +13,7 @@
 - [Vocal Remover](https://melocut.com/vocal-remover/): Take the singer out for a karaoke track.
 - [Song to Video](https://melocut.com/audio-to-video/): Turn a song into an MP4 for TikTok and Reels.
 - [Voice Changer](https://melocut.com/voice-changer/): Chipmunk, deep, robot, monster and more voices.
+- [Voice Recorder](https://melocut.com/voice-recorder/): Record your voice and save it as MP3.
 - [8D Audio](https://melocut.com/8d-audio/): Sound that moves from ear to ear. Use headphones.
 - [Bass Booster](https://melocut.com/bass-booster/): Add more low end to any song.
 - [Volume Booster](https://melocut.com/volume-booster/): Make quiet recordings louder.
@@ -39,6 +40,10 @@
 - [WebM to MP3](https://melocut.com/webm-to-mp3/)
 - [OPUS to MP3](https://melocut.com/opus-to-mp3/)
 - [MP3 to MP4 (video)](https://melocut.com/audio-to-video/)
+- [MP4 to WAV](https://melocut.com/mp4-to-wav/)
+- [M4A to WAV](https://melocut.com/m4a-to-wav/)
+- [FLAC to WAV](https://melocut.com/flac-to-wav/)
+- [Compress MP3](https://melocut.com/compress-mp3/)
 
 ## Guides
 - [Make a song your ringtone](https://melocut.com/guides/make-ringtone/): Any song, any phone, in about two minutes.

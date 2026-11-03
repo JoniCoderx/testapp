@@ -9,6 +9,7 @@ import es from './i18n/es.mjs';
 import ptBR from './i18n/pt-br.mjs';
 import de from './i18n/de.mjs';
 import fr from './i18n/fr.mjs';
+import recorder from './i18n/recorder.mjs';
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), 'site');
 const SITE_URL = (process.env.SITE_URL || 'https://melocut.com').replace(/\/$/, '');
@@ -40,6 +41,7 @@ const ICONS = {
   sparkle: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></svg>',
   film: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M10 9.5v5l4.5-2.5z" fill="currentColor"/><path d="M3 8h18M3 16h18" opacity=".45"/></svg>',
   voice: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="6" height="11" rx="3"/><path d="M3 10a7 7 0 0 0 14 0M10 17v5"/><path d="M19.5 7.5a5 5 0 0 1 0 5M22 5a9 9 0 0 1 0 10"/></svg>',
+  rec: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v5M8 22h8"/></svg>',
   mic: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v5M3 3l18 18"/></svg>',
   reverse: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>',
   gauge: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 14l4-4"/><path d="M3.3 19a10 10 0 1 1 17.4 0"/></svg>',
@@ -61,6 +63,7 @@ const TOOLS = [
   { slug: 'vocal-remover', icon: 'mic', title: 'Vocal Remover', blurb: 'Take the singer out for a karaoke track.' },
   { slug: 'audio-to-video', icon: 'film', isNew: true, title: 'Song to Video', blurb: 'Turn a song into an MP4 for TikTok and Reels.' },
   { slug: 'voice-changer', icon: 'voice', isNew: true, title: 'Voice Changer', blurb: 'Chipmunk, deep, robot, monster and more voices.' },
+  { slug: 'voice-recorder', icon: 'rec', isNew: true, title: 'Voice Recorder', blurb: 'Record your voice and save it as MP3.' },
   { slug: '8d-audio', icon: 'orbit', title: '8D Audio', blurb: 'Sound that moves from ear to ear. Use headphones.' },
   { slug: 'bass-booster', icon: 'bass', title: 'Bass Booster', blurb: 'Add more low end to any song.' },
   { slug: 'volume-booster', icon: 'volume', title: 'Volume Booster', blurb: 'Make quiet recordings louder.' },
@@ -88,6 +91,10 @@ const CONVERSIONS = [
   { slug: 'webm-to-mp3', label: 'WebM to MP3' },
   { slug: 'opus-to-mp3', label: 'OPUS to MP3' },
   { slug: 'audio-to-video', label: 'MP3 to MP4 (video)' },
+  { slug: 'mp4-to-wav', label: 'MP4 to WAV' },
+  { slug: 'm4a-to-wav', label: 'M4A to WAV' },
+  { slug: 'flac-to-wav', label: 'FLAC to WAV' },
+  { slug: 'compress-mp3', label: 'Compress MP3' },
 ];
 const MAIN_NAV = ['video-to-mp3', 'ringtone-maker', 'audio-cutter', 'audio-converter'];
 // Short how-to video shown on the ringtone guides (made in-house, also posted on TikTok).
@@ -166,6 +173,8 @@ const EN = {
   ],
 };
 const LANGS = { en: { ui: EN, tools: {}, pages: [] }, es: es(NAME), 'pt-br': ptBR(NAME), de: de(NAME), fr: fr(NAME) };
+// The voice recorder page in every language (see i18n/recorder.mjs).
+for (const [lang, page] of Object.entries(recorder(NAME))) { LANGS[lang].pages.push(page); LANGS[lang].tools['voice-recorder'] = { ...LANGS[lang].tools['voice-recorder'], path: page.path }; }
 const L10N = Object.keys(LANGS).filter((l) => l !== 'en');
 const installHTML = (ui) => `
   <div class="section"><div class="callout"><p>${ui.install}</p>
@@ -528,6 +537,139 @@ const PAGES = [
     faq: [
       ['Where does WhatsApp save voice notes on Android?', 'Usually in Internal storage → Android → media → com.whatsapp → WhatsApp → Media → WhatsApp Voice Notes.'],
       ['Can I make a voice note louder?', 'Yes. Raise Volume or turn on Auto loudness in Effects before converting.'],
+    ],
+  },
+  {
+    path: 'voice-recorder', tool: 'converter', format: 'mp3', quality: '128', recPrimary: true, crumb: 'Tools', suffix: '',
+    title: `Online Voice Recorder: Record Audio, Save MP3, Free | ${NAME}`,
+    description: 'Record your voice online with your microphone and save it as MP3, WAV or M4A. Trim it, add effects, no sign-up. The recording never leaves your device.',
+    h1: 'Online <em>voice recorder</em>',
+    lead: 'Record your voice with the microphone on your phone or computer, listen back, trim it and save it as an MP3. Nothing is uploaded.',
+    badges: ['Record in one tap', 'MP3, WAV, M4A', 'Stays on your device'],
+    steps: [
+      ['Tap Record with the microphone', 'Allow the microphone when your browser asks. Speak, sing or play, then tap Stop.'],
+      ['Listen and trim', 'The recording opens right away. Drag on the waveform to keep only the part you want.'],
+      ['Save it', 'Pick MP3 and a quality, press Convert, then Download.'],
+    ],
+    content: `
+    <h2>Record, trim and save in one place</h2>
+    <p>Most online recorders upload your voice to a server. ${NAME} records and processes it inside your browser, so it never leaves your phone or computer. When you stop, the recording opens in the editor: listen, cut the silence at the start, and save.</p>
+    <h3>Make it sound better</h3>
+    <ul>
+      <li><strong>Background noise?</strong> Open Effects and turn on <strong>AI noise removal</strong> to take out fans, traffic and hum.</li>
+      <li><strong>Too quiet?</strong> Turn on <strong>Auto loudness</strong>.</li>
+      <li><strong>Long pauses?</strong> Turn on <strong>Remove silences</strong>.</li>
+      <li><strong>Want a funny voice?</strong> Record in the <a href="/voice-changer/">Voice Changer</a> instead.</li>
+    </ul>
+    <h3>Which format?</h3>
+    <p><strong>MP3 at 128 kbps</strong> is plenty for speech and keeps files small, about 1 MB per minute. Choose <strong>WAV</strong> if you will edit the recording in other software.</p>
+    <h3>Works on</h3>
+    <p>Chrome, Edge, Firefox and Safari on Android, iPhone, Windows and Mac. Recording needs a secure page and your permission to use the microphone; you can turn it off again in your browser's site settings. Recordings stop automatically after 10 minutes.</p>`,
+    faq: [
+      ['Is this voice recorder free?', 'Yes. No sign-up, no watermark and no limits on how often you record.'],
+      ['Is my recording uploaded?', 'No. It is recorded and saved inside your browser and never sent to a server.'],
+      ['How long can I record?', 'Up to 10 minutes per recording. Record again for more, then put the parts together with the Audio Joiner.'],
+      ['Why does nothing happen when I tap Record?', 'Your browser needs permission to use the microphone. Allow it in the prompt, or in the site settings next to the address bar, and try again. In some in-app browsers (TikTok, Instagram) the microphone is blocked: open the page in Safari or Chrome.'],
+      ['Can I record on iPhone?', 'Yes, in Safari. Tap Record with the microphone and allow access when iOS asks.'],
+    ],
+  },
+  {
+    path: 'compress-mp3', tool: 'converter', format: 'mp3', quality: '64', crumb: 'Converters', suffix: ' (compressed)',
+    title: `Compress MP3: Reduce Audio File Size Online, Free | ${NAME}`,
+    description: 'Make MP3 and audio files smaller online: lower the bitrate, switch to mono and trim. Free, private and quick. Your file is never uploaded.',
+    h1: '<em>Compress MP3</em> and audio files',
+    lead: 'Make an MP3, voice note or recording much smaller so it fits email, chat or upload limits. Pick a lower quality and see the new size.',
+    badges: ['64 to 320 kbps', 'Mono option', 'No upload'],
+    steps: [
+      ['Open the file', 'Any MP3, WAV, M4A or other audio file, or a video.'],
+      ['Pick a smaller quality', '64 kbps is selected. Use 96 or 128 kbps for music.'],
+      ['Download', 'Press Convert. The new size is shown before you download.'],
+    ],
+    content: `
+    <h2>How much smaller?</h2>
+    <p>An MP3's size depends almost only on its bitrate and length:</p>
+    <ul>
+      <li><strong>320 kbps:</strong> about 2.4 MB per minute.</li>
+      <li><strong>128 kbps:</strong> about 1 MB per minute.</li>
+      <li><strong>96 kbps:</strong> about 0.7 MB per minute.</li>
+      <li><strong>64 kbps:</strong> about 0.5 MB per minute. Fine for speech, podcasts and voice notes.</li>
+    </ul>
+    <p>So a 320 kbps song gets about five times smaller at 64 kbps.</p>
+    <h3>Even smaller</h3>
+    <ul>
+      <li>Turn on <strong>Mono</strong> in Effects. For speech you won't hear a difference.</li>
+      <li>Drag on the waveform to keep only the part you need.</li>
+      <li>Turn on <strong>Remove silences</strong> to cut long pauses out of recordings.</li>
+    </ul>
+    <h3>What about quality?</h3>
+    <p>Lower bitrates remove detail you mostly hear in music: 64 kbps sounds fine for voices, use 96 to 128 kbps for songs. Compressing can't make a file sound better, so keep your original if you might need it later.</p>`,
+    faq: [
+      ['How do I make an MP3 smaller?', 'Open it here, keep 64 or 96 kbps, press Convert and download. Turning on Mono makes it smaller still.'],
+      ['Can I compress several files at once?', 'Yes. Choose several files together in the Audio Converter and download them as one ZIP.'],
+      ['Is my file uploaded?', 'No. It is compressed inside your browser.'],
+    ],
+  },
+  {
+    path: 'mp4-to-wav', tool: 'video-to-mp3', format: 'wav', crumb: 'Converters',
+    title: `MP4 to WAV Converter, Free and Online | ${NAME}`,
+    description: 'Convert MP4 video to WAV audio online for editing, transcription or music software. 16-bit WAV, no upload, no sign-up. Works on phone and PC.',
+    h1: '<em>MP4 to WAV</em> converter',
+    lead: 'Take the sound out of an MP4 and save it as an uncompressed WAV, ready for editing software.',
+    badges: ['16-bit WAV', 'MP4, MOV, WebM', 'No upload'],
+    steps: [
+      ['Open the MP4', 'Choose a video from your device.'],
+      ['WAV is already selected', 'Drag on the waveform first if you only need part of it.'],
+      ['Download the WAV', 'Press Convert, then Download.'],
+    ],
+    content: `
+    <h2>Why WAV?</h2>
+    <p>WAV keeps the sound without adding any compression, so it is the format editing programs, DAWs and transcription tools like best. The sound in an MP4 is usually compressed already; WAV keeps it exactly as it is without losing anything more.</p>
+    <p>WAV files are big, about 10 MB per minute. If you only want to listen, <a href="/mp4-to-mp3/">MP4 to MP3</a> gives a much smaller file.</p>`,
+    faq: [
+      ['Does it work with iPhone videos?', 'Yes. MOV and MP4 videos from iPhone both work.'],
+      ['Is the video uploaded?', 'No. The sound is extracted inside your browser.'],
+    ],
+  },
+  {
+    path: 'm4a-to-wav', tool: 'converter', format: 'wav', crumb: 'Converters',
+    title: `M4A to WAV Converter, Free and Online | ${NAME}`,
+    description: 'Convert M4A to WAV online: iPhone voice memos and iTunes audio to 16-bit WAV for editing software. Free, private, nothing uploaded.',
+    h1: '<em>M4A to WAV</em> converter',
+    lead: 'Turn iPhone voice memos and other M4A files into WAV for editing, transcription or music software.',
+    badges: ['16-bit WAV', 'Voice memos', 'No upload'],
+    steps: [
+      ['Open the M4A', 'On iPhone, share the voice memo to Files first, then choose it here.'],
+      ['WAV is already selected', 'Trim it or add effects if you like.'],
+      ['Download the WAV', 'Press Convert, then Download.'],
+    ],
+    content: `
+    <h2>When you need WAV</h2>
+    <p>Some editors, samplers and transcription services only accept WAV. Converting gives you a file they all open. It won't make the recording sound better than the M4A, it just stores it without further compression.</p>
+    <p>Noisy voice memo? Turn on <strong>AI noise removal</strong> in Effects before converting.</p>`,
+    faq: [
+      ['Can I convert protected iTunes songs?', 'No. Songs with copy protection (DRM) cannot be converted.'],
+      ['How big will the WAV be?', 'About 10 MB per minute for stereo, half that for mono.'],
+    ],
+  },
+  {
+    path: 'flac-to-wav', tool: 'converter', format: 'wav', crumb: 'Converters',
+    title: `FLAC to WAV Converter, Free and Lossless | ${NAME}`,
+    description: 'Convert FLAC to WAV online without losing quality. Both are lossless, so the sound stays exactly the same. Free, private and nothing is uploaded.',
+    h1: '<em>FLAC to WAV</em> converter',
+    lead: 'Convert lossless FLAC music to WAV for software, devices and CD burners that do not open FLAC.',
+    badges: ['Lossless', '16-bit WAV', 'No upload'],
+    steps: [
+      ['Open the FLAC', 'Choose a FLAC file from your device.'],
+      ['WAV is already selected', 'Leave the effects off for an exact copy.'],
+      ['Download the WAV', 'Press Convert, then Download.'],
+    ],
+    content: `
+    <h2>Same sound, different container</h2>
+    <p>FLAC and WAV are both lossless, so nothing is thrown away. FLAC is compressed like a ZIP file, WAV is not, so the WAV is about twice as big. ${NAME} saves 16-bit WAV, the same quality as a CD.</p>
+    <p>Need it smaller instead? <a href="/flac-to-mp3/">FLAC to MP3</a> at 320 kbps sounds very close and is a fraction of the size.</p>`,
+    faq: [
+      ['Does FLAC to WAV lose quality?', 'No for normal CD-quality FLAC. High-resolution 24-bit FLAC files are saved as 16-bit WAV.'],
+      ['Why is the WAV bigger?', 'WAV is uncompressed, so it uses about 10 MB per minute.'],
     ],
   },
   {
@@ -2120,7 +2262,7 @@ const slugOf = (p) => (p.path ? p.path.replace(/\//g, '-') : 'home');
 const ogImage = (p) => (fs.existsSync(path.join(ROOT, 'og', `${slugOf(p)}.jpg`)) ? `${SITE_URL}/og/${slugOf(p)}.jpg` : `${SITE_URL}/og.jpg`);
 
 // Every page with its language. The five English pages that have translations get a `key`.
-const KEY_OF = { '': 'home',
+const KEY_OF = { '': 'home', 'voice-recorder': 'recorder',
   'reverse-audio': 'reverse', 'speed-up-audio': 'speedup', 'slow-down-audio': 'slowdown', 'pitch-changer': 'pitch', 'remove-silence': 'silence', 'fade-in-fade-out': 'fade',
   'mp4-to-mp3': 'c-mp4', 'wav-to-mp3': 'c-wav', 'm4a-to-mp3': 'c-m4a', 'whatsapp-audio-to-mp3': 'c-wa', 'mp3-to-wav': 'c-mp3wav', 'ogg-to-mp3': 'c-ogg',
   'guides/iphone-ringtone': 'g-iphone', 'guides/samsung-ringtone': 'g-samsung', 'guides/whatsapp-voice-to-mp3': 'g-whatsapp', 'guides/make-slowed-reverb': 'g-slowed', 'audio-cutter': 'cutter', 'video-to-mp3': 'video', 'ringtone-maker': 'ringtone', 'audio-converter': 'converter',
@@ -2303,7 +2445,7 @@ ${p.tool ? `<link rel="modulepreload" href="${asset('assets/app.js')}">\n<script
     ${p.badges ? `<div class="badges">${p.badges.map((b) => `<span class="badge">${b}</span>`).join('')}</div>` : ''}
   </div>
   ${p.home ? `${toolGrid(lang)}\n  <div class="ad" data-slot="top"></div>` : ''}
-  ${p.tool ? `<div class="tool" data-tool="${p.tool}"${p.format ? ` data-format="${p.format}"` : ''}${p.fx ? ` data-fx='${JSON.stringify(p.fx)}'` : ''}${p.note ? ` data-note="${esc(p.note)}"` : ''}${p.suffix ? ` data-suffix="${esc(p.suffix)}"` : ''}${nextOf(p) ? ` data-next="${esc(nextOf(p))}"` : ''}><noscript>${ui.noscript}</noscript></div>
+  ${p.tool ? `<div class="tool" data-tool="${p.tool}"${p.format ? ` data-format="${p.format}"` : ''}${p.fx ? ` data-fx='${JSON.stringify(p.fx)}'` : ''}${p.note ? ` data-note="${esc(p.note)}"` : ''}${p.suffix ? ` data-suffix="${esc(p.suffix)}"` : ''}${p.quality ? ` data-quality="${p.quality}"` : ''}${p.recPrimary ? ' data-rec="primary"' : ''}${nextOf(p) ? ` data-next="${esc(nextOf(p))}"` : ''}><noscript>${ui.noscript}</noscript></div>
   <div class="ad" data-slot="top"></div>` : ''}
   ${body || ''}
   ${p.steps ? `<div class="section"><h2>${ui.howItWorks}</h2><div class="steps">${p.steps.map(([n, t]) => `<div class="card"><b>${n}</b><p>${t}</p></div>`).join('')}</div></div>` : ''}
