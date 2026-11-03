@@ -20,10 +20,10 @@ const base = (NAME) => ({
     installHow: 'So installierst du sie (auf Englisch)',
     whyTitle: `Warum ${NAME}`,
     why: [
-      ['lock', 'Deine Dateien bleiben bei dir', 'Alles passiert in deinem Browser. Nichts wird hochgeladen, also sieht niemand sonst deine Dateien.'],
+      ['lock', 'Völlig privat', 'Alles passiert in deinem Browser. Nichts wird hochgeladen, also sieht niemand sonst deine Dateien.'],
       ['bolt', 'Kein Warten', 'Kein Upload und keine Download-Warteschlange. Ein Song dauert meist nur ein paar Sekunden. Lange Videos brauchen etwas länger.'],
-      ['phone', 'Handy oder Computer', 'Funktioniert in Safari, Chrome, Edge und Firefox. Du kannst es auch auf deinem Startbildschirm installieren.'],
-      ['sparkle', 'Kostenlos und ohne Wasserzeichen', 'Kein Konto und nichts wird deinem Audio hinzugefügt. Nutze es, so oft du willst.'],
+      ['phone', 'Handy oder PC', 'Funktioniert in Safari, Chrome, Edge und Firefox. Du kannst es auch auf deinem Startbildschirm installieren.'],
+      ['sparkle', 'Kostenlos', 'Kein Konto und nichts wird deinem Audio hinzugefügt. Nutze es, so oft du willst.'],
     ],
   },
   tools: {

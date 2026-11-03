@@ -166,7 +166,7 @@ const EN = {
   installHow: 'How to install',
   whyTitle: `Why use ${NAME}`,
   why: [
-    ['lock', 'Your files stay with you', 'Everything happens in your browser. Nothing gets uploaded, so nobody else ever sees your files.'],
+    ['lock', 'Private by design', 'Everything happens in your browser. Nothing gets uploaded, so nobody else ever sees your files.'],
     ['bolt', 'No waiting', "There's no upload and no download queue. A song usually takes a few seconds. Long videos take a bit longer."],
     ['phone', 'Phone or computer', 'Works in Safari, Chrome, Edge and Firefox. You can also install it on your home screen.'],
     ['sparkle', 'Free, no watermark', 'No account and nothing added to your audio. Use it as often as you like.'],
@@ -180,7 +180,7 @@ const installHTML = (ui) => `
   <div class="section"><div class="callout"><p>${ui.install}</p>
     <a class="btn sm" href="/guides/install-app/">${ui.installHow}</a></div></div>`;
 const whyHTML = (ui) => `
-  <div class="section">
+  <div class="section why">
     <h2>${ui.whyTitle}</h2>
     <div class="cards">
       ${ui.why.map(([icon, b, t]) => `<div class="card"><div class="ico">${ICONS[icon]}</div><b>${b}</b><p>${t}</p></div>`).join('\n      ')}
