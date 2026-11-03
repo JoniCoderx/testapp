@@ -502,3 +502,10 @@ footer .en-tag { margin-left: 5px; font-size: 9.5px; padding: 0 4px; }
 .whatsnew button { position: absolute; top: 6px; right: 8px; width: 30px; height: 30px; border: 0; background: none; color: var(--muted); font-size: 22px; cursor: pointer; }
 @media (max-width: 520px) { .whatsnew { left: 12px; right: 12px; max-width: none; bottom: 12px; } }
 @media (prefers-reduced-motion: reduce) { .whatsnew { transition: none; } }
+
+/* Voice recorder page: the record button is the main action */
+.rec-primary .rec { margin: 0 0 16px; order: -1; }
+.rec-primary .rec > span:first-child { display: none; }
+.rec-primary .rec .btn { min-height: 56px; padding: 0 28px; font-size: 18px; border: 0; color: #fff; background: var(--grad); box-shadow: 0 10px 30px rgba(123, 92, 255, .3); }
+.rec-primary .rec .rec-dot { background: #fff; }
+.rec-primary .rec.on .btn.ghost { background: #e11d48; color: #fff; border: 0; }

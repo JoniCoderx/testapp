@@ -32,7 +32,7 @@ const FORMATS = {
   m4r: { label: T('M4R (iPhone ringtone)'), mime: 'audio/mp4', args: () => ['-c:a', 'aac', '-b:a', '192k', '-f', 'ipod'] },
   wav: { label: T('WAV (16-bit)'), mime: 'audio/wav', args: () => ['-c:a', 'pcm_s16le'] },
   // Vorbis rejects fixed bitrates it can't hit (e.g. 320k mono), so use quality mode.
-  ogg: { label: 'OGG (Vorbis)', mime: 'audio/ogg', args: (q) => ['-c:a', 'libvorbis', '-q:a', { 128: '4', 192: '6', 256: '8', 320: '9' }[q] || '6'] },
+  ogg: { label: 'OGG (Vorbis)', mime: 'audio/ogg', args: (q) => ['-c:a', 'libvorbis', '-q:a', { 64: '0', 96: '2', 128: '4', 192: '6', 256: '8', 320: '9' }[q] || '6'] },
   flac: { label: T('FLAC (lossless)'), mime: 'audio/flac', args: () => ['-c:a', 'flac'] },
   mp4: { label: T('MP4 video'), mime: 'video/mp4', args: () => [] }, // built separately, see videoArgs()
 };
@@ -607,7 +607,7 @@ function optionsHTML(cfg) {
   return `
     <label>${T('Format')} <select data-o="format">${fmtOpts}</select></label>
     <label data-q>${T('Quality')} <select data-o="quality">
-      <option value="128">128 kbps</option><option value="192">192 kbps</option>
+      <option value="64">64 kbps</option><option value="96">96 kbps</option><option value="128">128 kbps</option><option value="192">192 kbps</option>
       <option value="256">256 kbps</option><option value="320" selected>320 kbps</option></select></label>
     ${cfg.modes ? `<div class="seg" role="group" aria-label="${T('Cut mode')}">
       <button type="button" class="on" data-mode="keep">${T('Keep selection')}</button>
@@ -844,6 +844,7 @@ function mountTool(root) {
   };
   els.file.addEventListener('change', () => pick([...els.file.files]));
   const recorder = mountRecorder(root, (f) => openFile(f));
+  if (root.dataset.rec === 'primary') { root.classList.add('rec-primary'); els.drop.before($(root, '[data-rec]')); } // the voice recorder page leads with the mic
   // Arrived from another tool's "next" button: open the file it handed over.
   if (location.hash === '#handoff') {
     history.replaceState(null, '', location.pathname + location.search);
@@ -886,6 +887,7 @@ function mountTool(root) {
     els.busy.style.display = 'grid';
     els.busy.textContent = T('Reading audio…');
     els.format.value = cfg.formats.includes(root.dataset.format) ? root.dataset.format : cfg.defaultFormat;
+    if (root.dataset.quality) els.quality.value = root.dataset.quality; // e.g. 64 kbps on the compress page
     if (file.size > BIG_ON_PHONE && matchMedia('(pointer: coarse)').matches)
       notice(T('This is a big file ({0} MB). Phones can run out of memory with files this size; if the page stops or reloads, try a shorter file or a computer.', Math.round(file.size / 1048576)));
     syncQuality();

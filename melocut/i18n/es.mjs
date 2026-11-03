@@ -48,6 +48,7 @@ export default (NAME) => ({
     'remove-silence': { title: 'Quitar silencios', path: 'es/quitar-silencios', blurb: 'Corta las pausas largas de una grabación.' },
     'fade-in-fade-out': { title: 'Fundido de entrada y salida', path: 'es/fundido-entrada-salida', blurb: 'Añade un inicio y un final suaves a cualquier canción.' },
     'voice-changer': { title: 'Cambiador de voz', path: 'es/cambiador-de-voz', blurb: 'Ardilla, voz grave, robot, monstruo y más voces.' },
+    'voice-recorder': { title: 'Grabadora de voz', blurb: 'Graba tu voz y guárdala en MP3.' },
     'audio-to-video': { title: 'Canción a video', path: 'es/cancion-a-video', blurb: 'Convierte una canción en un MP4 para TikTok y Reels.' },
   },
   pages: [
@@ -57,7 +58,7 @@ export default (NAME) => ({
       description: 'Corta canciones, crea tonos para iPhone y Android, añade efectos y convierte videos a MP3. Gratis, y tus archivos nunca salen de tu dispositivo.',
       h1: 'Corta canciones, crea tonos y añade efectos, <em>en tu navegador</em>',
       lead: 'Herramientas de audio gratis para tu teléfono o computadora. Tus archivos nunca se suben. Elige una herramienta para empezar.',
-      badges: ['20 herramientas gratis', 'Quita ruido con IA', 'Sin subir archivos', 'Sin registro'],
+      badges: ['21 herramientas gratis', 'Quita ruido con IA', 'Sin subir archivos', 'Sin registro'],
       home: true,
       body: (L) => `
   <div class="section prose">

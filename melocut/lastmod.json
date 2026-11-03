@@ -1,8 +1,8 @@
 {
  "en:": {
-  "hash": "22718c622762",
+  "hash": "4e3ac4a04812",
   "published": "2026-10-25",
-  "modified": "2026-11-01"
+  "modified": "2026-11-03"
  },
  "en:video-to-mp3": {
   "hash": "ea2f93fb8026",
@@ -20,9 +20,9 @@
   "modified": "2026-10-29"
  },
  "en:audio-converter": {
-  "hash": "95a5faa8939c",
+  "hash": "bbb1b9f60019",
   "published": "2026-10-25",
-  "modified": "2026-11-02"
+  "modified": "2026-11-03"
  },
  "en:mp4-to-mp3": {
   "hash": "d442acb654d3",
@@ -160,9 +160,9 @@
   "modified": "2026-11-02"
  },
  "en:guides": {
-  "hash": "3019cf6a9cef",
+  "hash": "7e6c9d6d7e31",
   "published": "2026-10-25",
-  "modified": "2026-11-01"
+  "modified": "2026-11-03"
  },
  "en:guides/install-app": {
   "hash": "8335d2f72bd2",
@@ -310,9 +310,9 @@
   "modified": "2026-11-02"
  },
  "en:about": {
-  "hash": "9301db55a4bf",
+  "hash": "acc7a693a506",
   "published": "2026-10-25",
-  "modified": "2026-11-02"
+  "modified": "2026-11-03"
  },
  "es:es": {
   "hash": "26e5e7923f2f",
@@ -948,5 +948,50 @@
   "hash": "121ef244c894",
   "published": "2026-11-02",
   "modified": "2026-11-02"
+ },
+ "en:voice-recorder": {
+  "hash": "a63ec44f5b4a",
+  "published": "2026-11-03",
+  "modified": "2026-11-03"
+ },
+ "en:compress-mp3": {
+  "hash": "e72181f2dcfc",
+  "published": "2026-11-03",
+  "modified": "2026-11-03"
+ },
+ "en:mp4-to-wav": {
+  "hash": "f62bdf074f05",
+  "published": "2026-11-03",
+  "modified": "2026-11-03"
+ },
+ "en:m4a-to-wav": {
+  "hash": "bf0028d03aa2",
+  "published": "2026-11-03",
+  "modified": "2026-11-03"
+ },
+ "en:flac-to-wav": {
+  "hash": "37c704c67b59",
+  "published": "2026-11-03",
+  "modified": "2026-11-03"
+ },
+ "es:es/grabadora-de-voz": {
+  "hash": "218cf22b2089",
+  "published": "2026-11-03",
+  "modified": "2026-11-03"
+ },
+ "pt-br:pt-br/gravador-de-voz": {
+  "hash": "e05afc5aa889",
+  "published": "2026-11-03",
+  "modified": "2026-11-03"
+ },
+ "de:de/diktiergeraet": {
+  "hash": "6f21449db5cf",
+  "published": "2026-11-03",
+  "modified": "2026-11-03"
+ },
+ "fr:fr/dictaphone-en-ligne": {
+  "hash": "3a6f21015dfa",
+  "published": "2026-11-03",
+  "modified": "2026-11-03"
  }
 }
