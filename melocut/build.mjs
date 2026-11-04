@@ -10,6 +10,10 @@ import ptBR from './i18n/pt-br.mjs';
 import de from './i18n/de.mjs';
 import fr from './i18n/fr.mjs';
 import recorder from './i18n/recorder.mjs';
+import extraEs, { toolPaths as extraEsTP } from './i18n/extra-es.mjs';
+import extraPt, { toolPaths as extraPtTP } from './i18n/extra-pt-br.mjs';
+import extraDe, { toolPaths as extraDeTP } from './i18n/extra-de.mjs';
+import extraFr, { toolPaths as extraFrTP } from './i18n/extra-fr.mjs';
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), 'site');
 const SITE_URL = (process.env.SITE_URL || 'https://melocut.com').replace(/\/$/, '');
@@ -177,6 +181,11 @@ const EN = {
 const LANGS = { en: { ui: EN, tools: {}, pages: [] }, es: es(NAME), 'pt-br': ptBR(NAME), de: de(NAME), fr: fr(NAME) };
 // The voice recorder page in every language (see i18n/recorder.mjs).
 for (const [lang, page] of Object.entries(recorder(NAME))) { LANGS[lang].pages.push(page); LANGS[lang].tools['voice-recorder'] = { ...LANGS[lang].tools['voice-recorder'], path: page.path }; }
+// The newer pages (splitter, compress, WAV conversions, effects) in every language.
+for (const [lang, pages, tp] of [['es', extraEs, extraEsTP], ['pt-br', extraPt, extraPtTP], ['de', extraDe, extraDeTP], ['fr', extraFr, extraFrTP]]) {
+  LANGS[lang].pages.push(...pages(NAME));
+  for (const [slug, path] of Object.entries(tp)) LANGS[lang].tools[slug] = { ...LANGS[lang].tools[slug], path };
+}
 const L10N = Object.keys(LANGS).filter((l) => l !== 'en');
 const installHTML = (ui) => `
   <div class="section"><div class="callout"><p>${ui.install}</p>
@@ -2378,7 +2387,7 @@ const slugOf = (p) => (p.path ? p.path.replace(/\//g, '-') : 'home');
 const ogImage = (p) => (fs.existsSync(path.join(ROOT, 'og', `${slugOf(p)}.jpg`)) ? `${SITE_URL}/og/${slugOf(p)}.jpg` : `${SITE_URL}/og.jpg`);
 
 // Every page with its language. The five English pages that have translations get a `key`.
-const KEY_OF = { '': 'home', 'voice-recorder': 'recorder',
+const KEY_OF = { '': 'home', 'voice-recorder': 'recorder', 'audio-splitter': 'splitter', 'normalize-audio': 'normalize', 'stereo-to-mono': 'mono', 'add-reverb': 'reverb', 'compress-mp3': 'c-compress', 'mp4-to-wav': 'c-mp4wav', 'm4a-to-wav': 'c-m4awav', 'flac-to-wav': 'c-flacwav',
   'reverse-audio': 'reverse', 'speed-up-audio': 'speedup', 'slow-down-audio': 'slowdown', 'pitch-changer': 'pitch', 'remove-silence': 'silence', 'fade-in-fade-out': 'fade',
   'mp4-to-mp3': 'c-mp4', 'wav-to-mp3': 'c-wav', 'm4a-to-mp3': 'c-m4a', 'whatsapp-audio-to-mp3': 'c-wa', 'mp3-to-wav': 'c-mp3wav', 'ogg-to-mp3': 'c-ogg',
   'guides/iphone-ringtone': 'g-iphone', 'guides/samsung-ringtone': 'g-samsung', 'guides/whatsapp-voice-to-mp3': 'g-whatsapp', 'guides/make-slowed-reverb': 'g-slowed', 'audio-cutter': 'cutter', 'video-to-mp3': 'video', 'ringtone-maker': 'ringtone', 'audio-converter': 'converter',

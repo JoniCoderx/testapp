@@ -1013,5 +1013,165 @@
   "hash": "e3f5c2247db7",
   "published": "2026-11-04",
   "modified": "2026-11-04"
+ },
+ "es:es/dividir-audio": {
+  "hash": "5ae51f3763bc",
+  "published": "2026-11-04",
+  "modified": "2026-11-04"
+ },
+ "es:es/normalizar-audio": {
+  "hash": "11a22446f17d",
+  "published": "2026-11-04",
+  "modified": "2026-11-04"
+ },
+ "es:es/estereo-a-mono": {
+  "hash": "76245eb622e4",
+  "published": "2026-11-04",
+  "modified": "2026-11-04"
+ },
+ "es:es/anadir-reverb": {
+  "hash": "7d75d590a90d",
+  "published": "2026-11-04",
+  "modified": "2026-11-04"
+ },
+ "es:es/comprimir-mp3": {
+  "hash": "7945411e3dbb",
+  "published": "2026-11-04",
+  "modified": "2026-11-04"
+ },
+ "es:es/mp4-a-wav": {
+  "hash": "56367a8f435c",
+  "published": "2026-11-04",
+  "modified": "2026-11-04"
+ },
+ "es:es/m4a-a-wav": {
+  "hash": "4055658b7be7",
+  "published": "2026-11-04",
+  "modified": "2026-11-04"
+ },
+ "es:es/flac-a-wav": {
+  "hash": "bd27f9a4b42c",
+  "published": "2026-11-04",
+  "modified": "2026-11-04"
+ },
+ "pt-br:pt-br/dividir-audio": {
+  "hash": "2f7866a0f4f8",
+  "published": "2026-11-04",
+  "modified": "2026-11-04"
+ },
+ "pt-br:pt-br/normalizar-audio": {
+  "hash": "4722a59970c7",
+  "published": "2026-11-04",
+  "modified": "2026-11-04"
+ },
+ "pt-br:pt-br/estereo-para-mono": {
+  "hash": "02eb435aeb73",
+  "published": "2026-11-04",
+  "modified": "2026-11-04"
+ },
+ "pt-br:pt-br/adicionar-reverb": {
+  "hash": "f43e854584ee",
+  "published": "2026-11-04",
+  "modified": "2026-11-04"
+ },
+ "pt-br:pt-br/comprimir-mp3": {
+  "hash": "d49425496615",
+  "published": "2026-11-04",
+  "modified": "2026-11-04"
+ },
+ "pt-br:pt-br/mp4-para-wav": {
+  "hash": "76173b8f66af",
+  "published": "2026-11-04",
+  "modified": "2026-11-04"
+ },
+ "pt-br:pt-br/m4a-para-wav": {
+  "hash": "5ac08cb7ccdc",
+  "published": "2026-11-04",
+  "modified": "2026-11-04"
+ },
+ "pt-br:pt-br/flac-para-wav": {
+  "hash": "26d8a87e049d",
+  "published": "2026-11-04",
+  "modified": "2026-11-04"
+ },
+ "de:de/audio-aufteilen": {
+  "hash": "79f5ee4b50db",
+  "published": "2026-11-04",
+  "modified": "2026-11-04"
+ },
+ "de:de/audio-normalisieren": {
+  "hash": "2e13b9970ce2",
+  "published": "2026-11-04",
+  "modified": "2026-11-04"
+ },
+ "de:de/stereo-zu-mono": {
+  "hash": "1f828e2acf9a",
+  "published": "2026-11-04",
+  "modified": "2026-11-04"
+ },
+ "de:de/hall-hinzufuegen": {
+  "hash": "c63cc650a77d",
+  "published": "2026-11-04",
+  "modified": "2026-11-04"
+ },
+ "de:de/mp3-komprimieren": {
+  "hash": "9df1b2daaa6d",
+  "published": "2026-11-04",
+  "modified": "2026-11-04"
+ },
+ "de:de/mp4-zu-wav": {
+  "hash": "fb64b3aa4d62",
+  "published": "2026-11-04",
+  "modified": "2026-11-04"
+ },
+ "de:de/m4a-zu-wav": {
+  "hash": "fef6df007b60",
+  "published": "2026-11-04",
+  "modified": "2026-11-04"
+ },
+ "de:de/flac-zu-wav": {
+  "hash": "db3c849c152c",
+  "published": "2026-11-04",
+  "modified": "2026-11-04"
+ },
+ "fr:fr/diviser-audio": {
+  "hash": "c9b4eded3376",
+  "published": "2026-11-04",
+  "modified": "2026-11-04"
+ },
+ "fr:fr/normaliser-audio": {
+  "hash": "519a3fab4f92",
+  "published": "2026-11-04",
+  "modified": "2026-11-04"
+ },
+ "fr:fr/stereo-en-mono": {
+  "hash": "e7a2bbd6bf21",
+  "published": "2026-11-04",
+  "modified": "2026-11-04"
+ },
+ "fr:fr/ajouter-reverb": {
+  "hash": "c981cc64d737",
+  "published": "2026-11-04",
+  "modified": "2026-11-04"
+ },
+ "fr:fr/compresser-mp3": {
+  "hash": "0966b39384fe",
+  "published": "2026-11-04",
+  "modified": "2026-11-04"
+ },
+ "fr:fr/mp4-en-wav": {
+  "hash": "34c3572d16ba",
+  "published": "2026-11-04",
+  "modified": "2026-11-04"
+ },
+ "fr:fr/m4a-en-wav": {
+  "hash": "621014134666",
+  "published": "2026-11-04",
+  "modified": "2026-11-04"
+ },
+ "fr:fr/flac-en-wav": {
+  "hash": "796ed819db19",
+  "published": "2026-11-04",
+  "modified": "2026-11-04"
  }
 }
