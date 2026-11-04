@@ -46,6 +46,7 @@ const base = (NAME) => ({
     'remove-silence': { title: 'Stille entfernen', blurb: 'Schneide lange Pausen aus einer Aufnahme heraus.' },
     'fade-in-fade-out': { title: 'Ein- und Ausblenden', blurb: 'Gib jedem Song einen sanften Anfang und ein sanftes Ende.' },
     'voice-changer': { title: 'Stimmenverzerrer', path: 'de/stimmenverzerrer', blurb: 'Chipmunk, tiefe Stimme, Roboter, Monster und mehr.' },
+    'audio-splitter': { title: 'Audio aufteilen', blurb: 'Teile einen Song oder eine Aufnahme in gleiche Teile.' },
     'voice-recorder': { title: 'Diktiergerät', blurb: 'Nimm deine Stimme auf und speichere sie als MP3.' },
     'audio-to-video': { title: 'Song zu Video', path: 'de/mp3-zu-mp4', blurb: 'Mach aus einem Song ein MP4 für TikTok und Reels.' },
   },
@@ -56,7 +57,7 @@ const base = (NAME) => ({
       description: 'Schneide Songs, erstelle Klingeltöne für iPhone und Android, füge Effekte hinzu und wandle Videos in MP3 um. Kostenlos, deine Dateien bleiben auf deinem Gerät.',
       h1: 'Songs schneiden, Klingeltöne erstellen und Effekte hinzufügen, <em>im Browser</em>',
       lead: 'Kostenlose Audio-Tools für Handy und Computer. Deine Dateien werden nie hochgeladen. Wähle ein Tool, um loszulegen.',
-      badges: ['21 kostenlose Tools', 'KI-Rauschentfernung', 'Ohne Upload', 'Ohne Anmeldung'],
+      badges: ['22 kostenlose Tools', 'KI-Rauschentfernung', 'Ohne Upload', 'Ohne Anmeldung'],
       home: true,
       body: (L) => `
   <div class="section prose">

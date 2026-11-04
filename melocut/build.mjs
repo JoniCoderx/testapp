@@ -41,6 +41,7 @@ const ICONS = {
   sparkle: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></svg>',
   film: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M10 9.5v5l4.5-2.5z" fill="currentColor"/><path d="M3 8h18M3 16h18" opacity=".45"/></svg>',
   voice: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="6" height="11" rx="3"/><path d="M3 10a7 7 0 0 0 14 0M10 17v5"/><path d="M19.5 7.5a5 5 0 0 1 0 5M22 5a9 9 0 0 1 0 10"/></svg>',
+  split: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4M17 12h4M12 3v18"/><path d="M5 8v8M19 8v8M8.5 6v12M15.5 6v12"/></svg>',
   rec: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v5M8 22h8"/></svg>',
   mic: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v5M3 3l18 18"/></svg>',
   reverse: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>',
@@ -64,6 +65,7 @@ const TOOLS = [
   { slug: 'audio-to-video', icon: 'film', isNew: true, title: 'Song to Video', blurb: 'Turn a song into an MP4 for TikTok and Reels.' },
   { slug: 'voice-changer', icon: 'voice', isNew: true, title: 'Voice Changer', blurb: 'Chipmunk, deep, robot, monster and more voices.' },
   { slug: 'voice-recorder', icon: 'rec', isNew: true, title: 'Voice Recorder', blurb: 'Record your voice and save it as MP3.' },
+  { slug: 'audio-splitter', icon: 'split', isNew: true, title: 'Audio Splitter', blurb: 'Split a song or recording into equal parts.' },
   { slug: '8d-audio', icon: 'orbit', title: '8D Audio', blurb: 'Sound that moves from ear to ear. Use headphones.' },
   { slug: 'bass-booster', icon: 'bass', title: 'Bass Booster', blurb: 'Add more low end to any song.' },
   { slug: 'volume-booster', icon: 'volume', title: 'Volume Booster', blurb: 'Make quiet recordings louder.' },
@@ -338,7 +340,7 @@ const PAGES = [
     <h3>Popular conversions</h3>
     ${CONVERSION_LINKS}
     <h3>WhatsApp and Telegram voice notes</h3>
-    <p>Voice messages are saved as <code>.opus</code> or <code>.ogg</code> files that a lot of players won't open. Convert them to MP3 and they play anywhere.</p>`,
+    <p>Voice messages are saved as <code>.opus</code> or <code>.ogg</code> files that a lot of players won't open. Convert them to MP3 and they play anywhere. Need one channel instead of two? Use <a href="/stereo-to-mono/">stereo to mono</a>.</p>`,
     faq: [
       ['Can I convert several files at once?', 'Yes. Choose or drop several files together, pick the format, and press Convert all. You can download each file or all of them as one ZIP.'],
       ['How do I convert WAV to MP3?', 'Open the WAV, choose MP3 and a quality, then press Convert and Download.'],
@@ -746,6 +748,38 @@ const PAGES = [
     ],
   },
   {
+    path: 'audio-splitter', tool: 'splitter', crumb: 'Tools',
+    title: `Audio Splitter: Split MP3 into Parts Online, Free | ${NAME}`,
+    description: 'Split an MP3, podcast or long recording into equal parts or a part every few minutes. Download all parts as one ZIP. Free, private, nothing uploaded.',
+    h1: '<em>Audio splitter</em>: split MP3 into parts',
+    lead: 'Cut a long song, podcast, lecture or audiobook into equal parts, or a new part every few minutes. All parts come in one ZIP.',
+    badges: ['2 to 10 parts', 'Or every N minutes', 'One ZIP'],
+    steps: [
+      ['Open your file', 'A long MP3, recording, podcast or video.'],
+      ['Choose how to split', 'Pick a number of equal parts, or a part every 1 to 30 minutes.'],
+      ['Split and download', 'Press Split, then Download all (ZIP).'],
+    ],
+    content: `
+    <h2>What people split</h2>
+    <ul>
+      <li><strong>Long recordings and lectures</strong> into 10 or 15 minute parts that are easier to share and listen to.</li>
+      <li><strong>Podcasts and audiobooks</strong> into chapters for players that remember where you stopped in each file.</li>
+      <li><strong>Voice notes for WhatsApp or email</strong> when a file is too big to send in one piece.</li>
+      <li><strong>A DJ mix or concert</strong> into equal sections.</li>
+    </ul>
+    <h3>Only part of the file?</h3>
+    <p>Drag the handles on the waveform first. Only the selected part is split, so you can skip an intro or the silence at the end.</p>
+    <h3>Format and effects</h3>
+    <p>Every part is saved in the format you pick, MP3, M4A, WAV, OGG or FLAC. Effects apply to every part too: turn on <strong>Auto loudness</strong> to even out the volume, or add a short fade in and out so parts don't start and end abruptly.</p>
+    <p>Need one specific piece instead? Use the <a href="/audio-cutter/">Audio Cutter</a>. Want to put parts back together? Use the <a href="/audio-joiner/">Audio Joiner</a>.</p>`,
+    faq: [
+      ['How do I split an MP3 into equal parts?', 'Open the MP3, choose for example 4 equal parts, press Split and download the ZIP with all four parts.'],
+      ['Can I split a file every 10 minutes?', 'Yes. Choose Every 10 min. The last part gets whatever is left.'],
+      ['Is the file uploaded?', 'No. It is split inside your browser.'],
+      ['How do I open the ZIP on my phone?', 'On iPhone, tap the ZIP in the Files app and it unpacks into a folder. On Android, open it in Files and tap Extract.'],
+    ],
+  },
+  {
     path: 'noise-remover', tool: 'denoise', crumb: 'Tools',
     title: `AI Noise Remover for Voice Recordings, Free | ${NAME}`,
     description: 'Remove background noise from voice recordings, voice notes and videos with AI. It runs on your device, nothing is uploaded. Free.',
@@ -848,7 +882,7 @@ const PAGES = [
     ],
     content: `
     <h2>Good starting settings</h2>
-    <p>The <a href="/guides/make-slowed-reverb/">slowed + reverb guide</a> explains each setting. Most slowed + reverb edits use a speed of <strong>0.80 to 0.90×</strong>, pitch <strong>1 to 3 semitones lower</strong> and reverb around <strong>35 to 55%</strong>. For a sped-up or nightcore version, tap the <em>Nightcore</em> preset.</p>`,
+    <p>The <a href="/guides/make-slowed-reverb/">slowed + reverb guide</a> explains each setting. Most slowed + reverb edits use a speed of <strong>0.80 to 0.90×</strong>, pitch <strong>1 to 3 semitones lower</strong> and reverb around <strong>35 to 55%</strong>. For a sped-up or nightcore version, tap the <em>Nightcore</em> preset. Just want room sound, without slowing down? Use <a href="/add-reverb/">add reverb</a>.</p>`,
     faq: [
       ['How do I make a slowed + reverb song?', 'Open the song here. The effect is already set, so press Preview, change anything you like, then Convert and Download.'],
       ['Can I make a sped-up version?', 'Yes. Tap the Nightcore preset or raise the speed and pitch.'],
@@ -924,7 +958,8 @@ const PAGES = [
     ],
     content: `
     <h2>Louder, but still clean</h2>
-    <p><strong>Auto loudness</strong> measures the whole file and brings it to about the same loudness Spotify and YouTube use, so quiet recordings become clear. A limiter keeps the loudest moments from crackling.</p>`,
+    <p><strong>Auto loudness</strong> measures the whole file and brings it to about the same loudness Spotify and YouTube use, so quiet recordings become clear. A limiter keeps the loudest moments from crackling.</p>
+    <p>Want every file at the same standard loudness rather than just louder? See <a href="/normalize-audio/">normalize audio</a>.</p>`,
     faq: [['Will boosting the volume cause distortion?', 'No. A limiter keeps the peaks under control, so the result is louder without clipping.']],
   },
   {
@@ -1127,6 +1162,87 @@ const PAGES = [
     faq: [
       ['What is the difference between nightcore and sped up?', 'Both are faster and higher. Nightcore is usually more extreme. Lower the speed to about 1.1× for a softer sped up version.'],
       ['Can I keep the original pitch?', 'Yes. Set Pitch back to 0, or use the Speed Up Audio tool, which keeps the pitch.'],
+    ],
+  },
+  {
+    path: 'normalize-audio', tool: 'converter', crumb: 'Tools', fx: { normalize: true }, suffix: ' (normalized)',
+    note: 'Auto loudness is on. It brings the whole file to an even, streaming-level loudness. Press Play with effects to hear it.',
+    title: `Normalize Audio Online: Even Out MP3 Volume, Free | ${NAME}`,
+    description: 'Normalize audio online: make quiet and loud files the same loudness, like Spotify and YouTube do. MP3, WAV, voice notes and videos. Free, no upload.',
+    h1: '<em>Normalize audio</em> online',
+    lead: 'Bring any recording or song to an even, standard loudness, so quiet files are clear and loud ones don\'t blast. A limiter keeps it clean.',
+    badges: ['Streaming loudness', 'No clipping', 'No upload'],
+    steps: [
+      ['Open your file', 'A song, voice note, podcast, lecture or video.'],
+      ['Listen', 'Auto loudness is already on. Press Play with effects.'],
+      ['Download', 'Press Convert, then Download.'],
+    ],
+    content: `
+    <h2>What normalizing does</h2>
+    <p><strong>Auto loudness</strong> measures how loud the whole file sounds to a listener, not just its loudest peak, and brings it to about the same level streaming apps use. A limiter then catches the loudest moments so nothing crackles. Quiet recordings become clear; files that were already loud are left close to how they were.</p>
+    <h3>Several files at the same loudness</h3>
+    <p>Making a playlist or a podcast with several clips? Normalize each one, or put them together with the <a href="/audio-joiner/">Audio Joiner</a> and turn on <strong>Even out volume</strong> there.</p>
+    <h3>Still too quiet?</h3>
+    <p>Raise the Volume slider in Effects as well, or use the <a href="/volume-booster/">Volume Booster</a>.</p>`,
+    faq: [
+      ['What is audio normalization?', 'Adjusting a file so its overall loudness reaches a standard level. MeloCut uses loudness normalization, which matches how loud it sounds rather than only its highest peak.'],
+      ['Will normalizing distort my audio?', 'No. A limiter keeps the peaks under control, so the result is louder without clipping.'],
+      ['Can I normalize several files at once?', 'Normalize them one by one here, or join them with the Audio Joiner and turn on Even out volume.'],
+    ],
+  },
+  {
+    path: 'stereo-to-mono', tool: 'converter', crumb: 'Tools', fx: { mono: true }, suffix: ' (mono)',
+    note: 'Mono is on: both channels are mixed into one. Press Play with effects to check it.',
+    title: `Stereo to Mono Converter: Make Audio Mono Online | ${NAME}`,
+    description: 'Convert stereo audio to mono online: mix left and right into one channel for speakers, calls, podcasts or smaller files. Free, private, nothing uploaded.',
+    h1: '<em>Stereo to mono</em> converter',
+    lead: 'Mix the left and right channels into one, so the sound is the same from every speaker and in one earbud.',
+    badges: ['Left + right mixed', 'Smaller WAV', 'No upload'],
+    steps: [
+      ['Open your file', 'Any song, recording or video.'],
+      ['Listen', 'Mono is already on. Press Play with effects.'],
+      ['Download', 'Pick a format, press Convert, then Download.'],
+    ],
+    content: `
+    <h2>When mono is better</h2>
+    <ul>
+      <li><strong>One earbud or one speaker:</strong> nothing that was only on the other side gets lost.</li>
+      <li><strong>Voice recordings and podcasts:</strong> a voice stuck in one ear sounds odd; mono puts it in the middle.</li>
+      <li><strong>Smaller files:</strong> a mono WAV is half the size of a stereo one.</li>
+    </ul>
+    <p>Both channels are mixed together, so you keep everything that was on either side.</p>
+    <h3>Voice only on one side?</h3>
+    <p>Some recordings have the voice on just the left or right channel. Mono fixes that too. Turn on <strong>Auto loudness</strong> as well if it ends up quiet.</p>`,
+    faq: [
+      ['Does converting to mono lose quality?', 'It removes the left-right stereo image, but keeps all the sound from both sides. For speech you won\'t hear a difference.'],
+      ['Will the file be smaller?', 'A mono WAV or FLAC is about half the size. For MP3 the size depends mostly on the bitrate you choose.'],
+    ],
+  },
+  {
+    path: 'add-reverb', tool: 'converter', crumb: 'Tools', fx: { reverb: 40 }, suffix: ' (reverb)',
+    note: 'Reverb is set to 40%. Move the Reverb slider and press Play with effects to hear it.',
+    title: `Add Reverb to Audio Online: Echo and Room Sound, Free | ${NAME}`,
+    description: 'Add reverb to vocals, songs and voice notes online. Choose how much room sound you want, listen first and download. Free, private, nothing uploaded.',
+    h1: 'Add <em>reverb</em> to audio',
+    lead: 'Give a dry recording space: from a small room to a big hall. Set the amount, listen and download.',
+    badges: ['0 to 100%', 'Preview first', 'MP3 or WAV'],
+    steps: [
+      ['Open your file', 'A vocal, song, voice note or video.'],
+      ['Set the amount', '40% is set. Move the Reverb slider and press Play with effects.'],
+      ['Download', 'Press Convert, then Download.'],
+    ],
+    content: `
+    <h2>How much reverb?</h2>
+    <ul>
+      <li><strong>10 to 25%:</strong> a natural room. Good for dry home vocals and voice-overs.</li>
+      <li><strong>30 to 50%:</strong> a big, dreamy sound, as in slowed + reverb edits.</li>
+      <li><strong>60% and up:</strong> a hall or cave, for effects.</li>
+    </ul>
+    <h3>Popular combinations</h3>
+    <p>For the classic trend, lower the speed and pitch too, or start in <a href="/slowed-reverb/">Slowed + Reverb</a>. For a voice in a big space, try the <em>Echo</em> voice in the <a href="/voice-changer/">Voice Changer</a>.</p>`,
+    faq: [
+      ['What is the difference between reverb and echo?', 'Reverb is the smooth tail of sound in a room. An echo is a distinct repeat. MeloCut\'s reverb gives room sound; the Echo voice in the Voice Changer leans toward a big echoing space.'],
+      ['Can I add reverb to just my vocals?', 'Reverb is applied to the whole file. For a vocal-only result, add it to a vocal recording before mixing it with music.'],
     ],
   },
   {
@@ -2293,7 +2409,7 @@ const homeOf = (lang) => ALL.find((q) => q.lang === lang && q.key === 'home');
 // Guides written in other languages: listed under each other, and linked from the tool page they explain (`forTool`).
 // After a download, offer the next tool and carry the file over (see takeHandoff in app.js).
 const NEXT_TOOLS = { 'video-to-mp3': ['audio-cutter', 'ringtone-maker'], cutter: ['ringtone-maker', 'audio-to-video'], ringtone: ['audio-to-video'],
-  joiner: ['audio-to-video', 'audio-cutter'], 'audio-to-video': [] };
+  joiner: ['audio-to-video', 'audio-cutter'], 'audio-to-video': [], splitter: [] };
 function nextOf(p) {
   const ui = LANGS[p.lang].ui;
   const list = (NEXT_TOOLS[p.tool] || ['audio-to-video', 'ringtone-maker'])
