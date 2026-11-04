@@ -160,7 +160,7 @@ const I = {
   x: svg('<path d="M6 6l12 12M18 6 6 18"/>'),
 };
 const label = (icon, text) => `${I[icon]}<span>${text}</span>`;
-const ACCEPT = 'audio/*,video/*,.mp3,.mp4,.m4a,.wav,.ogg,.opus,.flac,.webm,.mov,.mkv,.aac,.amr,.3gp';
+const ACCEPT = 'audio/*,video/*,.mp3,.mp4,.m4a,.wav,.ogg,.opus,.flac,.webm,.mov,.mkv,.aac,.amr,.3gp,.wma,.aiff,.aif,.avi';
 const UPLOAD_ICON = '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4M6 10l6-6 6 6"/><path d="M4 18v2h16v-2"/></svg>';
 
 // atempo only accepts 0.5..2 per instance, so chain it for bigger changes.

@@ -44,6 +44,13 @@
 - [MP4 to WAV](https://melocut.com/mp4-to-wav/)
 - [M4A to WAV](https://melocut.com/m4a-to-wav/)
 - [FLAC to WAV](https://melocut.com/flac-to-wav/)
+- [WMA to MP3](https://melocut.com/wma-to-mp3/)
+- [AIFF to MP3](https://melocut.com/aiff-to-mp3/)
+- [MKV to MP3](https://melocut.com/mkv-to-mp3/)
+- [AVI to MP3](https://melocut.com/avi-to-mp3/)
+- [3GP to MP3](https://melocut.com/3gp-to-mp3/)
+- [MP3 to OGG](https://melocut.com/mp3-to-ogg/)
+- [WAV to FLAC](https://melocut.com/wav-to-flac/)
 - [Compress MP3](https://melocut.com/compress-mp3/)
 
 ## Guides
