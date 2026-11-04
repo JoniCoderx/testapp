@@ -1,13 +1,13 @@
 {
  "en:": {
-  "hash": "3afc6e5f59ae",
+  "hash": "609c38c3043e",
   "published": "2026-10-25",
   "modified": "2026-11-04"
  },
  "en:video-to-mp3": {
-  "hash": "ea2f93fb8026",
+  "hash": "c17b7683ede1",
   "published": "2026-10-25",
-  "modified": "2026-11-01"
+  "modified": "2026-11-04"
  },
  "en:ringtone-maker": {
   "hash": "910f74d890f6",
@@ -20,7 +20,7 @@
   "modified": "2026-10-29"
  },
  "en:audio-converter": {
-  "hash": "27fe0138357b",
+  "hash": "c0ce809cb7b0",
   "published": "2026-10-25",
   "modified": "2026-11-04"
  },
@@ -160,9 +160,9 @@
   "modified": "2026-11-02"
  },
  "en:guides": {
-  "hash": "7e6c9d6d7e31",
+  "hash": "fd2aeae64de3",
   "published": "2026-10-25",
-  "modified": "2026-11-03"
+  "modified": "2026-11-04"
  },
  "en:guides/install-app": {
   "hash": "8335d2f72bd2",
@@ -1171,6 +1171,41 @@
  },
  "fr:fr/flac-en-wav": {
   "hash": "796ed819db19",
+  "published": "2026-11-04",
+  "modified": "2026-11-04"
+ },
+ "en:wma-to-mp3": {
+  "hash": "160f0875afd4",
+  "published": "2026-11-04",
+  "modified": "2026-11-04"
+ },
+ "en:aiff-to-mp3": {
+  "hash": "1c940700a6a1",
+  "published": "2026-11-04",
+  "modified": "2026-11-04"
+ },
+ "en:mkv-to-mp3": {
+  "hash": "2f416f5bf5f1",
+  "published": "2026-11-04",
+  "modified": "2026-11-04"
+ },
+ "en:avi-to-mp3": {
+  "hash": "5ce60a93e484",
+  "published": "2026-11-04",
+  "modified": "2026-11-04"
+ },
+ "en:3gp-to-mp3": {
+  "hash": "d4ecb0ce23b9",
+  "published": "2026-11-04",
+  "modified": "2026-11-04"
+ },
+ "en:mp3-to-ogg": {
+  "hash": "817602a4c5f5",
+  "published": "2026-11-04",
+  "modified": "2026-11-04"
+ },
+ "en:wav-to-flac": {
+  "hash": "4b042afdbdfa",
   "published": "2026-11-04",
   "modified": "2026-11-04"
  }

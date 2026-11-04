@@ -10,6 +10,7 @@ import ptBR from './i18n/pt-br.mjs';
 import de from './i18n/de.mjs';
 import fr from './i18n/fr.mjs';
 import recorder from './i18n/recorder.mjs';
+import enConv2, { extraFaq as enConv2Faq } from './en-conv2.mjs';
 import extraEs, { toolPaths as extraEsTP } from './i18n/extra-es.mjs';
 import extraPt, { toolPaths as extraPtTP } from './i18n/extra-pt-br.mjs';
 import extraDe, { toolPaths as extraDeTP } from './i18n/extra-de.mjs';
@@ -100,6 +101,13 @@ const CONVERSIONS = [
   { slug: 'mp4-to-wav', label: 'MP4 to WAV' },
   { slug: 'm4a-to-wav', label: 'M4A to WAV' },
   { slug: 'flac-to-wav', label: 'FLAC to WAV' },
+  { slug: 'wma-to-mp3', label: 'WMA to MP3' },
+  { slug: 'aiff-to-mp3', label: 'AIFF to MP3' },
+  { slug: 'mkv-to-mp3', label: 'MKV to MP3' },
+  { slug: 'avi-to-mp3', label: 'AVI to MP3' },
+  { slug: '3gp-to-mp3', label: '3GP to MP3' },
+  { slug: 'mp3-to-ogg', label: 'MP3 to OGG' },
+  { slug: 'wav-to-flac', label: 'WAV to FLAC' },
   { slug: 'compress-mp3', label: 'Compress MP3' },
 ];
 const MAIN_NAV = ['video-to-mp3', 'ringtone-maker', 'audio-cutter', 'audio-converter'];
@@ -245,7 +253,7 @@ const PAGES = [
       ['Is MeloCut free?', 'Yes. Every tool is free, paid for by a few labelled ads. There is no sign-up and no watermark.'],
       ['Are my files uploaded anywhere?', 'No. All processing happens in your browser on your own device.'],
       ['Does it work on iPhone and Android?', 'Yes. It works in Safari, Chrome, Firefox and Edge on phones, tablets and computers.'],
-      ['Which file types can I open?', 'MP3, MP4, MOV, M4A, WAV, OGG, OPUS, FLAC, WebM, AAC, AMR, 3GP and most other audio and video formats.'],
+      ['Which file types can I open?', 'MP3, MP4, MOV, M4A, WAV, OGG, OPUS, FLAC, WebM, AAC, WMA, AIFF, AVI, MKV, AMR, 3GP and most other audio and video formats.'],
       ['Can I install MeloCut as an app?', 'Yes. Add it to your home screen from Safari or Chrome. It opens full screen, and tools you have used before keep working offline. The install guide shows the steps.'],
       ['Does MeloCut use AI?', 'The noise remover uses RNNoise, a small neural network that separates speech from background noise. It runs on your device. The other effects are standard audio processing.'],
     ],
@@ -256,7 +264,7 @@ const PAGES = [
     description: 'Convert MP4, MOV, WebM and other videos to MP3 in your browser. Up to 320 kbps, no upload, no sign-up. Works on iPhone and Android.',
     h1: 'Video to <em>MP3</em> converter',
     lead: 'Take the sound from any video and save it as MP3, M4A or WAV. It runs on your device, so even big videos are quick.',
-    badges: ['Up to 320 kbps', 'MP4, MOV, WebM, MKV', 'No upload'],
+    badges: ['Up to 320 kbps', 'MP4, MOV, MKV, AVI', 'No upload'],
     steps: [
       ['Choose your video', 'Tap the box above and pick a video, or drag one in.'],
       ['Trim it if you want', 'Keep all of the audio, or drag on the waveform to keep only part of it.'],
@@ -266,7 +274,7 @@ const PAGES = [
     <h2>Get the audio from a video</h2>
     <p>Filmed a concert, a lecture or something funny and only need the sound? Open the video here and save the audio as an MP3 you can play in your car, in a music app or anywhere else.</p>
     <h3>Which videos work?</h3>
-    <p>MP4, MOV (the format iPhones record in), WebM, MKV, AVI and 3GP. If your browser can open the file, it will almost always work. The most common ones have their own page: <a href="/mp4-to-mp3/">MP4 to MP3</a>, <a href="/mov-to-mp3/">MOV to MP3</a> and <a href="/webm-to-mp3/">WebM to MP3</a>.</p>
+    <p>MP4, MOV (the format iPhones record in), WebM, MKV, AVI and 3GP. If your browser can open the file, it will almost always work. The most common ones have their own page: <a href="/mp4-to-mp3/">MP4 to MP3</a>, <a href="/mov-to-mp3/">MOV to MP3</a>, <a href="/webm-to-mp3/">WebM to MP3</a>, <a href="/mkv-to-mp3/">MKV to MP3</a>, <a href="/avi-to-mp3/">AVI to MP3</a> and <a href="/3gp-to-mp3/">3GP to MP3</a>.</p>
     <h3>Which quality should I pick?</h3>
     <p>Use <strong>320 kbps</strong> for music. <strong>128 kbps</strong> is plenty for speech and makes much smaller files. Pick <strong>WAV</strong> if you want to edit the audio afterwards.</p>`,
     faq: [
@@ -344,7 +352,7 @@ const PAGES = [
     ],
     content: `
     <h2>Convert almost any audio file</h2>
-    <p>${NAME} opens MP3, WAV, M4A, AAC, OGG, OPUS, FLAC, AMR and WMA, and saves to the format your phone, car or app needs. Popular ones have their own page: <a href="/wav-to-mp3/">WAV to MP3</a>, <a href="/flac-to-mp3/">FLAC to MP3</a>, <a href="/m4a-to-mp3/">M4A to MP3</a>, <a href="/mp3-to-wav/">MP3 to WAV</a>, <a href="/mp3-to-m4a/">MP3 to M4A</a> and <a href="/mp3-to-m4r/">MP3 to M4R</a> for iPhone ringtones. Which one to pick? See <a href="/guides/best-audio-format/">which audio format to use</a>.</p>
+    <p>${NAME} opens MP3, WAV, M4A, AAC, OGG, OPUS, FLAC, AIFF, AMR and WMA, and saves to the format your phone, car or app needs. Popular ones have their own page: <a href="/wav-to-mp3/">WAV to MP3</a>, <a href="/flac-to-mp3/">FLAC to MP3</a>, <a href="/m4a-to-mp3/">M4A to MP3</a>, <a href="/mp3-to-wav/">MP3 to WAV</a>, <a href="/mp3-to-m4a/">MP3 to M4A</a> and <a href="/mp3-to-m4r/">MP3 to M4R</a> for iPhone ringtones, plus <a href="/wma-to-mp3/">WMA to MP3</a>, <a href="/aiff-to-mp3/">AIFF to MP3</a>, <a href="/mp3-to-ogg/">MP3 to OGG</a> and <a href="/wav-to-flac/">WAV to FLAC</a>. Which one to pick? See <a href="/guides/best-audio-format/">which audio format to use</a>.</p>
     <p>Open <strong>Effects &amp; filters</strong> if you also want to add fades, change the speed or pitch, boost the bass or volume, clean up noise or add reverb.</p>
     <h3>Popular conversions</h3>
     ${CONVERSION_LINKS}
@@ -2372,6 +2380,10 @@ const EXTRA_FAQ = {
   'webm-to-mp3': [['My WebM is a screen recording with two audio sources. What do I get?', 'The file\'s main audio track. Most screen recorders mix everything into one track anyway.'], ['Can I convert WebM audio from a video call?', 'Yes, if you recorded it and everyone agreed to the recording.']],
   'opus-to-mp3': [['Why is my OPUS file so small?', 'OPUS is very efficient for voice: a minute of speech can be under 100 KB. The MP3 will be bigger at the same clarity.'], ['Can I join several OPUS voice notes into one file?', 'Yes. Open them all in the Audio Joiner, put them in order and save one MP3.']],
 };
+
+// More format pages (en-conv2.mjs), placed right after the other converters.
+PAGES.splice(PAGES.findIndex((p) => p.path === 'flac-to-wav') + 1, 0, ...enConv2(NAME));
+Object.assign(EXTRA_FAQ, enConv2Faq);
 
 for (const p of PAGES) {
   if (ANSWERS[p.path] && p.content) p.content = `\n    <div class="callout answer"><p><strong>Short answer:</strong> ${ANSWERS[p.path]}</p></div>${p.content}`;
