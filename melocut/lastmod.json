@@ -1,8 +1,8 @@
 {
  "en:": {
-  "hash": "d2b569b7ddef",
+  "hash": "3afc6e5f59ae",
   "published": "2026-10-25",
-  "modified": "2026-11-03"
+  "modified": "2026-11-04"
  },
  "en:video-to-mp3": {
   "hash": "ea2f93fb8026",
@@ -20,9 +20,9 @@
   "modified": "2026-10-29"
  },
  "en:audio-converter": {
-  "hash": "bbb1b9f60019",
+  "hash": "27fe0138357b",
   "published": "2026-10-25",
-  "modified": "2026-11-03"
+  "modified": "2026-11-04"
  },
  "en:mp4-to-mp3": {
   "hash": "d442acb654d3",
@@ -85,9 +85,9 @@
   "modified": "2026-10-29"
  },
  "en:slowed-reverb": {
-  "hash": "b33146014736",
+  "hash": "dfcd4d067bfa",
   "published": "2026-10-25",
-  "modified": "2026-10-29"
+  "modified": "2026-11-04"
  },
  "en:vocal-remover": {
   "hash": "b1e6fdef0582",
@@ -105,9 +105,9 @@
   "modified": "2026-10-29"
  },
  "en:volume-booster": {
-  "hash": "9bd187e2c315",
+  "hash": "10fd112c3fa1",
   "published": "2026-10-25",
-  "modified": "2026-10-29"
+  "modified": "2026-11-04"
  },
  "en:reverse-audio": {
   "hash": "d706a8014465",
@@ -310,9 +310,9 @@
   "modified": "2026-11-02"
  },
  "en:about": {
-  "hash": "acc7a693a506",
+  "hash": "e365f8f83ea4",
   "published": "2026-10-25",
-  "modified": "2026-11-03"
+  "modified": "2026-11-04"
  },
  "es:es": {
   "hash": "26e5e7923f2f",
@@ -993,5 +993,25 @@
   "hash": "3a6f21015dfa",
   "published": "2026-11-03",
   "modified": "2026-11-03"
+ },
+ "en:audio-splitter": {
+  "hash": "176408408cc1",
+  "published": "2026-11-04",
+  "modified": "2026-11-04"
+ },
+ "en:normalize-audio": {
+  "hash": "582cf4f546bd",
+  "published": "2026-11-04",
+  "modified": "2026-11-04"
+ },
+ "en:stereo-to-mono": {
+  "hash": "4791c1b400f4",
+  "published": "2026-11-04",
+  "modified": "2026-11-04"
+ },
+ "en:add-reverb": {
+  "hash": "e3f5c2247db7",
+  "published": "2026-11-04",
+  "modified": "2026-11-04"
  }
 }

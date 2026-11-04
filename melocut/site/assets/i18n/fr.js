@@ -220,5 +220,13 @@ window.MELOCUT_I18N = {
 "Record with your microphone": "Enregistre avec ton micro",
 "Convert many files at once": "Convertis plusieurs fichiers à la fois",
 "Send a result straight to the next tool": "Envoie le résultat directement à un autre outil",
-"Close": "Fermer"
+"Close": "Fermer",
+"Split into": "Diviser en",
+"{0} equal parts": "{0} parties égales",
+"Every {0} min": "Toutes les {0} min",
+"Split": "Diviser",
+"Choose how many parts, or a part every few minutes. Drag the handles first to split only part of the file.": "Choisis combien de parties, ou une partie toutes les quelques minutes. Fais glisser les poignées avant pour ne diviser qu'une partie du fichier.",
+"Part {0} of {1}…": "Partie {0} sur {1}…",
+"part": "partie",
+"{0} parts": "{0} parties"
 };

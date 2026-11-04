@@ -449,6 +449,10 @@ const TOOLS = {
     fx: { fadeIn: 1, fadeOut: 2 }, defaultSel: (d) => [0, Math.min(29, d)],
     note: T('The first 29 seconds are selected, short enough to set straight from the iPhone Files app, with a short fade in and out (change them in Effects). Drag on the waveform to choose up to 40 seconds. M4R is for iPhone, MP3 for Android.'),
   },
+  splitter: {
+    formats: ALL_FORMATS, defaultFormat: 'mp3', suffix: '', split: true, go: T('Split'),
+    note: T('Choose how many parts, or a part every few minutes. Drag the handles first to split only part of the file.'),
+  },
   cutter: {
     formats: ALL_FORMATS, defaultFormat: 'mp3', suffix: T(' (cut)'), modes: true, go: T('Cut and save'),
     note: T('The whole file is selected. Drag the handles to choose a part, then keep it or remove it.'),
@@ -611,7 +615,18 @@ function optionsHTML(cfg) {
       <option value="256">256 kbps</option><option value="320" selected>320 kbps</option></select></label>
     ${cfg.modes ? `<div class="seg" role="group" aria-label="${T('Cut mode')}">
       <button type="button" class="on" data-mode="keep">${T('Keep selection')}</button>
-      <button type="button" data-mode="remove">${T('Remove selection')}</button></div>` : ''}`;
+      <button type="button" data-mode="remove">${T('Remove selection')}</button></div>` : ''}
+    ${cfg.split ? `<label>${T('Split into')} <select data-o="parts">
+      ${[2, 3, 4, 5, 6, 8, 10].map((n) => `<option value="n${n}"${n === 2 ? ' selected' : ''}>${T('{0} equal parts', n)}</option>`).join('')}
+      ${[1, 2, 5, 10, 15, 30].map((m) => `<option value="m${m}">${T('Every {0} min', m)}</option>`).join('')}</select></label>` : ''}`;
+}
+// Where to cut for the splitter: equal parts, or a part every N minutes (the last one takes what is left).
+function splitPoints(a, b, choice) {
+  const len = b - a, pts = [a];
+  if (choice[0] === 'n') { const n = +choice.slice(1); for (let i = 1; i < n; i++) pts.push(a + (len * i) / n); }
+  else { const step = +choice.slice(1) * 60; for (let t = a + step; t < b - 0.5; t += step) pts.push(t); }
+  pts.push(b);
+  return pts.map((t, i) => (i ? [pts[i - 1], t] : null)).filter(Boolean);
 }
 
 // ---------- the single-file tool widget ----------
@@ -1404,6 +1419,17 @@ function mountTool(root) {
     try {
       const data = await withInput(async (ff, inName) => {
         setP(0.3, T('Processing…'));
+        if (cfg.split) { // several outputs, one per part, zipped together
+          const segs = splitPoints(snap.sel[0], snap.sel[1], $(root, '[data-o=parts]').value), files = [];
+          for (let i = 0; i < segs.length; i++) {
+            const name = `part${i}.${fmtKey}`, job = buildArgs(inName, name, fmtKey, 0, { ...snap, sel: segs[i], mode: 'keep' });
+            await runFFmpeg(ff, job.args, job.outLen, (r) => setP(0.3 + ((i + r) / segs.length) * 0.7, T('Part {0} of {1}…', i + 1, segs.length)));
+            const d = await ff.readFile(name); await ff.deleteFile(name).catch(() => {});
+            files.push({ name: `${baseName(st.file.name)} - ${T('part')} ${String(i + 1).padStart(2, '0')}.${fmtKey}`, data: new Uint8Array(d.buffer) });
+          }
+          outLen = snap.sel[1] - snap.sel[0];
+          return { zip: makeZip(files), count: files.length };
+        }
         if (snap.video) await ff.writeFile('bg.png', await videoBackground(snap.video));
         const job = buildArgs(inName, outName, fmtKey, 0, snap);
         // Show the length that was really written (Remove silences, for one, can't be known in advance).
@@ -1414,6 +1440,17 @@ function mountTool(root) {
         return out;
       }, snap);
       if (st.dirty) throw new Error(T('Your settings changed while converting, so that file was not kept. Press {0} again.', goLabel));
+      if (cfg.split) {
+        st.outURL = URL.createObjectURL(data.zip);
+        const zipName = `${baseName(st.file.name)} (${T('{0} parts', data.count)}).zip`;
+        setP(1, `${T('Done')} · ${T('{0} parts', data.count)} · ${fmt(outLen)} · ${(data.zip.size / 1048576).toFixed(2)} MB`);
+        error('');
+        els.go.innerHTML = label('download', T('Download all (ZIP)'));
+        els.go.classList.add('ok');
+        els.go.onclick = () => { downloadURL(st.outURL, zipName); share.show(data.zip, zipName); track('download', { tool: 'splitter', format: fmtKey, parts: String(data.count) }); };
+        track('converted', { tool: 'splitter', format: fmtKey, parts: String(data.count) });
+        return;
+      }
       const blob = new Blob([data.buffer], { type: FORMATS[fmtKey].mime });
       st.outURL = URL.createObjectURL(blob);
       vprev?.showVideo(st.outURL);

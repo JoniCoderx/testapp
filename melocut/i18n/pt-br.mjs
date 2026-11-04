@@ -48,6 +48,7 @@ export default (NAME) => ({
     'remove-silence': { title: 'Remover silêncios', path: 'pt-br/remover-silencios', blurb: 'Corte as pausas longas de uma gravação.' },
     'fade-in-fade-out': { title: 'Fade in e fade out', path: 'pt-br/fade-in-fade-out', blurb: 'Coloque um começo e um fim suaves em qualquer música.' },
     'voice-changer': { title: 'Modificador de voz', path: 'pt-br/mudar-voz', blurb: 'Esquilo, voz grave, robô, monstro e mais vozes.' },
+    'audio-splitter': { title: 'Dividir áudio', blurb: 'Divida uma música ou gravação em partes iguais.' },
     'voice-recorder': { title: 'Gravador de voz', blurb: 'Grave sua voz e salve em MP3.' },
     'audio-to-video': { title: 'Música para vídeo', path: 'pt-br/musica-para-video', blurb: 'Transforme uma música em MP4 para TikTok e Reels.' },
   },
@@ -58,7 +59,7 @@ export default (NAME) => ({
       description: 'Corte músicas, crie toques para iPhone e Android, adicione efeitos e converta vídeos para MP3. Grátis, e seus arquivos nunca saem do seu aparelho.',
       h1: 'Corte músicas, crie toques e adicione efeitos, <em>no seu navegador</em>',
       lead: 'Ferramentas de áudio grátis para celular e computador. Seus arquivos nunca são enviados. Escolha uma ferramenta para começar.',
-      badges: ['21 ferramentas grátis', 'Remove ruído com IA', 'Sem upload', 'Sem cadastro'],
+      badges: ['22 ferramentas grátis', 'Remove ruído com IA', 'Sem upload', 'Sem cadastro'],
       home: true,
       body: (L) => `
   <div class="section prose">

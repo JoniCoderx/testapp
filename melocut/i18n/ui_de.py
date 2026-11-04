@@ -220,4 +220,12 @@ DE = {
  'Convert many files at once': 'Viele Dateien auf einmal umwandeln',
  'Send a result straight to the next tool': 'Ergebnis direkt ans nächste Tool schicken',
  'Close': 'Schließen',
+ 'Split into': 'Aufteilen in',
+ '{0} equal parts': '{0} gleiche Teile',
+ 'Every {0} min': 'Alle {0} Min.',
+ 'Split': 'Aufteilen',
+ 'Choose how many parts, or a part every few minutes. Drag the handles first to split only part of the file.': 'Wähle, wie viele Teile, oder alle paar Minuten einen Teil. Zieh vorher die Griffe, um nur einen Teil der Datei aufzuteilen.',
+ 'Part {0} of {1}…': 'Teil {0} von {1}…',
+ 'part': 'Teil',
+ '{0} parts': '{0} Teile',
 }
