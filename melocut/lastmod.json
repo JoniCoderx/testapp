@@ -1228,5 +1228,145 @@
   "hash": "ee4c5bf6b560",
   "published": "2026-11-05",
   "modified": "2026-11-05"
+ },
+ "es:es/wma-a-mp3": {
+  "hash": "29c0f3c7a986",
+  "published": "2026-11-05",
+  "modified": "2026-11-05"
+ },
+ "es:es/aiff-a-mp3": {
+  "hash": "97745df4350a",
+  "published": "2026-11-05",
+  "modified": "2026-11-05"
+ },
+ "es:es/mkv-a-mp3": {
+  "hash": "5d24eb77f775",
+  "published": "2026-11-05",
+  "modified": "2026-11-05"
+ },
+ "es:es/avi-a-mp3": {
+  "hash": "e11ea5f160f0",
+  "published": "2026-11-05",
+  "modified": "2026-11-05"
+ },
+ "es:es/3gp-a-mp3": {
+  "hash": "981d0780019c",
+  "published": "2026-11-05",
+  "modified": "2026-11-05"
+ },
+ "es:es/mp3-a-ogg": {
+  "hash": "6b9a7c83b35e",
+  "published": "2026-11-05",
+  "modified": "2026-11-05"
+ },
+ "es:es/wav-a-flac": {
+  "hash": "bd03e968cb89",
+  "published": "2026-11-05",
+  "modified": "2026-11-05"
+ },
+ "pt-br:pt-br/wma-para-mp3": {
+  "hash": "245efa5bbfe8",
+  "published": "2026-11-05",
+  "modified": "2026-11-05"
+ },
+ "pt-br:pt-br/aiff-para-mp3": {
+  "hash": "9ad28d158a99",
+  "published": "2026-11-05",
+  "modified": "2026-11-05"
+ },
+ "pt-br:pt-br/mkv-para-mp3": {
+  "hash": "5904e8c3d8fb",
+  "published": "2026-11-05",
+  "modified": "2026-11-05"
+ },
+ "pt-br:pt-br/avi-para-mp3": {
+  "hash": "f4e85d7995b4",
+  "published": "2026-11-05",
+  "modified": "2026-11-05"
+ },
+ "pt-br:pt-br/3gp-para-mp3": {
+  "hash": "0489bff56d21",
+  "published": "2026-11-05",
+  "modified": "2026-11-05"
+ },
+ "pt-br:pt-br/mp3-para-ogg": {
+  "hash": "c787ab6aba23",
+  "published": "2026-11-05",
+  "modified": "2026-11-05"
+ },
+ "pt-br:pt-br/wav-para-flac": {
+  "hash": "dbda9654ab72",
+  "published": "2026-11-05",
+  "modified": "2026-11-05"
+ },
+ "de:de/wma-zu-mp3": {
+  "hash": "2baeb6e8e5ab",
+  "published": "2026-11-05",
+  "modified": "2026-11-05"
+ },
+ "de:de/aiff-zu-mp3": {
+  "hash": "bd5a22d2a33f",
+  "published": "2026-11-05",
+  "modified": "2026-11-05"
+ },
+ "de:de/mkv-zu-mp3": {
+  "hash": "a6f18b35d29c",
+  "published": "2026-11-05",
+  "modified": "2026-11-05"
+ },
+ "de:de/avi-zu-mp3": {
+  "hash": "a19964fe82c8",
+  "published": "2026-11-05",
+  "modified": "2026-11-05"
+ },
+ "de:de/3gp-zu-mp3": {
+  "hash": "19d3b38d145d",
+  "published": "2026-11-05",
+  "modified": "2026-11-05"
+ },
+ "de:de/mp3-zu-ogg": {
+  "hash": "f8e56796d5a9",
+  "published": "2026-11-05",
+  "modified": "2026-11-05"
+ },
+ "de:de/wav-zu-flac": {
+  "hash": "2b5b0bd79c06",
+  "published": "2026-11-05",
+  "modified": "2026-11-05"
+ },
+ "fr:fr/wma-en-mp3": {
+  "hash": "b2e008a1c738",
+  "published": "2026-11-05",
+  "modified": "2026-11-05"
+ },
+ "fr:fr/aiff-en-mp3": {
+  "hash": "535c2a9bf9c5",
+  "published": "2026-11-05",
+  "modified": "2026-11-05"
+ },
+ "fr:fr/mkv-en-mp3": {
+  "hash": "306a7fb2f55f",
+  "published": "2026-11-05",
+  "modified": "2026-11-05"
+ },
+ "fr:fr/avi-en-mp3": {
+  "hash": "0cde100f8609",
+  "published": "2026-11-05",
+  "modified": "2026-11-05"
+ },
+ "fr:fr/3gp-en-mp3": {
+  "hash": "6ceb73ef8387",
+  "published": "2026-11-05",
+  "modified": "2026-11-05"
+ },
+ "fr:fr/mp3-en-ogg": {
+  "hash": "0405ee8eae3f",
+  "published": "2026-11-05",
+  "modified": "2026-11-05"
+ },
+ "fr:fr/wav-en-flac": {
+  "hash": "9e7eafa35d6e",
+  "published": "2026-11-05",
+  "modified": "2026-11-05"
  }
 }
