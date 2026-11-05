@@ -1744,10 +1744,34 @@ const PAGES = [
       <li>Open <strong>Settings → Sound &amp; vibration → Default notification sound</strong> (Samsung: <em>Notification sound</em>).</li>
       <li>Tap <strong>My sounds</strong> or <strong>+</strong> and pick the file.</li>
       <li>Apps like WhatsApp have their own sound settings inside the app as well.</li>
-    </ol>`,
+    </ol>
+    <h2>The best settings for a short sound</h2>
+    <p>The Ringtone Maker is set up for ringtones: it selects the first 29 seconds and adds a 1 second fade in and a 2 second fade out. For a text tone, change three things:</p>
+    <ul>
+      <li><strong>Type the times.</strong> Instead of dragging on the waveform, type exact times in the <strong>Start</strong> and <strong>End</strong> boxes, for example a start of 0:42 and an end of 0:44. Press <strong>Play original</strong> to check.</li>
+      <li><strong>Fades:</strong> open <strong>Effects &amp; filters</strong>, set <strong>Fade in</strong> to off and <strong>Fade out</strong> to 0.5 s. A long fade in swallows the first beat, and on a 2 second clip most of the sound would be fading.</li>
+      <li><strong>Loudness:</strong> short clips from videos are often quiet. Turn on <strong>Auto loudness</strong>, or raise <strong>Volume</strong> a little.</li>
+    </ul>
+    <p>Then choose <strong>M4R</strong> for iPhone or <strong>MP3</strong> for Android, press <strong>Make ringtone</strong> and download it.</p>
+    <h2>Ideas that work</h2>
+    <ul>
+      <li>A friend saying your name, recorded with the <a href="/voice-recorder/">Voice Recorder</a>. After you download it, tap <strong>Make it a ringtone</strong> to open it straight in the Ringtone Maker.</li>
+      <li>The first note of a song's chorus, or a drum hit.</li>
+      <li>A laugh or a catchphrase from one of your own videos (see <a href="/guides/ringtone-from-video/">make a ringtone from a video</a>).</li>
+      <li>A funny version of your voice made with the <a href="/voice-changer/">Voice Changer</a>.</li>
+    </ul>
+    <h2>The sound doesn't show up</h2>
+    <ol class="guide-steps">
+      <li><strong>iPhone:</strong> the sound must be added first, with <strong>Share → Use as Ringtone</strong> (iOS 26 and newer) or GarageBand on older iPhones. If it is still missing, see <a href="/guides/ringtone-not-showing-iphone/">ringtone not showing on iPhone</a>.</li>
+      <li><strong>Android:</strong> check that the download finished by playing it in <strong>Files → Downloads</strong>. On many phones, moving the file to the <strong>Notifications</strong> folder in internal storage makes it appear in the list. Menu names may differ slightly by phone and Android version.</li>
+      <li><strong>Samsung:</strong> the steps are the same as for a ringtone, under <strong>Settings → Sounds and vibration → Notification sound</strong>. The <a href="/guides/samsung-ringtone/">Samsung guide</a> has the details.</li>
+    </ol>
+    <p>Want a longer sound for calls or the morning? See <a href="/guides/make-ringtone/">make a song your ringtone</a> or <a href="/guides/custom-alarm-sound/">set a song as your alarm</a>.</p>`,
     faq: [
       ['How long should a text tone be?', '1 to 3 seconds. Anything longer is cut off or becomes annoying.'],
       ['Can I have a different sound for one contact?', 'Yes. On iPhone set it in the contact under Text Tone. On many Android phones you can set it per conversation in the Messages app.'],
+      ['Why is there a pause before my text tone plays?', 'The selection starts before the sound, or Fade in is still on. Move the Start a little later, set Fade in to off and download it again.'],
+      ['Can I use my own voice as a notification sound?', 'Yes. Record it with the Voice Recorder, open it in the Ringtone Maker, keep 1 to 3 seconds and add it like any other sound.'],
     ],
   },
   {
@@ -1768,14 +1792,35 @@ const PAGES = [
     <ol class="guide-steps">
       <li>Open <strong>Settings → Sound &amp; vibration → Phone ringtone</strong> (Samsung: <em>Sounds and vibration → Ringtone</em>).</li>
       <li>Pick the phone's original tone; it is usually at the top or marked as default.</li>
-      <li>For a contact: open the contact → <strong>⋮ → Set ringtone</strong> (or Edit → Ringtone on Samsung) → Default.</li>
+      <li>For a contact: open the contact → <strong>⋮ → Set ringtone</strong> (or Edit → View more → Ringtone on Samsung) → Default.</li>
+    </ol>
+    <p>Two SIM cards on a Samsung? Under <strong>Ringtone</strong>, pick <strong>SIM 1</strong> or <strong>SIM 2</strong> first: each one keeps its own ringtone, so you may need to reset both.</p>
+    <h2>Text tones, notifications and alarms</h2>
+    <p>Changing the ringtone doesn't touch your other sounds. If you set a custom sound for those too, reset each one:</p>
+    <ul>
+      <li><strong>iPhone text tone:</strong> <strong>Settings → Sounds &amp; Haptics → Text Tone</strong>, then a built-in tone (the original is usually marked <strong>(Default)</strong>). For one person: <strong>Contacts → the person → Edit → Text Tone → Default</strong>.</li>
+      <li><strong>Android notifications:</strong> <strong>Settings → Sound &amp; vibration → Default notification sound</strong> (Samsung: <em>Sounds and vibration → Notification sound</em>).</li>
+      <li><strong>Alarms:</strong> each alarm has its own sound. iPhone: <strong>Clock → Alarms → the alarm → Sound</strong>. Android: <strong>Clock → the alarm → the alarm sound</strong>. Pick a built-in tone.</li>
+      <li><strong>WhatsApp and other apps:</strong> they have their own sound settings inside the app, so change them there.</li>
+    </ul>
+    <p>Menu names may differ slightly by phone and software version.</p>
+    <h2>It still plays the old ringtone</h2>
+    <ol class="guide-steps">
+      <li><strong>Only for some callers?</strong> Those contacts have their own ringtone. Reset it in the contact as shown above.</li>
+      <li><strong>Only for WhatsApp, Telegram or other app calls?</strong> App calls can use the app's own sound. Check the app's settings.</li>
+      <li><strong>Deleted the file on Android and now it's silent or odd?</strong> Open the ringtone setting again and pick a built-in tone, so the phone isn't pointing at a file that no longer exists.</li>
+      <li><strong>Still the same?</strong> Restart the phone, then check the setting once more.</li>
     </ol>
     <h2>Removing old custom ringtones</h2>
     <p>An unused custom ringtone does no harm in the list. Ringtones made with GarageBand can be removed in GarageBand: long-press any song → <strong>Share → Ringtone → Your Ringtones → Edit</strong>. On Android, delete the file from <strong>Files → Ringtones</strong> or Downloads.</p>
-    <p>Want a new one instead? <a href="/guides/make-ringtone/">Make a song your ringtone</a> in about two minutes.</p>`,
+    <h2>Keep it for later</h2>
+    <p>On iPhone, custom ringtones stay at the top of the Ringtone list after you switch back, so you can pick them again any time. Want something in between, like your favorite song for one person only? The <a href="/guides/contact-ringtone/">contact ringtone guide</a> shows how.</p>
+    <p>Want a new one instead? <a href="/guides/make-ringtone/">Make a song your ringtone</a> in about two minutes. A shorter, quieter tone is often the sweet spot: in the <a href="/ringtone-maker/">Ringtone Maker</a>, lower <strong>Volume</strong> under Effects &amp; filters before you download.</p>`,
     faq: [
       ['What is the default iPhone ringtone called?', 'It is the tone marked (Default) in the Ringtone list. On recent iPhones that is Reflection.'],
       ['Does changing my ringtone reset contact ringtones?', 'No. Contacts with their own ringtone keep it until you change it in the contact.'],
+      ['Does switching back delete my custom ringtone?', 'No. It stays in the list, so you can choose it again later. Delete it only if you want it gone.'],
+      ['How do I change my text tone back to default?', 'iPhone: Settings → Sounds & Haptics → Text Tone, then a built-in tone (the original is usually marked Default). Android: Settings → Sound & vibration → Default notification sound.'],
     ],
   },
   {
@@ -2144,10 +2189,31 @@ const PAGES = [
       <li><strong>Calm songs work best:</strong> slow songs, lo-fi and ballads. Very busy songs can get messy.</li>
       <li><strong>Less reverb</strong> keeps the vocals clear, <strong>more</strong> makes it dreamier.</li>
       <li><strong>Combine it:</strong> make a <a href="/guides/make-slowed-reverb/">slowed + reverb</a> version first, then turn that into 8D.</li>
-    </ol>`,
+    </ol>
+    <h2>Settings that sound good</h2>
+    <p>The 8D Audio converter opens with the <strong>8D Audio</strong> preset: the <strong>8D audio</strong> switch on and <strong>Reverb</strong> at 20%. Everything else is under <strong>Effects &amp; filters</strong>:</p>
+    <ul>
+      <li><strong>Reverb 10 to 20%:</strong> clear vocals, good for pop and rap.</li>
+      <li><strong>Reverb 30 to 50%:</strong> dreamy and spacious, good for lo-fi and slow songs. Above that, words start to blur.</li>
+      <li><strong>Slowed 8D in one go:</strong> keep 8D on and set <strong>Speed</strong> to about 0.85× and <strong>Pitch</strong> to −2 semitones yourself. Don't tap the Slowed + Reverb preset: a preset replaces all the other settings, so 8D would switch off.</li>
+      <li><strong>Bass:</strong> +3 to +6 dB adds weight that suits headphones.</li>
+    </ul>
+    <p>The movement itself is fixed: one full trip from one ear to the other and back takes about 11 seconds, slow enough to feel like the music is circling you. Press <strong>Play with effects</strong> after each change; it plays the first 15 seconds of your selection.</p>
+    <h2>The effect isn't working</h2>
+    <ol class="guide-steps">
+      <li><strong>You're on a speaker.</strong> Phone speakers, laptops and most Bluetooth speakers mix the sides together. Use headphones.</li>
+      <li><strong>Mono Audio is on.</strong> This accessibility setting sends the same sound to both ears. iPhone: <strong>Settings → Accessibility → Audio &amp; Visual → Mono Audio</strong>. On Android, look under Accessibility for <em>Mono audio</em>. Names may differ slightly by version.</li>
+      <li><strong>Spatial audio is on.</strong> Headphones with spatial audio or head tracking add their own movement. Turn it off for a moment and listen again.</li>
+      <li><strong>One earbud only.</strong> You'll just hear the music get louder and softer. Put both in.</li>
+      <li><strong>Did you press Play original?</strong> That plays the song without effects. Use <strong>Play with effects</strong>.</li>
+    </ol>
+    <h2>Share it</h2>
+    <p>After you download it, tap <strong>Make it a video</strong> to turn the 8D song into an MP4 for TikTok or Reels with <a href="/audio-to-video/">Song to Video</a>. Tell people to use headphones in the caption. Want more bass on top? The <a href="/guides/bass-boost-song/">bass boost guide</a> has the settings.</p>`,
     faq: [
       ["Why can't I hear the 8D effect?", 'You need headphones or earbuds. On a single speaker both sides mix together and the movement disappears.'],
       ['What is the difference between 8D and 3D audio?', 'They are mostly names for the same idea: panning and reverb that make sound seem to move around you.'],
+      ['Can I make the 8D movement faster or slower?', 'No, the speed of the movement is fixed at a slow sweep of about 11 seconds per loop. You can change the reverb, speed, pitch and bass around it.'],
+      ['Does 8D audio work on a mono recording?', 'Yes. The 8D switch turns the sound into stereo first, so it still moves between your ears.'],
     ],
   },
   {
@@ -2169,10 +2235,31 @@ const PAGES = [
       <li><strong>Sped up:</strong> speed <strong>1.15 to 1.25×</strong> but the pitch kept closer to the original, so the singer still sounds like themselves.</li>
     </ol>
     <h2>Tips</h2>
-    <p>Songs with a clear beat and a catchy chorus work best. If it gets harsh, lower the <strong>Treble</strong> a little. Want the opposite? See <a href="/guides/make-slowed-reverb/">how to make slowed + reverb songs</a>.</p>`,
+    <p>Songs with a clear beat and a catchy chorus work best. If it gets harsh, lower the <strong>Treble</strong> a little. Want the opposite? See <a href="/guides/make-slowed-reverb/">how to make slowed + reverb songs</a>.</p>
+    <h2>The best settings, with real values</h2>
+    <p>The Nightcore maker opens at <strong>1.20×</strong> speed and <strong>+3 semitones</strong>. In <strong>Effects &amp; filters</strong>, Speed goes from 0.5× to 2× and Pitch from −12 to +12 semitones, and the two work separately. Good starting points:</p>
+    <ul>
+      <li><strong>Classic nightcore:</strong> 1.25× and +4 semitones.</li>
+      <li><strong>Old-school "tape" sound:</strong> match the pitch to the speed, as if you sped up a record: 1.20× with +3, 1.25× with +4, 1.30× with +5.</li>
+      <li><strong>Sped up (TikTok style):</strong> 1.15× and +2, or Pitch at 0 to keep the singer's real voice. The <a href="/speed-up-audio/">Speed Up Audio</a> tool starts with the pitch unchanged.</li>
+      <li><strong>Light:</strong> 1.10× and +1 for slow ballads.</li>
+    </ul>
+    <h2>Why it sounds harsh or like a chipmunk</h2>
+    <ol class="guide-steps">
+      <li><strong>Voices sound squeaky:</strong> the pitch is too high for this singer. Go down one semitone at a time. High voices need less, deep voices can take more.</li>
+      <li><strong>It sounds thin:</strong> raising the pitch moves the bass up too. Add <strong>Bass</strong> +3 to +5 dB.</li>
+      <li><strong>Cymbals and "s" sounds hurt:</strong> lower <strong>Treble</strong> to −2 or −3 dB.</li>
+      <li><strong>It feels rushed:</strong> drop the speed to 1.15×. Fast songs are already fast.</li>
+      <li><strong>It's quieter than other songs:</strong> turn on <strong>Auto loudness</strong>.</li>
+    </ol>
+    <p>The song also gets shorter: at 1.25× a 3:00 song becomes 2:24. The <strong>With effects</strong> waveform shows the new length before you convert.</p>
+    <h2>For TikTok, Reels or a ringtone</h2>
+    <p>Drag on the waveform to keep only the best 30 to 60 seconds, then convert. After downloading, tap <strong>Make it a video</strong> for an MP4 with <a href="/audio-to-video/">Song to Video</a>, or <strong>Make it a ringtone</strong>. The <a href="/ringtone-maker/">Ringtone Maker</a> also has a <strong>Nightcore</strong> preset under Effects &amp; filters. A preset resets the other sliders, so set the fades again after tapping it.</p>`,
     faq: [
       ['What speed is nightcore?', 'Usually about 1.2 to 1.3 times the original speed, with the pitch raised as well.'],
       ['Can I make a sped up song on my phone?', 'Yes. The Nightcore maker works in Safari and Chrome on iPhone and Android.'],
+      ['Why does my nightcore song sound like a chipmunk?', 'The pitch is raised too far for that voice. Lower Pitch one semitone at a time, or keep it at +2 and get the energy from Speed instead.'],
+      ['Does nightcore make the song shorter?', 'Yes. The length is divided by the speed, so a 3:00 song at 1.25× lasts 2:24.'],
     ],
   },
   {
@@ -2215,20 +2302,39 @@ const PAGES = [
     <ol class="guide-steps">
       <li>Open the <a href="/volume-booster/">Volume Booster</a> and choose your file (audio or video).</li>
       <li>For recordings and voice notes, leave <strong>Auto loudness</strong> on. It brings the whole file to an even, loud level.</li>
-      <li>For more, raise <strong>Volume</strong>. A limiter keeps the loudest parts from distorting.</li>
+      <li>For songs, use <strong>Volume</strong> instead (see below). A limiter keeps the loudest parts from distorting.</li>
       <li>Press <strong>Play with effects</strong>, then <strong>Convert</strong> and <strong>Download</strong>.</li>
     </ol>
     <h2>Which setting to use</h2>
     <ol class="guide-steps">
       <li><strong>Voice notes, lectures, interviews:</strong> Auto loudness. Quiet and loud parts end up closer together, so you hear everything.</li>
-      <li><strong>Songs:</strong> a little extra Volume, for example 120 to 150%. Songs are already mastered loud, so big boosts squash them.</li>
+      <li><strong>Songs:</strong> Auto loudness off and a little extra Volume, for example 120 to 150%. Songs are already mastered loud, so big boosts squash them.</li>
       <li><strong>Phone videos:</strong> Auto loudness, then save the sound with <a href="/video-to-mp3/">Video to MP3</a> if you only need the audio.</li>
     </ol>
+    <h2>Auto loudness or Volume?</h2>
+    <p>They do different things, and the Volume Booster opens with both: the <strong>Louder</strong> preset sets Volume to 180% and turns on Auto loudness.</p>
+    <ul>
+      <li><strong>Auto loudness</strong> measures the whole file and brings it to a fixed target, about as loud as Spotify and YouTube. Because it sets the final level itself, the Volume slider changes little while it's on. It also works the other way: a song that is already very loud can come out a bit quieter.</li>
+      <li><strong>Volume</strong> multiplies the level, from 25% up to 300%. 200% is about twice as loud on the waveform, and the limiter catches peaks above that.</li>
+    </ul>
+    <p>Rule of thumb: quiet recording, use Auto loudness. Song that is a little soft, switch Auto loudness off and use Volume.</p>
+    <h2>Why it sounds distorted or "pumping"</h2>
+    <ol class="guide-steps">
+      <li><strong>Too much Volume on a loud song.</strong> The limiter has to squash every beat, so it sounds flat and pumps. Go back to 120 to 150%.</li>
+      <li><strong>The original already crackles.</strong> If the recording clipped when it was made, making it louder makes the crackle louder too. That can't be undone.</li>
+      <li><strong>Background noise got louder.</strong> Louder also means louder hiss and hum. Use the <a href="/noise-remover/">AI Noise Remover</a> for voices: it removes the noise and evens out the level in one go.</li>
+      <li><strong>Your phone speaker is the limit.</strong> Try headphones. If it's clean there, the file is fine.</li>
+    </ol>
+    <p>Check before you convert: the <strong>With effects</strong> waveform shows the new level next to a dotted outline of the original, and says <em>limiter keeps it clean</em> when the limiter is working.</p>
+    <h2>Several files at the same level</h2>
+    <p>Making a playlist or a podcast where every file should sound equally loud? Use <a href="/normalize-audio/">Normalize Audio</a> on each one, or join them with the <a href="/audio-joiner/">Audio Joiner</a> and leave <strong>Even out volume</strong> on. A quiet ringtone? The <a href="/ringtone-maker/">Ringtone Maker</a> has the same Volume and Auto loudness settings under Effects &amp; filters.</p>
     <h2>Want more bass instead?</h2>
     <p>If the song isn't quiet but feels thin, the <a href="/guides/bass-boost-song/">bass boost guide</a> is what you're looking for.</p>`,
     faq: [
       ['How do I make an MP3 louder?', 'Open it in the Volume Booster, raise Volume or turn on Auto loudness, then convert and download it.'],
       ['Will it distort?', 'A limiter catches the loudest peaks, so moderate boosts stay clean. Very large boosts on loud songs can still sound squashed.'],
+      ['Why did my song get quieter with Auto loudness?', 'Auto loudness brings every file to the same streaming-level target, so very loud songs are turned down a little. Switch it off and use Volume instead.'],
+      ['Can I make a file quieter?', 'Yes. Turn Auto loudness off and set Volume below 100%, down to 25%.'],
     ],
   },
   {
@@ -2241,9 +2347,9 @@ const PAGES = [
     <h2>Step by step</h2>
     <ol class="guide-steps">
       <li>Open the <a href="/audio-joiner/">Audio Joiner</a> and choose <strong>two or more files</strong>. You can add more later.</li>
-      <li>Drag them into the right order. Tap play on each one to check it.</li>
+      <li>Use the up and down arrows to put them in the right order. Tap play on each one to check it.</li>
       <li>Set a <strong>crossfade</strong> (2 to 4 seconds) so one song blends into the next, or 0 for a hard cut.</li>
-      <li>Turn on <strong>Even volume</strong> if the files are at different loudness.</li>
+      <li>Leave <strong>Even out volume</strong> on if the files are at different loudness.</li>
       <li>Press <strong>Join files</strong>, listen to the result, then <strong>Download</strong>.</li>
     </ol>
     <h2>Only want part of each song?</h2>
@@ -2253,10 +2359,29 @@ const PAGES = [
       <li><strong>Mixed formats are fine:</strong> an MP3, an M4A and a video can go into one file.</li>
       <li><strong>Speech:</strong> use no crossfade and 128 kbps MP3.</li>
       <li><strong>Music:</strong> a 3-second crossfade and 320 kbps MP3.</li>
-    </ol>`,
+    </ol>
+    <h2>The settings, explained</h2>
+    <ul>
+      <li><strong>Crossfade</strong> goes from off to 8 seconds, in half-second steps, and starts at 2 seconds. Each song fades out while the next one fades in. Use 0 for speech, 1 to 2 seconds for a tight dance routine, 3 to 4 for a smooth party mix and 6 to 8 for slow, dreamy songs.</li>
+      <li><strong>Even out volume</strong> is on by default. It brings the finished file to one steady level, about as loud as streaming apps, so a quiet voice note doesn't vanish next to a loud song.</li>
+      <li><strong>Format and Quality:</strong> MP3, M4A, WAV, OGG or FLAC. MP3, M4A and OGG have a quality of 128 to 320 kbps (320 is preselected). Everything comes out in stereo.</li>
+    </ul>
+    <p>A crossfade overlaps the songs, so the mix gets shorter: four songs with a 3-second crossfade lose 9 seconds in total. The length at the top of the list is the total before the crossfades.</p>
+    <h2>Problems and fixes</h2>
+    <ol class="guide-steps">
+      <li><strong>"This file can't be played in your browser."</strong> The preview button may not work for some formats, but the file can still be joined. Press Join files and listen to the result.</li>
+      <li><strong>The crossfade seems shorter than I set.</strong> A crossfade can't be longer than half the shortest clip, so with very short clips it is shortened automatically.</li>
+      <li><strong>One song is much quieter.</strong> Check that Even out volume is on, then press Join files again.</li>
+      <li><strong>The page stops or reloads on a phone.</strong> All the files are held in your phone's memory while they are joined. Join fewer or shorter files, or use a computer. Files over 1 GB are skipped.</li>
+      <li><strong>Wrong order or wrong file?</strong> Use the arrows to move it, or the × to remove it. That clears the old result, so press Join files again.</li>
+    </ol>
+    <h2>What to do with the mix</h2>
+    <p>After you download it, tap <strong>Make it a video</strong> to turn it into an MP4 with <a href="/audio-to-video/">Song to Video</a>, or <strong>Cut it</strong> to trim the result in the Audio Cutter. Joining WhatsApp voice notes? Save them first with the <a href="/guides/whatsapp-voice-to-mp3/">WhatsApp voice message guide</a>. Need the opposite, one long file in parts? Use the <a href="/audio-splitter/">Audio Splitter</a>.</p>`,
     faq: [
       ['Can I combine songs on my phone?', 'Yes. The Audio Joiner works in Safari and Chrome on iPhone and Android, no app needed.'],
       ['Can I join a video and a song?', 'Yes. The sound of the video is used, and the result is one audio file.'],
+      ['Why is my mix shorter than the songs added up?', 'The crossfade overlaps the end of one song with the start of the next. Set the crossfade to 0 to keep the full length.'],
+      ['What is the longest crossfade?', '8 seconds. For very short clips it is shortened to fit, since it cannot be longer than half the shortest clip.'],
     ],
   },
   {
@@ -2279,10 +2404,32 @@ const PAGES = [
       <li>Press <strong>Convert</strong>, then <strong>Download</strong>. The MP3 is in Files → Downloads.</li>
     </ol>
     <h2>Make it sound better first</h2>
-    <p>Recorded in a noisy room or too quiet? Use the <a href="/noise-remover/">AI Noise Remover</a> instead. It cleans and evens out the voice and saves an MP3 in one go. The <a href="/guides/clean-up-voice-memo/">voice memo guide</a> walks through it.</p>`,
+    <p>Recorded in a noisy room or too quiet? Use the <a href="/noise-remover/">AI Noise Remover</a> instead. It cleans and evens out the voice and saves an MP3 in one go. The <a href="/guides/clean-up-voice-memo/">voice memo guide</a> walks through it.</p>
+    <h2>Which quality to choose</h2>
+    <ul>
+      <li><strong>64 or 96 kbps:</strong> long lectures and meetings where only the words matter. About half a megabyte per minute at 64 kbps.</li>
+      <li><strong>128 kbps:</strong> the best choice for most memos, about 1 MB per minute. A one-hour recording is roughly 58 MB.</li>
+      <li><strong>192 to 320 kbps:</strong> music, singing or instruments recorded with Voice Memos.</li>
+    </ul>
+    <p>A higher setting can't add quality the memo didn't have, it only makes the file bigger. Need it smaller for email? See <a href="/compress-mp3/">Compress MP3</a>.</p>
+    <h2>Several memos at once</h2>
+    <p>On <a href="/m4a-to-mp3/">M4A to MP3</a> you can choose more than one file in the file picker (up to 50). They appear in a list: pick the quality, press <strong>Convert all</strong>, then <strong>Download all (ZIP)</strong>, or download each one on its own. In this mode there's no trimming or effects, so convert single files when you want to cut them.</p>
+    <p>Want them as one file instead? Put them in order in the <a href="/audio-joiner/">Audio Joiner</a> and save one MP3. One very long memo? Cut it into parts with the <a href="/audio-splitter/">Audio Splitter</a>.</p>
+    <h2>Problems and fixes</h2>
+    <ol class="guide-steps">
+      <li><strong>No Save to Files option.</strong> Tap the Share button and scroll down the list of actions. The menus may differ slightly by iOS version.</li>
+      <li><strong>The memo won't open.</strong> If you saved it to iCloud Drive, it may not be on the phone yet. Open it once in the Files app so it downloads, then choose it again.</li>
+      <li><strong>Can't find the MP3.</strong> Look in <strong>Files → Downloads</strong>. The <a href="/guides/find-downloads/">downloads guide</a> covers every phone and computer.</li>
+      <li><strong>Long silence at the start.</strong> Drag the left handle on the waveform to the first word before you convert, or use <a href="/remove-silence/">Remove Silence</a> for pauses in the middle.</li>
+      <li><strong>Very big recording.</strong> Files up to 1 GB open. On a phone, very large files can run out of memory, so use a computer for multi-hour recordings.</li>
+    </ol>
+    <h2>On a Mac or Android</h2>
+    <p>On a Mac, drag the recording out of the Voice Memos app onto the desktop, then open it on M4A to MP3 in any browser. Android recorders often save M4A too, and convert the same way. Next time, skip the conversion: the <a href="/voice-recorder/">Voice Recorder</a> records in your browser and saves an MP3 straight away.</p>`,
     faq: [
       ['What format are iPhone voice memos?', 'M4A, which uses AAC audio. It sounds good, but some devices and websites only accept MP3.'],
       ['Does converting lower the quality?', 'For speech the difference is not audible at 128 kbps or more.'],
+      ['Can I convert several voice memos at once?', 'Yes. Choose up to 50 files on M4A to MP3, press Convert all, then Download all (ZIP).'],
+      ['How big is a voice memo as MP3?', 'About 1 MB per minute at 128 kbps, and about half that at 64 kbps.'],
     ],
   },
   {
@@ -2307,10 +2454,30 @@ const PAGES = [
     </ol>
     <p>A limiter keeps the loudest parts from crackling, so even big boosts stay clean.</p>
     <h2>Combine it</h2>
-    <p>Bass boost goes well with <a href="/guides/make-slowed-reverb/">slowed + reverb</a> and <a href="/guides/make-8d-audio/">8D audio</a>. Make one version, then open that file again and add the next effect. For TikTok or Reels, turn the result into a video with <a href="/audio-to-video/">Song to Video</a>.</p>`,
+    <p>Bass boost goes well with <a href="/guides/make-slowed-reverb/">slowed + reverb</a> and <a href="/guides/make-8d-audio/">8D audio</a>. Make one version, then open that file again and add the next effect. For TikTok or Reels, turn the result into a video with <a href="/audio-to-video/">Song to Video</a>.</p>
+    <h2>What the Bass Booster does</h2>
+    <p>It opens with the <strong>Bass Boosted</strong> preset: <strong>Bass</strong> at +10 dB and <strong>Auto loudness</strong> on. The Bass slider raises the low end around 110 Hz, where kick drums and bass lines live. It goes from −10 dB to +15 dB, in 1 dB steps. Auto loudness then brings the whole song back to an even, streaming-level volume, and a limiter catches the peaks.</p>
+    <h2>Settings for where you'll listen</h2>
+    <ul>
+      <li><strong>Phone speaker:</strong> +3 to +6 dB. Small speakers can't play deep bass, so more just sounds muddy.</li>
+      <li><strong>Earbuds and headphones:</strong> +6 to +10 dB.</li>
+      <li><strong>Car:</strong> +8 to +10 dB. Many cars already add bass, so test it in the car before going higher.</li>
+      <li><strong>Party speaker or subwoofer:</strong> +6 dB is often enough. Big speakers already have plenty of low end.</li>
+    </ul>
+    <p>Vocals buried under the bass? Raise <strong>Treble</strong> by +1 to +3 dB to bring them forward.</p>
+    <h2>Why it sounds distorted or muddy</h2>
+    <ol class="guide-steps">
+      <li><strong>The speaker is rattling, not the file.</strong> Listen on headphones. If it's clean there, lower Bass for that speaker.</li>
+      <li><strong>Too much boost.</strong> At +15 dB the limiter works hard and the song can sound flat and pumping. Try +8 to +10 dB.</li>
+      <li><strong>A low-quality source.</strong> A 128 kbps rip or a song taken from a video already lost detail, and the boost makes the flaws louder. Start from the best file you have and save at 320 kbps.</li>
+      <li><strong>The song is already bass-heavy.</strong> Many hip-hop and EDM tracks need +3 dB at most.</li>
+    </ol>
+    <p>Want it louder overall? Auto loudness sets the final level by itself, so switch it off first and then raise <strong>Volume</strong> a little. The <a href="/guides/make-audio-louder/">louder guide</a> explains the difference.</p>`,
     faq: [
       ['How do I make a song bass boosted?', 'Open it in the Bass Booster, raise Bass to +8 dB or more, preview it and download the MP3.'],
-      ['Why does my bass boosted song sound quieter?', 'To leave room for the bass without distorting, the rest has to sit a little lower. Add a little Volume if needed.'],
+      ['Why does my bass boosted song sound quieter?', 'To leave room for the bass without distorting, the rest has to sit a little lower. Keep Auto loudness on to bring the level back up, or switch it off and add a little Volume.'],
+      ['Can I reduce the bass instead?', 'Yes. Move the Bass slider below 0, down to −10 dB, to tame a boomy song or a voice recording with too much rumble.'],
+      ['What is the maximum bass boost?', '+15 dB. Most songs sound best between +6 and +10 dB; above that the limiter has to work hard.'],
     ],
   },
   {
