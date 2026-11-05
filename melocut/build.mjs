@@ -15,6 +15,10 @@ import extraEs, { toolPaths as extraEsTP } from './i18n/extra-es.mjs';
 import extraPt, { toolPaths as extraPtTP } from './i18n/extra-pt-br.mjs';
 import extraDe, { toolPaths as extraDeTP } from './i18n/extra-de.mjs';
 import extraFr, { toolPaths as extraFrTP } from './i18n/extra-fr.mjs';
+import extra2Es from './i18n/extra2-es.mjs';
+import extra2Pt from './i18n/extra2-pt-br.mjs';
+import extra2De from './i18n/extra2-de.mjs';
+import extra2Fr from './i18n/extra2-fr.mjs';
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), 'site');
 const SITE_URL = (process.env.SITE_URL || 'https://melocut.com').replace(/\/$/, '');
@@ -211,7 +215,7 @@ for (const [lang, [gp, h1, title, description, lead]] of Object.entries(GUIDE_IN
   });
 }
 // The newer pages (splitter, compress, WAV conversions, effects) in every language.
-for (const [lang, pages, tp] of [['es', extraEs, extraEsTP], ['pt-br', extraPt, extraPtTP], ['de', extraDe, extraDeTP], ['fr', extraFr, extraFrTP]]) {
+for (const [lang, pages, tp] of [['es', extraEs, extraEsTP], ['pt-br', extraPt, extraPtTP], ['de', extraDe, extraDeTP], ['fr', extraFr, extraFrTP], ['es', extra2Es, {}], ['pt-br', extra2Pt, {}], ['de', extra2De, {}], ['fr', extra2Fr, {}]]) {
   LANGS[lang].pages.push(...pages(NAME));
   for (const [slug, path] of Object.entries(tp)) LANGS[lang].tools[slug] = { ...LANGS[lang].tools[slug], path };
 }
@@ -2433,7 +2437,7 @@ const slugOf = (p) => (p.path ? p.path.replace(/\//g, '-') : 'home');
 const ogImage = (p) => (fs.existsSync(path.join(ROOT, 'og', `${slugOf(p)}.jpg`)) ? `${SITE_URL}/og/${slugOf(p)}.jpg` : `${SITE_URL}/og.jpg`);
 
 // Every page with its language. The five English pages that have translations get a `key`.
-const KEY_OF = { '': 'home', 'guides': 'guides', 'voice-recorder': 'recorder', 'audio-splitter': 'splitter', 'normalize-audio': 'normalize', 'stereo-to-mono': 'mono', 'add-reverb': 'reverb', 'compress-mp3': 'c-compress', 'mp4-to-wav': 'c-mp4wav', 'm4a-to-wav': 'c-m4awav', 'flac-to-wav': 'c-flacwav',
+const KEY_OF = { '': 'home', 'guides': 'guides', 'voice-recorder': 'recorder', 'audio-splitter': 'splitter', 'normalize-audio': 'normalize', 'stereo-to-mono': 'mono', 'add-reverb': 'reverb', 'compress-mp3': 'c-compress', 'mp4-to-wav': 'c-mp4wav', 'm4a-to-wav': 'c-m4awav', 'flac-to-wav': 'c-flacwav', 'wma-to-mp3': 'c-wma', 'aiff-to-mp3': 'c-aiff', 'mkv-to-mp3': 'c-mkv', 'avi-to-mp3': 'c-avi', '3gp-to-mp3': 'c-3gp', 'mp3-to-ogg': 'c-mp3ogg', 'wav-to-flac': 'c-wavflac',
   'reverse-audio': 'reverse', 'speed-up-audio': 'speedup', 'slow-down-audio': 'slowdown', 'pitch-changer': 'pitch', 'remove-silence': 'silence', 'fade-in-fade-out': 'fade',
   'mp4-to-mp3': 'c-mp4', 'wav-to-mp3': 'c-wav', 'm4a-to-mp3': 'c-m4a', 'whatsapp-audio-to-mp3': 'c-wa', 'mp3-to-wav': 'c-mp3wav', 'ogg-to-mp3': 'c-ogg',
   'guides/iphone-ringtone': 'g-iphone', 'guides/samsung-ringtone': 'g-samsung', 'guides/whatsapp-voice-to-mp3': 'g-whatsapp', 'guides/make-slowed-reverb': 'g-slowed', 'audio-cutter': 'cutter', 'video-to-mp3': 'video', 'ringtone-maker': 'ringtone', 'audio-converter': 'converter',
