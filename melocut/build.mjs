@@ -189,6 +189,27 @@ const EN = {
 const LANGS = { en: { ui: EN, tools: {}, pages: [] }, es: es(NAME), 'pt-br': ptBR(NAME), de: de(NAME), fr: fr(NAME) };
 // The voice recorder page in every language (see i18n/recorder.mjs).
 for (const [lang, page] of Object.entries(recorder(NAME))) { LANGS[lang].pages.push(page); LANGS[lang].tools['voice-recorder'] = { ...LANGS[lang].tools['voice-recorder'], path: page.path }; }
+// A guides index in every language, so /es/guias/ etc. list that language's guides.
+const GUIDE_INDEX = {
+  es: ['es/guias', 'Guías paso a paso', 'Guías: tonos de llamada, WhatsApp y más', 'Guías cortas y paso a paso para tonos de llamada en iPhone y Samsung, audios de WhatsApp a MP3 y canciones slowed + reverb. Gratis.', 'Guías cortas, paso a paso, para lo que más nos preguntan.'],
+  'pt-br': ['pt-br/guias', 'Guias passo a passo', 'Guias: toques, áudios do WhatsApp e mais', 'Guias curtos e passo a passo para toques no iPhone e Samsung, áudios do WhatsApp para MP3 e músicas slowed + reverb. Grátis.', 'Guias curtos, passo a passo, para o que mais perguntam.'],
+  de: ['de/anleitung', 'Anleitungen', 'Anleitungen: Klingeltöne, WhatsApp-Audio und mehr', 'Kurze Schritt-für-Schritt-Anleitungen für Klingeltöne auf iPhone und Samsung, WhatsApp-Audio zu MP3 und Slowed + Reverb. Kostenlos.', 'Kurze Anleitungen, Schritt für Schritt, für die häufigsten Fragen.'],
+  fr: ['fr/guide', 'Guides pas à pas', 'Guides : sonneries, audios WhatsApp et plus', 'Des guides courts et pas à pas pour les sonneries sur iPhone et Samsung, les audios WhatsApp en MP3 et le slowed + reverb. Gratuit.', 'Des guides courts, pas à pas, pour les questions les plus fréquentes.'],
+};
+const GUIDE_INTRO = {
+  'es': `Cada guía funciona con las herramientas gratis de ${NAME}, en iPhone, Android y computadora. Los pasos usan los nombres reales de los menús y todo se hace en tu navegador: tus archivos nunca se suben a ningún servidor. Elige una guía, sigue los pasos y en pocos minutos tendrás tu tono, tu audio en MP3 o tu canción slowed + reverb lista. Si algo no sale como esperabas, cada guía tiene preguntas frecuentes al final.`,
+  'pt-br': `Cada guia funciona com as ferramentas grátis do ${NAME}, no iPhone, Android e computador. Os passos usam os nomes reais dos menus e tudo acontece no seu navegador: seus arquivos nunca são enviados para nenhum servidor. Escolha um guia, siga os passos e em poucos minutos você terá seu toque, seu áudio em MP3 ou sua música slowed + reverb pronta. Se algo não sair como esperado, cada guia tem perguntas frequentes no final.`,
+  'de': `Jede Anleitung funktioniert mit den kostenlosen Tools von ${NAME}, auf iPhone, Android und am Computer. Die Schritte nutzen die echten Menünamen, und alles passiert in deinem Browser: Deine Dateien werden nie auf einen Server hochgeladen. Wähle eine Anleitung, folge den Schritten, und in wenigen Minuten ist dein Klingelton, dein MP3 oder dein Slowed-+-Reverb-Song fertig. Falls etwas nicht klappt, findest du am Ende jeder Anleitung häufige Fragen.`,
+  'fr': `Chaque guide fonctionne avec les outils gratuits de ${NAME}, sur iPhone, Android et ordinateur. Les étapes utilisent les vrais noms des menus et tout se passe dans ton navigateur : tes fichiers ne sont jamais envoyés sur un serveur. Choisis un guide, suis les étapes, et en quelques minutes ta sonnerie, ton MP3 ou ton morceau slowed + reverb est prêt. Si quelque chose ne marche pas, chaque guide a des questions fréquentes à la fin.`,
+};
+for (const [lang, [gp, h1, title, description, lead]] of Object.entries(GUIDE_INDEX)) {
+  LANGS[lang].pages.push({
+    key: 'guides', path: gp, crumb: null, plain: true, title: `${title} | ${NAME}`, description, h1, lead,
+    body: () => `<div class="section prose" style="margin-top:0"><p>${GUIDE_INTRO[lang]}</p></div>
+    <div class="section"><div class="cards">${ALL.filter((q) => q.lang === lang && q.crumb === 'Guides').map(localGuideCard).join('')}</div></div>
+    <div class="section"><h2>${LANGS[lang].ui.popularConv}</h2>${localConvChips(lang)}</div>`,
+  });
+}
 // The newer pages (splitter, compress, WAV conversions, effects) in every language.
 for (const [lang, pages, tp] of [['es', extraEs, extraEsTP], ['pt-br', extraPt, extraPtTP], ['de', extraDe, extraDeTP], ['fr', extraFr, extraFrTP]]) {
   LANGS[lang].pages.push(...pages(NAME));
@@ -2412,7 +2433,7 @@ const slugOf = (p) => (p.path ? p.path.replace(/\//g, '-') : 'home');
 const ogImage = (p) => (fs.existsSync(path.join(ROOT, 'og', `${slugOf(p)}.jpg`)) ? `${SITE_URL}/og/${slugOf(p)}.jpg` : `${SITE_URL}/og.jpg`);
 
 // Every page with its language. The five English pages that have translations get a `key`.
-const KEY_OF = { '': 'home', 'voice-recorder': 'recorder', 'audio-splitter': 'splitter', 'normalize-audio': 'normalize', 'stereo-to-mono': 'mono', 'add-reverb': 'reverb', 'compress-mp3': 'c-compress', 'mp4-to-wav': 'c-mp4wav', 'm4a-to-wav': 'c-m4awav', 'flac-to-wav': 'c-flacwav',
+const KEY_OF = { '': 'home', 'guides': 'guides', 'voice-recorder': 'recorder', 'audio-splitter': 'splitter', 'normalize-audio': 'normalize', 'stereo-to-mono': 'mono', 'add-reverb': 'reverb', 'compress-mp3': 'c-compress', 'mp4-to-wav': 'c-mp4wav', 'm4a-to-wav': 'c-m4awav', 'flac-to-wav': 'c-flacwav',
   'reverse-audio': 'reverse', 'speed-up-audio': 'speedup', 'slow-down-audio': 'slowdown', 'pitch-changer': 'pitch', 'remove-silence': 'silence', 'fade-in-fade-out': 'fade',
   'mp4-to-mp3': 'c-mp4', 'wav-to-mp3': 'c-wav', 'm4a-to-mp3': 'c-m4a', 'whatsapp-audio-to-mp3': 'c-wa', 'mp3-to-wav': 'c-mp3wav', 'ogg-to-mp3': 'c-ogg',
   'guides/iphone-ringtone': 'g-iphone', 'guides/samsung-ringtone': 'g-samsung', 'guides/whatsapp-voice-to-mp3': 'g-whatsapp', 'guides/make-slowed-reverb': 'g-slowed', 'audio-cutter': 'cutter', 'video-to-mp3': 'video', 'ringtone-maker': 'ringtone', 'audio-converter': 'converter',
@@ -2616,7 +2637,7 @@ ${p.tool ? `<link rel="modulepreload" href="${asset('assets/app.js')}">\n<script
     <div class="fcols">
       <nav aria-label="${ui.fTools}"><b>${ui.fTools}</b>${TOOLS.map((t) => { const x = toolIn(t, lang); return `<a href="${x.href}"${x.english ? ' hreflang="en"' : ''}>${x.title}${x.english ? `<span class="en-tag" title="${ui.inEnglish}">EN</span>` : ''}</a>`; }).join('')}</nav>
       ${isEn ? `<nav aria-label="Conversions"><b>Conversions</b>${CONVERSIONS.map((c) => `<a href="/${c.slug}/">${c.label}</a>`).join('')}</nav>` : localConversions(lang).length ? `<nav aria-label="${ui.conversions}"><b>${ui.conversions}</b>${localConversions(lang).map((q) => `<a href="${urlOf(q).replace(SITE_URL, '')}">${q.convLabel}</a>`).join('')}</nav>` : ''}
-      <nav aria-label="${ui.fHelp}"><b>${ui.fHelp}</b><a href="/guides/">${ui.fGuides}</a><a href="/guides/install-app/">${ui.fInstall}</a><a href="/about/">${ui.fAbout}</a><a href="/privacy/">${ui.fPrivacy}</a><a href="/terms/">${ui.fTerms}</a></nav>
+      <nav aria-label="${ui.fHelp}"><b>${ui.fHelp}</b><a href="${isEn ? "/guides/" : urlOf(ALL.find((q) => q.lang === lang && q.key === "guides")).replace(SITE_URL, "")}">${isEn ? ui.fGuides : NAV_TEXT[lang][2]}</a><a href="/guides/install-app/">${ui.fInstall}</a><a href="/about/">${ui.fAbout}</a><a href="/privacy/">${ui.fPrivacy}</a><a href="/terms/">${ui.fTerms}</a></nav>
       <nav aria-label="${ui.language}"><b>${ui.language}</b>${Object.keys(LANGS).map((l) => { const target = vers.find((q) => q.lang === l) || homeOf(l); return `<a href="${urlOf(target).replace(SITE_URL, '')}" hreflang="${LANGS[l].ui.hreflang}" lang="${LANGS[l].ui.code}">${LANGS[l].ui.name}</a>`; }).join('')}</nav>
     </div>
   </div>

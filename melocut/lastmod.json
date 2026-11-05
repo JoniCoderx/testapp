@@ -1208,5 +1208,25 @@
   "hash": "4b042afdbdfa",
   "published": "2026-11-04",
   "modified": "2026-11-04"
+ },
+ "es:es/guias": {
+  "hash": "c4f5f8c311d9",
+  "published": "2026-11-05",
+  "modified": "2026-11-05"
+ },
+ "pt-br:pt-br/guias": {
+  "hash": "3cca75fdbe06",
+  "published": "2026-11-05",
+  "modified": "2026-11-05"
+ },
+ "de:de/anleitung": {
+  "hash": "c82df59b64fa",
+  "published": "2026-11-05",
+  "modified": "2026-11-05"
+ },
+ "fr:fr/guide": {
+  "hash": "ee4c5bf6b560",
+  "published": "2026-11-05",
+  "modified": "2026-11-05"
  }
 }
