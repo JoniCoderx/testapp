@@ -574,7 +574,7 @@ const PAGES = [
   },
   {
     path: 'whatsapp-audio-to-mp3', tool: 'converter', format: 'mp3', crumb: 'Converters',
-    title: `WhatsApp Audio to MP3 (OPUS to MP3), Free | ${NAME}`,
+    title: `WhatsApp Audio to MP3: Convert Voice Notes Free | ${NAME}`,
     description: 'Convert WhatsApp and Telegram voice notes (.opus, .ogg) to MP3 so they play anywhere. Free and private: your messages never get uploaded.',
     h1: '<em>WhatsApp audio</em> to MP3',
     lead: 'Convert WhatsApp and Telegram voice notes (.opus or .ogg) to MP3. Your messages stay on your phone.',
@@ -586,11 +586,34 @@ const PAGES = [
     ],
     content: `
     <h2>Why WhatsApp voice notes don't play everywhere</h2>
-    <p>WhatsApp saves voice messages as OPUS audio. It's a good format for speech, but many music players, editors and older phones can't open it. An MP3 plays everywhere and is easy to email or keep.</p>
+    <p>WhatsApp saves voice messages as OPUS audio, in a file that ends in <strong>.opus</strong> or <strong>.ogg</strong>. It's a good format for speech, but many music players, video editors, car stereos and older phones can't open it. An MP3 plays everywhere and is easy to email, keep or put in a video.</p>
+    <h2>How to save a voice note from WhatsApp</h2>
+    <h3>iPhone</h3>
+    <ol>
+      <li>Open the chat and touch and hold the voice message.</li>
+      <li>Tap <strong>Forward</strong>, then the share button in the corner.</li>
+      <li>Choose <strong>Save to Files</strong>. Then open this page in Safari and pick the file from Files.</li>
+    </ol>
+    <h3>Android</h3>
+    <ol>
+      <li>Touch and hold the voice message, then tap the share button at the top.</li>
+      <li>Share it to a file manager or to Drive, or find it in the WhatsApp Voice Notes folder (see the questions below).</li>
+      <li>Open this page in Chrome and choose the file.</li>
+    </ol>
+    <h3>WhatsApp Web or desktop</h3>
+    <p>Hover over the voice message, open the small menu arrow and choose <strong>Download</strong>. The file goes to your Downloads folder, ready to drop in the box above.</p>
+    <p>Menu names can change a little between WhatsApp versions, but the idea is always the same: save the voice note as a file first, then convert it.</p>
+    <h2>Make the voice note sound better</h2>
+    <ul>
+      <li><strong>Too quiet?</strong> Open Effects and turn on <strong>Auto loudness</strong>.</li>
+      <li><strong>Wind or background noise?</strong> Turn on <strong>AI noise removal</strong>.</li>
+      <li><strong>Only need one part?</strong> Open it in the <a href="/audio-cutter/">Audio Cutter</a> and keep the bit you want.</li>
+      <li><strong>Several voice notes?</strong> Put them in one MP3 with the <a href="/audio-joiner/">Audio Joiner</a>, or choose several files here to convert them all at once.</li>
+    </ul>
+    <h3>Telegram, Signal and other apps</h3>
+    <p>Telegram voice messages are OPUS too, so they convert the same way. Any voice note saved as .opus, .ogg, .m4a or .aac works here. For other OGG files, see <a href="/ogg-to-mp3/">OGG to MP3</a> and <a href="/opus-to-mp3/">OPUS to MP3</a>.</p>
     <h3>Private by design</h3>
-    <p>Voice notes are personal, so it matters that ${NAME} never uploads them. The conversion happens on your own phone or computer.</p>
-    <h3>Several voice notes?</h3>
-    <p>Use the <a href="/audio-joiner/">Audio Joiner</a> to put them into one MP3.</p>`,
+    <p>Voice notes are personal, so it matters that ${NAME} never uploads them. The conversion happens on your own phone or computer, and nobody else hears your messages.</p>`,
     faq: [
       ['Where does WhatsApp save voice notes on Android?', 'Usually in Internal storage → Android → media → com.whatsapp → WhatsApp → Media → WhatsApp Voice Notes.'],
       ['Can I make a voice note louder?', 'Yes. Raise Volume or turn on Auto loudness in Effects before converting.'],
