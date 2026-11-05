@@ -10,7 +10,7 @@ export default (NAME) => [
     badges: ['7 voces', 'Escucha antes de guardar', 'Sin subir archivos'],
     steps: [
       ['Abre una grabación', 'Elige una nota de voz, una grabación o un video, o toca Grabar con el micrófono y di algo.'],
-      ['Elige una voz', 'Ardilla ya está seleccionada. Toca Voz grave, Monstruo, Robot, Alienígena, Teléfono o Eco y pulsa Escuchar con efectos.'],
+      ['Elige una voz', 'Ardilla ya está seleccionada. Toca Voz grave, Monstruo, Robot, Alienígena, Teléfono o Eco y pulsa Reproducir con efectos.'],
       ['Guárdala', 'Pulsa Cambiar voz y luego Descargar. Compártela o úsala como tono.'],
     ],
     content: `
@@ -31,7 +31,7 @@ export default (NAME) => [
       ['¿El cambiador de voz es gratis?', 'Sí. Gratis, sin registro, sin marca de agua y tu grabación nunca se sube.'],
       ['¿Puedo cambiar la voz de un video?', 'Sí. Abre el video y MeloCut usa su sonido. El resultado es un archivo de audio (MP3, M4A, WAV, OGG o FLAC).'],
       ['¿Puedo grabar directamente en la página?', 'Sí. Toca Grabar con el micrófono, habla y luego toca Detener. La grabación se abre al instante y se queda en tu dispositivo.'],
-      ['¿Cómo hago voz de ardilla?', 'Abre tu grabación aquí: Ardilla ya está seleccionada. Pulsa Escuchar con efectos, luego Cambiar voz y Descargar.'],
+      ['¿Cómo hago voz de ardilla?', 'Abre tu grabación aquí: Ardilla ya está seleccionada. Pulsa Reproducir con efectos, luego Cambiar voz y Descargar.'],
     ],
   },
   {
@@ -75,7 +75,7 @@ export default (NAME) => [
     badges: ['Velocidad y tono', 'Reverb', 'También nightcore'],
     steps: [
       ['Abre una canción', 'Elige cualquier canción de tu dispositivo.'],
-      ['Ajústala', 'Ya están puestas la velocidad 0,85× y la reverb. Cámbialas y pulsa Escuchar con efectos.'],
+      ['Ajústala', 'Ya están puestas la velocidad 0,85× y la reverb. Cámbialas y pulsa Reproducir con efectos.'],
       ['Descarga', 'Pulsa Convertir y guárdala como MP3.'],
     ],
     content: `
@@ -88,7 +88,7 @@ export default (NAME) => [
       <li>¿Lo quieres para TikTok o Reels? Hazlo video con <a href="/es/cancion-a-video/">canción a video</a>: abre Efectos y toca Slowed + Reverb.</li>
     </ul>`,
     faq: [
-      ['¿Cómo hago una canción slowed + reverb?', 'Abre la canción aquí. El efecto ya está puesto: pulsa Escuchar con efectos, cambia lo que quieras y luego Convertir y Descargar.'],
+      ['¿Cómo hago una canción slowed + reverb?', 'Abre la canción aquí. El efecto ya está puesto: pulsa Reproducir con efectos, cambia lo que quieras y luego Convertir y Descargar.'],
       ['¿Puedo hacer una versión acelerada?', 'Sí. Toca el ajuste rápido Nightcore o sube la velocidad y el tono.'],
       ['¿Es gratis?', 'Sí. Sin registro, sin marca de agua y la canción no se sube a ningún servidor.'],
     ],
@@ -102,7 +102,7 @@ export default (NAME) => [
     badges: ['Karaoke', 'Canciones estéreo', 'Escucha antes de guardar'],
     steps: [
       ['Abre una canción', 'Elige una canción estéreo de tu dispositivo.'],
-      ['Escúchala primero', 'Quitar voz ya está activado. Pulsa Escuchar con efectos.'],
+      ['Escúchala primero', 'Quitar voz ya está activado. Pulsa Reproducir con efectos.'],
       ['Descarga', 'Pulsa Convertir y guarda tu pista de karaoke.'],
     ],
     content: `
@@ -124,7 +124,7 @@ export default (NAME) => [
     badges: ['Usa auriculares', 'Reverb ajustable', 'MP3 o WAV'],
     steps: [
       ['Abre una canción', 'Elige cualquier canción de tu dispositivo.'],
-      ['Ponte auriculares', 'Pulsa Escuchar con efectos para oír cómo se mueve.'],
+      ['Ponte auriculares', 'Pulsa Reproducir con efectos para oír cómo se mueve.'],
       ['Descarga', 'Pulsa Convertir y guarda tu versión 8D.'],
     ],
     content: `
@@ -146,7 +146,7 @@ export default (NAME) => [
     badges: ['Hasta +15 dB', 'Sin distorsión', 'Escucha antes de guardar'],
     steps: [
       ['Abre una canción', 'Elige cualquier canción o video.'],
-      ['Elige cuánto', 'El control de Graves empieza en +10 dB. Cámbialo y pulsa Escuchar con efectos.'],
+      ['Elige cuánto', 'El control de Graves empieza en +10 dB. Cámbialo y pulsa Reproducir con efectos.'],
       ['Descarga', 'Pulsa Convertir y guarda.'],
     ],
     content: `
@@ -191,13 +191,13 @@ export default (NAME) => [
     badges: ['Red neuronal (RNNoise)', 'Notas de voz y pódcast', 'Sin subir archivos'],
     steps: [
       ['Abre tu grabación', 'Una nota de voz, una entrevista, una clase o un video.'],
-      ['Escucha la versión limpia', 'Quitar ruido con IA ya está activado. Pulsa Escuchar con efectos.'],
+      ['Escucha la versión limpia', 'Quitar ruido con IA ya está activado. Pulsa Reproducir con efectos.'],
       ['Descarga', 'Pulsa Convertir y luego Descargar.'],
     ],
     content: `
     <h2>Cómo funciona la parte de IA</h2>
     <p>${NAME} usa <strong>RNNoise</strong>, una red neuronal entrenada para distinguir la voz del ruido de fondo. El modelo pesa unos 300 KB y funciona en tu navegador, así que las grabaciones privadas nunca salen de tu celular o tu computadora.</p>
-    <p>En nuestra propia prueba, con una voz grabada junto a un ventilador encendido, el ruido en las pausas entre palabras bajó unos 18 dB, que suena más o menos tres veces más bajo, mientras la voz mantuvo su volumen. El resultado depende de la grabación, así que pulsa Escuchar con efectos y compruébalo tú mismo.</p>
+    <p>En nuestra propia prueba, con una voz grabada junto a un ventilador encendido, el ruido en las pausas entre palabras bajó unos 18 dB, que suena más o menos tres veces más bajo, mientras la voz mantuvo su volumen. El resultado depende de la grabación, así que pulsa Reproducir con efectos y compruébalo tú mismo.</p>
     <h3>Para el mejor resultado</h3>
     <p>Está hecho para voz: pódcast, entrevistas, notas de voz y llamadas. En música puede quitar también instrumentos, así que para canciones usa <strong>Reducir siseo</strong>. Aquí también están activados <strong>Volumen automático</strong> y <strong>Quitar silencios</strong>, para un resultado más limpio.</p>`,
     faq: [
@@ -238,7 +238,7 @@ export default (NAME) => [
     badges: ['Hasta 300 %', 'Volumen automático', 'Sin distorsión'],
     steps: [
       ['Abre tu archivo', 'Una canción baja, una nota de voz, una clase o un video.'],
-      ['Elige cuánto subir', 'Volumen automático ya está activado. Cambia el control de Volumen y pulsa Escuchar con efectos.'],
+      ['Elige cuánto subir', 'Volumen automático ya está activado. Cambia el control de Volumen y pulsa Reproducir con efectos.'],
       ['Descarga', 'Pulsa Convertir y guarda.'],
     ],
     content: `

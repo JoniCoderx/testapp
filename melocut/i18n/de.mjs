@@ -63,7 +63,7 @@ const base = (NAME) => ({
   <div class="section prose">
     <h2>Effekte in jedem Tool</h2>
     <p>Jedes Tool hat ein Feld <strong>Effekte und Filter</strong>. Du kannst sanftes Ein- und Ausblenden, Lautstärke, Tempo, Tonhöhe, Bass, Höhen und Hall einstellen oder 8D-Audio, KI-Rauschentfernung, Gesang entfernen und mehr einschalten. Schnelleinstellungen wie <em>Slowed + Reverb</em>, <em>Nightcore</em> und <em>Bass Boost</em> stellen alles mit einem Tippen ein.</p>
-    <p>Eine zweite Wellenform zeigt, was deine Effekte bewirken, während du die Regler bewegst, und <strong>Mit Effekten anhören</strong> spielt das Ergebnis ab, bevor du es speicherst.</p>
+    <p>Eine zweite Wellenform zeigt, was deine Effekte bewirken, während du die Regler bewegst, und <strong>Mit Effekten abspielen</strong> spielt das Ergebnis ab, bevor du es speicherst.</p>
   </div>
   ${L.WHY}
   ${L.INSTALL}
@@ -209,7 +209,7 @@ const base = (NAME) => ({
       badges: ['7 Stimmen', 'Vor dem Speichern anhören', 'Ohne Upload'],
       steps: [
         ['Öffne eine Aufnahme', 'Wähle eine Sprachnachricht, eine Aufnahme oder ein Video, oder tippe auf Mit dem Mikrofon aufnehmen und sprich etwas.'],
-        ['Wähle eine Stimme', 'Chipmunk ist schon ausgewählt. Tippe auf Tiefe Stimme, Monster, Roboter, Alien, Telefon oder Echo und dann auf Mit Effekten anhören.'],
+        ['Wähle eine Stimme', 'Chipmunk ist schon ausgewählt. Tippe auf Tiefe Stimme, Monster, Roboter, Alien, Telefon oder Echo und dann auf Mit Effekten abspielen.'],
         ['Speichere sie', 'Tippe auf Stimme ändern und dann auf Herunterladen. Teile sie oder nutze sie als Klingelton.'],
       ],
       content: `
@@ -230,7 +230,7 @@ const base = (NAME) => ({
         ['Ist der Stimmenverzerrer kostenlos?', 'Ja. Kostenlos, ohne Anmeldung, ohne Wasserzeichen, und deine Aufnahme wird nie hochgeladen.'],
         ['Kann ich die Stimme in einem Video ändern?', 'Ja. Öffne das Video, und MeloCut nutzt dessen Ton. Das Ergebnis ist eine Audiodatei (MP3, M4A, WAV, OGG oder FLAC).'],
         ['Kann ich direkt auf der Seite aufnehmen?', 'Ja. Tippe auf Mit dem Mikrofon aufnehmen, sprich und tippe dann auf Stopp. Die Aufnahme öffnet sich sofort und bleibt auf deinem Gerät.'],
-        ['Wie mache ich eine Chipmunk-Stimme?', 'Öffne deine Aufnahme hier: Chipmunk ist schon ausgewählt. Tippe auf Mit Effekten anhören, dann auf Stimme ändern und Herunterladen.'],
+        ['Wie mache ich eine Chipmunk-Stimme?', 'Öffne deine Aufnahme hier: Chipmunk ist schon ausgewählt. Tippe auf Mit Effekten abspielen, dann auf Stimme ändern und Herunterladen.'],
       ],
     },
     {

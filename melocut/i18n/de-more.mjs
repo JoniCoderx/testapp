@@ -29,7 +29,7 @@ export default (NAME) => [
     badges: ['Tempo und Tonhöhe', 'Hall', 'Auch Nightcore'],
     steps: [
       ['Öffne einen Song', 'Wähle einen beliebigen Song von deinem Gerät.'],
-      ['Pass ihn an', 'Tempo 0,85× und Hall sind schon eingestellt. Ändere sie und tippe auf Mit Effekten anhören.'],
+      ['Pass ihn an', 'Tempo 0,85× und Hall sind schon eingestellt. Ändere sie und tippe auf Mit Effekten abspielen.'],
       ['Herunterladen', 'Tippe auf Konvertieren und speichere ihn als MP3.'],
     ],
     content: `
@@ -42,7 +42,7 @@ export default (NAME) => [
       <li>Du willst ihn für TikTok oder Reels? Mach mit <a href="/de/mp3-zu-mp4/">Song zu Video</a> ein Video daraus: Öffne Effekte und tippe auf Slowed + Reverb.</li>
     </ul>`,
     faq: [
-      ['Wie mache ich einen Song slowed + reverb?', 'Öffne den Song hier. Der Effekt ist schon eingestellt: Tippe auf Mit Effekten anhören, ändere, was du willst, und dann auf Konvertieren und Herunterladen.'],
+      ['Wie mache ich einen Song slowed + reverb?', 'Öffne den Song hier. Der Effekt ist schon eingestellt: Tippe auf Mit Effekten abspielen, ändere, was du willst, und dann auf Konvertieren und Herunterladen.'],
       ['Kann ich auch eine schnellere Version machen?', 'Ja. Tippe auf die Schnelleinstellung Nightcore oder erhöhe Tempo und Tonhöhe.'],
       ['Ist das kostenlos?', 'Ja. Ohne Anmeldung, ohne Wasserzeichen, und der Song wird auf keinen Server hochgeladen.'],
     ],
@@ -56,7 +56,7 @@ export default (NAME) => [
     badges: ['Karaoke', 'Stereo-Songs', 'Vor dem Speichern anhören'],
     steps: [
       ['Öffne einen Song', 'Wähle einen Stereo-Song von deinem Gerät.'],
-      ['Hör erst rein', 'Gesang entfernen ist schon eingeschaltet. Tippe auf Mit Effekten anhören.'],
+      ['Hör erst rein', 'Gesang entfernen ist schon eingeschaltet. Tippe auf Mit Effekten abspielen.'],
       ['Herunterladen', 'Tippe auf Konvertieren und speichere deinen Karaoke-Track.'],
     ],
     content: `
@@ -78,7 +78,7 @@ export default (NAME) => [
     badges: ['Mit Kopfhörern', 'Hall einstellbar', 'MP3 oder WAV'],
     steps: [
       ['Öffne einen Song', 'Wähle einen beliebigen Song von deinem Gerät.'],
-      ['Setz Kopfhörer auf', 'Tippe auf Mit Effekten anhören, um zu hören, wie sich der Klang bewegt.'],
+      ['Setz Kopfhörer auf', 'Tippe auf Mit Effekten abspielen, um zu hören, wie sich der Klang bewegt.'],
       ['Herunterladen', 'Tippe auf Konvertieren und speichere deine 8D-Version.'],
     ],
     content: `
@@ -100,7 +100,7 @@ export default (NAME) => [
     badges: ['Bis +15 dB', 'Ohne Verzerrung', 'Vor dem Speichern anhören'],
     steps: [
       ['Öffne einen Song', 'Wähle einen beliebigen Song oder ein Video.'],
-      ['Wähle, wie stark', 'Der Bass-Regler startet bei +10 dB. Ändere ihn und tippe auf Mit Effekten anhören.'],
+      ['Wähle, wie stark', 'Der Bass-Regler startet bei +10 dB. Ändere ihn und tippe auf Mit Effekten abspielen.'],
       ['Herunterladen', 'Tippe auf Konvertieren und speichere.'],
     ],
     content: `
@@ -145,13 +145,13 @@ export default (NAME) => [
     badges: ['Neuronales Netz (RNNoise)', 'Sprachnachrichten und Podcasts', 'Ohne Upload'],
     steps: [
       ['Öffne deine Aufnahme', 'Eine Sprachnachricht, ein Interview, eine Vorlesung oder ein Video.'],
-      ['Hör dir die saubere Version an', 'Die KI-Rauschentfernung ist schon eingeschaltet. Tippe auf Mit Effekten anhören.'],
+      ['Hör dir die saubere Version an', 'Die KI-Rauschentfernung ist schon eingeschaltet. Tippe auf Mit Effekten abspielen.'],
       ['Herunterladen', 'Tippe auf Konvertieren und dann auf Herunterladen.'],
     ],
     content: `
     <h2>So funktioniert der KI-Teil</h2>
     <p>${NAME} nutzt <strong>RNNoise</strong>, ein neuronales Netz, das darauf trainiert ist, Stimme und Hintergrundgeräusche zu unterscheiden. Das Modell ist etwa 300 KB groß und läuft in deinem Browser, private Aufnahmen verlassen also nie dein Handy oder deinen Computer.</p>
-    <p>In unserem eigenen Test mit einer Stimme, die neben einem laufenden Ventilator aufgenommen wurde, sank das Rauschen in den Pausen zwischen den Wörtern um etwa 18 dB. Das klingt ungefähr dreimal leiser, während die Stimme ihre Lautstärke behielt. Das Ergebnis hängt von der Aufnahme ab, also tippe auf Mit Effekten anhören und prüf es selbst.</p>
+    <p>In unserem eigenen Test mit einer Stimme, die neben einem laufenden Ventilator aufgenommen wurde, sank das Rauschen in den Pausen zwischen den Wörtern um etwa 18 dB. Das klingt ungefähr dreimal leiser, während die Stimme ihre Lautstärke behielt. Das Ergebnis hängt von der Aufnahme ab, also tippe auf Mit Effekten abspielen und prüf es selbst.</p>
     <h3>Für das beste Ergebnis</h3>
     <p>Das Tool ist für Sprache gemacht: Podcasts, Interviews, Sprachnachrichten und Anrufe. Bei Musik kann es auch Instrumente entfernen, nimm für Songs deshalb <strong>Rauschen mindern</strong>. Hier sind außerdem <strong>Auto-Lautstärke</strong> und <strong>Stille entfernen</strong> eingeschaltet, für ein saubereres Ergebnis.</p>`,
     faq: [
@@ -192,7 +192,7 @@ export default (NAME) => [
     badges: ['Bis 300 %', 'Auto-Lautstärke', 'Ohne Verzerrung'],
     steps: [
       ['Öffne deine Datei', 'Ein leiser Song, eine Sprachnachricht, eine Vorlesung oder ein Video.'],
-      ['Wähle, wie viel lauter', 'Die Auto-Lautstärke ist schon eingeschaltet. Ändere den Lautstärke-Regler und tippe auf Mit Effekten anhören.'],
+      ['Wähle, wie viel lauter', 'Die Auto-Lautstärke ist schon eingeschaltet. Ändere den Lautstärke-Regler und tippe auf Mit Effekten abspielen.'],
       ['Herunterladen', 'Tippe auf Konvertieren und speichere.'],
     ],
     content: `
@@ -211,7 +211,7 @@ export default (NAME) => [
     badges: ['Schnell', 'Jedes Format', 'Ohne Upload'],
     steps: [
       ['Öffne eine Datei', 'Jeder Song, jede Sprachnachricht oder jedes Video.'],
-      ['Hör es dir an', 'Rückwärts ist schon eingeschaltet. Tippe auf Mit Effekten anhören.'],
+      ['Hör es dir an', 'Rückwärts ist schon eingeschaltet. Tippe auf Mit Effekten abspielen.'],
       ['Herunterladen', 'Tippe auf Konvertieren und speichere.'],
     ],
     content: `
@@ -642,7 +642,7 @@ export default (NAME) => [
     <h2>Schritt für Schritt</h2>
     <ol class="guide-steps">
       <li>Öffne <a href="/de/slowed-reverb/">Slowed + Reverb</a> und wähle einen Song von deinem Handy oder Computer.</li>
-      <li>Die klassischen Einstellungen sind schon gesetzt: Tempo <strong>0,85×</strong> mit Hall. Tippe auf <strong>Mit Effekten anhören</strong>.</li>
+      <li>Die klassischen Einstellungen sind schon gesetzt: Tempo <strong>0,85×</strong> mit Hall. Tippe auf <strong>Mit Effekten abspielen</strong>.</li>
       <li>Pass es nach deinem Geschmack an (siehe Einstellungen unten), tippe dann auf <strong>Konvertieren</strong> und lade deine MP3 mit <strong>MP3 herunterladen</strong> herunter.</li>
     </ol>
     <h2>Einstellungen, die gut klingen</h2>

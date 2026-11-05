@@ -1,8 +1,8 @@
 {
  "en:": {
-  "hash": "609c38c3043e",
+  "hash": "5c4e81c65cea",
   "published": "2026-10-25",
-  "modified": "2026-11-04"
+  "modified": "2026-11-05"
  },
  "en:video-to-mp3": {
   "hash": "c17b7683ede1",
@@ -80,24 +80,24 @@
   "modified": "2026-11-01"
  },
  "en:noise-remover": {
-  "hash": "c4090d29ae53",
+  "hash": "0d7531bb2343",
   "published": "2026-10-25",
-  "modified": "2026-10-29"
+  "modified": "2026-11-05"
  },
  "en:slowed-reverb": {
-  "hash": "dfcd4d067bfa",
+  "hash": "1cfd40fbb650",
   "published": "2026-10-25",
-  "modified": "2026-11-04"
+  "modified": "2026-11-05"
  },
  "en:vocal-remover": {
-  "hash": "b1e6fdef0582",
+  "hash": "d04f1acff569",
   "published": "2026-10-25",
-  "modified": "2026-10-29"
+  "modified": "2026-11-05"
  },
  "en:8d-audio": {
-  "hash": "e9f76939a8b7",
+  "hash": "da69a2f69ad6",
   "published": "2026-10-25",
-  "modified": "2026-11-01"
+  "modified": "2026-11-05"
  },
  "en:bass-booster": {
   "hash": "d89afbf925b7",
@@ -110,9 +110,9 @@
   "modified": "2026-11-04"
  },
  "en:reverse-audio": {
-  "hash": "d706a8014465",
+  "hash": "32a92fdd2edf",
   "published": "2026-10-25",
-  "modified": "2026-10-29"
+  "modified": "2026-11-05"
  },
  "en:mov-to-mp3": {
   "hash": "36df8abcddd1",
@@ -185,9 +185,9 @@
   "modified": "2026-10-31"
  },
  "en:guides/clean-up-voice-memo": {
-  "hash": "53c58928a819",
+  "hash": "f63b240f14ab",
   "published": "2026-10-25",
-  "modified": "2026-10-29"
+  "modified": "2026-11-05"
  },
  "en:guides/ringtone-from-video": {
   "hash": "11c4b10f45c3",
@@ -240,14 +240,14 @@
   "modified": "2026-10-29"
  },
  "en:guides/make-slowed-reverb": {
-  "hash": "9e123b54b6c4",
+  "hash": "42561b7f3b4b",
   "published": "2026-10-27",
-  "modified": "2026-11-01"
+  "modified": "2026-11-05"
  },
  "en:guides/remove-vocals": {
-  "hash": "4171894c5211",
+  "hash": "11256b5b1965",
   "published": "2026-10-27",
-  "modified": "2026-10-29"
+  "modified": "2026-11-05"
  },
  "en:guides/cut-song-iphone": {
   "hash": "b58a394d8181",
@@ -265,24 +265,24 @@
   "modified": "2026-10-31"
  },
  "en:guides/make-8d-audio": {
-  "hash": "da66ff1eba40",
+  "hash": "c3f3edd8f124",
   "published": "2026-10-28",
-  "modified": "2026-10-29"
+  "modified": "2026-11-05"
  },
  "en:guides/make-nightcore": {
-  "hash": "e93525d91d99",
+  "hash": "54337e029256",
   "published": "2026-10-28",
-  "modified": "2026-10-29"
+  "modified": "2026-11-05"
  },
  "en:guides/remove-background-noise": {
-  "hash": "df689461134c",
+  "hash": "344308cb7705",
   "published": "2026-10-28",
-  "modified": "2026-10-29"
+  "modified": "2026-11-05"
  },
  "en:guides/make-audio-louder": {
-  "hash": "b9be013d36c0",
+  "hash": "a8012a2ccbaa",
   "published": "2026-10-28",
-  "modified": "2026-10-29"
+  "modified": "2026-11-05"
  },
  "en:guides/combine-songs": {
   "hash": "bcbe0151fc86",
@@ -295,9 +295,9 @@
   "modified": "2026-10-29"
  },
  "en:guides/bass-boost-song": {
-  "hash": "7058bcd922bc",
+  "hash": "e80048c203a5",
   "published": "2026-10-28",
-  "modified": "2026-11-01"
+  "modified": "2026-11-05"
  },
  "en:terms": {
   "hash": "adf935132c6d",
@@ -315,9 +315,9 @@
   "modified": "2026-11-04"
  },
  "es:es": {
-  "hash": "26e5e7923f2f",
+  "hash": "8512beabaef5",
   "published": "2026-10-26",
-  "modified": "2026-10-29"
+  "modified": "2026-11-05"
  },
  "es:es/cortar-audio": {
   "hash": "232fed09e025",
@@ -340,9 +340,9 @@
   "modified": "2026-11-02"
  },
  "pt-br:pt-br": {
-  "hash": "7d1ecc2f8b61",
+  "hash": "0454b86e60ab",
   "published": "2026-10-26",
-  "modified": "2026-10-29"
+  "modified": "2026-11-05"
  },
  "pt-br:pt-br/cortar-audio": {
   "hash": "e76723e55651",
@@ -370,9 +370,9 @@
   "modified": "2026-11-02"
  },
  "en:guides/change-your-voice": {
-  "hash": "05f775f4362c",
+  "hash": "01117687585c",
   "published": "2026-10-31",
-  "modified": "2026-11-01"
+  "modified": "2026-11-05"
  },
  "en:audio-to-video": {
   "hash": "41d760384df1",
@@ -380,9 +380,9 @@
   "modified": "2026-11-01"
  },
  "es:es/cambiador-de-voz": {
-  "hash": "a705b5c1a294",
+  "hash": "ca90c15026ff",
   "published": "2026-11-02",
-  "modified": "2026-11-02"
+  "modified": "2026-11-05"
  },
  "es:es/cancion-a-video": {
   "hash": "7f7dbe6de658",
@@ -390,24 +390,24 @@
   "modified": "2026-11-02"
  },
  "es:es/slowed-reverb": {
-  "hash": "bc5be01c452e",
+  "hash": "5a434d9d163c",
   "published": "2026-11-02",
-  "modified": "2026-11-02"
+  "modified": "2026-11-05"
  },
  "es:es/quitar-voz": {
-  "hash": "d847c4e1d1e3",
+  "hash": "76cb871c01a4",
   "published": "2026-11-02",
-  "modified": "2026-11-02"
+  "modified": "2026-11-05"
  },
  "es:es/audio-8d": {
-  "hash": "99facdc74400",
+  "hash": "b687a56c63d1",
   "published": "2026-11-02",
-  "modified": "2026-11-02"
+  "modified": "2026-11-05"
  },
  "es:es/potenciador-de-graves": {
-  "hash": "dd342584673a",
+  "hash": "c807fba10e02",
   "published": "2026-11-02",
-  "modified": "2026-11-02"
+  "modified": "2026-11-05"
  },
  "es:es/nightcore": {
   "hash": "443e2cb44398",
@@ -415,9 +415,9 @@
   "modified": "2026-11-02"
  },
  "es:es/quitar-ruido": {
-  "hash": "539609127a45",
+  "hash": "832edab18bd2",
   "published": "2026-11-02",
-  "modified": "2026-11-02"
+  "modified": "2026-11-05"
  },
  "es:es/unir-audio": {
   "hash": "3af95718b616",
@@ -425,14 +425,14 @@
   "modified": "2026-11-02"
  },
  "es:es/subir-volumen": {
-  "hash": "d0f9a72204b4",
+  "hash": "7c17d45bc9de",
   "published": "2026-11-02",
-  "modified": "2026-11-02"
+  "modified": "2026-11-05"
  },
  "pt-br:pt-br/mudar-voz": {
-  "hash": "651419d8dbb1",
+  "hash": "94eec6c1a7f9",
   "published": "2026-11-02",
-  "modified": "2026-11-02"
+  "modified": "2026-11-05"
  },
  "pt-br:pt-br/musica-para-video": {
   "hash": "55d1d0ad7595",
@@ -440,24 +440,24 @@
   "modified": "2026-11-02"
  },
  "pt-br:pt-br/slowed-reverb": {
-  "hash": "625acc0f114c",
+  "hash": "8bb26c70c13e",
   "published": "2026-11-02",
-  "modified": "2026-11-02"
+  "modified": "2026-11-05"
  },
  "pt-br:pt-br/remover-voz": {
-  "hash": "12af1622f481",
+  "hash": "61833b554543",
   "published": "2026-11-02",
-  "modified": "2026-11-02"
+  "modified": "2026-11-05"
  },
  "pt-br:pt-br/audio-8d": {
-  "hash": "ab72f5dbf5b9",
+  "hash": "388ac352cadb",
   "published": "2026-11-02",
-  "modified": "2026-11-02"
+  "modified": "2026-11-05"
  },
  "pt-br:pt-br/aumentar-grave": {
-  "hash": "0724310e853d",
+  "hash": "e5be7c1a46e5",
   "published": "2026-11-02",
-  "modified": "2026-11-02"
+  "modified": "2026-11-05"
  },
  "pt-br:pt-br/nightcore": {
   "hash": "840557ef4366",
@@ -465,9 +465,9 @@
   "modified": "2026-11-02"
  },
  "pt-br:pt-br/remover-ruido": {
-  "hash": "0b9a3561e13c",
+  "hash": "0a61ea46b83e",
   "published": "2026-11-02",
-  "modified": "2026-11-02"
+  "modified": "2026-11-05"
  },
  "pt-br:pt-br/juntar-audio": {
   "hash": "1d634585b28b",
@@ -475,9 +475,9 @@
   "modified": "2026-11-02"
  },
  "pt-br:pt-br/aumentar-volume": {
-  "hash": "9e84b69ecf41",
+  "hash": "3b673406b17e",
   "published": "2026-11-02",
-  "modified": "2026-11-02"
+  "modified": "2026-11-05"
  },
  "es:es/guias/tono-iphone": {
   "hash": "98a388ef3994",
@@ -495,9 +495,9 @@
   "modified": "2026-11-02"
  },
  "es:es/guias/slowed-reverb": {
-  "hash": "3ba60b79f8cc",
+  "hash": "812e647461c2",
   "published": "2026-11-02",
-  "modified": "2026-11-02"
+  "modified": "2026-11-05"
  },
  "pt-br:pt-br/guias/toque-iphone": {
   "hash": "2df3c04cd413",
@@ -515,9 +515,9 @@
   "modified": "2026-11-02"
  },
  "pt-br:pt-br/guias/slowed-reverb": {
-  "hash": "729c3656f151",
+  "hash": "f8e20b0333ac",
   "published": "2026-11-02",
-  "modified": "2026-11-02"
+  "modified": "2026-11-05"
  },
  "es:es/mp4-a-mp3": {
   "hash": "d914005c5846",
@@ -580,9 +580,9 @@
   "modified": "2026-11-02"
  },
  "es:es/audio-al-reves": {
-  "hash": "29cb16292b4e",
+  "hash": "43ab5cd32f14",
   "published": "2026-11-02",
-  "modified": "2026-11-02"
+  "modified": "2026-11-05"
  },
  "es:es/acelerar-audio": {
   "hash": "8b9af2c4c4f7",
@@ -610,9 +610,9 @@
   "modified": "2026-11-02"
  },
  "pt-br:pt-br/audio-ao-contrario": {
-  "hash": "9bd2f663bc46",
+  "hash": "46a83d5d99a7",
   "published": "2026-11-02",
-  "modified": "2026-11-02"
+  "modified": "2026-11-05"
  },
  "pt-br:pt-br/acelerar-audio": {
   "hash": "1237076a10ae",
@@ -640,9 +640,9 @@
   "modified": "2026-11-02"
  },
  "de:de": {
-  "hash": "abe8dbe59cc7",
+  "hash": "f4176e320ee7",
   "published": "2026-11-02",
-  "modified": "2026-11-02"
+  "modified": "2026-11-05"
  },
  "de:de/audio-schneiden": {
   "hash": "65d9cbf07554",
@@ -665,9 +665,9 @@
   "modified": "2026-11-02"
  },
  "de:de/stimmenverzerrer": {
-  "hash": "746b7aec5ede",
+  "hash": "4e58d51ff0cc",
   "published": "2026-11-02",
-  "modified": "2026-11-02"
+  "modified": "2026-11-05"
  },
  "de:de/mp3-zu-mp4": {
   "hash": "0fcdaeaee9dc",
@@ -675,9 +675,9 @@
   "modified": "2026-11-02"
  },
  "fr:fr": {
-  "hash": "5f696496af63",
+  "hash": "6e9678b1baa3",
   "published": "2026-11-02",
-  "modified": "2026-11-02"
+  "modified": "2026-11-05"
  },
  "fr:fr/couper-audio": {
   "hash": "630f63bef4ee",
@@ -700,9 +700,9 @@
   "modified": "2026-11-02"
  },
  "fr:fr/modificateur-de-voix": {
-  "hash": "19663dedb817",
+  "hash": "00c834f78908",
   "published": "2026-11-02",
-  "modified": "2026-11-02"
+  "modified": "2026-11-05"
  },
  "fr:fr/mp3-en-mp4": {
   "hash": "a4004ec96ceb",
@@ -710,24 +710,24 @@
   "modified": "2026-11-02"
  },
  "de:de/slowed-reverb": {
-  "hash": "dc00d020798b",
+  "hash": "e1d822ae87b4",
   "published": "2026-11-02",
-  "modified": "2026-11-02"
+  "modified": "2026-11-05"
  },
  "de:de/gesang-entfernen": {
-  "hash": "96ad166276e1",
+  "hash": "a72190df5178",
   "published": "2026-11-02",
-  "modified": "2026-11-02"
+  "modified": "2026-11-05"
  },
  "de:de/8d-audio": {
-  "hash": "dda537545a8f",
+  "hash": "0bc7d5d9e958",
   "published": "2026-11-02",
-  "modified": "2026-11-02"
+  "modified": "2026-11-05"
  },
  "de:de/bass-booster": {
-  "hash": "be183ccff641",
+  "hash": "7d5e0a4d1464",
   "published": "2026-11-02",
-  "modified": "2026-11-02"
+  "modified": "2026-11-05"
  },
  "de:de/nightcore": {
   "hash": "afb2d6fe0aee",
@@ -735,9 +735,9 @@
   "modified": "2026-11-02"
  },
  "de:de/rauschen-entfernen": {
-  "hash": "99ae6534c192",
+  "hash": "1b1ccc7145a6",
   "published": "2026-11-02",
-  "modified": "2026-11-02"
+  "modified": "2026-11-05"
  },
  "de:de/audio-zusammenfuegen": {
   "hash": "0fae42917d56",
@@ -745,14 +745,14 @@
   "modified": "2026-11-02"
  },
  "de:de/lautstaerke-erhoehen": {
-  "hash": "7351654b2a6d",
+  "hash": "f4b64e976349",
   "published": "2026-11-02",
-  "modified": "2026-11-02"
+  "modified": "2026-11-05"
  },
  "de:de/audio-rueckwaerts": {
-  "hash": "18be6100e4c0",
+  "hash": "e82e983f20c6",
   "published": "2026-11-02",
-  "modified": "2026-11-02"
+  "modified": "2026-11-05"
  },
  "de:de/audio-beschleunigen": {
   "hash": "7f27b09b8c97",
@@ -825,29 +825,29 @@
   "modified": "2026-11-02"
  },
  "de:de/anleitung/slowed-reverb": {
-  "hash": "17e35fe723e2",
+  "hash": "47de622615a7",
   "published": "2026-11-02",
-  "modified": "2026-11-02"
+  "modified": "2026-11-05"
  },
  "fr:fr/slowed-reverb": {
-  "hash": "658900cc8899",
+  "hash": "0a9c2a4919fe",
   "published": "2026-11-02",
-  "modified": "2026-11-02"
+  "modified": "2026-11-05"
  },
  "fr:fr/supprimer-la-voix": {
-  "hash": "1d059a3a902d",
+  "hash": "27276e366f98",
   "published": "2026-11-02",
-  "modified": "2026-11-02"
+  "modified": "2026-11-05"
  },
  "fr:fr/audio-8d": {
-  "hash": "0e34d1178e94",
+  "hash": "6e350f4aabe7",
   "published": "2026-11-02",
-  "modified": "2026-11-02"
+  "modified": "2026-11-05"
  },
  "fr:fr/booster-les-basses": {
-  "hash": "564d73414688",
+  "hash": "57bcad360863",
   "published": "2026-11-02",
-  "modified": "2026-11-02"
+  "modified": "2026-11-05"
  },
  "fr:fr/nightcore": {
   "hash": "dccc54046b38",
@@ -855,9 +855,9 @@
   "modified": "2026-11-02"
  },
  "fr:fr/supprimer-le-bruit": {
-  "hash": "b2c9c34030b4",
+  "hash": "775e33b3f8a0",
   "published": "2026-11-02",
-  "modified": "2026-11-02"
+  "modified": "2026-11-05"
  },
  "fr:fr/fusionner-audio": {
   "hash": "ef8a7f0dfb6e",
@@ -865,14 +865,14 @@
   "modified": "2026-11-02"
  },
  "fr:fr/augmenter-le-volume": {
-  "hash": "f4f5ff7cc242",
+  "hash": "3c191746f59f",
   "published": "2026-11-02",
-  "modified": "2026-11-02"
+  "modified": "2026-11-05"
  },
  "fr:fr/audio-a-l-envers": {
-  "hash": "e04be46dc3d1",
+  "hash": "54d00c3c528d",
   "published": "2026-11-02",
-  "modified": "2026-11-02"
+  "modified": "2026-11-05"
  },
  "fr:fr/accelerer-audio": {
   "hash": "f710bcb0d512",
@@ -945,9 +945,9 @@
   "modified": "2026-11-02"
  },
  "fr:fr/guide/slowed-reverb": {
-  "hash": "121ef244c894",
+  "hash": "f49c6421cb55",
   "published": "2026-11-02",
-  "modified": "2026-11-02"
+  "modified": "2026-11-05"
  },
  "en:voice-recorder": {
   "hash": "a63ec44f5b4a",

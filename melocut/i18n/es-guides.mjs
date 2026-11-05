@@ -131,7 +131,7 @@ export default (NAME) => [
     <h2>Paso a paso</h2>
     <ol class="guide-steps">
       <li>Abre <a href="/es/slowed-reverb/">Slowed + Reverb</a> y elige una canción de tu celular o computadora.</li>
-      <li>Los ajustes clásicos ya están puestos: velocidad <strong>0,85×</strong> con reverb. Pulsa <strong>Escuchar con efectos</strong>.</li>
+      <li>Los ajustes clásicos ya están puestos: velocidad <strong>0,85×</strong> con reverb. Pulsa <strong>Reproducir con efectos</strong>.</li>
       <li>Ajústalo a tu gusto (mira los ajustes de abajo) y luego pulsa <strong>Convertir</strong> y <strong>Descargar</strong> tu MP3.</li>
     </ol>
     <h2>Ajustes que suenan bien</h2>
