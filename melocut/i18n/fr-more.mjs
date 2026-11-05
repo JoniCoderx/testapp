@@ -29,7 +29,7 @@ export default (NAME) => [
     badges: ["Vitesse et tonalité", "Réverb", "Nightcore aussi"],
     steps: [
       ["Ouvre une chanson", "Choisis n'importe quelle chanson de ton appareil."],
-      ["Ajuste-la", "La vitesse 0,85× et la réverb sont déjà réglées. Change-les et appuie sur Écouter avec effets."],
+      ["Ajuste-la", "La vitesse 0,85× et la réverb sont déjà réglées. Change-les et appuie sur Lire avec effets."],
       ["Télécharge", "Appuie sur Convertir et enregistre-la en MP3."],
     ],
     content: `
@@ -42,7 +42,7 @@ export default (NAME) => [
       <li>Tu la veux pour TikTok ou Reels ? Transforme-la en vidéo avec <a href="/fr/mp3-en-mp4/">MP3 en MP4</a> : ouvre Effets et touche Slowed + Reverb.</li>
     </ul>`,
     faq: [
-      ["Comment faire une chanson slowed + reverb ?", "Ouvre la chanson ici. L'effet est déjà réglé : appuie sur Écouter avec effets, change ce que tu veux, puis Convertir et Télécharger."],
+      ["Comment faire une chanson slowed + reverb ?", "Ouvre la chanson ici. L'effet est déjà réglé : appuie sur Lire avec effets, change ce que tu veux, puis Convertir et Télécharger."],
       ["Puis-je faire une version accélérée ?", "Oui. Touche le préréglage Nightcore ou augmente la vitesse et la tonalité."],
       ["C'est gratuit ?", "Oui. Sans inscription, sans filigrane, et la chanson n'est envoyée sur aucun serveur."],
     ],
@@ -56,7 +56,7 @@ export default (NAME) => [
     badges: ["Karaoké", "Chansons stéréo", "Écoute avant d'enregistrer"],
     steps: [
       ["Ouvre une chanson", "Choisis une chanson stéréo de ton appareil."],
-      ["Écoute d'abord", "Supprimer la voix est déjà activé. Appuie sur Écouter avec effets."],
+      ["Écoute d'abord", "Supprimer la voix est déjà activé. Appuie sur Lire avec effets."],
       ["Télécharge", "Appuie sur Convertir et enregistre ta piste karaoké."],
     ],
     content: `
@@ -78,7 +78,7 @@ export default (NAME) => [
     badges: ["Mets un casque", "Réverb réglable", "MP3 ou WAV"],
     steps: [
       ["Ouvre une chanson", "Choisis n'importe quelle chanson de ton appareil."],
-      ["Mets un casque", "Appuie sur Écouter avec effets pour entendre le son bouger."],
+      ["Mets un casque", "Appuie sur Lire avec effets pour entendre le son bouger."],
       ["Télécharge", "Appuie sur Convertir et enregistre ta version 8D."],
     ],
     content: `
@@ -100,7 +100,7 @@ export default (NAME) => [
     badges: ["Jusqu'à +15 dB", "Sans distorsion", "Écoute avant d'enregistrer"],
     steps: [
       ["Ouvre une chanson", "Choisis n'importe quelle chanson ou vidéo."],
-      ["Choisis l'intensité", "Le curseur Graves commence à +10 dB. Change-le et appuie sur Écouter avec effets."],
+      ["Choisis l'intensité", "Le curseur Graves commence à +10 dB. Change-le et appuie sur Lire avec effets."],
       ["Télécharge", "Appuie sur Convertir et enregistre."],
     ],
     content: `
@@ -145,13 +145,13 @@ export default (NAME) => [
     badges: ["Réseau de neurones (RNNoise)", "Messages vocaux et podcasts", "Aucun envoi de fichier"],
     steps: [
       ["Ouvre ton enregistrement", "Un message vocal, une interview, un cours ou une vidéo."],
-      ["Écoute la version nettoyée", "Suppression du bruit par IA est déjà activée. Appuie sur Écouter avec effets."],
+      ["Écoute la version nettoyée", "Suppression du bruit par IA est déjà activée. Appuie sur Lire avec effets."],
       ["Télécharge", "Appuie sur Convertir, puis sur Télécharger."],
     ],
     content: `
     <h2>Comment fonctionne la partie IA</h2>
     <p>${NAME} utilise <strong>RNNoise</strong>, un réseau de neurones entraîné à distinguer la voix du bruit de fond. Le modèle pèse environ 300 Ko et fonctionne dans ton navigateur, donc tes enregistrements privés ne quittent jamais ton téléphone ou ton ordinateur.</p>
-    <p>Dans notre propre test, avec une voix enregistrée à côté d'un ventilateur allumé, le bruit dans les pauses entre les mots a baissé d'environ 18 dB, ce qui sonne à peu près trois fois moins fort, tandis que la voix a gardé son volume. Le résultat dépend de l'enregistrement : appuie sur Écouter avec effets et vérifie par toi-même.</p>
+    <p>Dans notre propre test, avec une voix enregistrée à côté d'un ventilateur allumé, le bruit dans les pauses entre les mots a baissé d'environ 18 dB, ce qui sonne à peu près trois fois moins fort, tandis que la voix a gardé son volume. Le résultat dépend de l'enregistrement : appuie sur Lire avec effets et vérifie par toi-même.</p>
     <h3>Pour un meilleur résultat</h3>
     <p>C'est fait pour la voix : podcasts, interviews, messages vocaux et appels. Sur la musique, l'outil peut aussi supprimer des instruments, donc pour les chansons utilise plutôt <strong>Réduire le souffle</strong>. <strong>Volume automatique</strong> et <strong>Supprimer les silences</strong> sont aussi activés ici, pour un résultat plus propre.</p>`,
     faq: [
@@ -192,7 +192,7 @@ export default (NAME) => [
     badges: ["Jusqu'à 300 %", "Volume automatique", "Sans distorsion"],
     steps: [
       ["Ouvre ton fichier", "Une chanson trop faible, un message vocal, un cours ou une vidéo."],
-      ["Choisis de combien augmenter", "Volume automatique est déjà activé. Change le curseur Volume et appuie sur Écouter avec effets."],
+      ["Choisis de combien augmenter", "Volume automatique est déjà activé. Change le curseur Volume et appuie sur Lire avec effets."],
       ["Télécharge", "Appuie sur Convertir et enregistre."],
     ],
     content: `
@@ -211,7 +211,7 @@ export default (NAME) => [
     badges: ["Rapide", "Tous les formats", "Aucun envoi de fichier"],
     steps: [
       ["Ouvre un fichier", "N'importe quelle chanson, message vocal ou vidéo."],
-      ["Écoute-le", "À l'envers est déjà activé. Appuie sur Écouter avec effets."],
+      ["Écoute-le", "À l'envers est déjà activé. Appuie sur Lire avec effets."],
       ["Télécharge", "Appuie sur Convertir et enregistre."],
     ],
     content: `
@@ -642,7 +642,7 @@ export default (NAME) => [
     <h2>Étape par étape</h2>
     <ol class="guide-steps">
       <li>Ouvre <a href="/fr/slowed-reverb/">Slowed + Reverb</a> et choisis une chanson sur ton téléphone ou ton ordinateur.</li>
-      <li>Les réglages classiques sont déjà en place : vitesse <strong>0,85×</strong> avec réverb. Appuie sur <strong>Écouter avec effets</strong>.</li>
+      <li>Les réglages classiques sont déjà en place : vitesse <strong>0,85×</strong> avec réverb. Appuie sur <strong>Lire avec effets</strong>.</li>
       <li>Ajuste à ton goût (voir les réglages ci-dessous), puis appuie sur <strong>Convertir</strong> et <strong>Télécharger</strong> ton MP3.</li>
     </ol>
     <h2>Des réglages qui sonnent bien</h2>

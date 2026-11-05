@@ -217,7 +217,20 @@ const POPULAR = ['video-to-mp3', 'ringtone-maker', 'audio-cutter', 'audio-conver
 const toolGrid = (lang) => {
   const ui = LANGS[lang].ui, card = (t) => toolCardIn(t, lang);
   return `<div class="section first"><h2>${ui.popular}</h2><div class="cards">${TOOLS.filter((t) => POPULAR.includes(t.slug)).map(card).join('')}</div></div>
-  <div class="section" id="tools"><h2>${ui.allTools}</h2><div class="cards">${TOOLS.filter((t) => !POPULAR.includes(t.slug)).map(card).join('')}</div></div>`;
+  <div class="section" id="tools"><h2>${ui.allTools}</h2><div class="cards">${TOOLS.filter((t) => !POPULAR.includes(t.slug)).map(card).join('')}${navCards(lang)}</div></div>${lang === 'en' ? '' : localConversions(lang).length ? `\n  <div class="section" id="conversions"><h2>${ui.popularConv}</h2>${localConvChips(lang)}</div>` : ''}`;
+};
+// Two link cards that close the "All tools" grid: every conversion, and the guides.
+const NAV_TEXT = {
+  en: ['All conversions', (n) => `${n} conversions, from MP4 to MP3 to FLAC to WAV.`, 'Step-by-step guides', 'Ringtones, voice notes, video to MP3 and more.', '/guides/'],
+  es: ['Todas las conversiones', (n) => `${n} conversiones: MP4, WAV, M4A, OGG, FLAC y más.`, 'Guías paso a paso', 'Tonos de llamada, notas de voz, video a MP3 y más.', '/es/guias/'],
+  'pt-br': ['Todas as conversões', (n) => `${n} conversões: MP4, WAV, M4A, OGG, FLAC e mais.`, 'Guias passo a passo', 'Toques, mensagens de voz, vídeo para MP3 e mais.', '/pt-br/guias/'],
+  de: ['Alle Umwandlungen', (n) => `${n} Umwandlungen: MP4, WAV, M4A, OGG, FLAC und mehr.`, 'Anleitungen', 'Klingeltöne, Sprachnachrichten, Video zu MP3 und mehr.', '/de/anleitung/'],
+  fr: ['Toutes les conversions', (n) => `${n} conversions : MP4, WAV, M4A, OGG, FLAC et plus.`, 'Guides pas à pas', 'Sonneries, messages vocaux, vidéo en MP3 et plus.', '/fr/guide/'],
+};
+const navCards = (lang) => {
+  const [ct, cd, gt, gd, gh] = NAV_TEXT[lang] || NAV_TEXT.en;
+  const n = lang === 'en' ? CONVERSIONS.length : localConversions(lang).length;
+  return `<a class="card" href="#conversions"><div class="ico">${ICONS.swap}</div><b>${ct}</b><p>${cd(n)}</p></a><a class="card" href="${gh}"><div class="ico">${ICONS.book}</div><b>${gt}</b><p>${gd}</p></a>`;
 };
 const toolCardIn = (t, lang) => {
   const x = toolIn(t, lang);
@@ -235,13 +248,13 @@ const PAGES = [
     badges: [`${TOOLS.length} free tools`, 'AI noise removal', 'No upload', 'No sign-up'],
     body: `
   ${toolGrid('en')}
-  <div class="section"><h2>Popular conversions</h2>${CONVERSION_LINKS}</div>
+  <div class="section" id="conversions"><h2>Popular conversions</h2>${CONVERSION_LINKS}</div>
   <div class="section"><h2>Popular guides</h2><div class="cards">${GUIDES.filter((g) => ['make-ringtone', 'iphone-ringtone', 'extract-audio-from-video', 'make-slowed-reverb'].includes(g.slug)).map(guideCard).join('')}</div></div>
   <div class="ad" data-slot="top"></div>
   <div class="section prose">
     <h2>Effects in every tool</h2>
     <p>Each tool has an <strong>Effects &amp; filters</strong> panel. You can set fade in and fade out, volume, speed, pitch, bass, treble and reverb, or switch on 8D audio, AI noise removal, the vocal remover and more. Presets like <em>Slowed + Reverb</em>, <em>Nightcore</em> and <em>Bass Boosted</em> set everything with one tap.</p>
-    <p>A second waveform shows what your effects do while you move the sliders, and <strong>Preview with effects</strong> plays the result before you save it.</p>
+    <p>A second waveform shows what your effects do while you move the sliders, and <strong>Play with effects</strong> plays the result before you save it.</p>
   </div>
   ${WHY}
   ${INSTALL_CALLOUT}
@@ -805,7 +818,7 @@ const PAGES = [
     badges: ['Neural network (RNNoise)', 'Voice notes and podcasts', 'No upload'],
     steps: [
       ['Open your recording', 'A voice note, interview, lecture or video.'],
-      ['Listen to the clean version', 'AI noise removal is already on. Press Preview with effects.'],
+      ['Listen to the clean version', 'AI noise removal is already on. Press Play with effects.'],
       ['Download', 'Press Convert, then Download.'],
     ],
     content: `
@@ -894,7 +907,7 @@ const PAGES = [
     badges: ['Speed and pitch', 'Reverb', 'Nightcore too'],
     steps: [
       ['Open a song', 'Choose any song from your device.'],
-      ['Adjust it', 'Speed 0.85× with reverb is already set. Change it and press Preview with effects.'],
+      ['Adjust it', 'Speed 0.85× with reverb is already set. Change it and press Play with effects.'],
       ['Download', 'Convert and save it as an MP3.'],
     ],
     content: `
@@ -914,7 +927,7 @@ const PAGES = [
     badges: ['Karaoke', 'Stereo songs', 'Preview first'],
     steps: [
       ['Open a song', 'Choose a stereo song from your device.'],
-      ['Listen first', 'The vocal remover is already on. Press Preview with effects.'],
+      ['Listen first', 'The vocal remover is already on. Press Play with effects.'],
       ['Download', 'Convert and save your karaoke track.'],
     ],
     content: `
@@ -936,7 +949,7 @@ const PAGES = [
     badges: ['Use headphones', 'Adjustable reverb', 'MP3 or WAV'],
     steps: [
       ['Open a song', 'Choose any song from your device.'],
-      ['Put on headphones', 'Press Preview with effects to hear it move.'],
+      ['Put on headphones', 'Press Play with effects to hear it move.'],
       ['Download', 'Convert and save your 8D version.'],
     ],
     content: `
@@ -988,7 +1001,7 @@ const PAGES = [
     badges: ['Quick', 'Any format', 'No upload'],
     steps: [
       ['Open a file', 'Any song, voice note or video.'],
-      ['Listen', 'Reverse is already on. Press Preview with effects.'],
+      ['Listen', 'Reverse is already on. Press Play with effects.'],
       ['Download', 'Convert and save.'],
     ],
     content: `
@@ -1507,7 +1520,7 @@ const PAGES = [
     <h2>3. Trim the start and end</h2>
     <p>Drag the handles on the waveform so the selection starts just before the first word and ends just after the last one. Press <strong>Play</strong> to check.</p>
     <h2>4. Listen before saving</h2>
-    <p>Press <strong>Preview with effects</strong>. If the voice sounds thin, lower the Treble slider a little. If it's still too quiet, raise Volume.</p>
+    <p>Press <strong>Play with effects</strong>. If the voice sounds thin, lower the Treble slider a little. If it's still too quiet, raise Volume.</p>
     <h2>5. Save it</h2>
     <p>Choose <strong>MP3</strong> and <strong>128 kbps</strong> (plenty for speech), press Convert, then Download.</p>
     <h2>Recording tips for next time</h2>
@@ -1764,7 +1777,7 @@ const PAGES = [
     <ol class="guide-steps">
       <li>Open the <a href="/voice-changer/">Voice Changer</a> and choose your file. <strong>Chipmunk</strong> is already on.</li>
       <li>Tap another voice under Effects: <strong>Deep voice</strong>, <strong>Monster</strong>, <strong>Robot</strong>, <strong>Alien</strong>, <strong>Telephone</strong> or <strong>Echo</strong>.</li>
-      <li>Press <strong>Preview with effects</strong> to hear it before saving.</li>
+      <li>Press <strong>Play with effects</strong> to hear it before saving.</li>
     </ol>
     <h2>Step 3: Save and share it</h2>
     <p>Press <strong>Change voice</strong>, then <strong>Download</strong>, and send it with <strong>Send to a friend</strong>. To post it on TikTok or Reels as a video, open the result in <a href="/audio-to-video/">Song to Video</a>. Want it as a ringtone? Open the file in the <a href="/ringtone-maker/">Ringtone Maker</a> (see <a href="/guides/voice-ringtone/">your voice as a ringtone</a>).</p>
@@ -1913,7 +1926,7 @@ const PAGES = [
     <h2>Step by step</h2>
     <ol class="guide-steps">
       <li>Open the <a href="/slowed-reverb/">Slowed + Reverb maker</a> and choose a song from your phone or computer.</li>
-      <li>The classic settings are already on: speed <strong>0.85×</strong> with reverb. Press <strong>Preview with effects</strong> to listen.</li>
+      <li>The classic settings are already on: speed <strong>0.85×</strong> with reverb. Press <strong>Play with effects</strong> to listen.</li>
       <li>Adjust it to taste (see the settings below), then press <strong>Convert</strong> and <strong>Download</strong> your MP3.</li>
     </ol>
     <h2>Settings that sound right</h2>
@@ -1947,7 +1960,7 @@ const PAGES = [
     <h2>Step by step</h2>
     <ol class="guide-steps">
       <li>Open the <a href="/vocal-remover/">Vocal Remover</a> and choose a <strong>stereo</strong> studio song from your device.</li>
-      <li>The vocal remover is already on. Press <strong>Preview with effects</strong> to listen.</li>
+      <li>The vocal remover is already on. Press <strong>Play with effects</strong> to listen.</li>
       <li>If the bass got too quiet, raise <strong>Bass</strong> in Effects a little.</li>
       <li>Press <strong>Convert</strong> and <strong>Download</strong> your karaoke track.</li>
     </ol>
@@ -2073,7 +2086,7 @@ const PAGES = [
     <ol class="guide-steps">
       <li>Open the <a href="/8d-audio/">8D Audio converter</a> and choose a song.</li>
       <li>Put on <strong>headphones or earbuds</strong>. On a speaker the effect disappears.</li>
-      <li>Press <strong>Preview with effects</strong>. The sound should move slowly from one ear to the other.</li>
+      <li>Press <strong>Play with effects</strong>. The sound should move slowly from one ear to the other.</li>
       <li>Press <strong>Convert</strong> and <strong>Download</strong> your 8D version.</li>
     </ol>
     <h2>How it works</h2>
@@ -2099,7 +2112,7 @@ const PAGES = [
     <h2>Step by step</h2>
     <ol class="guide-steps">
       <li>Open the <a href="/nightcore-maker/">Nightcore maker</a> and choose a song.</li>
-      <li>The nightcore settings are already on. Press <strong>Preview with effects</strong> to listen.</li>
+      <li>The nightcore settings are already on. Press <strong>Play with effects</strong> to listen.</li>
       <li>Adjust it (see below), then <strong>Convert</strong> and <strong>Download</strong> the MP3.</li>
     </ol>
     <h2>Nightcore or sped up?</h2>
@@ -2124,7 +2137,7 @@ const PAGES = [
     <h2>Step by step</h2>
     <ol class="guide-steps">
       <li>Open the <a href="/noise-remover/">AI Noise Remover</a> and choose your recording, or a video with the sound you want to clean.</li>
-      <li><strong>AI noise removal</strong>, <strong>Auto loudness</strong> and <strong>Remove silences</strong> are already on. Press <strong>Preview with effects</strong>.</li>
+      <li><strong>AI noise removal</strong>, <strong>Auto loudness</strong> and <strong>Remove silences</strong> are already on. Press <strong>Play with effects</strong>.</li>
       <li>If long pauses should stay, switch off Remove silences. If the voice sounds thin, lower <strong>Treble</strong> a little.</li>
       <li>Choose <strong>MP3</strong> at <strong>128 kbps</strong> (plenty for speech), then <strong>Convert</strong> and <strong>Download</strong>.</li>
     </ol>
@@ -2155,7 +2168,7 @@ const PAGES = [
       <li>Open the <a href="/volume-booster/">Volume Booster</a> and choose your file (audio or video).</li>
       <li>For recordings and voice notes, leave <strong>Auto loudness</strong> on. It brings the whole file to an even, loud level.</li>
       <li>For more, raise <strong>Volume</strong>. A limiter keeps the loudest parts from distorting.</li>
-      <li>Press <strong>Preview with effects</strong>, then <strong>Convert</strong> and <strong>Download</strong>.</li>
+      <li>Press <strong>Play with effects</strong>, then <strong>Convert</strong> and <strong>Download</strong>.</li>
     </ol>
     <h2>Which setting to use</h2>
     <ol class="guide-steps">
@@ -2235,7 +2248,7 @@ const PAGES = [
     <ol class="guide-steps">
       <li>Open the <a href="/bass-booster/">Bass Booster</a> and choose a song.</li>
       <li>Set the amount of <strong>Bass</strong>. Start around <strong>+6 dB</strong>.</li>
-      <li>Press <strong>Preview with effects</strong> on the speakers or headphones you'll use.</li>
+      <li>Press <strong>Play with effects</strong> on the speakers or headphones you'll use.</li>
       <li>Happy with it? <strong>Convert</strong> and <strong>Download</strong> at 320 kbps.</li>
     </ol>
     <h2>How much bass?</h2>

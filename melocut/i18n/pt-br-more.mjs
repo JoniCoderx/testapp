@@ -10,7 +10,7 @@ export default (NAME) => [
     badges: ['7 vozes', 'Ouça antes de salvar', 'Sem upload'],
     steps: [
       ['Abra uma gravação', 'Escolha um áudio, uma gravação ou um vídeo, ou toque em Gravar com o microfone e fale alguma coisa.'],
-      ['Escolha uma voz', 'Esquilo já vem selecionado. Toque em Voz grave, Monstro, Robô, Alienígena, Telefone ou Eco e aperte Ouvir com efeitos.'],
+      ['Escolha uma voz', 'Esquilo já vem selecionado. Toque em Voz grave, Monstro, Robô, Alienígena, Telefone ou Eco e aperte Tocar com efeitos.'],
       ['Salve', 'Aperte Mudar voz e depois Baixar. Compartilhe ou use como toque.'],
     ],
     content: `
@@ -31,7 +31,7 @@ export default (NAME) => [
       ['O modificador de voz é grátis?', 'Sim. Grátis, sem cadastro, sem marca d\'água, e sua gravação nunca é enviada para nenhum servidor.'],
       ['Posso mudar a voz de um vídeo?', 'Sim. Abra o vídeo e o MeloCut usa o som dele. O resultado é um arquivo de áudio (MP3, M4A, WAV, OGG ou FLAC).'],
       ['Dá para gravar direto no site?', 'Sim. Toque em Gravar com o microfone, fale e depois toque em Parar. A gravação abre na hora e fica no seu aparelho.'],
-      ['Como faço voz de esquilo?', 'Abra sua gravação aqui: Esquilo já vem selecionado. Aperte Ouvir com efeitos, depois Mudar voz e Baixar.'],
+      ['Como faço voz de esquilo?', 'Abra sua gravação aqui: Esquilo já vem selecionado. Aperte Tocar com efeitos, depois Mudar voz e Baixar.'],
     ],
   },
   {
@@ -75,7 +75,7 @@ export default (NAME) => [
     badges: ['Velocidade e tom', 'Reverb', 'Nightcore também'],
     steps: [
       ['Abra uma música', 'Escolha qualquer música do seu aparelho.'],
-      ['Ajuste', 'A velocidade 0,85× e a reverb já vêm prontas. Mude e aperte Ouvir com efeitos.'],
+      ['Ajuste', 'A velocidade 0,85× e a reverb já vêm prontas. Mude e aperte Tocar com efeitos.'],
       ['Baixe', 'Aperte Converter e salve como MP3.'],
     ],
     content: `
@@ -88,7 +88,7 @@ export default (NAME) => [
       <li>Quer postar no TikTok ou no Reels? Transforme em vídeo com <a href="/pt-br/musica-para-video/">música para vídeo</a>: abra Efeitos e toque em Slowed + Reverb.</li>
     </ul>`,
     faq: [
-      ['Como faço uma música slowed + reverb?', 'Abra a música aqui. O efeito já está pronto: aperte Ouvir com efeitos, mude o que quiser e depois Converter e Baixar.'],
+      ['Como faço uma música slowed + reverb?', 'Abra a música aqui. O efeito já está pronto: aperte Tocar com efeitos, mude o que quiser e depois Converter e Baixar.'],
       ['Posso fazer uma versão acelerada?', 'Sim. Toque no ajuste rápido Nightcore ou aumente a velocidade e o tom.'],
       ['É grátis?', 'Sim. Sem cadastro, sem marca d\'água, e a música não é enviada para nenhum servidor.'],
     ],
@@ -102,7 +102,7 @@ export default (NAME) => [
     badges: ['Karaokê', 'Músicas estéreo', 'Ouça antes de salvar'],
     steps: [
       ['Abra uma música', 'Escolha uma música estéreo do seu aparelho.'],
-      ['Ouça primeiro', 'Remover voz já vem ativado. Aperte Ouvir com efeitos.'],
+      ['Ouça primeiro', 'Remover voz já vem ativado. Aperte Tocar com efeitos.'],
       ['Baixe', 'Aperte Converter e salve sua faixa de karaokê.'],
     ],
     content: `
@@ -124,7 +124,7 @@ export default (NAME) => [
     badges: ['Use fones', 'Reverb ajustável', 'MP3 ou WAV'],
     steps: [
       ['Abra uma música', 'Escolha qualquer música do seu aparelho.'],
-      ['Coloque os fones', 'Aperte Ouvir com efeitos para ouvir o som girar.'],
+      ['Coloque os fones', 'Aperte Tocar com efeitos para ouvir o som girar.'],
       ['Baixe', 'Aperte Converter e salve sua versão 8D.'],
     ],
     content: `
@@ -146,7 +146,7 @@ export default (NAME) => [
     badges: ['Até +15 dB', 'Sem distorção', 'Ouça antes de salvar'],
     steps: [
       ['Abra uma música', 'Escolha qualquer música ou vídeo.'],
-      ['Escolha quanto', 'O controle de Graves começa em +10 dB. Mude e aperte Ouvir com efeitos.'],
+      ['Escolha quanto', 'O controle de Graves começa em +10 dB. Mude e aperte Tocar com efeitos.'],
       ['Baixe', 'Aperte Converter e salve.'],
     ],
     content: `
@@ -193,13 +193,13 @@ export default (NAME) => [
     badges: ['Rede neural (RNNoise)', 'Áudios e podcasts', 'Sem upload'],
     steps: [
       ['Abra sua gravação', 'Um áudio, uma entrevista, uma aula ou um vídeo.'],
-      ['Ouça a versão limpa', 'Remover ruído com IA já vem ativado. Aperte Ouvir com efeitos.'],
+      ['Ouça a versão limpa', 'Remover ruído com IA já vem ativado. Aperte Tocar com efeitos.'],
       ['Baixe', 'Aperte Converter e depois Baixar.'],
     ],
     content: `
     <h2>Como funciona a parte de IA</h2>
     <p>O ${NAME} usa o <strong>RNNoise</strong>, uma rede neural treinada para separar a voz do ruído de fundo. O modelo tem cerca de 300 KB e roda no seu navegador, então gravações particulares nunca saem do seu celular ou computador.</p>
-    <p>No nosso próprio teste, com uma voz gravada ao lado de um ventilador ligado, o ruído nas pausas entre as palavras caiu cerca de 18 dB, o que soa mais ou menos três vezes mais baixo, enquanto a voz manteve o volume. O resultado depende da gravação, então aperte Ouvir com efeitos e confira.</p>
+    <p>No nosso próprio teste, com uma voz gravada ao lado de um ventilador ligado, o ruído nas pausas entre as palavras caiu cerca de 18 dB, o que soa mais ou menos três vezes mais baixo, enquanto a voz manteve o volume. O resultado depende da gravação, então aperte Tocar com efeitos e confira.</p>
     <h3>Para o melhor resultado</h3>
     <p>Foi feito para voz: podcasts, entrevistas, áudios e ligações. Em música ele pode tirar instrumentos também, então para músicas use <strong>Reduzir chiado</strong>. Aqui também vêm ativados <strong>Volume automático</strong> e <strong>Remover silêncios</strong>, para um resultado mais limpo.</p>`,
     faq: [
@@ -240,7 +240,7 @@ export default (NAME) => [
     badges: ['Até 300%', 'Volume automático', 'Sem distorção'],
     steps: [
       ['Abra seu arquivo', 'Uma música baixa, um áudio, uma aula ou um vídeo.'],
-      ['Escolha quanto aumentar', 'Volume automático já vem ativado. Mude o controle de Volume e aperte Ouvir com efeitos.'],
+      ['Escolha quanto aumentar', 'Volume automático já vem ativado. Mude o controle de Volume e aperte Tocar com efeitos.'],
       ['Baixe', 'Aperte Converter e salve.'],
     ],
     content: `

@@ -63,7 +63,7 @@ const base = (NAME) => ({
   <div class="section prose">
     <h2>Des effets dans chaque outil</h2>
     <p>Chaque outil a un panneau <strong>Effets et filtres</strong>. Tu peux ajouter un fondu d'entrée et de sortie, régler le volume, la vitesse, la tonalité, les graves, les aigus et la réverb, ou activer l'audio 8D, la suppression du bruit par IA, la suppression de la voix et plus encore. Les préréglages comme <em>Slowed + Reverb</em>, <em>Nightcore</em> et <em>Basses boostées</em> configurent tout en une touche.</p>
-    <p>Une deuxième forme d'onde montre l'effet de tes réglages pendant que tu bouges les curseurs, et <strong>Écouter avec effets</strong> lit le résultat avant que tu l'enregistres.</p>
+    <p>Une deuxième forme d'onde montre l'effet de tes réglages pendant que tu bouges les curseurs, et <strong>Lire avec effets</strong> lit le résultat avant que tu l'enregistres.</p>
   </div>
   ${L.WHY}
   ${L.INSTALL}
@@ -209,7 +209,7 @@ const base = (NAME) => ({
       badges: ["7 voix", "Écoute avant d'enregistrer", "Aucun envoi de fichier"],
       steps: [
         ["Ouvre un enregistrement", "Choisis un message vocal, un enregistrement ou une vidéo, ou touche Enregistrer avec le micro et dis quelque chose."],
-        ["Choisis une voix", "Écureuil est déjà sélectionné. Touche Voix grave, Monstre, Robot, Extraterrestre, Téléphone ou Écho et appuie sur Écouter avec effets."],
+        ["Choisis une voix", "Écureuil est déjà sélectionné. Touche Voix grave, Monstre, Robot, Extraterrestre, Téléphone ou Écho et appuie sur Lire avec effets."],
         ["Enregistre-la", "Appuie sur Changer la voix, puis sur Télécharger. Partage-la ou utilise-la comme sonnerie."],
       ],
       content: `
@@ -230,7 +230,7 @@ const base = (NAME) => ({
         ["Le modificateur de voix est-il gratuit ?", "Oui. Gratuit, sans inscription, sans filigrane, et ton enregistrement n'est jamais envoyé."],
         ["Puis-je changer la voix d'une vidéo ?", "Oui. Ouvre la vidéo et MeloCut utilise son son. Le résultat est un fichier audio (MP3, M4A, WAV, OGG ou FLAC)."],
         ["Puis-je m'enregistrer directement sur la page ?", "Oui. Touche Enregistrer avec le micro, parle, puis touche Arrêter. L'enregistrement s'ouvre tout de suite et reste sur ton appareil."],
-        ["Comment faire une voix d'écureuil ?", "Ouvre ton enregistrement ici : Écureuil est déjà sélectionné. Appuie sur Écouter avec effets, puis sur Changer la voix et Télécharger."],
+        ["Comment faire une voix d'écureuil ?", "Ouvre ton enregistrement ici : Écureuil est déjà sélectionné. Appuie sur Lire avec effets, puis sur Changer la voix et Télécharger."],
       ],
     },
     {

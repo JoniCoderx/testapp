@@ -65,7 +65,7 @@ export default (NAME) => ({
   <div class="section prose">
     <h2>Efectos en cada herramienta</h2>
     <p>Cada herramienta tiene un panel de <strong>Efectos y filtros</strong>. Puedes poner entrada y salida suaves, volumen, velocidad, tono, graves, agudos y reverb, o activar el audio 8D, quitar ruido con IA, quitar la voz y más. Los ajustes rápidos como <em>Slowed + Reverb</em>, <em>Nightcore</em> y <em>Bajos potentes</em> lo configuran todo con un toque.</p>
-    <p>Una segunda onda muestra lo que hacen tus efectos mientras mueves los controles, y <strong>Escuchar con efectos</strong> reproduce el resultado antes de guardarlo.</p>
+    <p>Una segunda onda muestra lo que hacen tus efectos mientras mueves los controles, y <strong>Reproducir con efectos</strong> reproduce el resultado antes de guardarlo.</p>
   </div>
   ${L.WHY}
   ${L.INSTALL}

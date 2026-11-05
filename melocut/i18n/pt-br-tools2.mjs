@@ -9,7 +9,7 @@ export default (NAME) => [
     badges: ['Rápido', 'Qualquer formato', 'Sem upload'],
     steps: [
       ['Abra um arquivo', 'Qualquer música, áudio ou vídeo.'],
-      ['Ouça', 'Ao contrário já vem ativado. Aperte Ouvir com efeitos.'],
+      ['Ouça', 'Ao contrário já vem ativado. Aperte Tocar com efeitos.'],
       ['Baixe', 'Aperte Converter e salve.'],
     ],
     content: `
