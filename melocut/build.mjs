@@ -298,7 +298,7 @@ const PAGES = [
   },
   {
     path: 'video-to-mp3', tool: 'video-to-mp3', crumb: 'Tools',
-    title: `Video to MP3 Converter, Free and Online | ${NAME}`,
+    title: `Video to MP3 Converter Online: Free, No Upload | ${NAME}`,
     description: 'Convert MP4, MOV, WebM and other videos to MP3 in your browser. Up to 320 kbps, no upload, no sign-up. Works on iPhone and Android.',
     h1: 'Video to <em>MP3</em> converter',
     lead: 'Take the sound from any video and save it as MP3, M4A or WAV. It runs on your device, so even big videos are quick.',
@@ -324,7 +324,7 @@ const PAGES = [
   },
   {
     path: 'ringtone-maker', tool: 'ringtone', crumb: 'Tools',
-    title: `Ringtone Maker for iPhone and Android, Free | ${NAME}`,
+    title: `Ringtone Maker: Free Ringtones for iPhone & Android | ${NAME}`,
     description: 'Make a ringtone from any song. Pick the best part, add a fade and save it as M4R for iPhone or MP3 for Android. Free, no app needed.',
     h1: '<em>Ringtone maker</em> for iPhone and Android',
     lead: 'Pick your favorite part of a song and save it as a ringtone for iPhone (M4R) or Android (MP3).',
@@ -407,7 +407,7 @@ const PAGES = [
   // ---------- format landing pages ----------
   {
     path: 'mp4-to-mp3', tool: 'video-to-mp3', format: 'mp3', crumb: 'Converters',
-    title: `MP4 to MP3 Converter, Free and Private | ${NAME}`,
+    title: `MP4 to MP3 Converter Online: Free, No Upload | ${NAME}`,
     description: 'Convert MP4 to MP3 online in a few seconds. Up to 320 kbps, no upload, no sign-up, no watermark. Works on iPhone, Android and PC.',
     h1: '<em>MP4 to MP3</em> converter',
     lead: 'Open an MP4 and save its sound as an MP3. It runs in your browser, so the video never leaves your device.',
@@ -452,7 +452,7 @@ const PAGES = [
   },
   {
     path: 'mp3-to-m4a', tool: 'converter', format: 'm4a', crumb: 'Converters',
-    title: `MP3 to M4A Converter, Free and Online | ${NAME}`,
+    title: `MP3 to M4A Converter Online: Free, No Upload | ${NAME}`,
     description: 'Convert MP3 to M4A (AAC) for iPhone, iTunes and Apple apps. Choose the quality, trim it if you like and download. Free, private, no upload.',
     h1: '<em>MP3 to M4A</em> converter',
     lead: "Convert MP3 files to M4A (AAC), Apple's standard audio format.",
@@ -474,7 +474,7 @@ const PAGES = [
   },
   {
     path: 'webm-to-mp3', tool: 'video-to-mp3', format: 'mp3', crumb: 'Converters',
-    title: `WebM to MP3 Converter, Free and Online | ${NAME}`,
+    title: `WebM to MP3 Converter Online: Free, No Upload | ${NAME}`,
     description: 'Get the audio from a WebM video and save it as MP3. Pick the part you want, choose the quality and download. Free, fast, nothing uploaded.',
     h1: '<em>WebM to MP3</em> converter',
     lead: 'Extract the sound from a WebM video, the format many browsers and screen recorders save in, and keep it as an MP3.',
@@ -496,7 +496,7 @@ const PAGES = [
   },
   {
     path: 'opus-to-mp3', tool: 'converter', format: 'mp3', crumb: 'Converters',
-    title: `OPUS to MP3 Converter, Free and Online | ${NAME}`,
+    title: `OPUS to MP3 Converter Online: Free, No Upload | ${NAME}`,
     description: 'Convert OPUS files to MP3 so they play on any phone, computer or car. Works with Telegram, WhatsApp and Discord audio. Free, private, no upload.',
     h1: '<em>OPUS to MP3</em> converter',
     lead: 'OPUS is great for voice and streaming but many players can\'t open it. Convert it to MP3 here.',
@@ -552,7 +552,7 @@ const PAGES = [
   },
   {
     path: 'm4a-to-mp3', tool: 'converter', format: 'mp3', crumb: 'Converters',
-    title: `M4A to MP3 Converter, Free and Online | ${NAME}`,
+    title: `M4A to MP3 Converter Online: Free, No Upload | ${NAME}`,
     description: 'Convert M4A to MP3 online: iPhone voice memos, iTunes audio and more. Free, private and quick. No upload, no sign-up.',
     h1: '<em>M4A to MP3</em> converter',
     lead: 'Convert iPhone voice memos and other M4A files to MP3 so they play on any device.',
@@ -754,7 +754,7 @@ const PAGES = [
   },
   {
     path: 'mp3-to-wav', tool: 'converter', format: 'wav', crumb: 'Converters',
-    title: `MP3 to WAV Converter, Free and Online | ${NAME}`,
+    title: `MP3 to WAV Converter Online: Free, No Upload | ${NAME}`,
     description: 'Convert MP3 to WAV online for editing, DJ software or CD burning. Free, quick and private. Nothing is uploaded.',
     h1: '<em>MP3 to WAV</em> converter',
     lead: 'Convert MP3s to WAV for editing software, DJ apps or burning CDs.',
@@ -1115,7 +1115,7 @@ const PAGES = [
   },
   {
     path: 'aac-to-mp3', tool: 'converter', format: 'mp3', crumb: 'Converters',
-    title: `AAC to MP3 Converter, Free and Private | ${NAME}`,
+    title: `AAC to MP3 Converter Online: Free, No Upload | ${NAME}`,
     description: 'Convert AAC audio files to MP3 for older players, cars and apps that need MP3. Free, quick, works on phones, and nothing is uploaded.',
     h1: '<em>AAC to MP3</em> converter',
     lead: 'Convert .aac files from recorders, radio apps and downloads into MP3s that every device can play.',
@@ -2680,7 +2680,10 @@ function crumbs(p) {
   const trail = [{ name: ui.home, url: home }];
   if (p.crumb === 'Tools') trail.push({ name: ui.tools, url: `${home}#tools` });
   if (p.crumb === 'Converters') { const c = toolIn(TOOLS.find((t) => t.slug === 'audio-converter'), p.lang); trail.push({ name: p.lang === 'en' ? 'Audio Converter' : c.title, url: `${SITE_URL}${c.href}` }); }
-  if (p.crumb === 'Guides' && p.lang === 'en') trail.push({ name: 'Guides', url: `${SITE_URL}/guides/` });
+  if (p.crumb === 'Guides') {
+    if (p.lang === 'en') trail.push({ name: 'Guides', url: `${SITE_URL}/guides/` });
+    else { const gi = ALL.find((q) => q.lang === p.lang && q.key === 'guides'); if (gi) trail.push({ name: gi.h1, url: urlOf(gi) }); }
+  }
   trail.push({ name: plainH1(p), url: urlOf(p) });
   return trail;
 }
