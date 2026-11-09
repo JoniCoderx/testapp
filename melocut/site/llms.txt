@@ -15,6 +15,7 @@
 - [Voice Changer](https://melocut.com/voice-changer/): Chipmunk, deep, robot, monster and more voices.
 - [Voice Recorder](https://melocut.com/voice-recorder/): Record your voice and save it as MP3.
 - [Audio Splitter](https://melocut.com/audio-splitter/): Split a song or recording into equal parts.
+- [MP3 Tag Editor](https://melocut.com/mp3-tag-editor/): Change the title, artist, album and cover art.
 - [8D Audio](https://melocut.com/8d-audio/): Sound that moves from ear to ear. Use headphones.
 - [Bass Booster](https://melocut.com/bass-booster/): Add more low end to any song.
 - [Volume Booster](https://melocut.com/volume-booster/): Make quiet recordings louder.

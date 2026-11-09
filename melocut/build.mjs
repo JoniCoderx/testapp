@@ -51,6 +51,7 @@ const ICONS = {
   film: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M10 9.5v5l4.5-2.5z" fill="currentColor"/><path d="M3 8h18M3 16h18" opacity=".45"/></svg>',
   voice: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="6" height="11" rx="3"/><path d="M3 10a7 7 0 0 0 14 0M10 17v5"/><path d="M19.5 7.5a5 5 0 0 1 0 5M22 5a9 9 0 0 1 0 10"/></svg>',
   split: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4M17 12h4M12 3v18"/><path d="M5 8v8M19 8v8M8.5 6v12M15.5 6v12"/></svg>',
+  tag: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg>',
   rec: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v5M8 22h8"/></svg>',
   mic: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v5M3 3l18 18"/></svg>',
   reverse: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>',
@@ -75,6 +76,7 @@ const TOOLS = [
   { slug: 'voice-changer', icon: 'voice', isNew: true, title: 'Voice Changer', blurb: 'Chipmunk, deep, robot, monster and more voices.' },
   { slug: 'voice-recorder', icon: 'rec', isNew: true, title: 'Voice Recorder', blurb: 'Record your voice and save it as MP3.' },
   { slug: 'audio-splitter', icon: 'split', isNew: true, title: 'Audio Splitter', blurb: 'Split a song or recording into equal parts.' },
+  { slug: 'mp3-tag-editor', icon: 'tag', isNew: true, title: 'MP3 Tag Editor', blurb: 'Change the title, artist, album and cover art.' },
   { slug: '8d-audio', icon: 'orbit', title: '8D Audio', blurb: 'Sound that moves from ear to ear. Use headphones.' },
   { slug: 'bass-booster', icon: 'bass', title: 'Bass Booster', blurb: 'Add more low end to any song.' },
   { slug: 'volume-booster', icon: 'volume', title: 'Volume Booster', blurb: 'Make quiet recordings louder.' },
@@ -255,7 +257,9 @@ const NAV_TEXT = {
 const navCards = (lang) => {
   const [ct, cd, gt, gd, gh] = NAV_TEXT[lang] || NAV_TEXT.en;
   const n = lang === 'en' ? CONVERSIONS.length : localConversions(lang).length;
-  return `<a class="card" href="#conversions"><div class="ico">${ICONS.swap}</div><b>${ct}</b><p>${cd(n)}</p></a><a class="card" href="${gh}"><div class="ico">${ICONS.book}</div><b>${gt}</b><p>${gd}</p></a>`;
+  const cards = [`<a class="card" href="#conversions"><div class="ico">${ICONS.swap}</div><b>${ct}</b><p>${cd(n)}</p></a>`, `<a class="card" href="${gh}"><div class="ico">${ICONS.book}</div><b>${gt}</b><p>${gd}</p></a>`];
+  const gap = (4 - (TOOLS.filter((t) => !POPULAR.includes(t.slug)).length % 4)) % 4;
+  return cards.slice(0, gap).join('');
 };
 const toolCardIn = (t, lang) => {
   const x = toolIn(t, lang);
@@ -823,6 +827,44 @@ const PAGES = [
       ['How many files can I join?', 'Two or more. There is no fixed number: how much you can join depends on your device and browser.'],
       ['Can I join files with no gap?', 'Yes. Turn the crossfade off and they play straight after each other.'],
       ['Can I join videos?', 'Yes. MeloCut takes the sound from each video and joins the audio.'],
+    ],
+  },
+  {
+    path: 'mp3-tag-editor', tool: 'tags', format: 'mp3', crumb: 'Tools',
+    title: `MP3 Tag Editor Online: Edit Title, Artist, Cover, Free | ${NAME}`,
+    description: 'Edit MP3 tags online: change the title, artist, album, year and cover art of a song. Free, no app, and the file never leaves your device.',
+    h1: '<em>MP3 tag editor</em>: title, artist and cover',
+    lead: 'Fix a song that shows up as "Unknown artist", add the right title, or give it album art. Right in your browser, on your phone or computer.',
+    badges: ['Title, artist, album', 'Cover art', 'No re-encoding for MP3'],
+    steps: [
+      ['Open the song', 'Choose an MP3 from your phone or computer.'],
+      ['Type the details', 'Fill in the title, artist, album or year, and pick a cover image if you want one.'],
+      ['Save it', 'Press Save tags, then Download.'],
+    ],
+    content: `
+    <h2>What MP3 tags are</h2>
+    <p>Tags (also called ID3 tags) are the details stored inside an MP3: the song title, the artist, the album, the year and the cover picture. Music apps, car stereos and phones show these instead of the file name. When they are missing or wrong, you see "Unknown artist", a gray square instead of a cover, or songs sorted in the wrong album.</p>
+    <h2>How the editor works</h2>
+    <ul>
+      <li><strong>Only what you type changes.</strong> Empty fields keep what the file already has, so you can fix just the artist and leave the rest.</li>
+      <li><strong>No quality loss for MP3s.</strong> When you open an MP3 and don't cut it or add effects, the sound is copied exactly as it is. Only the tags change.</li>
+      <li><strong>Cover art:</strong> pick any image. It's resized to at most 600 pixels and saved as a JPEG inside the MP3, the size most players expect.</li>
+      <li><strong>Other formats:</strong> open an M4A, WAV, FLAC or a video and you get an MP3 at 320 kbps with your tags.</li>
+    </ul>
+    <h3>Tips</h3>
+    <ul>
+      <li>Use the same album name, spelled the same way, on every song so players group them together.</li>
+      <li>A square image looks best as a cover. A wide photo still works, but players may crop it.</li>
+      <li>Want to shorten the song too? Drag on the waveform before saving, or use the <a href="/audio-cutter/">Audio Cutter</a> first.</li>
+      <li>Making a ringtone? Tags don't matter for that: use the <a href="/ringtone-maker/">Ringtone Maker</a>.</li>
+    </ul>
+    <h3>Private by design</h3>
+    <p>Your music never leaves your device. ${NAME} reads and writes the file inside your browser, so nothing is uploaded and there is no sign-up.</p>`,
+    faq: [
+      ['How do I change the artist name of an MP3?', 'Open the MP3 here, type the new name in Artist, press Save tags and download the file. The other tags stay as they were.'],
+      ['How do I add album art to an MP3?', 'Open the MP3, tap Choose image under Cover image and pick a picture, then press Save tags and download.'],
+      ['Does editing tags lower the sound quality?', 'Not for an MP3 that you do not cut or change: the sound is copied as it is. Other formats are converted to a 320 kbps MP3.'],
+      ['Why does my phone still show the old title?', 'Some music apps keep their own library. Remove the old copy of the song and add the new file, or restart the app so it reads the tags again.'],
     ],
   },
   {

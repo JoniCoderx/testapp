@@ -57,7 +57,7 @@ const base = (NAME) => ({
       description: "Coupe des chansons, crée des sonneries pour iPhone et Android, ajoute des effets et convertis des vidéos en MP3. Gratuit, tes fichiers restent sur ton appareil.",
       h1: "Coupe des chansons, crée des sonneries et ajoute des effets, <em>dans ton navigateur</em>",
       lead: "Des outils audio gratuits pour ton téléphone ou ton ordinateur. Tes fichiers ne sont jamais envoyés. Choisis un outil pour commencer.",
-      badges: ["22 outils gratuits", "Suppression du bruit par IA", "Aucun envoi de fichier", "Sans inscription"],
+      badges: ["23 outils gratuits", "Suppression du bruit par IA", "Aucun envoi de fichier", "Sans inscription"],
       home: true,
       body: (L) => `
   <div class="section prose">
