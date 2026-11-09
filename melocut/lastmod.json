@@ -75,9 +75,9 @@
   "modified": "2026-11-01"
  },
  "en:audio-joiner": {
-  "hash": "c9f74496f7a1",
+  "hash": "881781cc284b",
   "published": "2026-10-25",
-  "modified": "2026-11-01"
+  "modified": "2026-11-09"
  },
  "en:noise-remover": {
   "hash": "0d7531bb2343",
@@ -120,9 +120,9 @@
   "modified": "2026-10-29"
  },
  "en:ogg-to-mp3": {
-  "hash": "b1fdc4b96114",
+  "hash": "d69bb8fd6621",
   "published": "2026-10-26",
-  "modified": "2026-11-01"
+  "modified": "2026-11-09"
  },
  "en:aac-to-mp3": {
   "hash": "0b9940ca045f",
@@ -325,9 +325,9 @@
   "modified": "2026-11-01"
  },
  "es:es/video-a-mp3": {
-  "hash": "5ab9b5a9c245",
+  "hash": "284d26f4dbe0",
   "published": "2026-10-26",
-  "modified": "2026-10-29"
+  "modified": "2026-11-09"
  },
  "es:es/creador-de-tonos": {
   "hash": "b194f9d03ca3",
@@ -350,9 +350,9 @@
   "modified": "2026-10-29"
  },
  "pt-br:pt-br/video-para-mp3": {
-  "hash": "bc3e50018f51",
+  "hash": "55dc5e4dce3e",
   "published": "2026-10-26",
-  "modified": "2026-10-29"
+  "modified": "2026-11-09"
  },
  "pt-br:pt-br/criar-toque": {
   "hash": "3d0b2befa3d9",

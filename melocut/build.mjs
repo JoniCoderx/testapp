@@ -804,7 +804,7 @@ const PAGES = [
   // ---------- effect tools ----------
   {
     path: 'audio-joiner', tool: 'joiner', crumb: 'Tools',
-    title: `MP3 Joiner: Merge Audio Files Online, Free | ${NAME}`,
+    title: `Audio Joiner: Merge MP3 and Audio Files Online, Free | ${NAME}`,
     description: 'Free audio and MP3 joiner: merge MP3, M4A, WAV and other files into one. Reorder them, listen, add a crossfade and even out the volume. Free and private.',
     h1: '<em>Audio joiner</em>: merge songs into one file',
     lead: 'Put several songs, voice notes or clips together into one file. Listen to each one, change the order and add a crossfade.',
@@ -1085,8 +1085,8 @@ const PAGES = [
   },
   {
     path: 'ogg-to-mp3', tool: 'converter', format: 'mp3', crumb: 'Converters',
-    title: `OGG to MP3 Converter Online: Free, No Upload | ${NAME}`,
-    description: 'Convert OGG and OGA audio files to MP3 so they play on iPhone, in cars and in every music app. Free, quick, and nothing is uploaded.',
+    title: `OGG to MP3 Converter: Convert OGG Files Online, Free | ${NAME}`,
+    description: 'Convert OGG files to MP3 online so they play on iPhone, in cars and in every music app. Works with .ogg and .oga. Free, and nothing is uploaded.',
     h1: '<em>OGG to MP3</em> converter',
     lead: 'Turn OGG files from games, Telegram, Discord or Linux apps into MP3s that play everywhere.',
     badges: ['OGG Vorbis and Opus', 'Up to 320 kbps', 'No upload'],
