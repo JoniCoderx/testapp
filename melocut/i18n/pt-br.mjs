@@ -110,7 +110,7 @@ export default (NAME) => ({
     },
     {
       key: 'video', path: 'pt-br/video-para-mp3', tool: 'video-to-mp3', crumb: 'Tools',
-      title: `Converter vídeo para MP3 grátis e online | ${NAME}`,
+      title: `Conversor de vídeo para MP3 online e grátis | ${NAME}`,
       description: 'Converta vídeos MP4, MOV, WebM e outros para MP3 no seu navegador. Até 320 kbps, sem upload e sem cadastro. Funciona no iPhone e no Android.',
       h1: 'Converter <em>vídeo para MP3</em>',
       lead: 'Tire o som de qualquer vídeo e salve como MP3, M4A ou WAV. Funciona no seu aparelho, então até vídeos grandes são rápidos.',
