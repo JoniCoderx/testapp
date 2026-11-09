@@ -57,7 +57,7 @@ const base = (NAME) => ({
       description: 'Schneide Songs, erstelle Klingeltöne für iPhone und Android, füge Effekte hinzu und wandle Videos in MP3 um. Kostenlos, deine Dateien bleiben auf deinem Gerät.',
       h1: 'Songs schneiden, Klingeltöne erstellen und Effekte hinzufügen, <em>im Browser</em>',
       lead: 'Kostenlose Audio-Tools für Handy und Computer. Deine Dateien werden nie hochgeladen. Wähle ein Tool, um loszulegen.',
-      badges: ['22 kostenlose Tools', 'KI-Rauschentfernung', 'Ohne Upload', 'Ohne Anmeldung'],
+      badges: ['23 kostenlose Tools', 'KI-Rauschentfernung', 'Ohne Upload', 'Ohne Anmeldung'],
       home: true,
       body: (L) => `
   <div class="section prose">
