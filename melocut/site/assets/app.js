@@ -449,6 +449,10 @@ const TOOLS = {
     fx: { fadeIn: 1, fadeOut: 2 }, defaultSel: (d) => [0, Math.min(29, d)],
     note: T('The first 29 seconds are selected, short enough to set straight from the iPhone Files app, with a short fade in and out (change them in Effects). Drag on the waveform to choose up to 40 seconds. M4R is for iPhone, MP3 for Android.'),
   },
+  tags: {
+    formats: ['mp3'], defaultFormat: 'mp3', suffix: '', tags: true, go: T('Save tags'),
+    note: T('Type the details you want to change. Empty fields keep what the file already has.'),
+  },
   splitter: {
     formats: ALL_FORMATS, defaultFormat: 'mp3', suffix: '', split: true, go: T('Split'),
     note: T('Choose how many parts, or a part every few minutes. Drag the handles first to split only part of the file.'),
@@ -599,6 +603,15 @@ function videoArgs(pre, inName, filters, len, outName) {
 }
 
 function optionsHTML(cfg) {
+  if (cfg.tags) return `
+    <div class="vid-fields tag-fields">
+      <label>${T('Title')} <input type="text" data-t="title" maxlength="200"></label>
+      <label>${T('Artist')} <input type="text" data-t="artist" maxlength="200"></label>
+      <label>${T('Album')} <input type="text" data-t="album" maxlength="200"></label>
+      <label>${T('Year')} <input type="text" data-t="date" maxlength="4" inputmode="numeric"></label>
+      <div class="vid-cover"><span>${T('Cover image (optional)')}</span><label class="btn ghost sm">${I.upload || ''}${T('Choose image')}<input type="file" class="sr" accept="image/*" data-t="cover"></label><small data-tcovername></small></div>
+    </div>
+    <select data-o="format" hidden><option value="mp3">MP3</option></select><span data-q hidden><select data-o="quality"><option value="320" selected>320</option></select></span>`;
   if (cfg.video) return `
     <div class="vid-fields">
       <label class="vid-title">${T('Title')} <input type="text" data-v="title" maxlength="60" placeholder="${T('Song name')}"></label>
@@ -619,6 +632,14 @@ function optionsHTML(cfg) {
     ${cfg.split ? `<label>${T('Split into')} <select data-o="parts">
       ${[2, 3, 4, 5, 6, 8, 10].map((n) => `<option value="n${n}"${n === 2 ? ' selected' : ''}>${T('{0} equal parts', n)}</option>`).join('')}
       ${[1, 2, 5, 10, 15, 30].map((m) => `<option value="m${m}">${T('Every {0} min', m)}</option>`).join('')}</select></label>` : ''}`;
+}
+// A cover picture for MP3 tags: square-ish JPEG, at most 600 px, whatever image the user picked.
+async function coverJPEG(file) {
+  const bmp = await createImageBitmap(file), k = Math.min(1, 600 / Math.max(bmp.width, bmp.height));
+  const c = document.createElement('canvas'); c.width = Math.round(bmp.width * k); c.height = Math.round(bmp.height * k);
+  c.getContext('2d').drawImage(bmp, 0, 0, c.width, c.height);
+  const blob = await new Promise((res) => c.toBlob(res, 'image/jpeg', 0.9));
+  return new Uint8Array(await blob.arrayBuffer());
 }
 // Where to cut for the splitter: equal parts, or a part every N minutes (the last one takes what is left).
 function splitPoints(a, b, choice) {
@@ -898,6 +919,7 @@ function mountTool(root) {
     els.editor.style.display = 'block';
     els.name.textContent = file.name;
     if (cfg.video) { $(root, '[data-v=title]').value = baseName(file.name).replace(/[_-]+/g, ' ').slice(0, 60); vprev.refresh(0); }
+    if (cfg.tags) { root.querySelectorAll('[data-t]').forEach((el) => { if (el.type !== 'file') el.value = ''; }); }
     els.meta.textContent = `${(file.size / 1048576).toFixed(1)} MB`;
     els.busy.style.display = 'grid';
     els.busy.textContent = T('Reading audio…');
@@ -1242,6 +1264,10 @@ function mountTool(root) {
     draw(); drawAfter(); resetOutput();
   }));
   root.querySelectorAll('.opts select').forEach((el) => el.addEventListener('change', resetOutput));
+  if (cfg.tags) root.querySelectorAll('[data-t]').forEach((el) => el.addEventListener(el.type === 'file' ? 'change' : 'input', () => {
+    if (el.type === 'file') $(root, '[data-tcovername]').textContent = el.files[0]?.name || '';
+    resetOutput();
+  }));
 
   // Problems to report before running ffmpeg (null when fine).
   function checkJob() {
@@ -1429,6 +1455,30 @@ function mountTool(root) {
           }
           outLen = snap.sel[1] - snap.sel[0];
           return { zip: makeZip(files), count: files.length };
+        }
+        if (cfg.tags) { // write ID3 tags (and a cover) without re-encoding when the file is already an untouched MP3
+          const whole = snap.sel[0] <= 0.05 && snap.sel[1] >= st.duration - 0.05;
+          const copy = extOf(st.file.name) === 'mp3' && whole && isDefaultFx(snap.fx);
+          let src = inName;
+          if (!copy) {
+            const job = buildArgs(inName, 'tagsrc.mp3', 'mp3', 0, snap);
+            outLen = (await runFFmpeg(ff, job.args, job.outLen, (r) => setP(0.3 + r * 0.6, T('Processing… {0}%', Math.round(r * 100))))) ?? job.outLen;
+            src = 'tagsrc.mp3';
+          } else outLen = st.duration;
+          const cover = $(root, '[data-t=cover]').files[0];
+          const args = ['-i', src];
+          if (!copy) args.push('-i', inName); // the original's tags, to keep what isn't changed
+          if (cover) { await ff.writeFile('cover.jpg', await coverJPEG(cover)); args.push('-i', 'cover.jpg'); }
+          args.push('-map', '0:a');
+          if (cover) args.push('-map', `${copy ? 1 : 2}:0`); else if (copy) args.push('-map', '0:v?');
+          args.push('-c', 'copy', '-map_metadata', copy ? '0' : '1', '-id3v2_version', '3');
+          root.querySelectorAll('[data-t]').forEach((el) => { const v = el.type === 'file' ? '' : el.value.trim(); if (v) args.push('-metadata', `${el.dataset.t}=${v}`); });
+          if (cover) args.push('-metadata:s:v', 'title=Album cover', '-metadata:s:v', 'comment=Cover (front)');
+          args.push(outName);
+          await runFFmpeg(ff, args, outLen, () => setP(0.95, T('Processing…')));
+          const out = await ff.readFile(outName);
+          for (const n of [outName, 'tagsrc.mp3', 'cover.jpg']) await ff.deleteFile(n).catch(() => {});
+          return out;
         }
         if (snap.video) await ff.writeFile('bg.png', await videoBackground(snap.video));
         const job = buildArgs(inName, outName, fmtKey, 0, snap);
