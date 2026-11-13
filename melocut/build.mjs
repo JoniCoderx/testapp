@@ -2765,7 +2765,7 @@ const SOCIAL = [{ name: 'TikTok', url: 'https://www.tiktok.com/@melocutofficial'
 const GLOBE = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>';
 
 // The how-to video goes right after the short answer (or first, when a page has no short answer).
-const videoHTML = (v) => `<figure class="howto-video"><video controls playsinline preload="none" width="${v.width}" height="${v.height}" poster="${v.poster}"><source src="${v.src}" type="video/mp4"></video><figcaption>${v.caption}</figcaption></figure>`;
+const videoHTML = (v) => `<figure class="howto-video"><video controls playsinline preload="none" width="${v.width}" height="${v.height}" poster="${v.poster.replace(/\.jpg$/, ".webp")}"><source src="${v.src}" type="video/mp4"></video><figcaption>${v.caption}</figcaption></figure>`;
 function withVideo(p) {
   if (!p.video) return p.content;
   const m = p.content.match(/<div class="callout answer">[\s\S]*?<\/div>/);
@@ -2837,6 +2837,7 @@ ${p.tool ? `<link rel="modulepreload" href="${asset('assets/app.js')}">\n<script
 <script type="application/ld+json">${jsonLd(p)}</script>
 </head>
 <body>
+<script>try{var O={es:['Esta página también está en español.','Ver en español'],'pt-BR':['Esta página também está em português.','Ver em português'],de:['Diese Seite gibt es auch auf Deutsch.','Auf Deutsch ansehen'],fr:['Cette page existe aussi en français.','Voir en français'],en:['This page is also available in English.','View in English']},h=document.documentElement.lang,w=(navigator.languages||[navigator.language]).map(function(l){return /^pt/i.test(l)?'pt-BR':l.slice(0,2).toLowerCase()}).find(function(l){return O[l]}),a=w&&w!==h&&document.querySelector('link[rel=alternate][hreflang="'+w+'"]');if(a&&!localStorage.getItem('lang-offer-closed')&&!localStorage.getItem('lang-choice')){var d=document.createElement('div');d.className='lang-bar';d.lang=w;d.innerHTML='<span>'+O[w][0]+'</span><a href="'+new URL(a.href).pathname+'" hreflang="'+w+'">'+O[w][1]+'</a><button type="button" aria-label="Close">×</button>';document.body.prepend(d)}}catch(e){}</script>
 <header class="top">
   <div class="wrap">
     <a class="logo" href="${ui.prefix}/" aria-label="${ui.homeAria}"><img src="${asset('assets/logo.svg')}" width="32" height="32" alt="">${NAME}</a>
