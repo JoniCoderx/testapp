@@ -49,6 +49,7 @@ export default (NAME) => ({
     'fade-in-fade-out': { title: 'Fundido de entrada y salida', path: 'es/fundido-entrada-salida', blurb: 'Añade un inicio y un final suaves a cualquier canción.' },
     'voice-changer': { title: 'Cambiador de voz', path: 'es/cambiador-de-voz', blurb: 'Ardilla, voz grave, robot, monstruo y más voces.' },
     'audio-splitter': { title: 'Dividir audio', blurb: 'Divide una canción o grabación en partes iguales.' },
+    'mp3-tag-editor': { title: 'Editor de etiquetas MP3', blurb: 'Cambia el título, el artista, el álbum y la carátula.' },
     'voice-recorder': { title: 'Grabadora de voz', blurb: 'Graba tu voz y guárdala en MP3.' },
     'audio-to-video': { title: 'Canción a video', path: 'es/cancion-a-video', blurb: 'Convierte una canción en un MP4 para TikTok y Reels.' },
   },

@@ -47,6 +47,7 @@ const base = (NAME) => ({
     'fade-in-fade-out': { title: 'Ein- und Ausblenden', blurb: 'Gib jedem Song einen sanften Anfang und ein sanftes Ende.' },
     'voice-changer': { title: 'Stimmenverzerrer', path: 'de/stimmenverzerrer', blurb: 'Chipmunk, tiefe Stimme, Roboter, Monster und mehr.' },
     'audio-splitter': { title: 'Audio aufteilen', blurb: 'Teile einen Song oder eine Aufnahme in gleiche Teile.' },
+    'mp3-tag-editor': { title: 'MP3-Tags bearbeiten', blurb: 'Ändere Titel, Interpret, Album und Cover.' },
     'voice-recorder': { title: 'Diktiergerät', blurb: 'Nimm deine Stimme auf und speichere sie als MP3.' },
     'audio-to-video': { title: 'Song zu Video', path: 'de/mp3-zu-mp4', blurb: 'Mach aus einem Song ein MP4 für TikTok und Reels.' },
   },
