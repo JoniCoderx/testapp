@@ -49,6 +49,7 @@ export default (NAME) => ({
     'fade-in-fade-out': { title: 'Fade in e fade out', path: 'pt-br/fade-in-fade-out', blurb: 'Coloque um começo e um fim suaves em qualquer música.' },
     'voice-changer': { title: 'Modificador de voz', path: 'pt-br/mudar-voz', blurb: 'Esquilo, voz grave, robô, monstro e mais vozes.' },
     'audio-splitter': { title: 'Dividir áudio', blurb: 'Divida uma música ou gravação em partes iguais.' },
+    'mp3-tag-editor': { title: 'Editor de tags MP3', blurb: 'Mude o título, o artista, o álbum e a capa.' },
     'voice-recorder': { title: 'Gravador de voz', blurb: 'Grave sua voz e salve em MP3.' },
     'audio-to-video': { title: 'Música para vídeo', path: 'pt-br/musica-para-video', blurb: 'Transforme uma música em MP4 para TikTok e Reels.' },
   },

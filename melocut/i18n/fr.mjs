@@ -47,6 +47,7 @@ const base = (NAME) => ({
     'fade-in-fade-out': { title: "Fondu d'entrée et de sortie", blurb: "Ajoute un début et une fin en douceur à n'importe quelle chanson." },
     'voice-changer': { title: "Modificateur de voix", path: 'fr/modificateur-de-voix', blurb: "Écureuil, voix grave, robot, monstre et d'autres voix." },
     'audio-splitter': { title: 'Diviser un audio', blurb: 'Divise une chanson ou un enregistrement en parties égales.' },
+    'mp3-tag-editor': { title: 'Éditeur de tags MP3', blurb: 'Change le titre, l\'artiste, l\'album et la pochette.' },
     'voice-recorder': { title: 'Dictaphone en ligne', blurb: 'Enregistre ta voix et sauvegarde-la en MP3.' },
     'audio-to-video': { title: "MP3 en MP4", path: 'fr/mp3-en-mp4', blurb: "Transforme une chanson en MP4 pour TikTok et Reels." },
   },
