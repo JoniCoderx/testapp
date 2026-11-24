@@ -634,6 +634,27 @@ function optionsHTML(cfg) {
       ${[1, 2, 5, 10, 15, 30].map((m) => `<option value="m${m}">${T('Every {0} min', m)}</option>`).join('')}</select></label>` : ''}`;
 }
 // A cover picture for MP3 tags: square-ish JPEG, at most 600 px, whatever image the user picked.
+// Read the text tags (ID3v2.3/2.4) at the start of an MP3, to show what the file already has.
+async function readID3(file) {
+  const head = new Uint8Array(await file.slice(0, 10).arrayBuffer());
+  if (head[0] !== 0x49 || head[1] !== 0x44 || head[2] !== 0x33) return null; // "ID3"
+  const ver = head[3], size = (head[6] << 21) | (head[7] << 14) | (head[8] << 7) | head[9];
+  const buf = new Uint8Array(await file.slice(10, 10 + Math.min(size, 4 << 20)).arrayBuffer());
+  const want = { TIT2: 'title', TPE1: 'artist', TALB: 'album', TYER: 'date', TDRC: 'date' }, out = { cover: false };
+  const text = (b) => { const e = b[0], d = b.subarray(1);
+    const s = e === 1 || e === 2 ? new TextDecoder(e === 2 ? 'utf-16be' : 'utf-16').decode(d) : new TextDecoder(e === 3 ? 'utf-8' : 'latin1').decode(d);
+    return s.replace(/\u0000.*$/s, '').replace(/^\ufeff/, '').trim(); };
+  for (let i = 0; i + 10 <= buf.length;) {
+    const id = String.fromCharCode(...buf.subarray(i, i + 4));
+    if (!/^[A-Z0-9]{4}$/.test(id)) break;
+    const len = ver >= 4 ? (buf[i + 4] << 21) | (buf[i + 5] << 14) | (buf[i + 6] << 7) | buf[i + 7] : (buf[i + 4] << 24) | (buf[i + 5] << 16) | (buf[i + 6] << 8) | buf[i + 7];
+    if (len <= 0 || i + 10 + len > buf.length) break;
+    if (want[id]) { const v = text(buf.subarray(i + 10, i + 10 + len)); if (v) out[want[id]] = want[id] === 'date' ? v.slice(0, 4) : v; }
+    if (id === 'APIC') out.cover = true;
+    i += 10 + len;
+  }
+  return out;
+}
 async function coverJPEG(file) {
   const bmp = await createImageBitmap(file), k = Math.min(1, 600 / Math.max(bmp.width, bmp.height));
   const c = document.createElement('canvas'); c.width = Math.round(bmp.width * k); c.height = Math.round(bmp.height * k);
@@ -919,7 +940,15 @@ function mountTool(root) {
     els.editor.style.display = 'block';
     els.name.textContent = file.name;
     if (cfg.video) { $(root, '[data-v=title]').value = baseName(file.name).replace(/[_-]+/g, ' ').slice(0, 60); vprev.refresh(0); }
-    if (cfg.tags) { root.querySelectorAll('[data-t]').forEach((el) => { if (el.type !== 'file') el.value = ''; }); }
+    if (cfg.tags) {
+      root.querySelectorAll('[data-t]').forEach((el) => { if (el.type !== 'file') el.value = ''; });
+      $(root, '[data-tcovername]').textContent = '';
+      readID3(file).then((tags) => { // fill in what the file already has, if it is still the open file
+        if (!tags || st.file !== file) return;
+        for (const k of ['title', 'artist', 'album', 'date']) if (tags[k]) $(root, `[data-t=${k}]`).value = tags[k];
+        if (tags.cover && !$(root, '[data-t=cover]').files[0]) $(root, '[data-tcovername]').textContent = T('This file already has a cover.');
+      }).catch(() => {});
+    }
     els.meta.textContent = `${(file.size / 1048576).toFixed(1)} MB`;
     els.busy.style.display = 'grid';
     els.busy.textContent = T('Reading audio…');

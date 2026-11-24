@@ -204,6 +204,7 @@ window.MELOCUT_I18N = {
 "Microphone blocked. Allow it in your browser settings and try again.": "Microfone bloqueado. Permita nas configurações do navegador e tente de novo.",
 "Choose image": "Escolher imagem",
 "Save tags": "Salvar tags",
+"This file already has a cover.": "Este arquivo já tem uma capa.",
 "Artist": "Artista",
 "Album": "Álbum",
 "Year": "Ano",

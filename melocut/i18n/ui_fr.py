@@ -190,6 +190,7 @@ FR = {
  'Microphone blocked. Allow it in your browser settings and try again.': "Micro bloqué. Autorise-le dans les réglages du navigateur et réessaie.",
  'Choose image': "Choisir une image",
  'Save tags': 'Enregistrer les tags',
+ 'This file already has a cover.': 'Ce fichier a déjà une pochette.',
  'Artist': 'Artiste',
  'Album': 'Album',
  'Year': 'Année',
